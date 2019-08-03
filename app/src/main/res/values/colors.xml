@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--主题颜色-->
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#FFFFFF</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="ifafu_blue">#1296DB</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000</color>
+    <color name="effective_black">#2a2a2a</color>
+    <color name="light_black">#3E3E3E</color>
+    <color name="blue">#5697E5</color>
+    <color name="global_blue">#157EFB</color>
+    <color name="light_gray">#dbdbdb</color>
+
+    <color name="colorBlue">#0000FF</color>
+    <color name="darker_gray">#AAAAAA</color>
+    <color name="darker_gray_half">#80AAAAAA</color>
+
+</resources>

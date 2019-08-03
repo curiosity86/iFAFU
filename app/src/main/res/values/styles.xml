@@ -1,0 +1,86 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="android:colorPrimary">@color/colorPrimary</item>
+        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:textViewStyle">@style/TextView</item>
+        <item name="imageButtonStyle">@style/ImageButtonStyle</item>
+        <item name="buttonStyle">@style/Button</item>
+        <item name="titleTextColor">#3E3E3E</item>
+    </style>
+
+    <style name="TextView">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
+    <style name="TextView.CourseDetail">
+        <item name="android:drawablePadding">12dp</item>
+        <item name="android:lines">1</item>
+        <item name="android:background">@null</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/ifafu_blue</item>
+    </style>
+
+    <style name="Button" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@color/effective_black</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:background">@drawable/shape_btn</item>
+        <item name="android:foreground">?selectableItemBackground</item>
+    </style>
+
+    <style name="dialogTheme" parent="@android:style/Theme.Dialog" tools:keep="@style/dialogTheme">
+        <item name="android:windowIsTranslucent">false</item><!--半透明-->
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:backgroundDimEnabled">false</item><!--模糊-->
+        <item name="android:textColor">@color/ifafu_blue</item>
+    </style>
+
+    <style name="Button.Blue" parent="Button" tools:keep="@style/Button_Blue">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/shape_btn2</item>
+    </style>
+
+    <style name="ImageButtonStyle">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="EditText">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:background">@drawable/shape_edit_selector</item>
+    </style>
+
+    <style name="EditText.Material">
+        <item name="android:textColorHint">@color/blue</item>
+        <item name="android:textCursorDrawable">@drawable/shape_edit_cursor</item>
+    </style>
+
+    <style name="TextInput" parent="Base.TextAppearance.AppCompat.Caption">
+        <item name="android:textColor">@color/blue</item>
+    </style>
+    
+    <style name="TextView.Exam">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/global_blue</item>
+    </style>
+
+    <style name="styleInformDialog" parent="android:style/Theme.Dialog" tools:keep="@style/styleInformDialog">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="styleIOSDialog" parent="styleInformDialog" tools:keep="@style/styleIOSDialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
+    <style name="styleProgressDialog" parent="styleIOSDialog" tools:keep="@style/styleProgressDialog" />
+
+</resources>

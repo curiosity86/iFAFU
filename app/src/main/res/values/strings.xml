@@ -1,0 +1,58 @@
+<resources>
+    <string name="app_name">iFAFU测试版</string>
+    <string name="app_sub_name">For Android V%s</string>
+
+    <string name="base_on_fafu">基于福建农林大学教务管理系统</string>
+    <string name="account">学号</string>
+    <string name="password">密码</string>
+    <string name="login_welcome">欢迎登录</string>
+    <string name="login">登录</string>
+
+    <string name="display_about_1">基于福建农林大学教务管理系统</string>
+    <string name="display_about_2">加入iFAFU意见反馈群: 663114635&#10;发送邮件至support@ifafu.cn&#10;或新浪微博关注@iFAFU联系我们</string>
+    <string name="display_about_3">iFAFU官网: https://ifafu.cn, 点击访问 ></string>
+    <string name="display_about_4">关于iFAFU开发团队，点击了解我们 ></string>
+
+    <!--MainActivity-->
+    <string name="back_again">再次按下返回键退出程序</string>
+    
+    <!--SyllabusActivity-->
+    <string name="syllabus">课程表</string>
+    <string name="week_format">第%s周&#160;&#160;本周</string>
+    <string name="week_format_not">第%s周&#160;&#160;非本周(长按返回本周)</string>
+
+    <!--AddCourseActivity-->
+    <string name="add_course">添加课程</string>
+    <string name="save">保存</string>
+    <string name="course_name">课程名称</string>
+    <string name="select_course_week">请选择起止周</string>
+    <string name="select_course_time">请选择上课时间</string>
+    <string name="input_teacher">授课老师（选填）</string>
+    <string name="input_address">请输入上课地点（选填）</string>
+    <string name="add_course_btn">添加时间段</string>
+
+    <!--ExamActivity-->
+    <string name="exam">考试查询</string>
+
+    <!--AddExamActivity-->
+    <string name="add_exam">添加自定义考试</string>
+    <string name="input_exam_name">请输入课程名称</string>
+    <string name="input_exam_time">请选择考试时间</string>
+    <string name="display_exam_address">请输入考试地点（选填）</string>
+    <string name="display_exam_num">请输入座位号（选填）</string>
+    <string name="save_exam">保存考试</string>
+
+    <!--NoticeActivity-->
+    <string name="notice">校园后勤处公告</string>
+
+    <!--AboutActivity-->
+    <string name="about">关于iFAFU</string>
+    <string name="text_QQ_group">&#160;意见反馈</string>
+    <string name="text_weibo">&#160;关注微博</string>
+    <string name="text_email">&#160;发送邮件</string>
+    <string name="success_copy_email">收件人信息已复制至剪切板</string>
+    <string name="menu_update">检查更新</string>
+    <string name="menu_logout">切换用户</string>
+    <string name="menu_about">关于应用</string>
+    <string name="menu_fback">反馈问题</string>
+</resources>

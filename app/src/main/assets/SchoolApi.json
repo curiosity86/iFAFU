@@ -1,0 +1,34 @@
+[
+  {
+    "code": 1,
+    "name": "福建农林大学",
+    "syllabus":{
+      "api": "/xskbcx.aspx",
+      "zd": "N121603"
+    },
+    "exam": {
+      "api": "/xskscx.aspx",
+      "zd": "N121604"
+    },
+    "score":{
+      "api": "/xscjcx_dq_fafu.aspx",
+      "zd": "N121605"
+    }
+  },
+  {
+    "code": 2,
+    "name": "福建农林大学金山学院",
+    "exam": {
+      "api": "/xskscx.aspx",
+      "zd": "N121604"
+    },
+    "syllabus":{
+      "api": "/xskbcx.aspx",
+      "zd": "N121604"
+    },
+    "score":{
+      "api": "/xskbcx.aspx",
+      "zd": "N121604"
+    }
+  }
+]
