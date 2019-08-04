@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">iFAFU测试版</string>
+    <string name="app_name">iFAFU</string>
     <string name="app_sub_name">For Android V%s</string>
 
     <string name="base_on_fafu">基于福建农林大学教务管理系统</string>
@@ -8,10 +8,9 @@
     <string name="login_welcome">欢迎登录</string>
     <string name="login">登录</string>
 
-    <string name="display_about_1">基于福建农林大学教务管理系统</string>
-    <string name="display_about_2">加入iFAFU意见反馈群: 663114635&#10;发送邮件至support@ifafu.cn&#10;或新浪微博关注@iFAFU联系我们</string>
-    <string name="display_about_3">iFAFU官网: https://ifafu.cn, 点击访问 ></string>
-    <string name="display_about_4">关于iFAFU开发团队，点击了解我们 ></string>
+    <string name="about_1">基于福建农林大学教务管理系统</string>
+    <string name="about_2">iFAFU官网: https://ifafu.cn</string>
+    <string name="about_3">Design by Wooslen</string>
 
     <!--MainActivity-->
     <string name="back_again">再次按下返回键退出程序</string>

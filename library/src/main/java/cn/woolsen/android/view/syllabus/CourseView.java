@@ -10,6 +10,7 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -17,7 +18,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.woolsen.android.uitl.DensityUtils;
 import cn.woolsen.android.view.syllabus.data.CourseBase;
@@ -71,6 +74,9 @@ public class CourseView extends FrameLayout {
     private OnCourseLongClickListener onCourseLongClickListener;
 
     private List<CourseBase> mCourseList = new ArrayList<>();
+
+    private int colorIndex = 0;
+    private Map<String, Integer> colorMap = new HashMap<>();
 
     public CourseView(Context context) {
         this(context, null);
@@ -167,7 +173,6 @@ public class CourseView extends FrameLayout {
 
     private View createItemView(final CourseBase course) {
         final FrameLayout backgroundLayout = new FrameLayout(getContext());
-
         // 绘制TextView
         TextView tv = new TextView(getContext());
         LayoutParams params = new LayoutParams(
@@ -177,6 +182,7 @@ public class CourseView extends FrameLayout {
         tv.setTextColor(mCoureseTextColor);
         tv.setPadding(mCourseLRPadding, mCourseTBPadding, mCourseLRPadding, mCourseTBPadding);
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, mCourseTextSize);
+        tv.setGravity(Gravity.CENTER);
         TextPaint tp = tv.getPaint();
         tp.setFakeBoldText(true);
         params.setMargins(mCourseLRMargin, mCourseTBMargin, mCourseLRMargin, mCourseTBMargin);
@@ -184,7 +190,13 @@ public class CourseView extends FrameLayout {
         tv.setText(course.getText());
         // background
         if (course.getColor() == -1) {
-            backgroundLayout.setBackgroundColor(ColorUtils.getRandomColor());
+            if (colorMap.containsKey(course.getText())) {
+                int index = colorMap.get(course.getText());
+                backgroundLayout.setBackgroundColor(ColorUtils.colorList[index]);
+            } else {
+                backgroundLayout.setBackgroundColor(ColorUtils.colorList[colorIndex]);
+                colorMap.put(course.getText(), colorIndex++);
+            }
         } else {
             backgroundLayout.setBackgroundColor(course.getColor());
         }

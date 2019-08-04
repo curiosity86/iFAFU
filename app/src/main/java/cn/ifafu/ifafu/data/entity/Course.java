@@ -1,5 +1,6 @@
 package cn.ifafu.ifafu.data.entity;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 
 import org.greenrobot.greendao.annotation.Entity;
@@ -30,7 +31,7 @@ public class Course implements Cloneable, ToCourse {
     private int weekType;  // 单双周
 
     private String timeString; // 教务管理系统上的显示的时间
-    private String color; // 课程颜色
+    private int color; // 课程颜色
     private String account; // 课程归属账号
     private boolean local; // 是否是自定义课程
 
@@ -40,9 +41,9 @@ public class Course implements Cloneable, ToCourse {
 
 
 
-    @Generated(hash = 248270314)
+    @Generated(hash = 50667648)
     public Course(Long id, String name, String address, String teacher, int weekday, int beginNode, int nodeCnt, int beginWeek,
-                  int endWeek, int weekType, String timeString, String color, String account, boolean local) {
+            int endWeek, int weekType, String timeString, int color, String account, boolean local) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -195,11 +196,11 @@ public class Course implements Cloneable, ToCourse {
         this.timeString = timeString;
     }
 
-    public String getColor() {
+    public int getColor() {
         return this.color;
     }
 
-    public void setColor(String color) {
+    public void setColor(@ColorInt int color) {
         this.color = color;
     }
 

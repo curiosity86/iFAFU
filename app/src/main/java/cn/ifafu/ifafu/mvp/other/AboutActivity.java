@@ -29,7 +29,6 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
 
         StatusBarUtil.setLightMode(this);
         StatusBarUtil.setTransparent(this);
-
         Toolbar toolbar = findViewById(R.id.tb_about);
         toolbar.setNavigationOnClickListener(v -> finish());
 
@@ -45,15 +44,6 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         findViewById(R.id.btn_goto_email).setOnClickListener(this);
     }
 
-    private void gotoBrowser(String url) {
-        Intent intent = new Intent(AboutActivity.this, WebActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("pageTitle", "关于我们");
-        bundle.putString("loadUrl", url);
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
-
     private void linkTo(String url) {
         Intent intent = new Intent();
         intent.setData(Uri.parse(url));
@@ -64,9 +54,6 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.gotoGroupAbout:
-                gotoBrowser("https://static.ifafu.cn/about.html");
-                break;
             case R.id.btn_goto_qq_group:
                 linkTo("https://jq.qq.com/?_wv=1027&k=5BwhG6k");
                 break;
@@ -75,13 +62,11 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case R.id.btn_goto_email:
                 String email = "support@ifafu.cn";
-
                 ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 if (cm != null) {
                     cm.setPrimaryClip(ClipData.newPlainText("Label", email));
                     Toast.makeText(this, R.string.success_copy_email, Toast.LENGTH_SHORT).show();
                 }
-
                 Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(email));
                 startActivity(Intent.createChooser(intent, "选择发送应用"));
                 break;

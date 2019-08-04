@@ -11,8 +11,7 @@
     </style>
 
     <style name="TextView">
-        <item name="android:gravity">center</item>
-        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="TextView.CourseDetail">
@@ -33,13 +32,6 @@
         <item name="android:textSize">16sp</item>
         <item name="android:background">@drawable/shape_btn</item>
         <item name="android:foreground">?selectableItemBackground</item>
-    </style>
-
-    <style name="dialogTheme" parent="@android:style/Theme.Dialog" tools:keep="@style/dialogTheme">
-        <item name="android:windowIsTranslucent">false</item><!--半透明-->
-        <item name="android:windowBackground">@color/white</item>
-        <item name="android:backgroundDimEnabled">false</item><!--模糊-->
-        <item name="android:textColor">@color/ifafu_blue</item>
     </style>
 
     <style name="Button.Blue" parent="Button" tools:keep="@style/Button_Blue">
@@ -65,22 +57,10 @@
     <style name="TextInput" parent="Base.TextAppearance.AppCompat.Caption">
         <item name="android:textColor">@color/blue</item>
     </style>
-    
+
     <style name="TextView.Exam">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/global_blue</item>
     </style>
-
-    <style name="styleInformDialog" parent="android:style/Theme.Dialog" tools:keep="@style/styleInformDialog">
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-    </style>
-
-    <style name="styleIOSDialog" parent="styleInformDialog" tools:keep="@style/styleIOSDialog">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsFloating">true</item>
-    </style>
-
-    <style name="styleProgressDialog" parent="styleIOSDialog" tools:keep="@style/styleProgressDialog" />
 
 </resources>
