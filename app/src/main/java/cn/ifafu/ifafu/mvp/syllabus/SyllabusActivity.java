@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -14,7 +13,6 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.jaeger.library.StatusBarUtil;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -22,11 +20,9 @@ import java.util.Locale;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.mvp.add_course.AddCourseActivity;
-import cn.ifafu.ifafu.mvp.login.LoginActivity;
 import cn.ifafu.ifafu.util.NumberUtils;
 import cn.ifafu.ifafu.view.adapter.CoursePageAdapter;
 import cn.ifafu.ifafu.view.dialog.CourseDetailDialog;
-import cn.ifafu.ifafu.view.dialog.LoadingDialog;
 import cn.ifafu.ifafu.view.dialog.ProgressDialog;
 import cn.woolsen.android.mvp.BaseActivity;
 

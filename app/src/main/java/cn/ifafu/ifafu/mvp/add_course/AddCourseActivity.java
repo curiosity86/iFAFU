@@ -25,6 +25,7 @@ import java.util.List;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.util.GlobalLib;
 import cn.woolsen.android.mvp.BaseActivity;
+import cn.woolsen.android.uitl.ColorUtils;
 
 public class AddCourseActivity extends BaseActivity<AddCourseContract.Presenter>
         implements AddCourseContract.View, View.OnClickListener {
@@ -55,7 +56,7 @@ public class AddCourseActivity extends BaseActivity<AddCourseContract.Presenter>
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_course);
 
-        StatusBarUtil.setColor(this, getColor(R.color.global_blue), 0);
+        StatusBarUtil.setColor(this, ColorUtils.getColor(getContext(), R.color.global_blue), 0);
 
         mPresenter = new AddCoursePresenter(this);
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.os.Build;
 
 import java.util.Random;
 
@@ -80,7 +81,11 @@ public class ColorUtils {
 
 
     public static int getColor(Context context, int colorId) {
-        return context.getColor(colorId);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return context.getResources().getColor(colorId);
+        } else {
+            return context.getColor(colorId);
+        }
     }
 
     public static int dip2px(Context context, float dpValue) {

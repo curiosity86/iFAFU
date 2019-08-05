@@ -1,6 +1,4 @@
-package cn.woolsen.android.uitl;
-
-import android.util.Log;
+package cn.ifafu.ifafu;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -78,7 +76,8 @@ public class ChineseNumbers {
         for (Character s : DIGITS_MAP.keySet()) {
             join.append(s);
         }
-        String pattern = String.format("^[%s]+$", join.toString());
+        System.out.println(join);
+        String pattern = String.format("^[%s]+$", join);
         DIGITS_PATTERN = Pattern.compile(pattern);
     }
 

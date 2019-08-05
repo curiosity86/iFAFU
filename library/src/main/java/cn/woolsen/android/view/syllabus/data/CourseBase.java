@@ -94,4 +94,16 @@ public class CourseBase implements ToCourse {
     public CourseBase toCourseBase() {
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "CourseBase{" +
+                "text='" + text + '\'' +
+                ", weekday=" + weekday +
+                ", beginNode=" + beginNode +
+                ", nodeCnt=" + nodeCnt +
+                ", color=" + color +
+                ", other=" + other +
+                '}';
+    }
 }

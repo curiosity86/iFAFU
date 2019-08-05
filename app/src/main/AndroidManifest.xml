@@ -39,6 +39,7 @@
         <activity android:name=".mvp.exam.ExamActivity" />
         <activity android:name=".mvp.add_exam.AddExamActivity" />
         <activity android:name=".mvp.other.AboutActivity" />
+        <activity android:name=".mvp.web.WebActivity" />
 
         <!-- 配置APP渠道号 -->
         <meta-data

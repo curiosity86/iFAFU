@@ -28,7 +28,7 @@ class LoginContract {
 
         void onLogin();
 
-        void checkAccount();
+        void checkAccount(String account);
 
     }
 

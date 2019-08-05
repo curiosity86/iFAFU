@@ -1,7 +1,8 @@
 package cn.ifafu.ifafu.mvp.base;
 
 import android.content.Context;
-import android.util.Log;
+
+import java.io.IOException;
 
 import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.app.IFAFU;
@@ -13,13 +14,14 @@ import cn.ifafu.ifafu.http.service.ZhengFangService;
 import cn.ifafu.ifafu.http.parser.VerifyParser;
 import cn.woolsen.android.mvp.BaseModel;
 import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 
 public class BaseZFModel extends BaseModel implements IZFModel {
 
     protected User mUser;
 
-    protected BaseZFModel(Context context) {
+    public BaseZFModel(Context context) {
         super(context);
         mUser = IFAFU.getUser();
     }
@@ -46,6 +48,22 @@ public class BaseZFModel extends BaseModel implements IZFModel {
                 "", "", "", "%D1%A7%C9%FA");
     }
 
+    @Override
+    public Observable<Boolean> isTokenAlive(User user) {
+        return Observable
+                .<Boolean>create(emitter -> {
+                    ZhengFangService zhengFang = RetrofitFactory.obtainService(ZhengFangService.class, getBaseUrl(user));
+                    ResponseBody body = zhengFang.defaultHtml(user.getAccount()).execute().body();
+                    if (body == null) {
+                        emitter.onNext(false);
+                    } else {
+                        emitter.onNext(body.string().contains("欢迎您"));
+                    }
+                    emitter.onComplete();
+                })
+                .subscribeOn(Schedulers.io());
+    }
+
     private Observable<ResponseBody> getVerifyResp(User user) {
         return Observable.create(emitter -> {
             ZhengFangService zhengFang = RetrofitFactory.obtainService(ZhengFangService.class, getBaseUrl(user));
@@ -55,7 +73,7 @@ public class BaseZFModel extends BaseModel implements IZFModel {
     }
 
     protected String getReferer(User user) {
-        return getBaseUrl(user) + "/xs_main.aspx?xh=" + user.getAccount();
+        return getBaseUrl(user) + "xs_main.aspx?xh=" + user.getAccount();
     }
 
     @Override
@@ -73,9 +91,7 @@ public class BaseZFModel extends BaseModel implements IZFModel {
                 return "";
         }
     }
-
-
-
+    
     class VerifyErrorException extends Exception {
         VerifyErrorException(String message) {
             super(message);

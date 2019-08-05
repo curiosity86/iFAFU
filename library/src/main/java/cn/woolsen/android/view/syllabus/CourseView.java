@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -131,7 +132,7 @@ public class CourseView extends FrameLayout {
      * 把数组中的数据全部添加到界面
      */
     private void initCourseItemView() {
-        mCourseList.sort(new Comparator<CourseBase>() {
+        Collections.sort(mCourseList, new Comparator<CourseBase>() {
             @Override
             public int compare(CourseBase courseBase, CourseBase t1) {
                 int weekdayCompare = Integer.compare(courseBase.getWeekday(), t1.getWeekday());
@@ -174,6 +175,7 @@ public class CourseView extends FrameLayout {
     }
 
     private void realAddCourseItemView(CourseBase course) {
+        l(course);
         View itemView = createItemView(course);
         LayoutParams params = new LayoutParams((int) (mColItemWidth + 1),
                 (int) (mRowItemHeight * course.getNodeCnt() + 1));
@@ -290,6 +292,13 @@ public class CourseView extends FrameLayout {
         this.mCourseTBPadding = textTBPadding;
     }
 
+    public interface OnCourseClickListener {
+        void onClick(View v, CourseBase course);
+    }
+
+    public interface OnCourseLongClickListener {
+        boolean onLongClick(View v, CourseBase course);
+    }
 
     private void l(Object ... msg) {
         StringBuilder sb = new StringBuilder();
@@ -299,12 +308,5 @@ public class CourseView extends FrameLayout {
         Log.d("Syllabus", sb.toString());
     }
 
-    public interface OnCourseClickListener {
-        void onClick(View v, CourseBase course);
-    }
-
-    public interface OnCourseLongClickListener {
-        boolean onLongClick(View v, CourseBase course);
-    }
 
 }

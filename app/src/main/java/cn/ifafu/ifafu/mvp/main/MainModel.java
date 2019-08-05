@@ -3,13 +3,11 @@ package cn.ifafu.ifafu.mvp.main;
 import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.app.Constant;
@@ -21,6 +19,7 @@ import cn.ifafu.ifafu.http.service.WeatherService;
 import cn.ifafu.ifafu.mvp.base.BaseZFModel;
 import cn.ifafu.ifafu.data.Menu;
 import cn.ifafu.ifafu.mvp.exam.ExamActivity;
+import cn.ifafu.ifafu.mvp.web.WebActivity;
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusActivity;
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;
@@ -40,6 +39,7 @@ class MainModel extends BaseZFModel implements MainContract.Model {
             List<Menu> menus = new ArrayList<>();
             menus.add(new Menu(R.drawable.tab_syllabus, "课程表", SyllabusActivity.class));
             menus.add(new Menu(R.drawable.tab_exam, "考试查询", ExamActivity.class));
+            menus.add(new Menu(R.drawable.tab_web, "网页模式", WebActivity.class));
             emitter.onNext(menus);
             emitter.onComplete();
         });

@@ -35,8 +35,8 @@ class LoginModel extends BaseZFModel implements LoginContract.Model {
 
     @Override
     public void saveUser(User user) {
-        IFAFU.updateUser();
         SPUtils.get(Constant.SP_USER_INFO).putString("account", user.getAccount());
+        IFAFU.updateUser();
         userDao.insertOrReplace(user);
     }
 

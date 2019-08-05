@@ -21,7 +21,7 @@ public class Constant {
     public static final String IFAFU_BASE_URL  = "https://api.ifafu.cn";
 
     public static final String URL_FAFU = "http://jwgl.fafu.edu.cn/";
-    public static final String URL_FAFU_JS = "http://js.ifafu.cn";
+    public static final String URL_FAFU_JS = "http://js.ifafu.cn/";
     public static final String HOST_CARD = "http://cardapp.fafu.edu.cn:8088";
     public static final String HOST_BACKEND = "https://api.ifafu.cn";
 

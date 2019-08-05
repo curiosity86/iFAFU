@@ -21,14 +21,18 @@ import io.reactivex.functions.Function;
 
 public class BaseZFPresenter<V extends IView, M extends IZFModel> extends BasePresenter<V, M> implements IZFPresenter {
 
+    public BaseZFPresenter(V view) {
+        super(view);
+    }
+
     public BaseZFPresenter(V view, M model) {
         super(view, model);
     }
 
     /**
-     * 确保登录态有效
+     * 通过{@link Observable#retryWhen(Function)}捕捉{@link LoginException}异常后，触发登录账号
      *
-     * need {@link LoginException}
+     * Need {@link LoginException}
      */
     protected ObservableSource<?> ensureTokenAlive(Observable<Throwable> throwableObservable) {
         return throwableObservable.flatMap((Function<Throwable, ObservableSource<?>>) throwable -> {

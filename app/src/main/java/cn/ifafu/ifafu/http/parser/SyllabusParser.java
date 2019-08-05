@@ -79,7 +79,9 @@ public class SyllabusParser implements ObservableTransformer<ResponseBody, List<
 //                });
                 courses.addAll(clist);
             }
-            courses.forEach(this::mark);
+            for (Course c : courses) {
+                mark(c);
+            }
         }
         return courses;
     }

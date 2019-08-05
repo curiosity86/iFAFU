@@ -11,6 +11,7 @@ import cn.ifafu.ifafu.http.parser.LoginParser;
 import cn.ifafu.ifafu.http.parser.VerifyParser;
 import cn.ifafu.ifafu.mvp.base.BaseZFPresenter;
 import cn.ifafu.ifafu.mvp.main.MainActivity;
+import cn.woolsen.android.uitl.RxJavaUtils;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -30,6 +31,7 @@ class LoginPresenter extends BaseZFPresenter<LoginContract.View, LoginContract.M
     public void onStart() {
         Intent intent = mView.getActivity().getIntent();
         comeFromWhere = intent.getIntExtra("come_from", 0);
+        mView.setBackgroundLogo(R.drawable.drawable_fafu);
     }
 
     @Override
@@ -86,14 +88,11 @@ class LoginPresenter extends BaseZFPresenter<LoginContract.View, LoginContract.M
     }
 
     @Override
-    public void checkAccount() {
-        String account = mView.getAccountText();
-        if (account.isEmpty()) return;
-        if (account.charAt(0) == '0') {
+    public void checkAccount(String account) {
+        if (account.isEmpty() || account.length() < 9) return;
+        if (account.charAt(0) == '0' || account.length() == 9) {
             account = account.substring(1);
             mView.setAccountText(account);
-        }
-        if (account.length() == 9) {
             schoolCode = Constant.FAFU_JS;
             mView.setBackgroundLogo(R.drawable.drawable_fafu_js);
         } else {

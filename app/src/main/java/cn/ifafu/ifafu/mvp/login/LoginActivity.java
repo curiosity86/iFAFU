@@ -1,21 +1,27 @@
 package cn.ifafu.ifafu.mvp.login;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
 
+import com.bumptech.glide.Glide;
 import com.jaeger.library.StatusBarUtil;
 
 import cn.ifafu.ifafu.R;
-import cn.ifafu.ifafu.view.dialog.LoadingDialog;
 import cn.ifafu.ifafu.view.dialog.ProgressDialog;
 import cn.woolsen.android.mvp.BaseActivity;
 
 public class LoginActivity extends BaseActivity<LoginContract.Presenter>
-        implements LoginContract.View, View.OnClickListener, View.OnFocusChangeListener {
+        implements LoginContract.View, View.OnClickListener, TextWatcher {
 
     private EditText accountET;
 
@@ -34,13 +40,31 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter>
 
         mPresenter = new LoginPresenter(this);
 
+        logoIV = findViewById(R.id.bg_logo);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            logoIV.setVisibility(View.GONE);
+        }
+
         ImageView backBtn = findViewById(R.id.btn_finish);
+        backBtn.setOnClickListener(this);
         accountET = findViewById(R.id.et_account);
         passwordET = findViewById(R.id.et_password);
-        logoIV = findViewById(R.id.bg_logo);
+        accountET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        accountET.setOnFocusChangeListener(this);
-        backBtn.setOnClickListener(this);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         findViewById(R.id.btn_login).setOnClickListener(this);
 
         progressDialog = new ProgressDialog(this);
@@ -72,13 +96,6 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter>
     }
 
     @Override
-    public void onFocusChange(View v, boolean hasFocus) {
-        if (v.getId() == R.id.et_account && !hasFocus) {
-            mPresenter.checkAccount();
-        }
-    }
-
-    @Override
     public String getAccountText() {
         return accountET.getText().toString();
     }
@@ -90,11 +107,29 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter>
 
     @Override
     public void setBackgroundLogo(@DrawableRes int resId) {
-        logoIV.setImageResource(resId);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
+        Glide.with(this)
+                .load(resId)
+                .into(logoIV);
     }
 
     @Override
     public void setAccountText(String text) {
         accountET.setText(text);
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        mPresenter.checkAccount(s.toString());
     }
 }

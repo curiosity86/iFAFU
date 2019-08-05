@@ -14,7 +14,7 @@ import retrofit2.http.Query;
 public interface ZhengFangService {
 
     @GET("xs_main.aspx")
-    Observable<ResponseBody> defaultHtml(@Field("xh") String xh);
+    Call<ResponseBody> defaultHtml(@Query("xh") String xh);
 
     @GET("CheckCode.aspx")
     Call<ResponseBody> getCaptcha();
