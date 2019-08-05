@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,16 +47,17 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
     @NonNull
     @Override
     public ViewPagerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Log.d("Syllabus", "onCreateViewHolder");
         View view = LayoutInflater.from(mContext).inflate(R.layout.fragment_syllabus, parent, false);
         return new ViewPagerViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewPagerViewHolder holder, int position) {
+        l(holder.courseView, "onBindViewHolder start");
         if (beginTimes != null) {
             holder.sideView.setBeginTimeTexts(beginTimes);
         }
-        Log.d("CoursePageAdapter", position + "     course view = " + holder.courseView.hashCode());
         holder.courseView.setFirstDayOfWeek(firstDayOfWeek);
         holder.courseView.setOnCourseClickListener((v, course) -> {
             if (onCourseClickListener != null) {
@@ -64,10 +66,17 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
         });
         if (mCourseList != null && position < mCourseList.length && mCourseList[position] != null) {
             holder.courseView.setCourses(mCourseList[position]);
-            holder.courseView.redraw();
         }
         holder.dateView.setFirstDayOfWeek(firstDayOfWeek);
         holder.dateView.setDateTexts(DateUtils.getWeekDates(dateOfFirstStudyDay, position, firstDayOfWeek, "MM-dd"));
+        l(holder.courseView, "onBindViewHolder end");
+        RecyclerView rv = new RecyclerView(mContext);
+        rv.setLayoutManager(new RecyclerView.LayoutManager() {
+            @Override
+            public RecyclerView.LayoutParams generateDefaultLayoutParams() {
+                return null;
+            }
+        });
     }
 
     @Override
@@ -139,11 +148,25 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
 
         DateView dateView;
 
+        TextView cornerView;
+
         ViewPagerViewHolder(@NonNull View itemView) {
             super(itemView);
             courseView = itemView.findViewById(R.id.view_course);
             sideView = itemView.findViewById(R.id.view_side);
             dateView = itemView.findViewById(R.id.view_date);
+            cornerView = itemView.findViewById(R.id.tv_corner);
         }
+    }
+
+    private void l(CourseView view, Object... msg) {
+        String code = view.toString();
+        code = code.substring(code.indexOf("{") + 1, code.indexOf(" V.E"));
+        StringBuilder sb = new StringBuilder(code);
+        sb.append("    ");
+        for (Object s : msg) {
+            sb.append(s).append(" ");
+        }
+        Log.d("Syllabus", sb.toString());
     }
 }

@@ -29,24 +29,6 @@ class WebPresenter extends BaseZFPresenter<WebContract.View, WebContract.Model> 
             mView.setTitle(title);
             mView.loadUrl(url);
         } else {
-//            mCompDisposable.add(Observable
-//                    .<String>create(emitter -> {
-//                        if (mModel.isTokenAlive(mModel.getUser())) {
-//                            emitter.onNext(mModel.getMainUrl());
-//                        } else {
-//                            throw new LoginException();
-//                        }
-//                        emitter.onComplete();
-//                    })
-//                    .retryWhen(this::ensureTokenAlive)
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .doOnSubscribe(d -> mView.showLoading())
-//                    .subscribe(url -> mView.loadUrl(url), throwable -> {
-//                        mView.loadUrl(mModel.getMainUrl());
-//                        throwable.printStackTrace();
-//                    })
-//            );
             mCompDisposable.add(mModel.isTokenAlive(mModel.getUser())
                     .map(aBoolean -> {
                         if (aBoolean) {

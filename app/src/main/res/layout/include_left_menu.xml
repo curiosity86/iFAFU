@@ -11,9 +11,7 @@
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginStart="12dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/drawable_fafu2" />
+        android:layout_marginStart="12dp" />
 
     <TextView
         android:id="@+id/tv_menu_name"
@@ -22,7 +20,6 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="15dp"
         android:gravity="center"
-        android:text="姓名"
         android:textColor="@color/white"
         android:textSize="14sp" />
 
@@ -46,7 +43,7 @@
         android:drawableStart="@drawable/ic_share"
         android:drawablePadding="20dp"
         android:gravity="center"
-        android:text="分享应用"
+        android:text="@string/menu_share"
         android:textColor="@color/white"
         android:textSize="16sp" />
 

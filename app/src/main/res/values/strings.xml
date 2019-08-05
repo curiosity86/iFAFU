@@ -1,12 +1,6 @@
 <resources>
     <string name="app_name">iFAFU</string>
-    <string name="app_sub_name">For Android V%s</string>
-
     <string name="base_on_fafu">基于福建农林大学教务管理系统</string>
-
-    <string name="about_1">基于福建农林大学教务管理系统</string>
-    <string name="about_2">iFAFU官网: https://ifafu.cn</string>
-    <string name="about_3">Design by Wooslen</string>
 
     <!--LoginActivity-->
     <string name="account">学号</string>
@@ -24,7 +18,7 @@
     <!--SyllabusActivity-->
     <string name="syllabus">课程表</string>
     <string name="week_format">第%s周&#160;&#160;本周</string>
-    <string name="week_format_not">第%s周&#160;&#160;非本周(长按返回本周)</string>
+    <string name="week_format_not">第%s周&#160;&#160;非本周(长按返回%s)</string>
     <string name="refresh_success">课表刷新成功</string>
 
     <!--AddCourseActivity-->
@@ -53,11 +47,16 @@
 
     <!--AboutActivity-->
     <string name="about">关于iFAFU</string>
+    <string name="app_sub_name">For Android V%s</string>
+    <string name="about_1">基于福建农林大学教务管理系统</string>
+    <string name="about_2">iFAFU官网: https://ifafu.cn</string>
+    <string name="about_3">Design by Wooslen</string>
     <string name="text_QQ_group">&#160;意见反馈</string>
     <string name="text_weibo">&#160;关注微博</string>
     <string name="text_email">&#160;发送邮件</string>
     <string name="success_copy_email">收件人信息已复制至剪切板</string>
     <string name="menu_update">检查更新</string>
+    <string name="menu_share">分享应用</string>
     <string name="menu_logout">切换用户</string>
     <string name="menu_about">关于应用</string>
     <string name="menu_fback">反馈问题</string>

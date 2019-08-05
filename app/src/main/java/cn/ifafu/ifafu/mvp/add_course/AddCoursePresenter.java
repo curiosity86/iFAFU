@@ -30,7 +30,7 @@ class AddCoursePresenter extends BasePresenter<AddCourseContract.View, AddCourse
     @Override
     public void onStart() {
         super.onStart();
-        long id = mView.getActivity().getIntent().getLongExtra("id", 0);
+        long id = mView.getActivity().getIntent().getLongExtra("id", -1);
         if (id != -1) {
             mView.editMode();
             onAdd();

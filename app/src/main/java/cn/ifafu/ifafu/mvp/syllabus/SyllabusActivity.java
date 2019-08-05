@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -47,7 +48,7 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_syllabus);
-        StatusBarUtil.setTransparent(this);
+//        StatusBarUtil.setTransparent(this);
         StatusBarUtil.setLightMode(this);
 
         mPresenter = new SyllabusPresenter(this);
@@ -73,10 +74,15 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
+                String numCN = NumberUtils.numberToChinese(position + 1);
                 if (position != currentWeek - 1) {
-                    subTitleTV.setText(getString(R.string.week_format_not, NumberUtils.numberToChinese(position + 1)));
+                    if (currentWeek < 0) {
+                        subTitleTV.setText(getString(R.string.week_format_not, numCN, "第一周"));
+                    } else {
+                        subTitleTV.setText(getString(R.string.week_format_not, numCN, "本周"));
+                    }
                 } else {
-                    subTitleTV.setText(getString(R.string.week_format, NumberUtils.numberToChinese(position + 1)));
+                    subTitleTV.setText(getString(R.string.week_format, numCN));
                 }
             }
         });

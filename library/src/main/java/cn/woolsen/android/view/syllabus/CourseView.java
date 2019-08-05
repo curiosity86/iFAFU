@@ -21,8 +21,10 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import cn.woolsen.android.uitl.DensityUtils;
 import cn.woolsen.android.view.syllabus.data.CourseBase;
@@ -70,12 +72,22 @@ public class CourseView extends FrameLayout {
     private Path mLinePath = new Path();
 
     // onCreate时首次绘制
-    private boolean mFirstDraw;
+    private boolean mFirstDraw = true;
 
     private OnCourseClickListener onCourseClickListener;
     private OnCourseLongClickListener onCourseLongClickListener;
 
-    private List<CourseBase> mCourseList = new ArrayList<>();
+    private Map<CourseBase, View> mCourseViewMap = new TreeMap<>(new Comparator<CourseBase>() {
+        @Override
+        public int compare(CourseBase courseBase, CourseBase t1) {
+            int weekdayCompare = Integer.compare(courseBase.getWeekday(), t1.getWeekday());
+            if (weekdayCompare == 0) {
+                return Integer.compare(courseBase.getBeginNode(), t1.getBeginNode());
+            } else {
+                return weekdayCompare;
+            }
+        }
+    });
 
     private int colorIndex = 0;
     private Map<String, Integer> colorMap = new HashMap<>();
@@ -99,19 +111,32 @@ public class CourseView extends FrameLayout {
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+//        if (!mFirstDraw) {
+//            mFirstDraw = true;
         mHeight = h;
         mWidth = w;
         mColItemWidth = 1F * mWidth / mColCount;
         mRowItemHeight = 1F * mHeight / mRowCount;
+        l("onSizeChanged", "height:", mHeight, "width:", mWidth);
+//        l("height:", mHeight, "width:", mWidth, "ColItemWidth:", mColItemWidth, "RowItemHeight:", mRowItemHeight);
+//        }
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        initCourseItemView();
+        l("onDraw", "height:", mHeight, "width:", mWidth);
     }
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
         drawSplitLine(canvas);
         super.dispatchDraw(canvas);
-        if (!mFirstDraw) {
+        if (mFirstDraw) {
+            l("dispatchDraw", "height:", mHeight, "width:", mWidth);
+            mFirstDraw = false;
             initCourseItemView();
-            mFirstDraw = true;
         }
     }
 
@@ -121,6 +146,7 @@ public class CourseView extends FrameLayout {
 
     /**
      * 设置每周的第一天
+     *
      * @param firstDayOfWeek {@link Calendar}
      */
     public void setFirstDayOfWeek(int firstDayOfWeek) {
@@ -132,57 +158,52 @@ public class CourseView extends FrameLayout {
      * 把数组中的数据全部添加到界面
      */
     private void initCourseItemView() {
-        Collections.sort(mCourseList, new Comparator<CourseBase>() {
-            @Override
-            public int compare(CourseBase courseBase, CourseBase t1) {
-                int weekdayCompare = Integer.compare(courseBase.getWeekday(), t1.getWeekday());
-                if (weekdayCompare == 0) {
-                    return Integer.compare(courseBase.getBeginNode(), t1.getBeginNode());
-                } else {
-                    return weekdayCompare;
-                }
+        l("initCourseItemView", "height:", mHeight, "width:", mWidth);
+        for (Map.Entry<CourseBase, View> entry : mCourseViewMap.entrySet()) {
+            if (entry.getValue() == null && mHeight != 0) {
+                l(entry.getKey().getText().replace("\n", ""), "   ", entry.getValue());
+                realAddCourseItemView(entry.getKey());
             }
-        });
-        for (CourseBase course : mCourseList) {
-            realAddCourseItemView(course);
         }
     }
 
     public <T extends ToCourse> void addCourse(T course) {
-        if (!mCourseList.contains(course.toCourseBase())) {
-            mCourseList.add(course.toCourseBase());
+        CourseBase base = course.toCourseBase();
+        if (mCourseViewMap.get(base) == null) {
             realAddCourseItemView(course.toCourseBase());
         }
     }
 
     public <T extends ToCourse> void addCourse(List<T> courses) {
-        for (T t : courses) {
-            addCourse(t);
+        for (T course : courses) {
+            CourseBase base = course.toCourseBase();
+            if (!mCourseViewMap.containsKey(base) || mCourseViewMap.get(base) == null) {
+                realAddCourseItemView(course.toCourseBase());
+            }
         }
     }
 
     /**
      * 需调用{@link #redraw()}, 才能显示正确课表
+     *
      * @param courses
      * @param <T>
      */
     public <T extends ToCourse> void setCourses(List<T> courses) {
-        mCourseList.clear();
-        removeAllViews();
+        mCourseViewMap.clear();
         for (T t : courses) {
-            mCourseList.add(t.toCourseBase());
+            mCourseViewMap.put(t.toCourseBase(), null);
         }
     }
 
     private void realAddCourseItemView(CourseBase course) {
-        l(course);
         View itemView = createItemView(course);
         LayoutParams params = new LayoutParams((int) (mColItemWidth + 1),
                 (int) (mRowItemHeight * course.getNodeCnt() + 1));
         params.leftMargin = (int) (((course.getWeekday() + indexOfOffset) % 7) * mColItemWidth + 0.5);
         params.topMargin = (int) ((course.getBeginNode() - 1) * mRowItemHeight + 0.5);
         itemView.setLayoutParams(params);
-        addView(itemView);
+        addView(course, itemView);
     }
 
     private View createItemView(final CourseBase course) {
@@ -209,7 +230,7 @@ public class CourseView extends FrameLayout {
             } else {
                 backgroundLayout.setBackgroundColor(ColorUtils.colorList[colorIndex]);
                 colorMap.put(course.getText(), ColorUtils.colorList[colorIndex]);
-                colorIndex = (colorIndex + 1)  % ColorUtils.colorList.length;
+                colorIndex = (colorIndex + 1) % ColorUtils.colorList.length;
             }
         } else {
             backgroundLayout.setBackgroundColor(course.getColor());
@@ -248,15 +269,19 @@ public class CourseView extends FrameLayout {
         this.onCourseLongClickListener = listener;
     }
 
-    public void clear() {
-        removeAllViews();
-        mCourseList.clear();
+    public void addView(CourseBase courseBase, View view) {
+        addView(view);
+        mCourseViewMap.put(courseBase, view);
     }
 
     /**
      * 修改界面设置需调用此方法重新绘制
      */
     public void redraw() {
+        removeAllViews();
+        for (CourseBase base : mCourseViewMap.keySet()) {
+            mCourseViewMap.put(base, null);
+        }
         initCourseItemView();
     }
 
@@ -300,10 +325,13 @@ public class CourseView extends FrameLayout {
         boolean onLongClick(View v, CourseBase course);
     }
 
-    private void l(Object ... msg) {
-        StringBuilder sb = new StringBuilder();
-        for (Object s: msg) {
-            sb.append(s);
+    private void l(Object... msg) {
+        String code = this.toString();
+        code = code.substring(code.indexOf("{") + 1, code.indexOf(" V.E"));
+        StringBuilder sb = new StringBuilder(code);
+        sb.append("    ");
+        for (Object s : msg) {
+            sb.append(s).append(" ");
         }
         Log.d("Syllabus", sb.toString());
     }
