@@ -36,7 +36,7 @@
         style="@style/TextView.Exam" />
 
     <TextView
-        android:id="@+id/tv_room"
+        android:id="@+id/et_address"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:minWidth="80dp"
@@ -50,8 +50,8 @@
         android:id="@+id/tv_seat"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:layout_toEndOf="@id/tv_room"
-        android:layout_alignTop="@id/tv_room"
+        android:layout_toEndOf="@id/et_address"
+        android:layout_alignTop="@id/et_address"
         android:drawablePadding="4dp"
         android:drawableStart="@drawable/ic_seat"
         style="@style/TextView.Exam"/>

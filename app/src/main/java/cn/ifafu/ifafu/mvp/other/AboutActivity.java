@@ -36,7 +36,7 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
 
         aboutAppSubName.setText(String.format(
                 Locale.getDefault(), getString(R.string.app_sub_name),
-                GlobalLib.GetLocalVersionName(this)));
+                GlobalLib.getLocalVersionName(this)));
 
         findViewById(R.id.gotoGroupAbout).setOnClickListener(this);
         findViewById(R.id.btn_goto_qq_group).setOnClickListener(this);

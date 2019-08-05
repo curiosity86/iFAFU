@@ -112,7 +112,7 @@
             android:src="@drawable/ic_loc" />
 
         <EditText
-            android:id="@+id/tv_room"
+            android:id="@+id/et_address"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="1dp"

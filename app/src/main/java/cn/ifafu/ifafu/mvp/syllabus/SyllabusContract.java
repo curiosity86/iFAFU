@@ -13,10 +13,19 @@ class SyllabusContract {
 
     interface Presenter extends IZFPresenter {
 
+
         /**
-         * 更新课程表
+         * 刷新课表。若数据库为空，则自动刷新
+         *
+         * @param refresh   是否强制刷新
+         * @param showToast 加载完是否显示Toast
          */
-        void updateSyllabus();
+        void updateSyllabus(boolean refresh, boolean showToast);
+
+        /**
+         * 删除课程
+         */
+        void onDelete(Course course);
     }
 
     interface Model extends IZFModel {
@@ -29,13 +38,20 @@ class SyllabusContract {
         int getRowCount();
 
         /**
-         * 从数据库获取课程
-         * @return List
+         * 从数据库获取所有课程
+         * @return List<Course>
          */
-        Observable<List<Course>> getAllCoursesFromDB();
+        List<Course> getAllCoursesFromDB();
 
         /**
-         * 获取课表网页信息
+         * 从数据库获取本地课程
+         * @return List
+         */
+        List<Course> getLocalCoursesFromDB();
+
+
+        /**
+         * 获取网络课表。若获取成功，则清除数据库网络课表，并保存
          * @return Html
          */
         Observable<List<Course>> getCoursesFromNet();
@@ -49,6 +65,8 @@ class SyllabusContract {
          * 删除数据库中的网络获取的课程
          */
         void clearOnlineCourses();
+
+        void deleteCourse(Course course);
     }
 
     interface View extends IView {

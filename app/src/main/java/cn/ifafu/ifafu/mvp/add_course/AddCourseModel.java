@@ -20,6 +20,11 @@ class AddCourseModel extends BaseModel implements AddCourseContract.Model {
     }
 
     @Override
+    public Course getCourseById(long id) {
+        return courseDao.load(id);
+    }
+
+    @Override
     public void save(Course course) {
         courseDao.insertOrReplace(course);
     }
@@ -27,6 +32,11 @@ class AddCourseModel extends BaseModel implements AddCourseContract.Model {
     @Override
     public void save(Collection<Course> courses) {
         courseDao.insertOrReplaceInTx(courses);
+    }
+
+    @Override
+    public void deleteById(long id) {
+        courseDao.deleteByKey(id);
     }
 
     @Override

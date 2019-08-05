@@ -12,10 +12,14 @@ public class RetrofitFactory {
     private static Map<String, Retrofit> retrofitMap = new HashMap<>();
 
     public static <T> T obtainService(Class<T> clazz, String baseUrl) {
-        return getRetrofit(baseUrl).create(clazz);
+        return getRetrofit(baseUrl, false).create(clazz);
     }
 
-    private static Retrofit getRetrofit(String baseUrl) {
+    public static <T> T obtainServiceTemp(Class<T> clazz, String baseUrl) {
+        return getRetrofit(baseUrl, true).create(clazz);
+    }
+
+    private static Retrofit getRetrofit(String baseUrl, boolean temp) {
         if (retrofitMap.containsKey(baseUrl)) {
             return retrofitMap.get(baseUrl);
         }
@@ -23,7 +27,9 @@ public class RetrofitFactory {
                 .baseUrl(baseUrl)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build();
-        retrofitMap.put(baseUrl, retrofit);
+        if (!temp) {
+            retrofitMap.put(baseUrl, retrofit);
+        }
         return retrofit;
     }
 

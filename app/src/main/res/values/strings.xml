@@ -3,14 +3,20 @@
     <string name="app_sub_name">For Android V%s</string>
 
     <string name="base_on_fafu">基于福建农林大学教务管理系统</string>
-    <string name="account">学号</string>
-    <string name="password">密码</string>
-    <string name="login_welcome">欢迎登录</string>
-    <string name="login">登录</string>
 
     <string name="about_1">基于福建农林大学教务管理系统</string>
     <string name="about_2">iFAFU官网: https://ifafu.cn</string>
     <string name="about_3">Design by Wooslen</string>
+
+    <!--LoginActivity-->
+    <string name="account">学号</string>
+    <string name="password">密码</string>
+    <string name="login_welcome">欢迎登录</string>
+    <string name="login">登录</string>
+    <string name="logging_in">登录中..</string>
+    <string name="login_successful">登录中..</string>
+    <string name="empty_account">账号不能为空！！</string>
+    <string name="empty_password">密码不能为空！！</string>
 
     <!--MainActivity-->
     <string name="back_again">再次按下返回键退出程序</string>
@@ -19,6 +25,7 @@
     <string name="syllabus">课程表</string>
     <string name="week_format">第%s周&#160;&#160;本周</string>
     <string name="week_format_not">第%s周&#160;&#160;非本周(长按返回本周)</string>
+    <string name="refresh_success">课表刷新成功</string>
 
     <!--AddCourseActivity-->
     <string name="add_course">添加课程</string>

@@ -17,7 +17,7 @@ import io.reactivex.ObservableTransformer;
 import io.reactivex.functions.Function;
 import okhttp3.ResponseBody;
 
-public class VerifyParser implements Function<ResponseBody, String> {
+public class VerifyParser implements ObservableTransformer<ResponseBody, String> {
 
     private BigDecimal[][] weight;
 
@@ -150,10 +150,14 @@ public class VerifyParser implements Function<ResponseBody, String> {
     }
 
     @Override
-    public String apply(ResponseBody responseBody) throws Exception {
-        if (weight == null) {
-            init(mContext);
-        }
-        return todo(BitmapUtil.bytesToBitmap(responseBody.bytes()));
+    public ObservableSource<String> apply(Observable<ResponseBody> upstream) {
+        return upstream.map(responseBody -> {
+            Log.d("Login", "初始化开始 验证码识别内部");
+            if (weight == null) {
+                init(mContext);
+            }
+            Log.d("Login", "初始化完成 验证码识别内部");
+            return todo(BitmapUtil.bytesToBitmap(responseBody.bytes()));
+        });
     }
 }

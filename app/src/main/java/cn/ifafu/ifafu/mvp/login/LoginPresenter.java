@@ -1,6 +1,7 @@
 package cn.ifafu.ifafu.mvp.login;
 
 import android.content.Intent;
+import android.util.Log;
 
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.app.Constant;
@@ -21,11 +22,8 @@ class LoginPresenter extends BaseZFPresenter<LoginContract.View, LoginContract.M
 
     private int schoolCode = Constant.FAFU;
 
-    private VerifyParser verifyParser;
-
     LoginPresenter(LoginContract.View view) {
         super(view, new LoginModel(view.getContext()));
-        verifyParser = new VerifyParser(view.getContext());
     }
 
     @Override
@@ -36,12 +34,17 @@ class LoginPresenter extends BaseZFPresenter<LoginContract.View, LoginContract.M
 
     @Override
     public void onLogin() {
+        Log.d(TAG, "start");
         String account = mView.getAccountText();
         String password = mView.getPasswordText();
+        if (!ensureFormat(account, password)) {
+            return;
+        }
         User user = new User(Constant.FAFU);
         user.setAccount(account);
         user.setPassword(password);
         user.setSchoolCode(schoolCode);
+        Log.d(TAG, "end");
         mCompDisposable.add(mModel.login(user)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -52,7 +55,7 @@ class LoginPresenter extends BaseZFPresenter<LoginContract.View, LoginContract.M
                         mView.showMessage(result.getMessage());
                     } else {
                         //登录成功
-                        mView.showMessage("登录成功");
+                        mView.showMessage(R.string.login_successful);
                         if (comeFromWhere == 0) {
                             user.setName(result.getBody());
                             mModel.saveUser(user);
@@ -65,6 +68,21 @@ class LoginPresenter extends BaseZFPresenter<LoginContract.View, LoginContract.M
                     }
                 }, this::onError)
         );
+    }
+
+    /**
+     * 确保账号密码格式正确
+     */
+    private boolean ensureFormat(String account, String password) {
+        if (account.isEmpty()) {
+            mView.showMessage(R.string.empty_account);
+            return false;
+        }
+        if (password.isEmpty()) {
+            mView.showMessage(R.string.empty_password);
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -82,12 +100,6 @@ class LoginPresenter extends BaseZFPresenter<LoginContract.View, LoginContract.M
             schoolCode = Constant.FAFU;
             mView.setBackgroundLogo(R.drawable.drawable_fafu);
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        verifyParser = null;
     }
 
 }

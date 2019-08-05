@@ -2,7 +2,10 @@ package cn.ifafu.ifafu.mvp.syllabus;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import cn.ifafu.ifafu.app.IFAFU;
 import cn.ifafu.ifafu.dao.CourseDao;
@@ -14,6 +17,8 @@ import cn.ifafu.ifafu.http.parser.SyllabusParser;
 import cn.ifafu.ifafu.http.service.ZhengFangService;
 import cn.ifafu.ifafu.mvp.base.BaseZFModel;
 import io.reactivex.Observable;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function;
 
 class SyllabusModel extends BaseZFModel implements SyllabusContract.Model {
 
@@ -45,16 +50,16 @@ class SyllabusModel extends BaseZFModel implements SyllabusContract.Model {
     }
 
     @Override
-    public Observable<List<Course>> getAllCoursesFromDB() {
-        return Observable.just(courseDao.queryBuilder()
+    public List<Course> getAllCoursesFromDB() {
+        return courseDao.queryBuilder()
                 .where(CourseDao.Properties.Account.eq(user.getAccount()))
-                .list());
+                .list();
     }
 
     @Override
     public Observable<List<Course>> getCoursesFromNet() {
         return zhengFang.getInfo("xskbcx.aspx", getReferer(user), user.getAccount(), user.getName(), "N121603")
-                .map(new SyllabusParser());
+                .compose(new SyllabusParser());
     }
 
     @Override
@@ -64,9 +69,23 @@ class SyllabusModel extends BaseZFModel implements SyllabusContract.Model {
 
     @Override
     public void clearOnlineCourses() {
-        List<Course> courses = courseDao.queryBuilder()
-                .where(CourseDao.Properties.Account.eq(user.getAccount()), CourseDao.Properties.Local.eq(false))
-                .list();
+        List<Course> courses = getCourses(false);
         courseDao.deleteInTx(courses);
+    }
+
+    @Override
+    public void deleteCourse(Course course) {
+        courseDao.delete(course);
+    }
+
+    @Override
+    public List<Course> getLocalCoursesFromDB() {
+        return getCourses(true);
+    }
+
+    private List<Course> getCourses(boolean local) {
+        return courseDao.queryBuilder()
+                .where(CourseDao.Properties.Account.eq(user.getAccount()), CourseDao.Properties.Local.eq(local))
+                .list();
     }
 }

@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,6 +131,17 @@ public class CourseView extends FrameLayout {
      * 把数组中的数据全部添加到界面
      */
     private void initCourseItemView() {
+        mCourseList.sort(new Comparator<CourseBase>() {
+            @Override
+            public int compare(CourseBase courseBase, CourseBase t1) {
+                int weekdayCompare = Integer.compare(courseBase.getWeekday(), t1.getWeekday());
+                if (weekdayCompare == 0) {
+                    return Integer.compare(courseBase.getBeginNode(), t1.getBeginNode());
+                } else {
+                    return weekdayCompare;
+                }
+            }
+        });
         for (CourseBase course : mCourseList) {
             realAddCourseItemView(course);
         }
@@ -191,11 +203,11 @@ public class CourseView extends FrameLayout {
         // background
         if (course.getColor() == -1) {
             if (colorMap.containsKey(course.getText())) {
-                int index = colorMap.get(course.getText());
-                backgroundLayout.setBackgroundColor(ColorUtils.colorList[index]);
+                backgroundLayout.setBackgroundColor(colorMap.get(course.getText()));
             } else {
                 backgroundLayout.setBackgroundColor(ColorUtils.colorList[colorIndex]);
-                colorMap.put(course.getText(), colorIndex++);
+                colorMap.put(course.getText(), ColorUtils.colorList[colorIndex]);
+                colorIndex = (colorIndex + 1)  % ColorUtils.colorList.length;
             }
         } else {
             backgroundLayout.setBackgroundColor(course.getColor());

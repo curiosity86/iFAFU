@@ -21,12 +21,13 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import cn.ifafu.ifafu.R;
-import cn.ifafu.ifafu.mvp.other.AboutActivity;
 import cn.ifafu.ifafu.data.Menu;
+import cn.ifafu.ifafu.data.Weather;
+import cn.ifafu.ifafu.mvp.other.AboutActivity;
 import cn.ifafu.ifafu.view.adapter.MenuAdapter;
 import cn.woolsen.android.mvp.BaseActivity;
-import cn.woolsen.android.view.listener.ZoomDrawerListener;
 import cn.woolsen.android.uitl.ButtonUtils;
+import cn.woolsen.android.view.listener.ZoomDrawerListener;
 
 public class MainActivity extends BaseActivity<MainContract.Presenter>
         implements MainContract.View, View.OnClickListener {
@@ -36,6 +37,9 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
     private LinearLayout mLeftMenuView;
     private RecyclerView mMenuRecycleView;
     private MenuAdapter mMenuAdapter;
+
+    private TextView weatherTV1;
+    private TextView weatherTV2;
 
     private ImageView mLeftMenuIconIV;
     private TextView mLeftMenuNameTV;
@@ -58,6 +62,8 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
 
     //初始化View
     private void initViewAndEvent() {
+        weatherTV1 = findViewById(R.id.tv_weather_1);
+        weatherTV2 = findViewById(R.id.tv_weather_2);
         mDrawerLayout = findViewById(R.id.dl_main);
         mLeftMenuView = findViewById(R.id.nav_main);
         mContentLayout = findViewById(R.id.ll_content);
@@ -147,4 +153,9 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
         }
     }
 
+    @Override
+    public void setWeatherText(Weather weather) {
+        weatherTV1.setText((weather.getNowTemp() + "℃"));
+        weatherTV2.setText(String.format("%s | %s", weather.getCityName(), weather.getWeather()));
+    }
 }

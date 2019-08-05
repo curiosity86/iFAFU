@@ -67,15 +67,15 @@ public class CourseDetailDialog extends Dialog {
                 DateUtils.getWeekdayCN(course.getWeekday()), course.getBeginNode(),
                 course.getBeginNode() + course.getNodeCnt() - 1));
         if (listener != null) {
-            deleteIb.setOnClickListener(v -> listener.onDeleteBtnClick(course));
-            editIb.setOnClickListener(v -> listener.onEditBtnClick(course));
+            deleteIb.setOnClickListener(v -> listener.onDeleteBtnClick(this, course));
+            editIb.setOnClickListener(v -> listener.onEditBtnClick(this, course));
         }
     }
 
     public interface OnClickListener {
-        void onDeleteBtnClick(Course course);
+        void onDeleteBtnClick(Dialog dialog, Course course);
 
-        void onEditBtnClick(Course course);
+        void onEditBtnClick(Dialog dialog, Course course);
     }
 
 }

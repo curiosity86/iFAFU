@@ -1,9 +1,12 @@
 package cn.ifafu.ifafu.mvp.main;
 
 import android.content.Intent;
+import android.util.Log;
 
 import cn.woolsen.android.mvp.BasePresenter;
 import cn.ifafu.ifafu.mvp.login.LoginActivity;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 class MainPresenter extends BasePresenter<MainContract.View, MainContract.Model>
         implements MainContract.Presenter {
@@ -16,11 +19,30 @@ class MainPresenter extends BasePresenter<MainContract.View, MainContract.Model>
     public void onStart() {
         //获取主页菜单
         mCompDisposable.add(mModel.getMenus()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(menus -> {
                     mView.setMenuAdapterData(menus);
                 }, this::onError));
         mView.setLeftMenuHeadName(mModel.getUserName());
         mView.setLeftMenuHeadIcon(mModel.getSchoolIcon());
+        mCompDisposable.add(mModel.getWeather("101230101")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(weather -> {
+                    Log.d(TAG, weather.toString());
+                }, this::onError));
+        update();
+    }
+
+    @Override
+    public void update() {
+        mCompDisposable.add(mModel.getWeather("101230101")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(weather -> {
+                    mView.setWeatherText(weather);
+                }, this::onError));
     }
 
     @Override

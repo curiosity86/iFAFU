@@ -16,30 +16,34 @@ class AddCourseContract {
          * @param op2 开始节数
          * @param op3 截至节数
          * @param layoutId
-         * @return 需要显示的文本
          */
-        String onWeekSelect(int op1, int op2, int op3, int layoutId);
+        void onWeekSelect(int op1, int op2, int op3, int layoutId);
 
         /**
          * @param op1 星期
          * @param op2 开始节数
          * @param op3 截至节数
          * @param layoutId
-         * @return 需要显示的文本
          */
-        String onTimeSelect(int op1, int op2, int op3, int layoutId);
+        void onTimeSelect(int op1, int op2, int op3, int layoutId);
 
         void onAdd();
 
         void onDelete(int layoutId);
 
         void onSave();
+
     }
 
     interface Model extends IModel {
+
+        Course getCourseById(long id);
+
         void save(Course course);
 
         void save(Collection<Course> courses);
+
+        void deleteById(long id);
 
         String getAccount();
     }
@@ -61,6 +65,15 @@ class AddCourseContract {
          */
         void setWeekOPVOptions(List<String> op1, List<String> op2, List<String> op3);
 
+        void setNameText(String name);
+
+        void setTeacherText(String teacher);
+
+        /**
+         * 编辑模式，不可添加时间段，删除时间段
+         */
+        void editMode();
+
         String getNameText();
 
         String getTeacherText();
@@ -71,5 +84,13 @@ class AddCourseContract {
          * @param  layoutId
          */
         void addTimeView(int layoutId);
+
+        void setAddressText(String address);
+
+        void setWeekOPVSelect(int op1, int op2, int op3);
+
+        void setTimeOPVSelect(int op1, int op2, int op3);
+
+
     }
 }

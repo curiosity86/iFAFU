@@ -1,6 +1,7 @@
 package cn.ifafu.ifafu.mvp.base;
 
 import android.content.Context;
+import android.util.Log;
 
 import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.app.IFAFU;
@@ -27,9 +28,9 @@ public class BaseZFModel extends BaseModel implements IZFModel {
     public Observable<Response<String>> login(User user) {
         VerifyParser verifyParser = new VerifyParser(mContext);
         return getVerifyResp(user)
-                .map(verifyParser) // 识别验证码
+                .compose(verifyParser) // 识别验证码
                 .flatMap(verify -> login(user, verify)) // 登录
-                .map(new LoginParser()) // 登录解析
+                .compose(new LoginParser()) // 登录解析
                 .flatMap(response -> { // 验证码错误抛异常用于重试
                     if (response.getCode() == Response.FAILURE && response.getMessage().contains("验证码")) {
                         return Observable.error(new VerifyErrorException(response.getMessage()));
@@ -46,8 +47,8 @@ public class BaseZFModel extends BaseModel implements IZFModel {
     }
 
     private Observable<ResponseBody> getVerifyResp(User user) {
-        ZhengFangService zhengFang = RetrofitFactory.obtainService(ZhengFangService.class, getBaseUrl(user));
         return Observable.create(emitter -> {
+            ZhengFangService zhengFang = RetrofitFactory.obtainService(ZhengFangService.class, getBaseUrl(user));
             emitter.onNext(zhengFang.getCaptcha().execute().body());
             emitter.onComplete();
         });

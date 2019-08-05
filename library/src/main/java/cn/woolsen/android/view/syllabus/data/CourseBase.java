@@ -23,7 +23,7 @@ public class CourseBase implements ToCourse {
     private Object other;
 
     public CourseBase() {
-        color = ColorUtils.getRandomColor();
+        color = -1;
     }
 
     public CourseBase(String text, @DayOfWeek int weekday, int beginNode, int nodeNum) {

@@ -62,7 +62,7 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ExamViewHolder
             nameTV = itemView.findViewById(R.id.tv_name);
             dateTV = itemView.findViewById(R.id.tv_date);
             timeTV = itemView.findViewById(R.id.tv_time);
-            roomTV = itemView.findViewById(R.id.tv_room);
+            roomTV = itemView.findViewById(R.id.et_address);
             seatTV = itemView.findViewById(R.id.tv_seat);
             lastTimeTV = itemView.findViewById(R.id.tv_last_time);
             timeUnitTV = itemView.findViewById(R.id.tv_time_unit);

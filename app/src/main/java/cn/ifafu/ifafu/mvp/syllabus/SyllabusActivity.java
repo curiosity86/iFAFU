@@ -1,6 +1,7 @@
 package cn.ifafu.ifafu.mvp.syllabus;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -21,9 +22,12 @@ import java.util.Locale;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.mvp.add_course.AddCourseActivity;
+import cn.ifafu.ifafu.mvp.login.LoginActivity;
 import cn.ifafu.ifafu.util.NumberUtils;
 import cn.ifafu.ifafu.view.adapter.CoursePageAdapter;
 import cn.ifafu.ifafu.view.dialog.CourseDetailDialog;
+import cn.ifafu.ifafu.view.dialog.LoadingDialog;
+import cn.ifafu.ifafu.view.dialog.ProgressDialog;
 import cn.woolsen.android.mvp.BaseActivity;
 
 public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
@@ -41,6 +45,8 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
 
     private int currentWeek = 1;
 
+    private ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +56,8 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
 
         mPresenter = new SyllabusPresenter(this);
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setText("加载中");
         findViewById(R.id.btn_add).setOnClickListener(this);
         findViewById(R.id.btn_back).setOnClickListener(this);
         findViewById(R.id.btn_refresh).setOnClickListener(this);
@@ -100,31 +108,37 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
     }
 
     @Override
-    public void onDeleteBtnClick(Course course) {
-        showMessage("onDelete => " + course.getName());
+    public void onDeleteBtnClick(Dialog dialog, Course course) {
+        mPresenter.onDelete(course);
+        dialog.dismiss();
     }
 
     @Override
-    public void onEditBtnClick(Course course) {
-        showMessage("onEditBtn => " + course.getName());
+    public void onEditBtnClick(Dialog dialog, Course course) {
+        Intent intent = new Intent(this, AddCourseActivity.class);
+        intent.putExtra("id", course.getId());
+        startActivityForResult(intent, 0x123);
+        dialog.dismiss();
     }
 
     @Override
     public void showLoading() {
+        progressDialog.show();
     }
 
     @Override
     public void hideLoading() {
+        progressDialog.cancel();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add:
-                startActivityForResult(new Intent(this, AddCourseActivity.class), 0);
+                startActivityForResult(new Intent(this, AddCourseActivity.class), 0x123);
                 break;
             case R.id.btn_refresh:
-                mPresenter.updateSyllabus();
+                mPresenter.updateSyllabus(true, true);
                 break;
             case R.id.btn_back:
                 finish();
@@ -134,14 +148,10 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Activity.RESULT_OK) {
-            if (data != null && data.hasExtra("course")) {
-                Course course = (Course) data.getBundleExtra("course").get("course");
-//                courseView.addCourse(course);
-//                courseView.redraw();
-            }
+        if (requestCode == 0x123 && resultCode == Activity.RESULT_OK) {
+            mPresenter.updateSyllabus(false, false);
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

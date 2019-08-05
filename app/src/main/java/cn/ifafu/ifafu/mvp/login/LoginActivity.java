@@ -10,6 +10,7 @@ import androidx.annotation.DrawableRes;
 import com.jaeger.library.StatusBarUtil;
 
 import cn.ifafu.ifafu.R;
+import cn.ifafu.ifafu.view.dialog.LoadingDialog;
 import cn.ifafu.ifafu.view.dialog.ProgressDialog;
 import cn.woolsen.android.mvp.BaseActivity;
 
@@ -43,6 +44,7 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter>
         findViewById(R.id.btn_login).setOnClickListener(this);
 
         progressDialog = new ProgressDialog(this);
+        progressDialog.setText(R.string.logging_in);
 
         mPresenter.onStart();
     }
@@ -61,7 +63,7 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter>
 
     @Override
     public void showLoading() {
-        progressDialog.show("登录中..");
+        progressDialog.show();
     }
 
     @Override

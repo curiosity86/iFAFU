@@ -60,11 +60,12 @@ public abstract class BaseActivity<P extends IPresenter> extends AppCompatActivi
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        hideLoading();
         if (mPresenter != null) {
             mPresenter.onDestroy();
             mPresenter = null;
         }
+        super.onDestroy();
     }
 
 }

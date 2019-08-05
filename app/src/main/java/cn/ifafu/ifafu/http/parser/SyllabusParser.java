@@ -20,10 +20,13 @@ import javax.security.auth.login.LoginException;
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.util.RegexUtils;
 import cn.woolsen.android.uitl.ColorUtils;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
 import io.reactivex.functions.Function;
 import okhttp3.ResponseBody;
 
-public class SyllabusParser implements Function<ResponseBody, List<Course>> {
+public class SyllabusParser implements ObservableTransformer<ResponseBody, List<Course>> {
 
     private String[] weekdayCN = {"周日", "周一", "周二", "周三", "周四", "周五", "周六"};
 
@@ -33,9 +36,6 @@ public class SyllabusParser implements Function<ResponseBody, List<Course>> {
     private boolean[][] locFlag = new boolean[20][8];
 
     private String account;
-
-    private int colorIndex = 0;
-    private Map<String, Integer> colorMap = new HashMap<>();
 
     public List<Course> parse(String html) {
         List<Course> courses = new ArrayList<>();
@@ -199,14 +199,15 @@ public class SyllabusParser implements Function<ResponseBody, List<Course>> {
     }
 
     @Override
-    public List<Course> apply(ResponseBody responseBody) throws Exception {
-        Log.d("Syllabus", "课表解析");
-        String html = responseBody.string();
-        if (html.contains("请登录")) {
-            Log.d("Syllabus", "需要重新登录");
-            throw new LoginException();
-        }
-        return parse(html);
+    public ObservableSource<List<Course>> apply(Observable<ResponseBody> upstream) {
+        return upstream.map(responseBody -> {
+            String html = responseBody.string();
+            if (html.contains("请登录")) {
+                Log.d("Syllabus", "需要重新登录");
+                throw new LoginException();
+            }
+            return parse(html);
+        });
     }
 
     private class Help {
