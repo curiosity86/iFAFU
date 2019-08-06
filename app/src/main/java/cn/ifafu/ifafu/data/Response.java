@@ -14,38 +14,42 @@ public class Response<T> {
 
     private T body;
 
-    public Response() {
-        message = "";
-    }
+    private String viewState;
 
-    public Response(int code, String message, T body) {
+    private String viewStateGenerator;
+
+    private Response(int code, T body, String message) {
         this.code = code;
         this.message = message;
         this.body = body;
+    }
+
+    private Response(int code, T body, String message, String viewState, String viewStateGenerator) {
+        this.code = code;
+        this.message = message;
+        this.body = body;
+        this.viewState = viewState;
+        this.viewStateGenerator = viewStateGenerator;
     }
 
     public int getCode() {
         return code;
     }
 
-    public void setCode(@HttpCode int code) {
-        this.code = code;
-    }
-
     public T getBody() {
         return body;
-    }
-
-    public void setBody(T body) {
-        this.body = body;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public String getViewState() {
+        return viewState;
+    }
+
+    public String getViewStateGenerator() {
+        return viewStateGenerator;
     }
 
     public boolean isSuccess() {
@@ -53,22 +57,27 @@ public class Response<T> {
     }
 
     public static <T> Response<T> success(T body) {
-        return new Response<>(SUCCESS, "", body);
+        return new Response<>(SUCCESS, body , null);
     }
 
-    public static <T> Response<T> success(String msg, T body) {
-        return new Response<>(SUCCESS, msg, body);
+    public static <T> Response<T> success(T body, String msg) {
+        return new Response<>(SUCCESS, body, msg);
+    }
+
+    public static <T> Response<T> success(String msg, T body, String viewState, String viewStateGenerator) {
+        return new Response<T>(SUCCESS, body, msg, viewState, viewStateGenerator);
     }
 
     public static <T> Response<T> failure(String msg) {
-        return new Response<>(FAILURE, msg, null);
+        return new Response<>(FAILURE, null, msg);
     }
 
     public static <T> Response<T> failure(String msg, T body) {
-        return new Response<>(FAILURE, msg, body);
+        return new Response<>(FAILURE, body, msg);
     }
 
     public static <T> Response<T> error(String msg) {
-        return new Response<>(ERROR, msg, null);
+        return new Response<>(ERROR, null, msg);
     }
+
 }

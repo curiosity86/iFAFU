@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.LongDef;
 
 import com.bumptech.glide.Glide;
 import com.jaeger.library.StatusBarUtil;
@@ -52,17 +53,19 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter>
         accountET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                Log.d(TAG, "beforeTextChanged => " + s);
 
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                Log.d(TAG, "onTextChanged => " + s);
+                mPresenter.checkAccount(s.toString());
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                Log.d(TAG, "afterTextChanged => " + s);
             }
         });
         findViewById(R.id.btn_login).setOnClickListener(this);

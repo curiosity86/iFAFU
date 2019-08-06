@@ -8,7 +8,7 @@
     <string name="login_welcome">欢迎登录</string>
     <string name="login">登录</string>
     <string name="logging_in">登录中..</string>
-    <string name="login_successful">登录中..</string>
+    <string name="login_successful">登录成功</string>
     <string name="empty_account">账号不能为空！！</string>
     <string name="empty_password">密码不能为空！！</string>
 

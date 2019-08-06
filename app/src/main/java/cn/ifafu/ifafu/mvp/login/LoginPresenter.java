@@ -43,6 +43,9 @@ class LoginPresenter extends BaseZFPresenter<LoginContract.View, LoginContract.M
             return;
         }
         User user = new User(Constant.FAFU);
+        if (account.charAt(0) == '0') {
+            account = account.substring(1);
+        }
         user.setAccount(account);
         user.setPassword(password);
         user.setSchoolCode(schoolCode);
@@ -90,12 +93,10 @@ class LoginPresenter extends BaseZFPresenter<LoginContract.View, LoginContract.M
     @Override
     public void checkAccount(String account) {
         if (account.isEmpty() || account.length() < 9) return;
-        if (account.charAt(0) == '0' || account.length() == 9) {
-            account = account.substring(1);
-            mView.setAccountText(account);
+        if (schoolCode != Constant.FAFU_JS && account.charAt(0) == '0' || account.length() == 9) {
             schoolCode = Constant.FAFU_JS;
             mView.setBackgroundLogo(R.drawable.drawable_fafu_js);
-        } else {
+        } else if (schoolCode != Constant.FAFU) {
             schoolCode = Constant.FAFU;
             mView.setBackgroundLogo(R.drawable.drawable_fafu);
         }

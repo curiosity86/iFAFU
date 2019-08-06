@@ -10,14 +10,18 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 
 public interface ZhengFangService {
 
     @GET("xs_main.aspx")
-    Call<ResponseBody> defaultHtml(@Query("xh") String xh);
+    Call<ResponseBody> mainHtml(@Query("xh") String xh);
 
     @GET("CheckCode.aspx")
     Call<ResponseBody> getCaptcha();
+
+    @GET
+    Call<ResponseBody> loginHtml(@Url String url);
 
     @POST("default2.aspx")
     @FormUrlEncoded

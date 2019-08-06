@@ -40,6 +40,18 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
 
     private String dateOfFirstStudyDay = "2019-09-01";
 
+    /**
+     * 我也不知道为什么会有这个变量，但是没有它又不行。
+     * 没有它的话，5.1的系统第一次加载第一页位置会出错。
+     * 我也不知道这是为什么，可能是我课表绘制原因。
+     * 但我不知道该如何解决这个问题。
+     * 希望有人能知道为什么告诉我并帮我解决它。
+     *
+     * 如果我删除它和{@link CourseView#redraw()}课表可以正常显示。
+     * 但是这会导致我删除课程后，无法及时更新view
+     */
+    private boolean firstUnknown = false;
+
     public CoursePageAdapter(Context context) {
         mContext = context;
     }
@@ -66,6 +78,13 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
         });
         if (mCourseList != null && position < mCourseList.length && mCourseList[position] != null) {
             holder.courseView.setCourses(mCourseList[position]);
+            l(holder.courseView, "onBindViewHolder setCourses " + firstUnknown);
+            if (firstUnknown) {
+                l(holder.courseView, "onBindViewHolder redraw");
+                holder.courseView.redraw();
+            } else {
+                firstUnknown = true;
+            }
         }
         holder.dateView.setFirstDayOfWeek(firstDayOfWeek);
         holder.dateView.setDateTexts(DateUtils.getWeekDates(dateOfFirstStudyDay, position, firstDayOfWeek, "MM-dd"));

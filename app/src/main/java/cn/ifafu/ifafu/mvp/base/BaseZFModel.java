@@ -2,8 +2,6 @@ package cn.ifafu.ifafu.mvp.base;
 
 import android.content.Context;
 
-import java.io.IOException;
-
 import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.app.IFAFU;
 import cn.ifafu.ifafu.data.Response;
@@ -53,7 +51,7 @@ public class BaseZFModel extends BaseModel implements IZFModel {
         return Observable
                 .<Boolean>create(emitter -> {
                     ZhengFangService zhengFang = RetrofitFactory.obtainService(ZhengFangService.class, getBaseUrl(user));
-                    ResponseBody body = zhengFang.defaultHtml(user.getAccount()).execute().body();
+                    ResponseBody body = zhengFang.mainHtml(user.getAccount()).execute().body();
                     if (body == null) {
                         emitter.onNext(false);
                     } else {
@@ -70,6 +68,17 @@ public class BaseZFModel extends BaseModel implements IZFModel {
             emitter.onNext(zhengFang.getCaptcha().execute().body());
             emitter.onComplete();
         });
+    }
+
+    private String getLoginReferer(User user) {
+        switch (user.getSchoolCode()) {
+            case Constant.FAFU:
+                return Constant.URL_FAFU + user.getToken() + "default.aspx";
+            case Constant.FAFU_JS:
+                return Constant.URL_FAFU_JS;
+            default:
+                return "";
+        }
     }
 
     protected String getReferer(User user) {

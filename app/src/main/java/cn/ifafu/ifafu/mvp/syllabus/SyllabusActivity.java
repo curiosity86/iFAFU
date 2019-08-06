@@ -3,6 +3,7 @@ package cn.ifafu.ifafu.mvp.syllabus;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.gyf.immersionbar.ImmersionBar;
 import com.jaeger.library.StatusBarUtil;
 
 import java.text.SimpleDateFormat;
@@ -49,7 +51,12 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_syllabus);
 //        StatusBarUtil.setTransparent(this);
-        StatusBarUtil.setLightMode(this);
+//        StatusBarUtil.setLightMode(this);
+        ImmersionBar.with(this)
+                .statusBarColor(R.color.white)
+                .statusBarDarkFont(true)
+                .fitsSystemWindows(true)
+                .init();
 
         mPresenter = new SyllabusPresenter(this);
 
