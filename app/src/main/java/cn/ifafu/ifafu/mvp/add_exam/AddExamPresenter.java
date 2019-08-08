@@ -3,9 +3,10 @@ package cn.ifafu.ifafu.mvp.add_exam;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.data.entity.Exam;
-import cn.woolsen.android.mvp.BasePresenter;
-import cn.woolsen.android.uitl.RxJavaUtils;
-import cn.woolsen.android.uitl.SPUtils;
+import cn.ifafu.ifafu.mvp.base.BasePresenter;
+import cn.ifafu.ifafu.util.RxUtils;
+import cn.ifafu.ifafu.util.SPUtils;
+import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
 
 public class AddExamPresenter extends BasePresenter<AddExamContract.View, AddExamContract.Model> implements AddExamContract.Presenter {
@@ -16,7 +17,7 @@ public class AddExamPresenter extends BasePresenter<AddExamContract.View, AddExa
 
     @Override
     public void onSave() {
-        mCompDisposable.add(RxJavaUtils
+        mCompDisposable.add(Observable
                 .create((ObservableOnSubscribe<Integer>) emitter -> {
                     String name = mView.getNameText();
                     if (name.isEmpty()) {
@@ -44,6 +45,7 @@ public class AddExamPresenter extends BasePresenter<AddExamContract.View, AddExa
                     emitter.onNext(0);
                     emitter.onComplete();
                 })
+                .compose(RxUtils.ioToMainScheduler())
                 .subscribe(i -> {
                     if (i == 0){
                         mView.showMessage("保存成功");

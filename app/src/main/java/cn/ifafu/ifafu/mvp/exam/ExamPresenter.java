@@ -1,6 +1,6 @@
 package cn.ifafu.ifafu.mvp.exam;
 
-import cn.woolsen.android.mvp.BasePresenter;
+import cn.ifafu.ifafu.mvp.base.BasePresenter;
 
 public class ExamPresenter extends BasePresenter<ExamContract.View, ExamContract.Model>
         implements ExamContract.Presenter {

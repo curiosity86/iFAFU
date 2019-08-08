@@ -1,23 +1,14 @@
 package cn.ifafu.ifafu.mvp.syllabus;
 
-import android.util.Log;
-
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Observer;
 
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.mvp.base.BaseZFPresenter;
-import cn.woolsen.android.uitl.DateUtils;
-import cn.woolsen.android.uitl.RxJavaUtils;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import kotlin.Lazy;
 
 class SyllabusPresenter extends BaseZFPresenter<SyllabusContract.View, SyllabusContract.Model>
         implements SyllabusContract.Presenter {
@@ -67,7 +58,6 @@ class SyllabusPresenter extends BaseZFPresenter<SyllabusContract.View, SyllabusC
                     }
                     mView.setSyllabusDate(list);
                     mView.redrawSyllabus();
-//                    mView.hideLoading();
                 }, this::onError)
         );
     }

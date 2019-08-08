@@ -6,11 +6,10 @@ import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.app.IFAFU;
 import cn.ifafu.ifafu.data.Response;
 import cn.ifafu.ifafu.data.entity.User;
-import cn.ifafu.ifafu.http.RetrofitFactory;
+import cn.ifafu.ifafu.http.RetrofitManager;
 import cn.ifafu.ifafu.http.parser.LoginParser;
 import cn.ifafu.ifafu.http.service.ZhengFangService;
 import cn.ifafu.ifafu.http.parser.VerifyParser;
-import cn.woolsen.android.mvp.BaseModel;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
@@ -41,7 +40,7 @@ public class BaseZFModel extends BaseModel implements IZFModel {
     }
 
     private Observable<ResponseBody> login(User user, String verify) {
-        ZhengFangService zhengFang = RetrofitFactory.obtainService(ZhengFangService.class, getBaseUrl(user));
+        ZhengFangService zhengFang = RetrofitManager.INSTANCE.obtainService(ZhengFangService.class, getBaseUrl(user));
         return zhengFang.login(user.getAccount(), user.getPassword(), verify,
                 "", "", "", "%D1%A7%C9%FA");
     }
@@ -50,7 +49,7 @@ public class BaseZFModel extends BaseModel implements IZFModel {
     public Observable<Boolean> isTokenAlive(User user) {
         return Observable
                 .<Boolean>create(emitter -> {
-                    ZhengFangService zhengFang = RetrofitFactory.obtainService(ZhengFangService.class, getBaseUrl(user));
+                    ZhengFangService zhengFang = RetrofitManager.INSTANCE.obtainService(ZhengFangService.class, getBaseUrl(user));
                     ResponseBody body = zhengFang.mainHtml(user.getAccount()).execute().body();
                     if (body == null) {
                         emitter.onNext(false);
@@ -64,7 +63,7 @@ public class BaseZFModel extends BaseModel implements IZFModel {
 
     private Observable<ResponseBody> getVerifyResp(User user) {
         return Observable.create(emitter -> {
-            ZhengFangService zhengFang = RetrofitFactory.obtainService(ZhengFangService.class, getBaseUrl(user));
+            ZhengFangService zhengFang = RetrofitManager.INSTANCE.obtainService(ZhengFangService.class, getBaseUrl(user));
             emitter.onNext(zhengFang.getCaptcha().execute().body());
             emitter.onComplete();
         });
@@ -73,9 +72,9 @@ public class BaseZFModel extends BaseModel implements IZFModel {
     private String getLoginReferer(User user) {
         switch (user.getSchoolCode()) {
             case Constant.FAFU:
-                return Constant.URL_FAFU + user.getToken() + "default.aspx";
+                return Constant.URL_FAFU + user.getToken() + "default2.aspx";
             case Constant.FAFU_JS:
-                return Constant.URL_FAFU_JS;
+                return Constant.URL_FAFU_JS + "default.aspx";
             default:
                 return "";
         }

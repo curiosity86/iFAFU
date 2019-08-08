@@ -6,10 +6,8 @@ import cn.ifafu.ifafu.data.entity.User;
 import cn.ifafu.ifafu.data.Response;
 import cn.ifafu.ifafu.mvp.base.IZFModel;
 import cn.ifafu.ifafu.mvp.base.IZFPresenter;
-import cn.woolsen.android.mvp.i.IView;
+import cn.ifafu.ifafu.mvp.base.i.IView;
 import io.reactivex.Observable;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
 
 class LoginContract {
 

@@ -2,11 +2,9 @@ package cn.ifafu.ifafu.mvp.base;
 
 import android.os.NetworkOnMainThreadException;
 
-import java.io.IOException;
-
 import cn.ifafu.ifafu.data.Response;
 import cn.ifafu.ifafu.data.entity.User;
-import cn.woolsen.android.mvp.i.IModel;
+import cn.ifafu.ifafu.mvp.base.i.IModel;
 import io.reactivex.Observable;
 
 public interface IZFModel extends IModel {

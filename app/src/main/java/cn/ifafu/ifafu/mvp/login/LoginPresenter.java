@@ -5,14 +5,9 @@ import android.util.Log;
 
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.app.Constant;
-import cn.ifafu.ifafu.data.Response;
 import cn.ifafu.ifafu.data.entity.User;
-import cn.ifafu.ifafu.http.parser.LoginParser;
-import cn.ifafu.ifafu.http.parser.VerifyParser;
 import cn.ifafu.ifafu.mvp.base.BaseZFPresenter;
 import cn.ifafu.ifafu.mvp.main.MainActivity;
-import cn.woolsen.android.uitl.RxJavaUtils;
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 

@@ -5,7 +5,7 @@ import android.content.Context;
 import cn.ifafu.ifafu.dao.ExamDao;
 import cn.ifafu.ifafu.data.dao.DaoManager;
 import cn.ifafu.ifafu.data.entity.Exam;
-import cn.woolsen.android.mvp.BaseModel;
+import cn.ifafu.ifafu.mvp.base.BaseModel;
 
 class AddExamModel extends BaseModel implements AddExamContract.Model {
 

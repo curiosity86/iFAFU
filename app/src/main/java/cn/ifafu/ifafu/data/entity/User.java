@@ -8,7 +8,7 @@ import org.greenrobot.greendao.annotation.Transient;
 import java.io.Serializable;
 import java.util.Random;
 
-import cn.ifafu.ifafu.app.Constant.SchoolCode;
+import cn.ifafu.ifafu.data.announce.SchoolCode;
 
 @Entity
 public class User implements Serializable {

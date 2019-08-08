@@ -10,9 +10,9 @@ import org.greenrobot.greendao.annotation.Id;
 import java.util.Objects;
 
 import cn.ifafu.ifafu.data.announce.WeekType;
-import cn.woolsen.android.view.syllabus.data.CourseBase;
-import cn.woolsen.android.view.syllabus.data.DayOfWeek;
-import cn.woolsen.android.view.syllabus.data.ToCourse;
+import cn.ifafu.ifafu.view.syllabus.data.CourseBase;
+import cn.ifafu.ifafu.view.syllabus.data.DayOfWeek;
+import cn.ifafu.ifafu.view.syllabus.data.ToCourse;
 
 @Entity
 public class Course implements Cloneable, ToCourse {

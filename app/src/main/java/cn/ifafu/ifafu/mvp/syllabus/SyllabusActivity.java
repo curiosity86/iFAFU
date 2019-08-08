@@ -3,17 +3,14 @@ package cn.ifafu.ifafu.mvp.syllabus;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.gyf.immersionbar.ImmersionBar;
-import com.jaeger.library.StatusBarUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,7 +24,7 @@ import cn.ifafu.ifafu.util.NumberUtils;
 import cn.ifafu.ifafu.view.adapter.CoursePageAdapter;
 import cn.ifafu.ifafu.view.dialog.CourseDetailDialog;
 import cn.ifafu.ifafu.view.dialog.ProgressDialog;
-import cn.woolsen.android.mvp.BaseActivity;
+import cn.ifafu.ifafu.mvp.base.BaseActivity;
 
 public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
         implements SyllabusContract.View, CourseDetailDialog.OnClickListener, View.OnClickListener, View.OnLongClickListener {

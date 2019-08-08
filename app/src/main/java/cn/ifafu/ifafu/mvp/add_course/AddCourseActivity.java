@@ -16,16 +16,14 @@ import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.jaeger.library.StatusBarUtil;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.util.GlobalLib;
-import cn.woolsen.android.mvp.BaseActivity;
-import cn.woolsen.android.uitl.ColorUtils;
+import cn.ifafu.ifafu.mvp.base.BaseActivity;
+import cn.ifafu.ifafu.util.ColorUtils;
 
 public class AddCourseActivity extends BaseActivity<AddCourseContract.Presenter>
         implements AddCourseContract.View, View.OnClickListener {

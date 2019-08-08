@@ -2,23 +2,18 @@ package cn.ifafu.ifafu.mvp.syllabus;
 
 import android.content.Context;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import cn.ifafu.ifafu.app.IFAFU;
 import cn.ifafu.ifafu.dao.CourseDao;
 import cn.ifafu.ifafu.data.dao.DaoManager;
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.data.entity.User;
-import cn.ifafu.ifafu.http.RetrofitFactory;
+import cn.ifafu.ifafu.http.RetrofitManager;
 import cn.ifafu.ifafu.http.parser.SyllabusParser;
 import cn.ifafu.ifafu.http.service.ZhengFangService;
 import cn.ifafu.ifafu.mvp.base.BaseZFModel;
 import io.reactivex.Observable;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.functions.Function;
 
 class SyllabusModel extends BaseZFModel implements SyllabusContract.Model {
 
@@ -36,7 +31,7 @@ class SyllabusModel extends BaseZFModel implements SyllabusContract.Model {
 
     SyllabusModel(Context context) {
         super(context);
-        zhengFang = RetrofitFactory.obtainService(ZhengFangService.class, getBaseUrl(user));
+        zhengFang = RetrofitManager.INSTANCE.obtainService(ZhengFangService.class, getBaseUrl(user));
     }
 
     @Override

@@ -11,18 +11,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Course;
-import cn.woolsen.android.uitl.DateUtils;
-import cn.woolsen.android.view.syllabus.CourseView;
-import cn.woolsen.android.view.syllabus.DateView;
-import cn.woolsen.android.view.syllabus.SideView;
-import cn.woolsen.android.view.syllabus.data.DayOfWeek;
+import cn.ifafu.ifafu.util.DateUtils;
+import cn.ifafu.ifafu.view.syllabus.CourseView;
+import cn.ifafu.ifafu.view.syllabus.DateView;
+import cn.ifafu.ifafu.view.syllabus.SideView;
+import cn.ifafu.ifafu.view.syllabus.data.DayOfWeek;
 
 public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.ViewPagerViewHolder> {
 
@@ -30,7 +28,7 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
 
     private List<Course>[] mCourseList;
 
-    private String[] beginTimes;
+    private String[] mBeginTimes;
 
     private Context mContext;
 
@@ -40,17 +38,7 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
 
     private String dateOfFirstStudyDay = "2019-09-01";
 
-    /**
-     * 我也不知道为什么会有这个变量，但是没有它又不行。
-     * 没有它的话，5.1的系统第一次加载第一页位置会出错。
-     * 我也不知道这是为什么，可能是我课表绘制原因。
-     * 但我不知道该如何解决这个问题。
-     * 希望有人能知道为什么告诉我并帮我解决它。
-     *
-     * 如果我删除它和{@link CourseView#redraw()}课表可以正常显示。
-     * 但是这会导致我删除课程后，无法及时更新view
-     */
-    private boolean firstUnknown = false;
+    //TODO 在5.1系统上，CourseView在绘制时会测量两次，在测量第二次时高度会出错，目前未能发现是啥原因
 
     public CoursePageAdapter(Context context) {
         mContext = context;
@@ -59,16 +47,16 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
     @NonNull
     @Override
     public ViewPagerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.d("Syllabus", "onCreateViewHolder");
+        l("onCreateViewHolder");
         View view = LayoutInflater.from(mContext).inflate(R.layout.fragment_syllabus, parent, false);
         return new ViewPagerViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewPagerViewHolder holder, int position) {
-        l(holder.courseView, "onBindViewHolder start");
-        if (beginTimes != null) {
-            holder.sideView.setBeginTimeTexts(beginTimes);
+        l("onBindViewHolder");
+        if (mBeginTimes != null) {
+            holder.sideView.setBeginTimeTexts(mBeginTimes);
         }
         holder.courseView.setFirstDayOfWeek(firstDayOfWeek);
         holder.courseView.setOnCourseClickListener((v, course) -> {
@@ -78,24 +66,10 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
         });
         if (mCourseList != null && position < mCourseList.length && mCourseList[position] != null) {
             holder.courseView.setCourses(mCourseList[position]);
-            l(holder.courseView, "onBindViewHolder setCourses " + firstUnknown);
-            if (firstUnknown) {
-                l(holder.courseView, "onBindViewHolder redraw");
-                holder.courseView.redraw();
-            } else {
-                firstUnknown = true;
-            }
+            holder.courseView.redraw();
         }
         holder.dateView.setFirstDayOfWeek(firstDayOfWeek);
         holder.dateView.setDateTexts(DateUtils.getWeekDates(dateOfFirstStudyDay, position, firstDayOfWeek, "MM-dd"));
-        l(holder.courseView, "onBindViewHolder end");
-        RecyclerView rv = new RecyclerView(mContext);
-        rv.setLayoutManager(new RecyclerView.LayoutManager() {
-            @Override
-            public RecyclerView.LayoutParams generateDefaultLayoutParams() {
-                return null;
-            }
-        });
     }
 
     @Override
@@ -116,10 +90,10 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
     /**
      * 修改后需调用{@link #notifyDataSetChanged()}，才会更新布局
      *
-     * @param times
+     * @param times times
      */
     public void setSideViewBeginTime(String[] times) {
-        beginTimes = times;
+        mBeginTimes = times;
     }
 
     /**
@@ -182,6 +156,15 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
         String code = view.toString();
         code = code.substring(code.indexOf("{") + 1, code.indexOf(" V.E"));
         StringBuilder sb = new StringBuilder(code);
+        sb.append("    ");
+        for (Object s : msg) {
+            sb.append(s).append(" ");
+        }
+        Log.d("Syllabus", sb.toString());
+    }
+
+    private void l(Object... msg) {
+        StringBuilder sb = new StringBuilder();
         sb.append("    ");
         for (Object s : msg) {
             sb.append(s).append(" ");

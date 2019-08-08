@@ -1,16 +1,12 @@
 package cn.ifafu.ifafu;
 
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.JSONPObject;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Scanner;
 
-import cn.ifafu.ifafu.http.RetrofitFactory;
+import cn.ifafu.ifafu.http.RetrofitManager;
 import cn.ifafu.ifafu.http.service.WeatherService;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
@@ -18,14 +14,32 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ExampleUnitTest {
 
-    Scheduler mainThread = Schedulers.newThread();
-    Scheduler ioThread = Schedulers.newThread();
+    Scheduler mainThread = Schedulers.single();
+    Scheduler ioThread = Schedulers.single();
 
     @Test
     public void test() {
-        ChineseNumbers.englishNumberToChinese("123");
 
-
+        Observable
+                .<String>create(emitter -> {
+                    l("create");
+                    emitter.onNext("111");
+                    emitter.onComplete();
+                })
+                .subscribeOn(ioThread)
+                .observeOn(mainThread)
+                .doOnNext(s -> {
+                    l("doOnNext: " + s);
+                })
+                .map(s -> {
+                    l("map： " + s);
+                    return s + "  map";
+                })
+                .subscribeOn(ioThread)
+                .observeOn(mainThread)
+                .subscribe(s -> {
+                    l("onNext: " + s);
+                }, Throwable::printStackTrace);
 
 
         Scanner in = new Scanner(System.in);
@@ -34,7 +48,7 @@ public class ExampleUnitTest {
 
     public Observable<JSONObject> getWeather(String cityCode) {
         return Observable.create(emitter -> {
-            WeatherService service = RetrofitFactory.obtainServiceTemp(WeatherService.class, "http://www.weather.com.cn");
+            WeatherService service = RetrofitManager.INSTANCE.obtainService(WeatherService.class, "http://www.weather.com.cn");
             String url = "http://d1.weather.com.cn/sk_2d/" + cityCode + ".html";
             String referer = "http://www.weather.com.cn/weather1d/" + cityCode + ".shtml";
             String jsonStr = service.getWeather(url, referer).execute().body().string();

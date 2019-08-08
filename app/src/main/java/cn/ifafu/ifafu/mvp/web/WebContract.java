@@ -2,7 +2,7 @@ package cn.ifafu.ifafu.mvp.web;
 
 import cn.ifafu.ifafu.mvp.base.IZFModel;
 import cn.ifafu.ifafu.mvp.base.IZFPresenter;
-import cn.woolsen.android.mvp.i.IView;
+import cn.ifafu.ifafu.mvp.base.i.IView;
 
 class WebContract {
     interface Presenter extends IZFPresenter {

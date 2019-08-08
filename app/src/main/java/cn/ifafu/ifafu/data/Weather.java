@@ -9,7 +9,6 @@ public class Weather {
     private String weather;
 
     public Weather() {
-
     }
 
     public Weather(String cityName) {

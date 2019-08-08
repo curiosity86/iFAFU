@@ -7,7 +7,7 @@ import org.greenrobot.greendao.database.Database;
 import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.dao.DaoMaster;
 import cn.ifafu.ifafu.dao.DaoSession;
-import cn.woolsen.android.mvp.BaseApplication;
+import cn.ifafu.ifafu.mvp.base.BaseApplication;
 
 public class DaoManager {
 

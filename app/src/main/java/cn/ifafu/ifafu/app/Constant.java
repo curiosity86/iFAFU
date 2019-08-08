@@ -1,20 +1,6 @@
 package cn.ifafu.ifafu.app;
 
 
-import androidx.annotation.IntDef;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import cn.ifafu.ifafu.data.SchoolApi;
-
-
 public class Constant {
     public static final String DB_NAME  = "ifafu";
 
@@ -35,8 +21,5 @@ public class Constant {
     public static final int FAFU = 0x00010001;
     public static final int FAFU_JS = 0x00010002;
 
-    @IntDef(value = {Constant.FAFU, Constant.FAFU_JS})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface SchoolCode{}
 
 }

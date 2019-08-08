@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+def appName = "iFAFU"
 
 android {
     //noinspection GradleCompatible
@@ -43,6 +47,12 @@ android {
         }
     }
 
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = appName + defaultConfig.versionName + ".apk"
+        }
+    }
+
     greendao {
         //版本号，升级时可配置
         schemaVersion 5
@@ -55,7 +65,7 @@ android {
         // but continue the build even when errors are found:
         abortOnError false
     }
-    
+
     compileOptions {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
@@ -69,40 +79,33 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation "androidx.viewpager2:viewpager2:1.0.0-beta02"
     implementation 'com.google.android.material:material:1.1.0-alpha09'
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.2.0-alpha03'
+    // 选择器
     implementation 'com.contrarywind:Android-PickerView:4.1.7'
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
-    implementation 'com.gyf.immersionbar:immersionbar:3.0.0-beta05'
-
+    // 刷新库
     implementation 'com.github.ybq:Android-SpinKit:1.2.0'
-
-    implementation project(path: ':library')
-
     // bugly
     implementation 'com.tencent.bugly:crashreport:2.8.6.0'
-
 //    // 权限管理
 //    implementation 'com.github.jokermonn:permissions4m:2.1.2-lib'
 //    annotationProcessor 'com.github.jokermonn:permissions4m:2.1.2-processor'
 //    implementation "org.permissionsdispatcher:permissionsdispatcher:4.5.0"
 //    annotationProcessor "org.permissionsdispatcher:permissionsdispatcher-processor:4.5.0"
-
     // 沉浸状态栏
     implementation 'com.jaeger.statusbarutil:library:1.5.1'
-
+    implementation 'com.gyf.immersionbar:immersionbar:3.0.0-beta05'
     // 数据库框架
     implementation 'org.greenrobot:greendao:3.2.2'
-
     // RxJava
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.10'
-
     // Http框架
     implementation 'com.squareup.retrofit2:retrofit:2.6.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.1'
     implementation 'org.jsoup:jsoup:1.12.1'
     implementation 'com.alibaba:fastjson:1.2.58'
-
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'

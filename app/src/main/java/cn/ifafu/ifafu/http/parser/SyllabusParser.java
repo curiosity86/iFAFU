@@ -9,9 +9,7 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,11 +17,9 @@ import javax.security.auth.login.LoginException;
 
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.util.RegexUtils;
-import cn.woolsen.android.uitl.ColorUtils;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
-import io.reactivex.functions.Function;
 import okhttp3.ResponseBody;
 
 public class SyllabusParser implements ObservableTransformer<ResponseBody, List<Course>> {

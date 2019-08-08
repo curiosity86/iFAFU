@@ -2,8 +2,8 @@ package cn.ifafu.ifafu.app;
 
 import cn.ifafu.ifafu.data.dao.DaoManager;
 import cn.ifafu.ifafu.data.entity.User;
-import cn.woolsen.android.mvp.BaseApplication;
-import cn.woolsen.android.uitl.SPUtils;
+import cn.ifafu.ifafu.mvp.base.BaseApplication;
+import cn.ifafu.ifafu.util.SPUtils;
 
 public class IFAFU extends BaseApplication {
 

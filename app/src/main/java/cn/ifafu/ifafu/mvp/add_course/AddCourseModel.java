@@ -8,8 +8,8 @@ import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.dao.CourseDao;
 import cn.ifafu.ifafu.data.dao.DaoManager;
 import cn.ifafu.ifafu.data.entity.Course;
-import cn.woolsen.android.mvp.BaseModel;
-import cn.woolsen.android.uitl.SPUtils;
+import cn.ifafu.ifafu.mvp.base.BaseModel;
+import cn.ifafu.ifafu.util.SPUtils;
 
 class AddCourseModel extends BaseModel implements AddCourseContract.Model {
 

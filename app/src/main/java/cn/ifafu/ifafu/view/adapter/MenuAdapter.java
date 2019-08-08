@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.ifafu.ifafu.R;
@@ -20,6 +21,11 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
     private List<Menu> mMenuList;
     private Context mContext;
     private OnClickListener mItemClickListener;
+
+    public MenuAdapter(Context context) {
+        mContext = context;
+        mMenuList = new ArrayList<>();
+    }
 
     public MenuAdapter(Context context, List<Menu> menuList) {
         mMenuList = menuList;
@@ -60,7 +66,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 
     public void setMenuList(List<Menu> menus) {
         mMenuList = menus;
-        notifyDataSetChanged();
     }
 
     public interface OnClickListener {

@@ -1,6 +1,9 @@
 <resources>
-    <string name="app_name">iFAFU</string>
+    <string name="app_name">iFAFU内测版</string>
     <string name="base_on_fafu">基于福建农林大学教务管理系统</string>
+
+    <!--MVP Base-->
+    <string name="net_error">网络错误，请检查网络设置</string>
 
     <!--LoginActivity-->
     <string name="account">学号</string>

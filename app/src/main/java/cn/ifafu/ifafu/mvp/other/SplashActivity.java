@@ -11,7 +11,7 @@ import cn.ifafu.ifafu.app.IFAFU;
 import cn.ifafu.ifafu.data.entity.User;
 import cn.ifafu.ifafu.mvp.login.LoginActivity;
 import cn.ifafu.ifafu.mvp.main.MainActivity;
-import cn.woolsen.android.mvp.BaseActivity;
+import cn.ifafu.ifafu.mvp.base.BaseActivity;
 
 public class SplashActivity extends BaseActivity {
 

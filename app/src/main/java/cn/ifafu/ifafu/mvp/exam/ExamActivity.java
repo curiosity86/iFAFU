@@ -15,7 +15,7 @@ import java.util.List;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Exam;
 import cn.ifafu.ifafu.view.adapter.ExamAdapter;
-import cn.woolsen.android.mvp.BaseActivity;
+import cn.ifafu.ifafu.mvp.base.BaseActivity;
 
 public class ExamActivity extends BaseActivity<ExamContract.Presenter>
         implements ExamContract.View {

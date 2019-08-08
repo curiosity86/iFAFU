@@ -1,5 +1,0 @@
-<resources>
-    <string name="app_name">AndroidLibrary</string>
-
-    <string name="net_error">网络错误，请检查网络设置</string>
-</resources>

@@ -5,15 +5,13 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import cn.ifafu.ifafu.data.entity.Course;
-import cn.woolsen.android.mvp.BasePresenter;
-import cn.woolsen.android.uitl.RxJavaUtils;
+import cn.ifafu.ifafu.mvp.base.BasePresenter;
+import cn.ifafu.ifafu.util.RxUtils;
+import io.reactivex.Observable;
 
 class AddCoursePresenter extends BasePresenter<AddCourseContract.View, AddCourseContract.Model>
         implements AddCourseContract.Presenter {
@@ -92,7 +90,7 @@ class AddCoursePresenter extends BasePresenter<AddCourseContract.View, AddCourse
         String name = mView.getNameText();
         String teacher = mView.getTeacherText();
         String account = mModel.getAccount();
-        mCompDisposable.add(RxJavaUtils
+        mCompDisposable.add(Observable
                 .<String>create(emitter -> {
                     if (name.isEmpty()) {
                         emitter.onNext("请输入课程名称");
@@ -135,6 +133,7 @@ class AddCoursePresenter extends BasePresenter<AddCourseContract.View, AddCourse
                     }
                     emitter.onComplete();
                 })
+                .compose(RxUtils.ioToMainScheduler())
                 .doOnSubscribe(disposable -> mView.showLoading())
                 .doFinally(() -> mView.hideLoading())
                 .subscribe(

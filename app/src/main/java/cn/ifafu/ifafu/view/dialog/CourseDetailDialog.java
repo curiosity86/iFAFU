@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Course;
-import cn.woolsen.android.uitl.DateUtils;
+import cn.ifafu.ifafu.util.DateUtils;
 
 public class CourseDetailDialog extends Dialog {
 

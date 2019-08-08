@@ -18,7 +18,7 @@ import java.util.Locale;
 
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.util.GlobalLib;
-import cn.woolsen.android.mvp.BaseActivity;
+import cn.ifafu.ifafu.mvp.base.BaseActivity;
 
 public class AboutActivity extends BaseActivity implements View.OnClickListener {
 

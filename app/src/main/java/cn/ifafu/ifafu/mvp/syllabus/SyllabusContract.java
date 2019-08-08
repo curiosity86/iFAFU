@@ -5,8 +5,8 @@ import java.util.List;
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.mvp.base.IZFModel;
 import cn.ifafu.ifafu.mvp.base.IZFPresenter;
-import cn.woolsen.android.mvp.i.IView;
-import cn.woolsen.android.view.syllabus.data.DayOfWeek;
+import cn.ifafu.ifafu.mvp.base.i.IView;
+import cn.ifafu.ifafu.view.syllabus.data.DayOfWeek;
 import io.reactivex.Observable;
 
 class SyllabusContract {

@@ -15,7 +15,7 @@ import com.jaeger.library.StatusBarUtil;
 
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.view.dialog.ProgressDialog;
-import cn.woolsen.android.mvp.BaseActivity;
+import cn.ifafu.ifafu.mvp.base.BaseActivity;
 
 public class WebActivity extends BaseActivity<WebContract.Presenter> implements WebContract.View {
 

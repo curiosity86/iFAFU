@@ -15,7 +15,7 @@
             android:layout_height="match_parent"
             android:ems="1" />
 
-        <cn.woolsen.android.view.syllabus.DateView
+        <cn.ifafu.ifafu.view.syllabus.DateView
             android:id="@+id/view_date"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -27,12 +27,12 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <cn.woolsen.android.view.syllabus.SideView
+        <cn.ifafu.ifafu.view.syllabus.SideView
             android:id="@+id/view_side"
             android:layout_width="24dp"
             android:layout_height="match_parent" />
 
-        <cn.woolsen.android.view.syllabus.CourseView
+        <cn.ifafu.ifafu.view.syllabus.CourseView
             android:id="@+id/view_course"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

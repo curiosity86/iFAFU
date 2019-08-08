@@ -3,20 +3,14 @@ package cn.ifafu.ifafu.mvp.base;
 import android.content.Intent;
 import android.util.Log;
 
-import java.io.IOException;
-
 import javax.security.auth.login.LoginException;
 
-import cn.ifafu.ifafu.app.IFAFU;
 import cn.ifafu.ifafu.data.Response;
-import cn.ifafu.ifafu.data.entity.User;
 import cn.ifafu.ifafu.mvp.login.LoginActivity;
-import cn.woolsen.android.mvp.BasePresenter;
-import cn.woolsen.android.mvp.i.IView;
+import cn.ifafu.ifafu.mvp.base.i.IView;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
 public class BaseZFPresenter<V extends IView, M extends IZFModel> extends BasePresenter<V, M> implements IZFPresenter {
