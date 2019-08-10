@@ -114,7 +114,7 @@ public class CourseView extends FrameLayout {
         mWidth = w;
         mColItemWidth = 1F * mWidth / mColCount;
         mRowItemHeight = 1F * mHeight / mRowCount;
-        l("onSizeChanged", "height:", mHeight, "width:", mWidth);
+//        l("onSizeChanged", "height:", mHeight, "width:", mWidth);
 //        l("height:", mHeight, "width:", mWidth, "ColItemWidth:", mColItemWidth, "RowItemHeight:", mRowItemHeight);
 //        }
     }
@@ -123,14 +123,14 @@ public class CourseView extends FrameLayout {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 //        initCourseItemView();
-        l("onDraw", "height:", mHeight, "width:", mWidth);
+//        l("onDraw", "height:", mHeight, "width:", mWidth);
     }
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
         drawSplitLine(canvas);
         super.dispatchDraw(canvas);
-        l("dispatchDraw", "height:", mHeight, "width:", mWidth, " ",Boolean.valueOf(mFirstDraw).toString());
+//        l("dispatchDraw", "height:", mHeight, "width:", mWidth, " ",Boolean.valueOf(mFirstDraw).toString());
         if (mFirstDraw) {
             mFirstDraw = false;
             initCourseItemView();
@@ -140,7 +140,7 @@ public class CourseView extends FrameLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        l("onMeasure", "width:", widthMeasureSpec & MEASURED_SIZE_MASK, "height:", heightMeasureSpec & MEASURED_SIZE_MASK);
+//        l("onMeasure", "width:", widthMeasureSpec & MEASURED_SIZE_MASK, "height:", heightMeasureSpec & MEASURED_SIZE_MASK);
     }
 
     public void setRowCount(int rowCount) {
@@ -192,7 +192,6 @@ public class CourseView extends FrameLayout {
      * @param <T>
      */
     public <T extends ToCourse> void setCourses(List<T> courses) {
-        l("setCourses");
         mCourseViewMap.clear();
         for (T t : courses) {
             mCourseViewMap.put(t.toCourseBase(), null);

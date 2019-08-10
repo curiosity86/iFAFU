@@ -2,6 +2,8 @@ package cn.ifafu.ifafu.mvp.login;
 
 import android.content.Context;
 
+import org.jetbrains.annotations.NotNull;
+
 import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.app.IFAFU;
 import cn.ifafu.ifafu.dao.UserDao;
@@ -21,8 +23,9 @@ class LoginModel extends BaseZFModel implements LoginContract.Model {
         userDao = DaoManager.getInstance().getDaoSession().getUserDao();
     }
 
+    @NotNull
     @Override
-    public Observable<Response<String>> login(User user) {
+    public Observable<Response<String>> login(@NotNull User user) {
         return super.login(user);
     }
 

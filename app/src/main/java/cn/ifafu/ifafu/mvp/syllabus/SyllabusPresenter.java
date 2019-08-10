@@ -1,7 +1,12 @@
 package cn.ifafu.ifafu.mvp.syllabus;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.logging.SimpleFormatter;
 
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Course;
@@ -13,8 +18,6 @@ import io.reactivex.schedulers.Schedulers;
 class SyllabusPresenter extends BaseZFPresenter<SyllabusContract.View, SyllabusContract.Model>
         implements SyllabusContract.Presenter {
 
-    private final int firstDayOfWeek = Calendar.SUNDAY;
-
     SyllabusPresenter(SyllabusContract.View view) {
         super(view, new SyllabusModel(view.getContext()));
     }
@@ -23,7 +26,11 @@ class SyllabusPresenter extends BaseZFPresenter<SyllabusContract.View, SyllabusC
     public void onStart() {
         mView.setSyllabusRowCount(mModel.getRowCount());
         mView.setCourseBeginTime(mModel.getCourseBeginTime());
+        String firstStudyDay = mModel.getFirstStudyDay();
+        mView.setFirstStudyDay(firstStudyDay);
+        int firstDayOfWeek = mModel.getFirstDayOfWeek();
         mView.setFirstDayOfWeek(firstDayOfWeek);
+        mView.setCurrentWeek(getCurrentWeek(firstStudyDay, firstDayOfWeek));
         updateSyllabus(false, false);
     }
 
@@ -76,6 +83,22 @@ class SyllabusPresenter extends BaseZFPresenter<SyllabusContract.View, SyllabusC
                     return courses;
                 })
                 .retryWhen(this::ensureTokenAlive);// 保活
+    }
+
+    private int getCurrentWeek(String firstStudyDay, int firstDayOfWeek) {
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+            Date firstStudyDate = format.parse(firstStudyDay);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setFirstDayOfWeek(firstDayOfWeek);
+            int currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+            calendar.setTime(firstStudyDate);
+            int firstWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+            return currentWeek - firstWeek + 1;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
     @Override

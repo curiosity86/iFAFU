@@ -12,6 +12,6 @@ public class WebModel extends BaseZFModel implements WebContract.Model {
 
     @Override
     public String getMainUrl() {
-        return getReferer(mUser);
+        return getReferer(getMUser());
     }
 }

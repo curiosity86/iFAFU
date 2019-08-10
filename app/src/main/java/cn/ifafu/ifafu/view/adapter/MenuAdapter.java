@@ -43,11 +43,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
     public void onBindViewHolder(@NonNull MenuViewHolder holder, int position) {
         final Menu menu = mMenuList.get(position);
         holder.titleTV.setText(menu.getTitle());
-        if (menu.getIconResId() != 0) {
-            holder.iconIV.setImageResource(menu.getIconResId());
-        } else if (menu.getIcon() != null) {
-            holder.iconIV.setImageDrawable(menu.getIcon());
-        }
+        holder.iconIV.setImageDrawable(menu.getIcon());
         holder.itemView.setOnClickListener(v -> {
             if (mItemClickListener != null) {
                 mItemClickListener.onClick(v, menu);
@@ -78,7 +74,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 
         ImageView iconIV;
 
-        public MenuViewHolder(@NonNull View itemView) {
+        MenuViewHolder(@NonNull View itemView) {
             super(itemView);
             titleTV = itemView.findViewById(R.id.tv_title);
             iconIV = itemView.findViewById(R.id.iv_icon);

@@ -1,7 +1,10 @@
 package cn.ifafu.ifafu.util;
 
+import android.util.Log;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -104,6 +107,8 @@ public class DateUtils {
             dates[i] = format.format(c.getTime());
             c.add(Calendar.DATE, 1);
         }
+//        Log.d("Syllabus", date + "   " + offsetWeek + "   " + firstDayOfWeek + "   " + dateFormat);
+//        Log.d("Syllabus", Arrays.toString(dates));
         return dates;
     }
 

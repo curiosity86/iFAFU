@@ -2,6 +2,7 @@ package cn.ifafu.ifafu.view.adapter;
 
 import android.content.Context;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -26,7 +28,7 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
 
     private int mPageCount = 24;
 
-    private List<Course>[] mCourseList;
+    private SparseArray<List<Course>> mCourseList = new SparseArray<>();
 
     private String[] mBeginTimes;
 
@@ -36,7 +38,7 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
 
     private CourseView.OnCourseClickListener onCourseClickListener;
 
-    private String dateOfFirstStudyDay = "2019-09-01";
+    private String dateOfFirstStudyDay;
 
     //TODO 在5.1系统上，CourseView在绘制时会测量两次，在测量第二次时高度会出错，目前未能发现是啥原因
 
@@ -47,15 +49,15 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
     @NonNull
     @Override
     public ViewPagerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        l("onCreateViewHolder");
+//        l("onCreateViewHolder");
         View view = LayoutInflater.from(mContext).inflate(R.layout.fragment_syllabus, parent, false);
         return new ViewPagerViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewPagerViewHolder holder, int position) {
-        l("onBindViewHolder");
-        if (mBeginTimes != null) {
+//        l("onBindViewHolder");
+        if (holder.sideView.getBeginTimeTexts() != mBeginTimes) {
             holder.sideView.setBeginTimeTexts(mBeginTimes);
         }
         holder.courseView.setFirstDayOfWeek(firstDayOfWeek);
@@ -64,12 +66,22 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
                 onCourseClickListener.onClick(v, course);
             }
         });
-        if (mCourseList != null && position < mCourseList.length && mCourseList[position] != null) {
-            holder.courseView.setCourses(mCourseList[position]);
+        if (mCourseList.get(position) != null) {
+            holder.courseView.setCourses(mCourseList.get(position));
             holder.courseView.redraw();
         }
         holder.dateView.setFirstDayOfWeek(firstDayOfWeek);
-        holder.dateView.setDateTexts(DateUtils.getWeekDates(dateOfFirstStudyDay, position, firstDayOfWeek, "MM-dd"));
+        if (dateOfFirstStudyDay != null) {
+            holder.dateView.setDateTexts(DateUtils.getWeekDates(dateOfFirstStudyDay, position, firstDayOfWeek, "MM-dd"));
+            holder.dateView.redraw();
+        }
+    }
+
+    /**
+     * @param dateOfFirstStudyDay example: "2019-09-01"
+     */
+    public void setDateOfFirstStudyDay(String dateOfFirstStudyDay) {
+        this.dateOfFirstStudyDay = dateOfFirstStudyDay;
     }
 
     @Override
@@ -102,27 +114,31 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
      * @param courseList courses
      */
     public void setCourseList(List<Course> courseList) {
-        mCourseList = new List[mPageCount];
-        for (int i = 0; i < mPageCount; i++) {
-            mCourseList[i] = new ArrayList<>();
-        }
+        mCourseList.clear();
         for (Course course : courseList) {
             if (course.getWeekType() == Course.SINGLE_WEEK) {
                 int beginWeek = course.getBeginWeek() % 2 == 1 ? course.getBeginWeek() : course.getBeginWeek() + 1;
                 for (int i = beginWeek - 1; i < course.getEndWeek(); i += 2) {
-                    mCourseList[i].add(course);
+                    addCourse(i, course);
                 }
             } else if (course.getWeekType() == Course.DOUBLE_WEEK) {
                 int beginWeek = course.getBeginWeek() % 2 == 0 ? course.getBeginWeek() : course.getBeginWeek() + 1;
                 for (int i = beginWeek - 1; i < course.getEndWeek(); i += 2) {
-                    mCourseList[i].add(course);
+                    addCourse(i, course);
                 }
             } else if (course.getWeekType() == Course.ALL_WEEK) {
                 for (int i = course.getBeginWeek() - 1; i < course.getEndWeek(); i++) {
-                    mCourseList[i].add(course);
+                    addCourse(i, course);
                 }
             }
         }
+    }
+
+    private void addCourse(int index, Course course) {
+        if (mCourseList.get(index) == null) {
+            mCourseList.put(index, new ArrayList<>());
+        }
+        mCourseList.get(index).add(course);
     }
 
     public void setCourserClickListener(CourseView.OnCourseClickListener listener) {
@@ -160,7 +176,7 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
         for (Object s : msg) {
             sb.append(s).append(" ");
         }
-        Log.d("Syllabus", sb.toString());
+//        Log.d("Syllabus", sb.toString());
     }
 
     private void l(Object... msg) {
@@ -169,6 +185,6 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
         for (Object s : msg) {
             sb.append(s).append(" ");
         }
-        Log.d("Syllabus", sb.toString());
+//        Log.d("Syllabus", sb.toString());
     }
 }

@@ -1,5 +1,6 @@
 package cn.ifafu.ifafu.mvp.syllabus;
 
+import java.util.Calendar;
 import java.util.List;
 
 import cn.ifafu.ifafu.data.entity.Course;
@@ -30,6 +31,16 @@ class SyllabusContract {
 
     interface Model extends IZFModel {
 
+        String getFirstStudyDay();
+
+        /**
+         * @return 每周的首日 {@link Calendar}
+         */
+        int getFirstDayOfWeek();
+
+        /**
+         * @return 上课时间
+         */
         String[] getCourseBeginTime();
 
         /**
@@ -70,6 +81,11 @@ class SyllabusContract {
     }
 
     interface View extends IView {
+
+        void setCurrentWeek(int firstWeek);
+
+        void setFirstStudyDay(String firstStudyDay);
+
         /**
          * 设置课程表行数
          * @param count 课程表行数
@@ -91,7 +107,7 @@ class SyllabusContract {
          * 设置当前周
          * @param week
          */
-        void setCurrentWeek(int week);
+        void setmCurrentWeek(int week);
 
         void setSyllabusDate(List<Course> courses);
 

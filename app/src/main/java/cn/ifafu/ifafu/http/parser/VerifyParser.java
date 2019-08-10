@@ -149,6 +149,11 @@ public class VerifyParser implements ObservableTransformer<ResponseBody, String>
         return (red * 30 + green * 59 + blue * 11 + 50) / 100;
     }
 
+    public void release() {
+        weight = null;
+        mContext = null;
+    }
+
     @Override
     public ObservableSource<String> apply(Observable<ResponseBody> upstream) {
         return upstream.map(responseBody -> {

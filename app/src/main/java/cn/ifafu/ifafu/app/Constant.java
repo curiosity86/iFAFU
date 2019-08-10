@@ -21,5 +21,8 @@ public class Constant {
     public static final int FAFU = 0x00010001;
     public static final int FAFU_JS = 0x00010002;
 
+    public static final String API_LOGIN = "登录";
+    public static final String API_SYLLABUS = "课表查询";
+    public static final String API_EXAM = "考试查询";
 
 }

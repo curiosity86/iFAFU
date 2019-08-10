@@ -29,9 +29,9 @@ class MainModel(context: Context) : BaseZFModel(context), MainContract.Model {
 
     override fun getMenus(): Observable<List<Menu>> {
         return Observable.just(listOf(
-                Menu(R.drawable.tab_syllabus, "课程表", SyllabusActivity::class.java),
-                Menu(R.drawable.tab_exam, "考试计划", ExamActivity::class.java),
-                Menu(R.drawable.tab_web, "网页模式", WebActivity::class.java)
+                Menu(mContext.getDrawable(R.drawable.tab_syllabus), "课程表", SyllabusActivity::class.java),
+                Menu(mContext.getDrawable(R.drawable.tab_exam),"考试计划", ExamActivity::class.java),
+                Menu(mContext.getDrawable(R.drawable.tab_web), "网页模式", WebActivity::class.java)
         ))
     }
 
@@ -57,7 +57,7 @@ class MainModel(context: Context) : BaseZFModel(context), MainContract.Model {
         return Observable.create { emitter ->
             val weather = Weather()
             val referer = "http://www.weather.com.cn/weather1d/$cityCode.shtml"
-            val service = RetrofitManager.obtainServiceTemp(WeatherService::class.java, "")
+            val service = RetrofitManager.obtainServiceTemp(WeatherService::class.java, "http://www.weather.com.cn/")
 
             // 获取城市名和当前温度
             val url1 = "http://d1.weather.com.cn/sk_2d/$cityCode.html"

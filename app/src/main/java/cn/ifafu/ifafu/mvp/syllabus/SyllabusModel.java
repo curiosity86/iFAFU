@@ -2,6 +2,7 @@ package cn.ifafu.ifafu.mvp.syllabus;
 
 import android.content.Context;
 
+import java.util.Calendar;
 import java.util.List;
 
 import cn.ifafu.ifafu.app.IFAFU;
@@ -17,6 +18,10 @@ import io.reactivex.Observable;
 
 class SyllabusModel extends BaseZFModel implements SyllabusContract.Model {
 
+    private final int firstDayOfWeek = Calendar.SUNDAY;
+
+    private final String firstStudyDay = "2019-09-01";
+
     private final int mRowCount = 12;
 
     private final String[][] courseBeginTime = new String[][]{
@@ -31,7 +36,16 @@ class SyllabusModel extends BaseZFModel implements SyllabusContract.Model {
 
     SyllabusModel(Context context) {
         super(context);
-        zhengFang = RetrofitManager.INSTANCE.obtainService(ZhengFangService.class, getBaseUrl(user));
+    }
+
+    @Override
+    public String getFirstStudyDay() {
+        return firstStudyDay;
+    }
+
+    @Override
+    public int getFirstDayOfWeek() {
+        return firstDayOfWeek;
     }
 
     @Override

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.gyf.immersionbar.ImmersionBar;
+import com.jaeger.library.StatusBarUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,7 +39,7 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
 
     private CourseDetailDialog detailDialog;
 
-    private int currentWeek = 1;
+    private int mCurrentWeek = 1;
 
     private ProgressDialog progressDialog;
 
@@ -47,13 +47,13 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_syllabus);
-//        StatusBarUtil.setTransparent(this);
-//        StatusBarUtil.setLightMode(this);
-        ImmersionBar.with(this)
-                .statusBarColor(R.color.white)
-                .statusBarDarkFont(true)
-                .fitsSystemWindows(true)
-                .init();
+        StatusBarUtil.setTransparent(this);
+        StatusBarUtil.setLightMode(this);
+//        ImmersionBar.with(this)
+//                .statusBarColor(R.color.white)
+//                .statusBarDarkFont(true)
+//                .fitsSystemWindows(true)
+//                .init();
 
         mPresenter = new SyllabusPresenter(this);
 
@@ -79,11 +79,17 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
             @Override
             public void onPageSelected(int position) {
                 String numCN = NumberUtils.numberToChinese(position + 1);
-                if (position != currentWeek - 1) {
-                    if (currentWeek < 0) {
-                        subTitleTV.setText(getString(R.string.week_format_not, numCN, "第一周"));
+                if (mCurrentWeek - 1 < 0) {
+                    if (position != 0) {
+                        subTitleTV.setText(getString(R.string.week_format_not_return, numCN, "第一周"));
                     } else {
-                        subTitleTV.setText(getString(R.string.week_format_not, numCN, "本周"));
+                        subTitleTV.setText(getString(R.string.week_format_not, numCN));
+                    }
+                } else if (position != mCurrentWeek - 1) {
+                    if (mCurrentWeek < 0) {
+                        subTitleTV.setText(getString(R.string.week_format_not_return, numCN, "第一周"));
+                    } else {
+                        subTitleTV.setText(getString(R.string.week_format_not_return, numCN, "本周"));
                     }
                 } else {
                     subTitleTV.setText(getString(R.string.week_format, numCN));
@@ -94,8 +100,13 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
     }
 
     @Override
-    public void setSyllabusRowCount(int count) {
+    public void setFirstStudyDay(String firstStudyDay) {
+        adapter.setDateOfFirstStudyDay(firstStudyDay);
+    }
 
+    @Override
+    public void setSyllabusRowCount(int count) {
+        //TODO
     }
 
     @Override
@@ -117,6 +128,12 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
     public void onDeleteBtnClick(Dialog dialog, Course course) {
         mPresenter.onDelete(course);
         dialog.dismiss();
+    }
+
+    @Override
+    public void setCurrentWeek(int currentWeek) {
+        mCurrentWeek = currentWeek;
+        viewPager.setCurrentItem(mCurrentWeek - 1, false);
     }
 
     @Override
@@ -171,19 +188,18 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
     }
 
     @Override
-    public void setCurrentWeek(int week) {
+    public void setmCurrentWeek(int week) {
         if (viewPager.getCurrentItem() != week - 1) {
             viewPager.setCurrentItem(week - 1);
         }
-        currentWeek = week;
+        mCurrentWeek = week;
     }
 
     @Override
     public boolean onLongClick(View v) {
-        switch (v.getId()) {
-            case R.id.tv_sub_title:
-                viewPager.setCurrentItem(currentWeek - 1, true);
-                return true;
+        if (v.getId() == R.id.tv_sub_title) {
+            viewPager.setCurrentItem(mCurrentWeek - 1, true);
+            return true;
         }
         return false;
     }

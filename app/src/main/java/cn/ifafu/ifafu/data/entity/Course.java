@@ -15,7 +15,7 @@ import cn.ifafu.ifafu.view.syllabus.data.DayOfWeek;
 import cn.ifafu.ifafu.view.syllabus.data.ToCourse;
 
 @Entity
-public class Course implements Cloneable, ToCourse {
+public class Course extends Search implements Cloneable, ToCourse {
     @Id
     private Long id;
     private String name; // 课程名

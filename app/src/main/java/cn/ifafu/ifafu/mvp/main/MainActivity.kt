@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.data.Menu
 import cn.ifafu.ifafu.data.Weather
@@ -34,9 +35,18 @@ class MainActivity : BaseActivity<MainContract.Presenter>(), MainContract.View, 
         mPresenter = MainPresenter(this)
 
         btn_menu.setOnClickListener(this)
+        initIconMenu()
         initNavigationView()
 
         mPresenter.onStart()
+    }
+
+    private fun initIconMenu() {
+        mMenuAdapter.setOnMenuClickListener { v, menu ->
+            startActivity(Intent(this, menu.activityClass))
+        }
+        rv_menu.adapter = mMenuAdapter
+        rv_menu.layoutManager = GridLayoutManager(this, 4)
     }
 
     //初始化侧滑栏样式

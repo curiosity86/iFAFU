@@ -21,7 +21,8 @@
     <!--SyllabusActivity-->
     <string name="syllabus">课程表</string>
     <string name="week_format">第%s周&#160;&#160;本周</string>
-    <string name="week_format_not">第%s周&#160;&#160;非本周(长按返回%s)</string>
+    <string name="week_format_not">第%s周&#160;&#160;非本周</string>
+    <string name="week_format_not_return">第%s周&#160;&#160;非本周(长按返回%s)</string>
     <string name="refresh_success">课表刷新成功</string>
 
     <!--AddCourseActivity-->

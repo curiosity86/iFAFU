@@ -124,6 +124,10 @@ public class SideView extends LinearLayout {
         this.timeTexts = timeTexts;
     }
 
+    public String[] getBeginTimeTexts() {
+        return timeTexts;
+    }
+
     class SideItem extends RelativeLayout {
 
         private TextView timeTV;

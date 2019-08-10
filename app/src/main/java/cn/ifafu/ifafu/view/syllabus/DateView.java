@@ -116,6 +116,10 @@ public class DateView extends LinearLayout {
         weekdayTexts = getWeekdayText(firstDayOfWeek, true);
     }
 
+    public void redraw() {
+        initDateItemView();
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         mHeight = h;
@@ -124,7 +128,6 @@ public class DateView extends LinearLayout {
     }
 
     private void drawSplitLine(Canvas canvas) {
-
         //垂直分割线
         if (mShowVerticalLine) {
             for (int i = 0; i <= mColCount; i++) {
