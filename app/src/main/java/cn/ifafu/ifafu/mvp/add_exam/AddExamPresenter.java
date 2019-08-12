@@ -12,7 +12,8 @@ import io.reactivex.ObservableOnSubscribe;
 public class AddExamPresenter extends BasePresenter<AddExamContract.View, AddExamContract.Model> implements AddExamContract.Presenter {
 
     AddExamPresenter(AddExamContract.View view) {
-        super(view, new AddExamModel(view.getContext()));
+        mView = view;
+        mModel = new AddExamModel(view.getContext());
     }
 
     @Override

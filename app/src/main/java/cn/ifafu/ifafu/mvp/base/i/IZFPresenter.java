@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.mvp.base;
+package cn.ifafu.ifafu.mvp.base.i;
 
 import cn.ifafu.ifafu.mvp.base.i.IPresenter;
 

@@ -1,65 +1,70 @@
 package cn.ifafu.ifafu.data.entity;
 
-import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.Generated;
+import java.util.Random;
 
-@Entity
 public class ZFUrl {
-    
-    @Id
-    private String account;
 
-    private String referer;
+    public static final int LOGIN = 843;
+    public static final int VERIFY = 920;
+    public static final int MAIN = 99;
+    public static final int SYLLABUS = 354;
+    public static final int EXAM = 985;
 
-    private String syllabus;
+    private int schoolCode;
+    private String baseUrl;
+    private String login;
+    private String verify;
+    private String main;
+    private QueryApi syllabus;
+    private QueryApi exam;
+    private String baseUrlTemp;
 
-    private String exam;
-
-    @Generated(hash = 1751367875)
-    public ZFUrl(String account, String referer, String syllabus, String exam) {
-        this.account = account;
-        this.referer = referer;
+    public ZFUrl(int schoolCode, String baseUrl, String login, String verify, String main, QueryApi syllabus, QueryApi exam) {
+        this.schoolCode = schoolCode;
+        this.baseUrl = baseUrl;
+        this.login = login;
+        this.verify = verify;
+        this.main = main;
         this.syllabus = syllabus;
         this.exam = exam;
     }
 
-    @Generated(hash = 1511831326)
-    public ZFUrl() {
+    public String getBaseUrl() {
+        if (baseUrlTemp != null) {
+            return baseUrlTemp;
+        }
+        baseUrlTemp = baseUrl
+                .replace("{token}", makeToken());
+        return baseUrlTemp;
     }
 
-    public String getAccount() {
-        return this.account;
+    private String makeToken() {
+        char[] randomStr = "abcdefghijklmnopqrstuvwxyz12345".toCharArray();
+        StringBuilder token = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < 24; i++) {
+            token.append(randomStr[random.nextInt(31)]);
+        }
+        return '(' + token.toString() + ')';
     }
 
-    public void setAccount(String account) {
-        this.account = account;
+    public String get(int filed, String xh, String xm) {
+        String baseUrl = getBaseUrl();
+        switch (filed) {
+            case VERIFY:
+                return String.format("%s%s", baseUrl, verify);
+            case LOGIN:
+                return String.format("%s%s", baseUrl, login);
+            case MAIN:
+                return String.format("%s%s?xh=%s", baseUrl, main, xh);
+            case SYLLABUS:
+                return String.format("%s%s?xh=%s&xm=%s&gnmkdm=%s",
+                        baseUrl, syllabus.getApi(), xh, xm, syllabus.getGnmkdm());
+            case EXAM:
+                return String.format("%s%s?xh=%s&xm=%s&gnmkdm=%s",
+                        baseUrl, exam.getApi(), xh, xm, exam.getGnmkdm());
+            default:
+                throw new IllegalArgumentException("field is invalid");
+        }
     }
-
-    public String getReferer() {
-        return this.referer;
-    }
-
-    public void setReferer(String referer) {
-        this.referer = referer;
-    }
-
-    public String getSyllabus() {
-        return this.syllabus;
-    }
-
-    public void setSyllabus(String syllabus) {
-        this.syllabus = syllabus;
-    }
-
-    public String getExam() {
-        return this.exam;
-    }
-
-    public void setExam(String exam) {
-        this.exam = exam;
-    }
-
-
-
 }

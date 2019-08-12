@@ -5,10 +5,19 @@
         <item name="android:colorPrimary">@color/colorPrimary</item>
         <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:textViewStyle">@style/TextView</item>
-        <item name="imageButtonStyle">@style/ImageButtonStyle</item>
+        <item name="imageButtonStyle">@style/ImageButton</item>
         <item name="buttonStyle">@style/Button</item>
         <item name="titleTextColor">#3E3E3E</item>
+        <!--<item name="android:windowAnimationStyle">@style/activityAnim</item>-->
+        <item name="android:activityCloseExitAnimation">@android:anim/fade_out</item>
     </style>
+
+    <!--<style name="activityAnim">-->
+        <!--<item name="android:activityOpenEnterAnimation">@android:anim/fade_in</item>-->
+        <!--<item name="android:activityOpenExitAnimation">@android:anim/fade_out</item>-->
+        <!--<item name="android:activityCloseEnterAnimation">@android:anim/fade_in</item>-->
+        <!--<item name="android:activityCloseExitAnimation">@android:anim/fade_out</item>-->
+    <!--</style>-->
 
     <style name="TextView">
         <item name="android:gravity">center_vertical</item>
@@ -39,7 +48,7 @@
         <item name="android:background">@drawable/shape_btn2</item>
     </style>
 
-    <style name="ImageButtonStyle">
+    <style name="ImageButton">
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 

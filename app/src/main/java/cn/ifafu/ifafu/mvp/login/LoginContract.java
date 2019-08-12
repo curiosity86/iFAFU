@@ -3,9 +3,9 @@ package cn.ifafu.ifafu.mvp.login;
 import androidx.annotation.DrawableRes;
 
 import cn.ifafu.ifafu.data.entity.User;
-import cn.ifafu.ifafu.data.Response;
-import cn.ifafu.ifafu.mvp.base.IZFModel;
-import cn.ifafu.ifafu.mvp.base.IZFPresenter;
+import cn.ifafu.ifafu.data.entity.Response;
+import cn.ifafu.ifafu.mvp.base.i.IZFModel;
+import cn.ifafu.ifafu.mvp.base.i.IZFPresenter;
 import cn.ifafu.ifafu.mvp.base.i.IView;
 import io.reactivex.Observable;
 

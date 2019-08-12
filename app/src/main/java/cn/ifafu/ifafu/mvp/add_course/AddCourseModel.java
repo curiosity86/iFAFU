@@ -6,7 +6,7 @@ import java.util.Collection;
 
 import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.dao.CourseDao;
-import cn.ifafu.ifafu.data.dao.DaoManager;
+import cn.ifafu.ifafu.data.local.DaoManager;
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.mvp.base.BaseModel;
 import cn.ifafu.ifafu.util.SPUtils;

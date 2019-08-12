@@ -6,10 +6,10 @@ import androidx.annotation.IntDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import cn.ifafu.ifafu.app.Constant;
+import cn.ifafu.ifafu.app.School;
 
-@IntDef(value = {Constant.FAFU, Constant.FAFU_JS})
+@IntDef(value = {School.FAFU, School.FAFU_JS})
 @Retention(RetentionPolicy.SOURCE)
-public @interface SchoolCode{
+public @interface SchoolCode {
 
 }

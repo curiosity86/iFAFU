@@ -5,6 +5,7 @@ import android.util.Log;
 
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.app.Constant;
+import cn.ifafu.ifafu.app.School;
 import cn.ifafu.ifafu.data.entity.User;
 import cn.ifafu.ifafu.mvp.base.BaseZFPresenter;
 import cn.ifafu.ifafu.mvp.main.MainActivity;
@@ -16,10 +17,11 @@ class LoginPresenter extends BaseZFPresenter<LoginContract.View, LoginContract.M
 
     private int comeFromWhere;
 
-    private int schoolCode = Constant.FAFU;
+    private int schoolCode = School.FAFU;
 
     LoginPresenter(LoginContract.View view) {
-        super(view, new LoginModel(view.getContext()));
+        mView = view;
+        mModel = new LoginModel(view.getContext());
     }
 
     @Override
@@ -31,20 +33,18 @@ class LoginPresenter extends BaseZFPresenter<LoginContract.View, LoginContract.M
 
     @Override
     public void onLogin() {
-        Log.d(TAG, "start");
         String account = mView.getAccountText();
         String password = mView.getPasswordText();
         if (!ensureFormat(account, password)) {
             return;
         }
-        User user = new User(Constant.FAFU);
+        User user = new User();
         if (account.charAt(0) == '0') {
             account = account.substring(1);
         }
         user.setAccount(account);
         user.setPassword(password);
         user.setSchoolCode(schoolCode);
-        Log.d(TAG, "end");
         mCompDisposable.add(mModel.login(user)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -88,11 +88,11 @@ class LoginPresenter extends BaseZFPresenter<LoginContract.View, LoginContract.M
     @Override
     public void checkAccount(String account) {
         if (account.isEmpty() || account.length() < 9) return;
-        if (schoolCode != Constant.FAFU_JS && account.charAt(0) == '0' || account.length() == 9) {
-            schoolCode = Constant.FAFU_JS;
+        if (schoolCode != School.FAFU_JS && account.charAt(0) == '0' || account.length() == 9) {
+            schoolCode = School.FAFU_JS;
             mView.setBackgroundLogo(R.drawable.drawable_fafu_js);
-        } else if (schoolCode != Constant.FAFU) {
-            schoolCode = Constant.FAFU;
+        } else if (schoolCode != School.FAFU) {
+            schoolCode = School.FAFU;
             mView.setBackgroundLogo(R.drawable.drawable_fafu);
         }
     }

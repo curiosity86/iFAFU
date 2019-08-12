@@ -5,14 +5,14 @@ import android.content.Context;
 import java.util.Calendar;
 import java.util.List;
 
-import cn.ifafu.ifafu.app.IFAFU;
+import cn.ifafu.ifafu.app.School;
 import cn.ifafu.ifafu.dao.CourseDao;
-import cn.ifafu.ifafu.data.dao.DaoManager;
-import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.data.entity.User;
-import cn.ifafu.ifafu.http.RetrofitManager;
-import cn.ifafu.ifafu.http.parser.SyllabusParser;
-import cn.ifafu.ifafu.http.service.ZhengFangService;
+import cn.ifafu.ifafu.data.entity.ZFUrl;
+import cn.ifafu.ifafu.data.local.DaoManager;
+import cn.ifafu.ifafu.data.entity.Course;
+import cn.ifafu.ifafu.data.http.RetrofitManager;
+import cn.ifafu.ifafu.data.http.parser.SyllabusParser;
 import cn.ifafu.ifafu.mvp.base.BaseZFModel;
 import io.reactivex.Observable;
 
@@ -24,13 +24,11 @@ class SyllabusModel extends BaseZFModel implements SyllabusContract.Model {
 
     private final int mRowCount = 12;
 
+    private final User user = getUser();
+
     private final String[][] courseBeginTime = new String[][]{
             {"8:00", "8:50", "9:55", "10:45", "11:35", "14:00", "14:50", "15:50", "16:40", "18:25", "19:15", "20:05"},
             {"8:30", "9:20", "10:25", "11:15", "12:05", "14:00", "14:50", "15:45", "16:35", "18:25", "19:15", "20:05"}};
-
-    private ZhengFangService zhengFang;
-
-    private User user = IFAFU.getUser();
 
     private CourseDao courseDao = DaoManager.getInstance().getDaoSession().getCourseDao();
 
@@ -61,13 +59,15 @@ class SyllabusModel extends BaseZFModel implements SyllabusContract.Model {
     @Override
     public List<Course> getAllCoursesFromDB() {
         return courseDao.queryBuilder()
-                .where(CourseDao.Properties.Account.eq(user.getAccount()))
+                .where(CourseDao.Properties.Account.eq(getUser().getAccount()))
                 .list();
     }
 
     @Override
     public Observable<List<Course>> getCoursesFromNet() {
-        return zhengFang.getInfo("xskbcx.aspx", getReferer(user), user.getAccount(), user.getName(), "N121603")
+        String url = School.getUrl(ZFUrl.SYLLABUS, user);
+        String referer = School.getUrl(ZFUrl.MAIN, user);
+        return zhengFang.getInfo(url, referer)
                 .compose(new SyllabusParser());
     }
 

@@ -4,8 +4,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import cn.ifafu.ifafu.data.entity.Course;
-import cn.ifafu.ifafu.mvp.base.IZFModel;
-import cn.ifafu.ifafu.mvp.base.IZFPresenter;
+import cn.ifafu.ifafu.mvp.base.i.IZFModel;
+import cn.ifafu.ifafu.mvp.base.i.IZFPresenter;
 import cn.ifafu.ifafu.mvp.base.i.IView;
 import cn.ifafu.ifafu.view.syllabus.data.DayOfWeek;
 import io.reactivex.Observable;

@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.http.parser;
+package cn.ifafu.ifafu.data.http.parser;
 
 import android.util.Log;
 
@@ -9,20 +9,20 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.security.auth.login.LoginException;
-
 import cn.ifafu.ifafu.data.entity.Course;
+import cn.ifafu.ifafu.data.exception.NoAuthException;
 import cn.ifafu.ifafu.util.RegexUtils;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.ObservableTransformer;
 import okhttp3.ResponseBody;
 
-public class SyllabusParser implements ObservableTransformer<ResponseBody, List<Course>> {
+public class SyllabusParser extends BaseParser<List<Course>> {
 
     private String[] weekdayCN = {"周日", "周一", "周二", "周三", "周四", "周五", "周六"};
 
@@ -33,7 +33,7 @@ public class SyllabusParser implements ObservableTransformer<ResponseBody, List<
 
     private String account;
 
-    public List<Course> parse(String html) {
+    private List<Course> parse(String html) {
         List<Course> courses = new ArrayList<>();
         Document doc = Jsoup.parse(html);
         account = getAccount(doc);
@@ -79,7 +79,7 @@ public class SyllabusParser implements ObservableTransformer<ResponseBody, List<
                 mark(c);
             }
         }
-        return courses;
+        return merge(courses);
     }
 
     private String getAccount(Document document) {
@@ -87,8 +87,8 @@ public class SyllabusParser implements ObservableTransformer<ResponseBody, List<
         return e.text().replace("学号：", "");
     }
 
-    private ArrayList<Course> parseTdElement(Element td, Help help) {
-        ArrayList<Course> list = new ArrayList<>();
+    private List<Course> parseTdElement(Element td, Help help) {
+        List<Course> list = new ArrayList<>();
         String[] s = td.text().trim().split(" ");
         for (int i = 0; i < s.length; i++) {
             try {
@@ -111,6 +111,27 @@ public class SyllabusParser implements ObservableTransformer<ResponseBody, List<
             }
         }
         return list;
+    }
+
+    private List<Course> merge(List<Course> courses) {
+        List<Course> newList = new ArrayList<>();
+        Map<String, List<Course>> map = new HashMap<>();
+        for (Course course : courses) {
+            String key = course.getName() + course.getTeacher() + course.getAddress()
+                    + course.getWeekday() + course.getBeginWeek() + course.getEndWeek();
+            if (map.get(key) == null) {
+                map.put(key, new ArrayList<>());
+            }
+            map.get(key).add(course);
+        }
+        for (List<Course> cl : map.values()) {
+            if (cl.size() == 2 && cl.get(0).getBeginNode() + cl.get(0).getNodeCnt() == cl.get(1).getBeginNode()) {
+                cl.get(0).setNodeCnt(cl.get(0).getNodeCnt() + cl.get(1).getNodeCnt());
+                newList.remove(1);
+            }
+            newList.addAll(cl);
+        }
+        return newList;
     }
 
     /**
@@ -202,7 +223,7 @@ public class SyllabusParser implements ObservableTransformer<ResponseBody, List<
             String html = responseBody.string();
             if (html.contains("请登录")) {
                 Log.d("Syllabus", "需要重新登录");
-                throw new LoginException();
+                throw new NoAuthException();
             }
             return parse(html);
         });

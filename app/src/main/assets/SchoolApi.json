@@ -1,34 +1,34 @@
 [
   {
-    "code": 1,
     "name": "福建农林大学",
-    "syllabus":{
-      "api": "/xskbcx.aspx",
-      "zd": "N121603"
-    },
+    "schoolCode": 1,
+    "baseUrl": "http://jwgl.fafu.edu.cn/{token}/",
+    "login": "default2.aspx",
+    "verify": "CheckCode.aspx",
+    "main": "xs_main.aspx",
     "exam": {
-      "api": "/xskscx.aspx",
-      "zd": "N121604"
+      "api": "xscjcx_dq_fafu.aspx",
+      "gnmkdm": "N121605"
     },
-    "score":{
-      "api": "/xscjcx_dq_fafu.aspx",
-      "zd": "N121605"
+    "syllabus": {
+      "api": "xskbcx.aspx",
+      "gnmkdm": "N121602"
     }
   },
   {
-    "code": 2,
     "name": "福建农林大学金山学院",
+    "schoolCode": 2,
+    "baseUrl": "http://js.ifafu.cn/",
+    "login": "default.aspx",
+    "verify": "CheckCode.aspx",
+    "main": "xs_main.aspx",
     "exam": {
-      "api": "/xskscx.aspx",
-      "zd": "N121604"
+      "api": "Xscjcx.aspx",
+      "gnmkdm": "N121613"
     },
-    "syllabus":{
-      "api": "/xskbcx.aspx",
-      "zd": "N121604"
-    },
-    "score":{
-      "api": "/xskbcx.aspx",
-      "zd": "N121604"
+    "syllabus": {
+      "api": "xskbcx.aspx",
+      "gnmkdm": "N121602"
     }
   }
 ]

@@ -3,11 +3,13 @@ package cn.ifafu.ifafu.data.entity;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Keep;
 import org.greenrobot.greendao.annotation.Transient;
 
 import java.io.Serializable;
 import java.util.Random;
 
+import cn.ifafu.ifafu.app.School;
 import cn.ifafu.ifafu.data.announce.SchoolCode;
 
 @Entity
@@ -20,7 +22,7 @@ public class User implements Serializable {
     private String token; // Token
 
     @SchoolCode
-    private int schoolCode;
+    private int schoolCode = School.FAFU;
 
     private static final long serialVersionUID = 0x00010123;
 
@@ -35,21 +37,6 @@ public class User implements Serializable {
 
     @Generated(hash = 586692638)
     public User() {
-    }
-
-    public User(@SchoolCode int schoolCode) {
-        this.schoolCode = schoolCode;
-    }
-
-    private String makeToken() {
-        String randomString = "abcdefghijklmnopqrstuvwxyz12345";
-        StringBuilder token = new StringBuilder("(");
-        Random random = new Random(System.currentTimeMillis());
-        for (int i = 0; i < 24; i++) {
-            token.append(randomString.charAt(random.nextInt(randomString.length())));
-        }
-        token.append(")/");
-        return token.toString();
     }
 
     public String getAccount() {
@@ -77,9 +64,6 @@ public class User implements Serializable {
     }
 
     public String getToken() {
-        if (token == null || token.isEmpty()) {
-            this.token = makeToken();
-        }
         return this.token;
     }
 
@@ -91,7 +75,7 @@ public class User implements Serializable {
         return this.schoolCode;
     }
 
-    public void setSchoolCode(@SchoolCode int schoolCode) {
+    public void setSchoolCode(int schoolCode) {
         this.schoolCode = schoolCode;
     }
 

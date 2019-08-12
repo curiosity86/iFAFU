@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.http.parser;
+package cn.ifafu.ifafu.data.http.parser;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,7 +14,6 @@ import cn.ifafu.ifafu.util.BitmapUtil;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
-import io.reactivex.functions.Function;
 import okhttp3.ResponseBody;
 
 public class VerifyParser implements ObservableTransformer<ResponseBody, String> {
@@ -28,7 +27,7 @@ public class VerifyParser implements ObservableTransformer<ResponseBody, String>
     }
 
     private void init(Context context) {
-        try(InputStream inputStream = context.getAssets().open("theta.dat")) {
+        try (InputStream inputStream = context.getAssets().open("theta.dat")) {
             weight = new BigDecimal[34][337];
             Scanner scanner = new Scanner(inputStream);
             for (int i = 0; i < 34; i++) {
@@ -41,15 +40,15 @@ public class VerifyParser implements ObservableTransformer<ResponseBody, String>
         }
     }
 
-    public String todo(Bitmap bitmap) {
+    private String todo(Bitmap bitmap) {
         if (bitmap == null) {
             return "";
         }
 
         long longStart = System.currentTimeMillis();
-        int[][]         data = prepareData(bitmap);
+        int[][] data = prepareData(bitmap);
         /* transpose data to x for linear classifier */
-        BigDecimal[][]  x    = new BigDecimal[4][337];
+        BigDecimal[][] x = new BigDecimal[4][337];
         for (int i = 0; i < 4; i++) {
             x[i][0] = new BigDecimal(1);
             for (int j = 1; j < 337; j++) {
@@ -57,9 +56,6 @@ public class VerifyParser implements ObservableTransformer<ResponseBody, String>
             }
         }
 
-//        Log.d("Classifier", String.format("data: (%d, %d)", data.length, data[0].length));
-//        Log.d("Classifier", String.format("x: (%d, %d)", x.length, x[0].length));
-//        Log.d("Classifier", String.format("weight: (%d, %d)", weight.length, weight[0].length));
         /* predict */
         double[][] y = dot(weight, x);
         double[][] p = sigmoid(y);
@@ -67,8 +63,8 @@ public class VerifyParser implements ObservableTransformer<ResponseBody, String>
         /* classify */
         char[] chr = new char[4];
         for (int i = 0; i < 4; i++) {
-            double max  = 0;
-            int    clas = 0;
+            double max = 0;
+            int clas = 0;
 
             for (int j = 0; j < 34; j++) {
                 if (p[i][j] > max) {
@@ -142,26 +138,21 @@ public class VerifyParser implements ObservableTransformer<ResponseBody, String>
     }
 
     private int convertGreyDegree(int argb) {
-        int red     = (argb >> 16) & 0xff;
-        int green   = (argb >> 8) & 0xff;
-        int blue    = argb & 0xff;
+        int red = (argb >> 16) & 0xff;
+        int green = (argb >> 8) & 0xff;
+        int blue = argb & 0xff;
 
         return (red * 30 + green * 59 + blue * 11 + 50) / 100;
-    }
-
-    public void release() {
-        weight = null;
-        mContext = null;
     }
 
     @Override
     public ObservableSource<String> apply(Observable<ResponseBody> upstream) {
         return upstream.map(responseBody -> {
-            Log.d("Login", "初始化开始 验证码识别内部");
             if (weight == null) {
+                Log.d("VerifyParser", "验证码工具 初始化开始");
                 init(mContext);
+                Log.d("VerifyParser", "验证码工具 初始化完成");
             }
-            Log.d("Login", "初始化完成 验证码识别内部");
             return todo(BitmapUtil.bytesToBitmap(responseBody.bytes()));
         });
     }

@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.ToOne;
 
 import java.util.Objects;
 
@@ -13,9 +14,13 @@ import cn.ifafu.ifafu.data.announce.WeekType;
 import cn.ifafu.ifafu.view.syllabus.data.CourseBase;
 import cn.ifafu.ifafu.view.syllabus.data.DayOfWeek;
 import cn.ifafu.ifafu.view.syllabus.data.ToCourse;
+import org.greenrobot.greendao.DaoException;
+import cn.ifafu.ifafu.dao.DaoSession;
+import cn.ifafu.ifafu.dao.SearchDao;
+import cn.ifafu.ifafu.dao.CourseDao;
 
 @Entity
-public class Course extends Search implements Cloneable, ToCourse {
+public class Course implements Cloneable, ToCourse {
     @Id
     private Long id;
     private String name; // 课程名
@@ -35,11 +40,10 @@ public class Course extends Search implements Cloneable, ToCourse {
     private String account; // 课程归属账号
     private boolean local; // 是否是自定义课程
 
+
     public static final int ALL_WEEK = 8;
     public static final int SINGLE_WEEK = 9;
     public static final int DOUBLE_WEEK = 10;
-
-
 
     @Generated(hash = 50667648)
     public Course(Long id, String name, String address, String teacher, int weekday, int beginNode, int nodeCnt, int beginWeek,

@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 public class GlobalLib {
@@ -21,45 +24,13 @@ public class GlobalLib {
         return localVersion;
     }
 
-//    public static String getCityName(Context context) {
-//        LocationManager locationManager;
-//        String contextString = Context.LOCATION_SERVICE;
-//        locationManager = (LocationManager) context.getSystemService(contextString);
-//        Criteria criteria = new Criteria();
-//        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-//        criteria.setAltitudeRequired(false);
-//        criteria.setBearingRequired(false);
-//        criteria.setCostAllowed(false);
-//        criteria.setPowerRequirement(Criteria.POWER_LOW);
-//        String cityName = null;
-//        // 取得效果最好的criteria
-//        String provider = locationManager.getBestProvider(criteria, true);
-//        if (provider == null) {
-//            return null;
-//        }
-//        // 得到坐标相关的信息
-//        @SuppressLint("MissingPermission") Location location = locationManager.getLastKnownLocation(provider);
-//        if (location == null) {
-//            return null;
-//        }
-//
-//        double latitude = location.getLatitude();
-//        double longitude = location.getLongitude();
-//        // 更具地理环境来确定编码
-//        Geocoder gc = new Geocoder(context, Locale.getDefault());
-//        try {
-//            // 取得地址相关的一些信息\经度、纬度
-//            List<Address> addresses = gc.getFromLocation(latitude, longitude, 1);
-//            StringBuilder sb = new StringBuilder();
-//            if (addresses.size() > 0) {
-//                Address address = addresses.get(0);
-//                sb.append(address.getLocality()).append("\n");
-//                cityName = sb.toString();
-//            }
-//        } catch (IOException e) {
-//        }
-//        return cityName;
-//    }
+    public static void transparentStatus(Activity activity) {
+        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        int option = activity.getWindow().getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+        activity.getWindow().getDecorView().setSystemUiVisibility(option);
+        activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
+    }
 
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);

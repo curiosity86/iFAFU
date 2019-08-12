@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.jaeger.library.StatusBarUtil;
@@ -18,9 +19,8 @@ import java.util.Locale;
 
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.util.GlobalLib;
-import cn.ifafu.ifafu.mvp.base.BaseActivity;
 
-public class AboutActivity extends BaseActivity implements View.OnClickListener {
+public class AboutActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -17,6 +17,10 @@ public class ButtonUtils {
         return isFastDoubleClick(-1, DIFF);
     }
 
+    public static boolean isFastDoubleClick(long diff) {
+        return isFastDoubleClick(-1, diff);
+    }
+
     /**
      * 判断两次点击的间隔，如果小于1000，则认为是多次无效点击
      *

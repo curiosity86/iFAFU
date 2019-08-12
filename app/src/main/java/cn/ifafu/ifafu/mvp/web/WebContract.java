@@ -1,8 +1,9 @@
 package cn.ifafu.ifafu.mvp.web;
 
-import cn.ifafu.ifafu.mvp.base.IZFModel;
-import cn.ifafu.ifafu.mvp.base.IZFPresenter;
+import cn.ifafu.ifafu.mvp.base.i.IZFModel;
+import cn.ifafu.ifafu.mvp.base.i.IZFPresenter;
 import cn.ifafu.ifafu.mvp.base.i.IView;
+import io.reactivex.Observable;
 
 class WebContract {
     interface Presenter extends IZFPresenter {
@@ -22,6 +23,8 @@ class WebContract {
          * @return 首页Url
          */
         String getMainUrl();
+
+        Observable<String> getMainHtml();
     }
 
 }

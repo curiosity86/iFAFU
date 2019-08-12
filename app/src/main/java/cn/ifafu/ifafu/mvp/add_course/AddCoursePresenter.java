@@ -22,7 +22,8 @@ class AddCoursePresenter extends BasePresenter<AddCourseContract.View, AddCourse
     private Map<Integer, Course> courses = new HashMap<>();
 
     AddCoursePresenter(AddCourseContract.View view) {
-        super(view, new AddCourseModel(view.getContext()));
+        mView = view;
+        mModel = new AddCourseModel(view.getContext());
     }
 
     @Override

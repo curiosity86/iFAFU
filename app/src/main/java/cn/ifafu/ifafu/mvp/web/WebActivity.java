@@ -3,7 +3,9 @@ package cn.ifafu.ifafu.mvp.web;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
+import android.webkit.CookieManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -14,6 +16,8 @@ import androidx.appcompat.widget.Toolbar;
 import com.jaeger.library.StatusBarUtil;
 
 import cn.ifafu.ifafu.R;
+import cn.ifafu.ifafu.app.Constant;
+import cn.ifafu.ifafu.util.SPUtils;
 import cn.ifafu.ifafu.view.dialog.ProgressDialog;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
 
@@ -29,8 +33,8 @@ public class WebActivity extends BaseActivity<WebContract.Presenter> implements 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web);
-        StatusBarUtil.setLightMode(this);
         StatusBarUtil.setTransparent(this);
+        StatusBarUtil.setLightMode(this);
 
         mPresenter = new WebPresenter(this);
 
@@ -45,6 +49,9 @@ public class WebActivity extends BaseActivity<WebContract.Presenter> implements 
         toolbar.setOnClickListener(v -> finish());
 
         mPresenter.onStart();
+    }
+
+    void setCookie() {
     }
 
     @SuppressLint("SetJavaScriptEnabled")

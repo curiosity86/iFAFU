@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.data.dao;
+package cn.ifafu.ifafu.data.local;
 
 import android.content.Context;
 
