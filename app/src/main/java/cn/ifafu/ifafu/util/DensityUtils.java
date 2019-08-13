@@ -3,8 +3,6 @@ package cn.ifafu.ifafu.util;
 import android.content.Context;
 import android.util.TypedValue;
 
-import cn.ifafu.ifafu.mvp.base.BaseApplication;
-
 /**
  * create by woolsen on 19/7/24
  */
@@ -17,7 +15,7 @@ public class DensityUtils {
      */
     public static float dp2px(Context context, float dpValue) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                dpValue, BaseApplication.getContext().getResources().getDisplayMetrics());
+                dpValue, context.getResources().getDisplayMetrics());
     }
 
     public static float sp2px(Context context, float spVal) {

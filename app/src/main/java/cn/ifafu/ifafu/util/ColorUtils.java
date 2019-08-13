@@ -1,7 +1,6 @@
 package cn.ifafu.ifafu.util;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;

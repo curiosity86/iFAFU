@@ -1,7 +1,5 @@
 package cn.ifafu.ifafu.mvp.base.i;
 
-import android.os.NetworkOnMainThreadException;
-
 import cn.ifafu.ifafu.data.entity.Response;
 import cn.ifafu.ifafu.data.entity.User;
 import cn.ifafu.ifafu.mvp.base.i.IModel;

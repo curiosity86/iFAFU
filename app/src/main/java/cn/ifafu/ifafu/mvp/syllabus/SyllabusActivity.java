@@ -1,7 +1,6 @@
 package cn.ifafu.ifafu.mvp.syllabus;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.gyf.immersionbar.ImmersionBar;
 import com.jaeger.library.StatusBarUtil;
 
 import java.text.SimpleDateFormat;
@@ -20,15 +18,14 @@ import java.util.Locale;
 
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Course;
-import cn.ifafu.ifafu.mvp.add_course.AddCourseActivity;
+import cn.ifafu.ifafu.mvp.base.BaseActivity;
+import cn.ifafu.ifafu.mvp.syllabus_item.SyllabusItemActivity;
 import cn.ifafu.ifafu.util.NumberUtils;
 import cn.ifafu.ifafu.view.adapter.CoursePageAdapter;
-import cn.ifafu.ifafu.view.dialog.CourseDetailDialog;
 import cn.ifafu.ifafu.view.dialog.ProgressDialog;
-import cn.ifafu.ifafu.mvp.base.BaseActivity;
 
 public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
-        implements SyllabusContract.View, CourseDetailDialog.OnClickListener, View.OnClickListener, View.OnLongClickListener {
+        implements SyllabusContract.View, View.OnClickListener, View.OnLongClickListener {
 
     private ViewPager2 viewPager;
 
@@ -38,7 +35,7 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
 
     private TextView subTitleTV;
 
-    private CourseDetailDialog detailDialog;
+//    private CourseDetailDialog detailDialog;
 
     private int mCurrentWeek = 1;
 
@@ -61,15 +58,19 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
         TextView dateTV = findViewById(R.id.tv_date);
         dateTV.setText(new SimpleDateFormat("MM月dd日", Locale.CHINA).format(new Date()));
 
-        detailDialog = new CourseDetailDialog(this);
-        detailDialog.setOnClickListener(this);
+//        detailDialog = new CourseDetailDialog(this);
+//        detailDialog.setOnClickListener(this);
 
         cornerTV = findViewById(R.id.tv_corner);
         viewPager = findViewById(R.id.view_pager);
         subTitleTV = findViewById(R.id.tv_sub_title);
         subTitleTV.setOnLongClickListener(this);
         adapter = new CoursePageAdapter(this);
-        adapter.setCourserClickListener((v, course) -> detailDialog.show((Course) course.getOther()));
+        adapter.setCourserClickListener((v, course) ->{
+            Intent intent = new Intent(this, SyllabusItemActivity.class);
+            intent.putExtra("course_id", ((Course) course.getOther()).getId());
+            startActivityForResult(intent, 0x123);
+        });
         viewPager.setAdapter(adapter);
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -121,26 +122,6 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
     }
 
     @Override
-    public void onDeleteBtnClick(Dialog dialog, Course course) {
-        mPresenter.onDelete(course);
-        dialog.dismiss();
-    }
-
-    @Override
-    public void setCurrentWeek(int currentWeek) {
-        mCurrentWeek = currentWeek;
-        viewPager.setCurrentItem(mCurrentWeek - 1, false);
-    }
-
-    @Override
-    public void onEditBtnClick(Dialog dialog, Course course) {
-        Intent intent = new Intent(this, AddCourseActivity.class);
-        intent.putExtra("id", course.getId());
-        startActivityForResult(intent, 0x123);
-        dialog.dismiss();
-    }
-
-    @Override
     public void showLoading() {
         progressDialog.show();
     }
@@ -154,7 +135,9 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add:
-                startActivityForResult(new Intent(this, AddCourseActivity.class), 0x123);
+                Intent intent = new Intent(this, SyllabusItemActivity.class);
+                intent.putExtra("come_from", 1);
+                startActivityForResult(intent, 0x123);
                 break;
             case R.id.btn_refresh:
                 mPresenter.updateSyllabus(true, true);
@@ -184,9 +167,9 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
     }
 
     @Override
-    public void setmCurrentWeek(int week) {
+    public void setCurrentWeek(int week) {
         if (viewPager.getCurrentItem() != week - 1) {
-            viewPager.setCurrentItem(week - 1);
+            viewPager.setCurrentItem(week - 1, false);
         }
         mCurrentWeek = week;
     }

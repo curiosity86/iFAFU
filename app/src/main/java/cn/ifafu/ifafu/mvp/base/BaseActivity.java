@@ -3,10 +3,14 @@ package cn.ifafu.ifafu.mvp.base;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import cn.ifafu.ifafu.mvp.base.i.IPresenter;
 import cn.ifafu.ifafu.mvp.base.i.IView;
 
@@ -14,22 +18,30 @@ public abstract class BaseActivity<P extends IPresenter> extends AppCompatActivi
 
     protected P mPresenter;
     protected final String TAG = this.getClass().getSimpleName();
+    private Unbinder unbinder;
 
     @Override
-    public Context getContext() {
-        return getApplicationContext();
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (initLayout(savedInstanceState) != 0) {
+            setContentView(initLayout(savedInstanceState));
+            unbinder = ButterKnife.bind(this);
+            initData(savedInstanceState);
+            mPresenter.onStart();
+        }
+    }
+
+    public int initLayout(@Nullable Bundle savedInstanceState) {
+        return 0;
+    }
+
+    public void initData(@Nullable Bundle savedInstanceState) {
+
     }
 
     @Override
     public void showMessage(String msg) {
-//        View view = this.getWindow().getDecorView().findViewById(android.R.id.content);
-//        Snackbar.make(view, msg, Snackbar.LENGTH_SHORT).show();
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public Activity getActivity() {
-        return this;
     }
 
     @Override
@@ -38,13 +50,21 @@ public abstract class BaseActivity<P extends IPresenter> extends AppCompatActivi
     }
 
     @Override
-    public void showLoading() {
+    public Activity getActivity() {
+        return this;
+    }
 
+    @Override
+    public Context getContext() {
+        return getApplicationContext();
+    }
+
+    @Override
+    public void showLoading() {
     }
 
     @Override
     public void hideLoading() {
-
     }
 
     @Override
@@ -63,6 +83,9 @@ public abstract class BaseActivity<P extends IPresenter> extends AppCompatActivi
         if (mPresenter != null) {
             mPresenter.onDestroy();
             mPresenter = null;
+        }
+        if (unbinder != null) {
+            unbinder.unbind();
         }
         super.onDestroy();
     }

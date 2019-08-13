@@ -19,35 +19,13 @@
     <string name="back_again">再次按下返回键退出程序</string>
     
     <!--SyllabusActivity-->
-    <string name="syllabus">课程表</string>
     <string name="week_format">第%s周&#160;&#160;本周</string>
     <string name="week_format_not">第%s周&#160;&#160;非本周</string>
     <string name="week_format_not_return">第%s周&#160;&#160;非本周(长按返回%s)</string>
     <string name="refresh_success">课表刷新成功</string>
 
-    <!--AddCourseActivity-->
-    <string name="add_course">添加课程</string>
-    <string name="save">保存</string>
-    <string name="course_name">课程名称</string>
-    <string name="select_course_week">请选择起止周</string>
-    <string name="select_course_time">请选择上课时间</string>
-    <string name="input_teacher">授课老师（选填）</string>
-    <string name="input_address">请输入上课地点（选填）</string>
-    <string name="add_course_btn">添加时间段</string>
-
     <!--ExamActivity-->
     <string name="exam">考试查询</string>
-
-    <!--AddExamActivity-->
-    <string name="add_exam">添加自定义考试</string>
-    <string name="input_exam_name">请输入课程名称</string>
-    <string name="input_exam_time">请选择考试时间</string>
-    <string name="display_exam_address">请输入考试地点（选填）</string>
-    <string name="display_exam_num">请输入座位号（选填）</string>
-    <string name="save_exam">保存考试</string>
-
-    <!--NoticeActivity-->
-    <string name="notice">校园后勤处公告</string>
 
     <!--AboutActivity-->
     <string name="about">关于iFAFU</string>
@@ -64,4 +42,18 @@
     <string name="menu_logout">切换用户</string>
     <string name="menu_about">关于应用</string>
     <string name="menu_fback">反馈问题</string>
+
+    <!--SyllabusItemActivity-->
+    <string name="course_detail">课程详情</string>
+    <string name="loading">加载中…</string>
+    <string name="course_name">课程名称</string>
+    <string name="course_time">上课时间</string>
+    <string name="course_address">教室</string>
+    <string name="course_teacher">教师</string>
+    <string name="course_weeks">周数</string>
+    <string name="input_course_name">请输入课程名称</string>
+    <string name="select_course_time">请选择上课时间</string>
+    <string name="select_course_week">请选择周数</string>
+    <string name="save_successful">保存成功</string>
+    <string name="delete_successful">删除成功</string>
 </resources>

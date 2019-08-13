@@ -3,11 +3,8 @@ package cn.ifafu.ifafu.data.entity;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.Keep;
-import org.greenrobot.greendao.annotation.Transient;
 
 import java.io.Serializable;
-import java.util.Random;
 
 import cn.ifafu.ifafu.app.School;
 import cn.ifafu.ifafu.data.announce.SchoolCode;

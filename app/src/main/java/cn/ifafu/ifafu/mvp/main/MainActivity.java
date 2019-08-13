@@ -6,8 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,7 +17,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.gyf.immersionbar.ImmersionBar;
 
 import java.util.List;
 
@@ -78,7 +75,7 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
     //初始化侧滑栏样式
     private void initNavigationView() {
         mDrawerLayout.setScrimColor(Color.TRANSPARENT);
-        mDrawerLayout.addDrawerListener(new ZoomDrawerListener(this, mContentLayout, mLeftMenuView));
+        mDrawerLayout.addDrawerListener(new ZoomDrawerListener(this, mDrawerLayout, mContentLayout, mLeftMenuView));
         findViewById(R.id.tv_nav_about).setOnClickListener(this);
         findViewById(R.id.tv_nav_share).setOnClickListener(this);
         findViewById(R.id.tv_nav_fback).setOnClickListener(this);

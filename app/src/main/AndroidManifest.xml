@@ -35,11 +35,11 @@
         <activity android:name=".mvp.main.MainActivity" />
         <activity android:name=".mvp.login.LoginActivity" />
         <activity android:name=".mvp.syllabus.SyllabusActivity" />
-        <activity android:name=".mvp.add_course.AddCourseActivity" />
         <activity android:name=".mvp.exam.ExamActivity" />
-        <activity android:name=".mvp.add_exam.AddExamActivity" />
         <activity android:name=".mvp.other.AboutActivity" />
         <activity android:name=".mvp.web.WebActivity" />
+        <activity android:name=".mvp.score.ScoreActivity" />
+        <activity android:name=".mvp.syllabus_item.SyllabusItemActivity" />
 
         <!-- 配置APP渠道号 -->
         <meta-data

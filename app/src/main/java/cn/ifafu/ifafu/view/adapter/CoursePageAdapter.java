@@ -1,7 +1,6 @@
 package cn.ifafu.ifafu.view.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -116,20 +114,8 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
     public void setCourseList(List<Course> courseList) {
         mCourseList.clear();
         for (Course course : courseList) {
-            if (course.getWeekType() == Course.SINGLE_WEEK) {
-                int beginWeek = course.getBeginWeek() % 2 == 1 ? course.getBeginWeek() : course.getBeginWeek() + 1;
-                for (int i = beginWeek - 1; i < course.getEndWeek(); i += 2) {
-                    addCourse(i, course);
-                }
-            } else if (course.getWeekType() == Course.DOUBLE_WEEK) {
-                int beginWeek = course.getBeginWeek() % 2 == 0 ? course.getBeginWeek() : course.getBeginWeek() + 1;
-                for (int i = beginWeek - 1; i < course.getEndWeek(); i += 2) {
-                    addCourse(i, course);
-                }
-            } else if (course.getWeekType() == Course.ALL_WEEK) {
-                for (int i = course.getBeginWeek() - 1; i < course.getEndWeek(); i++) {
-                    addCourse(i, course);
-                }
+            for (int week : course.getWeekSet()) {
+                addCourse(week - 1, course);
             }
         }
     }

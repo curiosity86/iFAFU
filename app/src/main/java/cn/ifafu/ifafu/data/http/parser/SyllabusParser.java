@@ -9,6 +9,8 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,9 +72,6 @@ public class SyllabusParser extends BaseParser<List<Course>> {
                     help.nodeNum = Integer.parseInt(td.attr("rowspan"));
                 }
                 List<Course> clist = parseTdElement(td, help);
-//                clist.forEach(c -> {
-//                    System.out.println("name=" + c.getName() + "   weekday = " + c.getWeekday() + "  =>  " + help.col);
-//                });
                 courses.addAll(clist);
             }
             for (Course c : courses) {
@@ -80,6 +79,28 @@ public class SyllabusParser extends BaseParser<List<Course>> {
             }
         }
         return merge(courses);
+    }
+
+    private List<Course> merge(List<Course> courses) {
+        List<Course> newList = new ArrayList<>();
+        Map<String, List<Course>> map = new HashMap<>();
+        for (Course course : courses) {
+            String key = course.getName() + course.getTeacher() + course.getAddress() + course.getWeekday()
+                    + course.getWeekSet().first() + course.getWeekSet().last();
+            if (map.get(key) == null) {
+                map.put(key, new ArrayList<>());
+            }
+            map.get(key).add(course);
+        }
+        for (List<Course> cl : map.values()) {
+            Collections.sort(cl, (o1, o2) -> Integer.compare(o1.getBeginNode(), o2.getBeginNode()));
+            if (cl.size() == 2 && cl.get(0).getBeginNode() + cl.get(0).getNodeCnt() == cl.get(1).getBeginNode()) {
+                cl.get(0).setNodeCnt(cl.get(0).getNodeCnt() + cl.get(1).getNodeCnt());
+                cl.remove(1);
+            }
+            newList.addAll(cl);
+        }
+        return newList;
     }
 
     private String getAccount(Document document) {
@@ -113,26 +134,6 @@ public class SyllabusParser extends BaseParser<List<Course>> {
         return list;
     }
 
-    private List<Course> merge(List<Course> courses) {
-        List<Course> newList = new ArrayList<>();
-        Map<String, List<Course>> map = new HashMap<>();
-        for (Course course : courses) {
-            String key = course.getName() + course.getTeacher() + course.getAddress()
-                    + course.getWeekday() + course.getBeginWeek() + course.getEndWeek();
-            if (map.get(key) == null) {
-                map.put(key, new ArrayList<>());
-            }
-            map.get(key).add(course);
-        }
-        for (List<Course> cl : map.values()) {
-            if (cl.size() == 2 && cl.get(0).getBeginNode() + cl.get(0).getNodeCnt() == cl.get(1).getBeginNode()) {
-                cl.get(0).setNodeCnt(cl.get(0).getNodeCnt() + cl.get(1).getNodeCnt());
-                newList.remove(1);
-            }
-            newList.addAll(cl);
-        }
-        return newList;
-    }
 
     /**
      * flag标记课程位置，用于定位
@@ -199,21 +200,27 @@ public class SyllabusParser extends BaseParser<List<Course>> {
             course.setWeekday(weekday);
         }
 
-        //weekType
-        if (t.contains("单周")) {
-            course.setWeekType(Course.SINGLE_WEEK);
-        } else if (t.contains("双周")) {
-            course.setWeekType(Course.DOUBLE_WEEK);
-        } else {
-            course.setWeekType(Course.ALL_WEEK);
-        }
-
-        //startWeek, endWeek
         Matcher m2 = Pattern.compile("第[0-9]+-[0-9]+周").matcher(t);
         if (m2.find()) {
             List<Integer> intList = RegexUtils.getNumbers(m2.group());
-            course.setBeginWeek(intList.get(0));
-            course.setEndWeek(intList.get(1));
+            int beginWeek = intList.get(0);
+            int endWeek = intList.get(1);
+            //weekType
+            if (t.contains("单周")) {
+                beginWeek = beginWeek % 2 == 1 ? beginWeek : beginWeek + 1;
+                for (int i = beginWeek; i <= endWeek; i += 2) {
+                    course.getWeekSet().add(i);
+                }
+            } else if (t.contains("双周")) {
+                beginWeek = beginWeek % 2 == 0 ? beginWeek : beginWeek + 1;
+                for (int i = beginWeek; i <= endWeek; i += 2) {
+                    course.getWeekSet().add(i);
+                }
+            } else {
+                for (int i = beginWeek; i <= endWeek; i++) {
+                    course.getWeekSet().add(i);
+                }
+            }
         }
     }
 

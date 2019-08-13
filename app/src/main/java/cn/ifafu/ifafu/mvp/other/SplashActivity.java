@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.tencent.bugly.Bugly;
-
 import java.util.concurrent.Callable;
 
 import cn.ifafu.ifafu.R;

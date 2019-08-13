@@ -1,6 +1,8 @@
 package cn.ifafu.ifafu.view.listener;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -11,11 +13,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 public class ZoomDrawerListener implements DrawerLayout.DrawerListener {
 
     private Activity mActivity;
+    private DrawerLayout mDrawerLayout;
     private View mContentView;
     private View mLeftView;
 
-    public ZoomDrawerListener(Activity activity, View contentView, View leftMenu) {
+    public ZoomDrawerListener(Activity activity, DrawerLayout drawerLayout, View contentView, View leftMenu) {
         mActivity = activity;
+        mDrawerLayout = drawerLayout;
         mContentView = contentView;
         mLeftView = leftMenu;
     }
@@ -56,8 +60,7 @@ public class ZoomDrawerListener implements DrawerLayout.DrawerListener {
         mContentView.setTranslationX(-0.1f * percent * mContentView.getWidth());
         mLeftView.setScaleX(percent * 0.5f + 0.5f);
         mLeftView.setScaleY(percent * 0.5f + 0.5f);
-        mLeftView.setTranslationX(0.1f * (1 - percent) * mLeftView.getWidth());
-        mLeftView.setAlpha(percent);
+        mLeftView.setTranslationX(0.2f * (1 - percent) * mLeftView.getWidth());
     }
 
     private void l(String msg) {

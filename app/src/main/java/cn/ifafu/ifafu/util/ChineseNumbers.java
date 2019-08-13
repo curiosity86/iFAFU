@@ -1,13 +1,9 @@
 package cn.ifafu.ifafu.util;
 
-import android.util.Log;
-
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * Created by wangweiwei01 on 17/4/1.

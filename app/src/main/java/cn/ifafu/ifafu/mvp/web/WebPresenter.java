@@ -18,7 +18,6 @@ class WebPresenter extends BaseZFPresenter<WebContract.View, WebContract.Model> 
 
     @Override
     public void onStart() {
-        super.onStart();
         mCompDisposable.add(mModel.getMainHtml()
                 .map(s -> {
                     if (s.contains("请登录")) {

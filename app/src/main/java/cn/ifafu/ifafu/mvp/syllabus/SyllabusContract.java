@@ -82,8 +82,6 @@ class SyllabusContract {
 
     interface View extends IView {
 
-        void setCurrentWeek(int firstWeek);
-
         void setFirstStudyDay(String firstStudyDay);
 
         /**
@@ -107,7 +105,7 @@ class SyllabusContract {
          * 设置当前周
          * @param week
          */
-        void setmCurrentWeek(int week);
+        void setCurrentWeek(int week);
 
         void setSyllabusDate(List<Course> courses);
 

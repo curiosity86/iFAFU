@@ -10,7 +10,7 @@ import cn.ifafu.ifafu.app.School;
 import cn.ifafu.ifafu.data.entity.Response;
 import cn.ifafu.ifafu.data.entity.User;
 import cn.ifafu.ifafu.data.entity.ZFUrl;
-import cn.ifafu.ifafu.data.http.RetrofitManager;
+import cn.ifafu.ifafu.data.http.APIManager;
 import cn.ifafu.ifafu.data.exception.VerifyException;
 import cn.ifafu.ifafu.data.http.parser.DefaultParser;
 import cn.ifafu.ifafu.data.http.parser.LoginParser;
@@ -27,7 +27,7 @@ public class BaseZFModel extends BaseModel implements IZFModel {
 
     public BaseZFModel(Context context) {
         super(context);
-        zhengFang = RetrofitManager.obtainService(ZhengFangService.class);
+        zhengFang = APIManager.getZhengFangAPI();
     }
 
     @Override

@@ -8,7 +8,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.Callable;
 
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Course;
@@ -16,7 +15,6 @@ import cn.ifafu.ifafu.mvp.base.BaseZFPresenter;
 import cn.ifafu.ifafu.util.RxUtils;
 import cn.ifafu.ifafu.view.syllabus.data.DayOfWeek;
 import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
 
 public class SyllabusPresenter extends BaseZFPresenter<SyllabusContract.View, SyllabusContract.Model>
         implements SyllabusContract.Presenter {
@@ -28,7 +26,6 @@ public class SyllabusPresenter extends BaseZFPresenter<SyllabusContract.View, Sy
 
     @Override
     public void onStart() {
-        super.onStart();
         mView.setSyllabusRowCount(mModel.getRowCount());
         mView.setCourseBeginTime(mModel.getCourseBeginTime());
         String firstStudyDay = mModel.getFirstStudyDay();

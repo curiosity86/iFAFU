@@ -7,12 +7,11 @@ import java.util.List;
 
 import cn.ifafu.ifafu.app.School;
 import cn.ifafu.ifafu.dao.CourseDao;
+import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.data.entity.User;
 import cn.ifafu.ifafu.data.entity.ZFUrl;
-import cn.ifafu.ifafu.data.local.DaoManager;
-import cn.ifafu.ifafu.data.entity.Course;
-import cn.ifafu.ifafu.data.http.RetrofitManager;
 import cn.ifafu.ifafu.data.http.parser.SyllabusParser;
+import cn.ifafu.ifafu.data.local.DaoManager;
 import cn.ifafu.ifafu.mvp.base.BaseZFModel;
 import io.reactivex.Observable;
 

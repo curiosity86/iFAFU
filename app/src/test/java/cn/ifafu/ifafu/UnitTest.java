@@ -1,13 +1,8 @@
 package cn.ifafu.ifafu;
 
-import android.content.Context;
-import android.content.Intent;
-import android.util.SparseArray;
-
-import com.alibaba.fastjson.JSONObject;
-
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,6 +33,7 @@ public class UnitTest {
 
     @Test
     public void test() {
-        System.out.println(JSONObject.toJSONString(URL_MAP));
+        boolean[] bs = new boolean[24];
+        System.out.println(Arrays.toString(bs));
     }
 }

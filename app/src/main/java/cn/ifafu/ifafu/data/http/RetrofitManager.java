@@ -2,9 +2,9 @@ package cn.ifafu.ifafu.data.http;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import cn.ifafu.ifafu.app.Constant;
-import cn.ifafu.ifafu.data.http.service.ZhengFangService;
 import cn.ifafu.ifafu.util.SPUtils;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -14,11 +14,16 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 public class RetrofitManager {
 
-    private static ZhengFangService service;
-
     private static Retrofit retrofit;
 
+    private static final int CONNECT_TIME_OUT = 10;//连接超时时长x秒
+    private static final int READ_TIME_OUT = 10;//读数据超时时长x秒
+    private static final int WRITE_TIME_OUT = 10;//写数据接超时时长x秒
+
     private static List<String> cookieList = new ArrayList<>();
+
+    private RetrofitManager() {
+    }
 
     private static OkHttpClient getOkHttpClient() {
         return new OkHttpClient.Builder()
@@ -27,7 +32,7 @@ public class RetrofitManager {
                     String cookieString = response.header("Set-Cookie");
                     if (cookieString != null) {
                         String[] cookies = cookieString.split(";");
-                        for (int i = 0; i < cookies.length - 1 ; i++) {
+                        for (int i = 0; i < cookies.length - 1; i++) {
                             if (!cookies[i].isEmpty()) {
                                 cookieList.add(cookies[i]);
                             }
@@ -47,10 +52,13 @@ public class RetrofitManager {
                     }
                     return chain.proceed(request);
                 })
+                .connectTimeout(CONNECT_TIME_OUT, TimeUnit.SECONDS)
+                .writeTimeout(WRITE_TIME_OUT, TimeUnit.SECONDS)
+                .readTimeout(READ_TIME_OUT, TimeUnit.SECONDS)
                 .build();
     }
 
-    public static <T> T obtainService(Class<T> clazz) {
+    static <T> T obtainService(Class<T> clazz) {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(Constant.IFAFU_BASE_URL)

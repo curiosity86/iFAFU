@@ -9,7 +9,7 @@
         <item name="buttonStyle">@style/Button</item>
         <item name="titleTextColor">#3E3E3E</item>
         <!--<item name="android:windowAnimationStyle">@style/activityAnim</item>-->
-        <item name="android:activityCloseExitAnimation">@android:anim/fade_out</item>
+        <!--<item name="android:activityCloseExitAnimation">@android:anim/fade_out</item>-->
     </style>
 
     <!--<style name="activityAnim">-->
@@ -70,10 +70,6 @@
     <style name="TextView.Exam">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/global_blue</item>
-    </style>
-    
-    <style name="Dialog">
-
     </style>
 
     <style name="Dialog.Loading" parent="@android:style/Theme.Dialog">

@@ -15,7 +15,7 @@ import cn.ifafu.ifafu.dao.DaoSession;
 import cn.ifafu.ifafu.data.entity.Menu;
 import cn.ifafu.ifafu.data.entity.User;
 import cn.ifafu.ifafu.data.entity.Weather;
-import cn.ifafu.ifafu.data.http.RetrofitManager;
+import cn.ifafu.ifafu.data.http.APIManager;
 import cn.ifafu.ifafu.data.http.service.WeatherService;
 import cn.ifafu.ifafu.data.local.DaoManager;
 import cn.ifafu.ifafu.mvp.base.BaseZFModel;
@@ -67,7 +67,7 @@ public class MainModel extends BaseZFModel implements MainContract.Model {
         return Observable.fromCallable(() -> {
             Weather weather = new Weather();
             String referer = "http://www.weather.com.cn/weather1d/" + cityCode + ".shtml";
-            WeatherService service = RetrofitManager.obtainService(WeatherService.class);
+            WeatherService service = APIManager.getWeatherAPI();
 
             // 获取城市名和当前温度
             String url1 = "http://d1.weather.com.cn/sk_2d/" + cityCode + ".html";

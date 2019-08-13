@@ -53,16 +53,6 @@ public class CourseDetailDialog extends Dialog {
         nameTv.setText(course.getName());
         addressTv.setText(course.getAddress());
         teacherTv.setText(course.getTeacher());
-        String weekType;
-        if (course.getWeekType() == Course.SINGLE_WEEK) {
-            weekType = "单周";
-        } else if (course.getWeekType() == Course.DOUBLE_WEEK) {
-            weekType = "双周";
-        } else {
-            weekType = "";
-        }
-        weekTv.setText(String.format("%s 第%d - %d周 %s",
-                DateUtils.getWeekdayCN(course.getWeekday()), course.getBeginWeek(), course.getEndWeek(), weekType));
         timeTv.setText(String.format("%s 第%d - %d节",
                 DateUtils.getWeekdayCN(course.getWeekday()), course.getBeginNode(),
                 course.getBeginNode() + course.getNodeCnt() - 1));

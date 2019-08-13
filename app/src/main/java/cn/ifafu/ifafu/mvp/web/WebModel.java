@@ -2,7 +2,6 @@ package cn.ifafu.ifafu.mvp.web;
 
 import android.content.Context;
 
-import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.app.School;
 import cn.ifafu.ifafu.data.entity.ZFUrl;
 import cn.ifafu.ifafu.mvp.base.BaseZFModel;
