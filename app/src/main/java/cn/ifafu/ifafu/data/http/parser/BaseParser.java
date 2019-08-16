@@ -22,4 +22,9 @@ public abstract class BaseParser<T> implements ObservableTransformer<ResponseBod
         }
         return params;
     }
+
+    protected String getAccount(Document document) {
+        Elements e = document.select("span[id=\"Label5\"]");
+        return e.text().replace("学号：", "");
+    }
 }

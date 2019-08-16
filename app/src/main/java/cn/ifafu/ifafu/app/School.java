@@ -19,7 +19,7 @@ public class School {
                 "CheckCode.aspx",
                 "xs_main.aspx",
                 new QueryApi("xskbcx.aspx", "N121602"),
-                new QueryApi("xscjcx_dq_fafu.aspx", "N121605")));
+                new QueryApi("xskscx.aspx", "N121605")));
         URL_MAP.put(FAFU_JS, new ZFUrl(FAFU_JS, "http://js.ifafu.cn/",
                 "default.aspx",
                 "CheckCode.aspx",

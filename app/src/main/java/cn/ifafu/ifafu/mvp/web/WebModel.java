@@ -21,7 +21,7 @@ public class WebModel extends BaseZFModel implements WebContract.Model {
 
     @Override
     public Observable<String> getMainHtml() {
-        return zhengFang.mainHtml(getMainUrl())
+        return zhengFang.base(getMainUrl())
                 .map(ResponseBody::string);
     }
 }

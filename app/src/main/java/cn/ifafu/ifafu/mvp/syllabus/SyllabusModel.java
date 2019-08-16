@@ -3,6 +3,7 @@ package cn.ifafu.ifafu.mvp.syllabus;
 import android.content.Context;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import cn.ifafu.ifafu.app.School;
@@ -66,7 +67,7 @@ class SyllabusModel extends BaseZFModel implements SyllabusContract.Model {
     public Observable<List<Course>> getCoursesFromNet() {
         String url = School.getUrl(ZFUrl.SYLLABUS, user);
         String referer = School.getUrl(ZFUrl.MAIN, user);
-        return zhengFang.getInfo(url, referer)
+        return zhengFang.getInfo(url, referer, Collections.emptyMap())
                 .compose(new SyllabusParser());
     }
 

@@ -5,10 +5,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
+    <cn.ifafu.ifafu.view.WToolbar
         android:id="@+id/tb_web"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:background="@color/white"
         app:navigationIcon="@drawable/ic_back"
         app:title="网页模式" />

@@ -1,5 +1,7 @@
 package cn.ifafu.ifafu.view.syllabus.data;
 
+import androidx.annotation.NonNull;
+
 import cn.ifafu.ifafu.util.ColorUtils;
 
 public class CourseBase implements ToCourse {
@@ -7,7 +9,7 @@ public class CourseBase implements ToCourse {
     // 显示的文本
     private String text;
 
-    // 显示的列数
+    // 星期
     private int weekday;
 
     // 显示开始的行数
@@ -95,6 +97,7 @@ public class CourseBase implements ToCourse {
         return this;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "CourseBase{" +

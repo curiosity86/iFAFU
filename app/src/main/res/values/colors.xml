@@ -12,10 +12,9 @@
     <color name="black">#000</color>
     <color name="effective_black">#2a2a2a</color>
     <color name="light_black">#3E3E3E</color>
-    <color name="blue">#5697E5</color>
+    <color name="blue">#0000FF</color>
+    <color name="little_blue">#5697E5</color>
     <color name="global_blue">#157EFB</color>
     <color name="light_gray">#dbdbdb</color>
-
-    <color name="colorBlue">#0000FF</color>
 
 </resources>

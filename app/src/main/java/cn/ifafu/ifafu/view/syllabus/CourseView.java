@@ -28,6 +28,9 @@ import cn.ifafu.ifafu.view.syllabus.data.CourseBase;
 import cn.ifafu.ifafu.view.syllabus.data.ToCourse;
 import cn.ifafu.ifafu.util.ColorUtils;
 
+/**
+ * Created by woolsen
+ */
 public class CourseView extends FrameLayout {
 
     //rootView's width and height
@@ -193,6 +196,7 @@ public class CourseView extends FrameLayout {
      */
     public <T extends ToCourse> void setCourses(List<T> courses) {
         mCourseViewMap.clear();
+        if (courses == null) return;
         for (T t : courses) {
             mCourseViewMap.put(t.toCourseBase(), null);
         }

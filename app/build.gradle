@@ -54,7 +54,7 @@ android {
 
     greendao {
         //版本号，升级时可配置
-        schemaVersion 7
+        schemaVersion 8
         daoPackage 'cn.ifafu.ifafu.dao'
     }
 
@@ -73,7 +73,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation "androidx.viewpager2:viewpager2:1.0.0-beta02"
+    implementation "androidx.viewpager2:viewpager2:1.0.0-beta03"
     implementation 'androidx.core:core:1.2.0-alpha03'
     implementation 'com.google.android.material:material:1.1.0-alpha09'
     // 选择器

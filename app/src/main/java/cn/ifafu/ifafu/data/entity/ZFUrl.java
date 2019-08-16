@@ -1,5 +1,7 @@
 package cn.ifafu.ifafu.data.entity;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Random;
 
 public class ZFUrl {
@@ -49,22 +51,27 @@ public class ZFUrl {
     }
 
     public String get(int filed, String xh, String xm) {
-        String baseUrl = getBaseUrl();
-        switch (filed) {
-            case VERIFY:
-                return String.format("%s%s", baseUrl, verify);
-            case LOGIN:
-                return String.format("%s%s", baseUrl, login);
-            case MAIN:
-                return String.format("%s%s?xh=%s", baseUrl, main, xh);
-            case SYLLABUS:
-                return String.format("%s%s?xh=%s&xm=%s&gnmkdm=%s",
-                        baseUrl, syllabus.getApi(), xh, xm, syllabus.getGnmkdm());
-            case EXAM:
-                return String.format("%s%s?xh=%s&xm=%s&gnmkdm=%s",
-                        baseUrl, exam.getApi(), xh, xm, exam.getGnmkdm());
-            default:
-                throw new IllegalArgumentException("field is invalid");
+        try {
+            String baseUrl = getBaseUrl();
+            switch (filed) {
+                case VERIFY:
+                    return String.format("%s%s", baseUrl, verify);
+                case LOGIN:
+                    return String.format("%s%s", baseUrl, login);
+                case MAIN:
+                    return String.format("%s%s?xh=%s", baseUrl, main, xh);
+                case SYLLABUS:
+                    return String.format("%s%s?xh=%s&xm=%s&gnmkdm=%s",
+                            baseUrl, syllabus.getApi(), xh, URLEncoder.encode(xm, "GBK"), syllabus.getGnmkdm());
+                case EXAM:
+                    return String.format("%s%s?xh=%s&xm=%s&gnmkdm=%s",
+                            baseUrl, exam.getApi(), xh, URLEncoder.encode(xm, "GBK"), exam.getGnmkdm());
+                default:
+                    throw new IllegalArgumentException("field is invalid");
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

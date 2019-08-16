@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="WToolbar">
+        <attr name="title" format="string" />
+        <attr name="titleTextColor" format="color" />
+        <attr name="titleTextAppearance" format="reference" />
+        <attr name="subtitle" format="string" />
+        <attr name="subtitleTextColor" format="color" />
+        <attr name="subtitleTextAppearance" format="reference" />
+        <attr name="navigationIcon" format="reference" />
+        <attr name="navigationContentDescription" format="string" />
+    </declare-styleable>
+
+    <attr name="wToolbarStyle" format="reference" />
+
+</resources>

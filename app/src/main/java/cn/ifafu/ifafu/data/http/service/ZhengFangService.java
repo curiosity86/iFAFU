@@ -14,13 +14,13 @@ import retrofit2.http.Url;
 public interface ZhengFangService {
 
     @GET
-    Observable<ResponseBody> mainHtml(@Url String url);
-
-    @GET
     Observable<ResponseBody> getCaptcha(@Url String url);
 
     @GET
-    Observable<ResponseBody> loginBase(@Url String url);
+    Observable<ResponseBody> base(@Url String url);
+
+    @GET
+    Observable<ResponseBody> base(@Url String url, @Header("Referer") String referer);
 
     @POST
     @FormUrlEncoded
@@ -29,8 +29,10 @@ public interface ZhengFangService {
             @FieldMap Map<String, String> filedMap);
 
     @POST
+    @FormUrlEncoded
     Observable<ResponseBody> getInfo(
             @Url String url,
-            @Header("Referer") String referer
+            @Header("Referer") String referer,
+            @FieldMap Map<String, String> fieldMap
     );
 }

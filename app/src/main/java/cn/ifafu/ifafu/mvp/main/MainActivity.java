@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
     //初始化侧滑栏样式
     private void initNavigationView() {
         mDrawerLayout.setScrimColor(Color.TRANSPARENT);
-        mDrawerLayout.addDrawerListener(new ZoomDrawerListener(this, mDrawerLayout, mContentLayout, mLeftMenuView));
+        mDrawerLayout.addDrawerListener(new ZoomDrawerListener(mContentLayout, mLeftMenuView));
         findViewById(R.id.tv_nav_about).setOnClickListener(this);
         findViewById(R.id.tv_nav_share).setOnClickListener(this);
         findViewById(R.id.tv_nav_fback).setOnClickListener(this);

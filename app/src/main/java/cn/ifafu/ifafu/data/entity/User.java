@@ -10,7 +10,7 @@ import cn.ifafu.ifafu.app.School;
 import cn.ifafu.ifafu.data.announce.SchoolCode;
 
 @Entity
-public class User implements Serializable {
+public class User {
 
     @Id
     private String account; // 学号
@@ -20,8 +20,6 @@ public class User implements Serializable {
 
     @SchoolCode
     private int schoolCode = School.FAFU;
-
-    private static final long serialVersionUID = 0x00010123;
 
     @Generated(hash = 1559455514)
     public User(String account, String password, String name, String token, int schoolCode) {

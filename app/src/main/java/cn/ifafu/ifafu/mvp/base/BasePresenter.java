@@ -7,6 +7,7 @@ import cn.ifafu.ifafu.mvp.base.i.IModel;
 import cn.ifafu.ifafu.mvp.base.i.IPresenter;
 import cn.ifafu.ifafu.mvp.base.i.IView;
 
+import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 
 public abstract class BasePresenter<V extends IView, M extends IModel> implements IPresenter {
@@ -32,7 +33,6 @@ public abstract class BasePresenter<V extends IView, M extends IModel> implement
         mCompDisposable = null;
         mView = null;
     }
-
 
     protected void onError(Throwable throwable) {
         if (throwable instanceof ConnectException) {

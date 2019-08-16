@@ -28,11 +28,11 @@
 
             <include
                 layout="@layout/include_weather"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_width="wrap_content" />
+                android:layout_marginEnd="16dp" />
 
         </RelativeLayout>
 
@@ -40,11 +40,11 @@
             android:id="@+id/rv_menu"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="4dp"
+            android:background="@color/white"
+            android:overScrollMode="never"
             android:paddingStart="32dp"
             android:paddingEnd="32dp"
-            android:background="@color/white"
-            android:layout_marginTop="4dp"
-            android:overScrollMode="never"
             android:scrollbars="none" />
 
     </LinearLayout>

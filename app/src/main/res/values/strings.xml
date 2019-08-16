@@ -26,6 +26,8 @@
 
     <!--ExamActivity-->
     <string name="exam">考试查询</string>
+    <string name="exam_over">已结束</string>
+    <string name="exam_hint">考试记得带齐证件和文具哦</string>
 
     <!--AboutActivity-->
     <string name="about">关于iFAFU</string>

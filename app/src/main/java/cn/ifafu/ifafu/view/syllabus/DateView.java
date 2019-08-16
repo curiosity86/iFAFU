@@ -18,6 +18,9 @@ import java.util.Calendar;
 
 import cn.ifafu.ifafu.util.DensityUtils;
 
+/**
+ * Created by woolsen
+ */
 public class DateView extends LinearLayout {
 
     //rootView's width and height

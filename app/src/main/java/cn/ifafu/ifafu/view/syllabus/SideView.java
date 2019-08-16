@@ -16,6 +16,9 @@ import androidx.annotation.Nullable;
 
 import cn.ifafu.ifafu.util.DensityUtils;
 
+/**
+ * Created by woolsen
+ */
 public class SideView extends LinearLayout {
 
     //rootView's width and height
@@ -36,6 +39,7 @@ public class SideView extends LinearLayout {
     private Paint mLinePaint;
     private Path mLinePath = new Path();
 
+    // 上课时间
     private String[] timeTexts;
     private SideItem[] sideItems;
 

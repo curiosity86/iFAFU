@@ -2,6 +2,7 @@ package cn.ifafu.ifafu.view.adapter;
 
 import android.content.Context;
 import android.util.SparseArray;
+import android.view.Choreographer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,7 @@ import cn.ifafu.ifafu.view.syllabus.DateView;
 import cn.ifafu.ifafu.view.syllabus.SideView;
 import cn.ifafu.ifafu.view.syllabus.data.DayOfWeek;
 
-public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.ViewPagerViewHolder> {
+public class SyllabusPageAdapter extends RecyclerView.Adapter<SyllabusPageAdapter.ViewPagerViewHolder> {
 
     private int mPageCount = 24;
 
@@ -38,9 +39,7 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
 
     private String dateOfFirstStudyDay;
 
-    //TODO 在5.1系统上，CourseView在绘制时会测量两次，在测量第二次时高度会出错，目前未能发现是啥原因
-
-    public CoursePageAdapter(Context context) {
+    public SyllabusPageAdapter(Context context) {
         mContext = context;
     }
 
@@ -64,10 +63,8 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
                 onCourseClickListener.onClick(v, course);
             }
         });
-        if (mCourseList.get(position) != null) {
-            holder.courseView.setCourses(mCourseList.get(position));
-            holder.courseView.redraw();
-        }
+        holder.courseView.setCourses(mCourseList.get(position));
+        holder.courseView.redraw();
         holder.dateView.setFirstDayOfWeek(firstDayOfWeek);
         if (dateOfFirstStudyDay != null) {
             holder.dateView.setDateTexts(DateUtils.getWeekDates(dateOfFirstStudyDay, position, firstDayOfWeek, "MM-dd"));
@@ -162,7 +159,6 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
         for (Object s : msg) {
             sb.append(s).append(" ");
         }
-//        Log.d("Syllabus", sb.toString());
     }
 
     private void l(Object... msg) {
@@ -171,6 +167,5 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
         for (Object s : msg) {
             sb.append(s).append(" ");
         }
-//        Log.d("Syllabus", sb.toString());
     }
 }

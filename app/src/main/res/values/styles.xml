@@ -8,6 +8,7 @@
         <item name="imageButtonStyle">@style/ImageButton</item>
         <item name="buttonStyle">@style/Button</item>
         <item name="titleTextColor">#3E3E3E</item>
+        <item name="wToolbarStyle">@style/toolbarStyle</item>
         <!--<item name="android:windowAnimationStyle">@style/activityAnim</item>-->
         <!--<item name="android:activityCloseExitAnimation">@android:anim/fade_out</item>-->
     </style>
@@ -59,12 +60,12 @@
     </style>
 
     <style name="EditText.Material">
-        <item name="android:textColorHint">@color/blue</item>
+        <item name="android:textColorHint">@color/little_blue</item>
         <item name="android:textCursorDrawable">@drawable/shape_edit_cursor</item>
     </style>
 
     <style name="TextInput" parent="Base.TextAppearance.AppCompat.Caption">
-        <item name="android:textColor">@color/blue</item>
+        <item name="android:textColor">@color/little_blue</item>
     </style>
 
     <style name="TextView.Exam">
@@ -82,6 +83,24 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:backgroundDimAmount">0.6</item>
+    </style>
+
+
+    <!--WToolbarStyle-->
+    <style name="toolbarStyle">
+        <item name="android:title">123</item>
+        <item name="titleTextAppearance">@style/titleTextAppearance</item>
+        <item name="subtitleTextAppearance">@style/subtitleTextAppearance</item>
+    </style>
+
+    <style name="titleTextAppearance">
+        <item name="android:textColor">#222222</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="subtitleTextAppearance">
+        <item name="android:textColor">#666666</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
 </resources>

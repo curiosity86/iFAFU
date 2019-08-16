@@ -103,11 +103,6 @@ public class SyllabusParser extends BaseParser<List<Course>> {
         return newList;
     }
 
-    private String getAccount(Document document) {
-        Elements e = document.select("span[id=\"Label5\"]");
-        return e.text().replace("学号：", "");
-    }
-
     private List<Course> parseTdElement(Element td, Help help) {
         List<Course> list = new ArrayList<>();
         String[] s = td.text().trim().split(" ");

@@ -21,7 +21,7 @@ import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
 import cn.ifafu.ifafu.mvp.syllabus_item.SyllabusItemActivity;
 import cn.ifafu.ifafu.util.NumberUtils;
-import cn.ifafu.ifafu.view.adapter.CoursePageAdapter;
+import cn.ifafu.ifafu.view.adapter.SyllabusPageAdapter;
 import cn.ifafu.ifafu.view.dialog.ProgressDialog;
 
 public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
@@ -29,7 +29,7 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
 
     private ViewPager2 viewPager;
 
-    private CoursePageAdapter adapter;
+    private SyllabusPageAdapter adapter;
 
     private TextView cornerTV;
 
@@ -65,7 +65,7 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
         viewPager = findViewById(R.id.view_pager);
         subTitleTV = findViewById(R.id.tv_sub_title);
         subTitleTV.setOnLongClickListener(this);
-        adapter = new CoursePageAdapter(this);
+        adapter = new SyllabusPageAdapter(this);
         adapter.setCourserClickListener((v, course) ->{
             Intent intent = new Intent(this, SyllabusItemActivity.class);
             intent.putExtra("course_id", ((Course) course.getOther()).getId());

@@ -1,82 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#ffffff"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:background="@color/white"
+    android:padding="16dp">
 
     <TextView
-        android:id="@+id/tv_name"
+        android:id="@+id/tv_exam_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        style="@style/TextView.Exam" />
+        android:layout_gravity="bottom"
+        android:textColor="@color/black"
+        android:textSize="24sp" />
 
     <TextView
-        android:id="@+id/tv_date"
-        android:layout_width="wrap_content"
-        android:layout_height="24dp"
-        android:layout_below="@id/tv_name"
-        android:layout_marginTop="4dp"
-        android:drawablePadding="4dp"
-        android:drawableStart="@drawable/ic_date"
-        style="@style/TextView.Exam"/>
-
-    <TextView
-        android:id="@+id/tv_time"
-        android:layout_width="wrap_content"
-        android:layout_height="24dp"
-        android:layout_below="@id/tv_date"
-        android:layout_marginTop="4dp"
-        android:minWidth="80dp"
-        android:drawablePadding="4dp"
-        android:drawableStart="@drawable/ic_time"
-        style="@style/TextView.Exam" />
-
-    <TextView
-        android:id="@+id/et_address"
-        android:layout_width="wrap_content"
-        android:layout_height="24dp"
-        android:minWidth="80dp"
-        android:layout_toEndOf="@id/tv_time"
-        android:layout_alignTop="@id/tv_time"
-        android:drawableStart="@drawable/ic_loc"
-        android:drawablePadding="4dp"
-        style="@style/TextView.Exam"/>
-
-    <TextView
-        android:id="@+id/tv_seat"
-        android:layout_width="wrap_content"
-        android:layout_height="24dp"
-        android:layout_toEndOf="@id/et_address"
-        android:layout_alignTop="@id/et_address"
-        android:drawablePadding="4dp"
-        android:drawableStart="@drawable/ic_seat"
-        style="@style/TextView.Exam"/>
-
-    <LinearLayout
+        android:id="@+id/tv_exam_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_alignBottom="@id/tv_exam_date"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="4dp"
+        android:layout_toEndOf="@id/tv_exam_date"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_exam_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_exam_date"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_exam_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_exam_name"
+        android:layout_marginTop="8dp"
+        android:textColor="#adadad"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_exam_last"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_alignParentEnd="true">
-
-        <TextView
-            android:id="@+id/tv_last_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/TextView.Exam"
-            android:textSize="40sp"/>
-
-        <TextView
-            android:id="@+id/tv_time_unit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/TextView.Exam"
-            android:textSize="20sp"/>
-
-    </LinearLayout>
+        android:background="@drawable/shape_exam_item"
+        android:gravity="center"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
 
 </RelativeLayout>
+
+
+
+
+

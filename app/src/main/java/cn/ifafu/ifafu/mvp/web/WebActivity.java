@@ -9,13 +9,13 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 
 import com.jaeger.library.StatusBarUtil;
 
 import cn.ifafu.ifafu.R;
-import cn.ifafu.ifafu.view.dialog.ProgressDialog;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
+import cn.ifafu.ifafu.view.WToolbar;
+import cn.ifafu.ifafu.view.dialog.ProgressDialog;
 
 public class WebActivity extends BaseActivity<WebContract.Presenter> implements WebContract.View {
 
@@ -23,7 +23,7 @@ public class WebActivity extends BaseActivity<WebContract.Presenter> implements 
 
     private WebView webView;
 
-    private Toolbar toolbar;
+    private WToolbar toolbar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,9 +45,6 @@ public class WebActivity extends BaseActivity<WebContract.Presenter> implements 
         toolbar.setOnClickListener(v -> finish());
 
         mPresenter.onStart();
-    }
-
-    void setCookie() {
     }
 
     @SuppressLint("SetJavaScriptEnabled")
