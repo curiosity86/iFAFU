@@ -23,6 +23,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
+import cn.ifafu.ifafu.view.WToolbar;
 import cn.ifafu.ifafu.view.adapter.WeekItemAdapter;
 
 public class SyllabusItemActivity extends BaseActivity<SyllabusItemContract.Presenter>
@@ -34,6 +35,8 @@ public class SyllabusItemActivity extends BaseActivity<SyllabusItemContract.Pres
     ImageButton btnDelete;
     @BindView(R.id.btn_ok)
     ImageButton btnOk;
+    @BindView(R.id.tb_exam_item)
+    WToolbar tbExamItem;
     @BindView(R.id.rv_course_weeks)
     RecyclerView rvCourseWeeks;
     @BindView(R.id.tv_course_name)
@@ -72,6 +75,8 @@ public class SyllabusItemActivity extends BaseActivity<SyllabusItemContract.Pres
         rvCourseWeeks.setLayoutManager(new GridLayoutManager(this, 6, RecyclerView.VERTICAL, false));
         rvCourseWeeks.setAdapter(weekAdapter);
 
+        tbExamItem.setNavigationOnClickListener(v -> finish());
+
         timeOPV = new OptionsPickerBuilder(this,
                 (options1, options2, options3, v) -> {
                     if (options2 > options3) {
@@ -106,14 +111,11 @@ public class SyllabusItemActivity extends BaseActivity<SyllabusItemContract.Pres
         etCourseTime.setText(text);
     }
 
-    @OnClick({R.id.btn_finish, R.id.btn_edit, R.id.btn_delete, R.id.btn_ok, R.id.et_course_time})
+    @OnClick({R.id.btn_edit, R.id.btn_delete, R.id.btn_ok, R.id.et_course_time})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.et_course_time:
                 timeOPV.show();
-                break;
-            case R.id.btn_finish:
-                mPresenter.onFinish();
                 break;
             case R.id.btn_edit:
                 mPresenter.onEdit();

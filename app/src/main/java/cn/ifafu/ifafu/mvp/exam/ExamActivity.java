@@ -1,8 +1,8 @@
 package cn.ifafu.ifafu.mvp.exam;
 
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
+import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.jaeger.library.StatusBarUtil;
 
 import java.util.List;
@@ -19,8 +21,10 @@ import butterknife.BindView;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Exam;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
+import cn.ifafu.ifafu.view.EmptyView;
 import cn.ifafu.ifafu.view.WToolbar;
 import cn.ifafu.ifafu.view.adapter.ExamAdapter;
+import cn.ifafu.ifafu.view.dialog.ProgressDialog;
 
 public class ExamActivity extends BaseActivity<ExamContract.Presenter>
         implements ExamContract.View {
@@ -31,8 +35,16 @@ public class ExamActivity extends BaseActivity<ExamContract.Presenter>
     RecyclerView rvExam;
     @BindView(R.id.btn_exam_refresh)
     ImageButton btnRefresh;
+    @BindView(R.id.view_exam_empty)
+    EmptyView emptyView;
 
     private ExamAdapter examAdapter;
+
+    private ProgressDialog progressDialog;
+    private OptionsPickerView<String> yearTermOPV;
+
+    private List<String> years;
+    private List<String> terms;
 
     @Override
     public int initLayout(@Nullable Bundle savedInstanceState) {
@@ -44,22 +56,22 @@ public class ExamActivity extends BaseActivity<ExamContract.Presenter>
         StatusBarUtil.setTransparent(this);
         StatusBarUtil.setLightMode(this);
         mPresenter = new ExamPresenter(this);
+        progressDialog = new ProgressDialog(this);
+
         btnRefresh.setOnClickListener(v -> mPresenter.update());
         tbExam = findViewById(R.id.tb_exam);
-        tbExam.setSubtitle("2019-2020学年第1学期");
-        tbExam.setSubtitleDrawablesRelative(
-                null, null, getContext().getDrawable(R.drawable.ic_down_little), null
-        );
-        tbExam.getSubtitleTextView().setOnClickListener(v -> {
-
-        });
         tbExam.setNavigationOnClickListener(v -> finish());
+
     }
 
     @Override
     public void setExamAdapterData(List<Exam> data) {
-        Log.d(TAG, "exam size = " + data.size());
-        if (examAdapter == null) {
+        if (data.isEmpty()) {
+            emptyView.setVisibility(View.VISIBLE);
+            rvExam.setVisibility(View.GONE);
+        } else if (examAdapter == null) {
+            emptyView.setVisibility(View.GONE);
+            rvExam.setVisibility(View.VISIBLE);
             examAdapter = new ExamAdapter(this, data);
             rvExam.setLayoutManager(new LinearLayoutManager(this));
             DividerItemDecoration dividerItemDecoration =
@@ -71,29 +83,59 @@ public class ExamActivity extends BaseActivity<ExamContract.Presenter>
             rvExam.addItemDecoration(dividerItemDecoration);
             rvExam.setAdapter(examAdapter);
         } else {
+            emptyView.setVisibility(View.GONE);
+            rvExam.setVisibility(View.VISIBLE);
             examAdapter.setExamData(data);
+            examAdapter.notifyDataSetChanged();
         }
     }
 
     @Override
-    public void setSubtitle(String subtitle) {
-        tbExam.setSubtitle(subtitle);
+    public void setYearTermData(final List<String> years, final List<String> terms) {
+        this.years = years;
+        this.terms = terms;
+        if (yearTermOPV == null) {
+            yearTermOPV = new OptionsPickerBuilder(this,
+                    (options1, options2, options3, v) -> {
+                        setSubtitle(years.get(options1), terms.get(options2));
+                        mPresenter.switchYearTerm(options1, options2);
+                    })
+                    .setCancelText("取消")
+                    .setSubmitText("确定")
+                    .setTitleText("请选择学年与学期")
+                    .setTitleColor(Color.parseColor("#157efb"))
+                    .setTitleSize(13)
+                    .build();
+            tbExam.setSubtitleClickListener(v -> {
+                yearTermOPV.show();
+            });
+            tbExam.setSubtitleDrawablesRelative(
+                    null, null, getContext().getDrawable(R.drawable.ic_down_little), null
+            );
+        }
+        yearTermOPV.setNPicker(years, terms, null);
     }
 
     @Override
-    public void showEmptyView() {
-        rvExam.setVisibility(View.GONE);
-//        emptyView.setVisibility(View.VISIBLE);
+    public void setYearTermOptions(int option1, int option2) {
+        yearTermOPV.setSelectOptions(option1, option2);
+        setSubtitle(years.get(option1), terms.get(option2));
     }
 
     @Override
     public void showLoading() {
-
+        progressDialog.show();
     }
 
     @Override
     public void hideLoading() {
-
+        progressDialog.cancel();
     }
+
+
+    private void setSubtitle(String year, String term) {
+        tbExam.setSubtitle(String.format("%s学年第%s学期", year, term));
+    }
+
 
 }

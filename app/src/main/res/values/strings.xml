@@ -4,6 +4,7 @@
 
     <!--MVP Base-->
     <string name="net_error">网络错误，请检查网络设置</string>
+    <string name="empty_data">暂无数据</string>
 
     <!--LoginActivity-->
     <string name="account">学号</string>
@@ -23,11 +24,13 @@
     <string name="week_format_not">第%s周&#160;&#160;非本周</string>
     <string name="week_format_not_return">第%s周&#160;&#160;非本周(长按返回%s)</string>
     <string name="refresh_success">课表刷新成功</string>
+    <string name="refresh_failure">课表刷新失败</string>
 
     <!--ExamActivity-->
     <string name="exam">考试查询</string>
     <string name="exam_over">已结束</string>
     <string name="exam_hint">考试记得带齐证件和文具哦</string>
+    <string name="exam_data_empty">本学期暂无考试信息</string>
 
     <!--AboutActivity-->
     <string name="about">关于iFAFU</string>

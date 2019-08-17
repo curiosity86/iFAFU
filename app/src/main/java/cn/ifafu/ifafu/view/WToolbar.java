@@ -55,7 +55,6 @@ public class WToolbar extends RelativeLayout {
     public WToolbar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-
         final TintTypedArray a = TintTypedArray.obtainStyledAttributes(getContext(), attrs,
                 R.styleable.WToolbar, defStyleAttr, 0);
 
@@ -95,11 +94,11 @@ public class WToolbar extends RelativeLayout {
             if (mTitleTextView == null) {
                 final Context context = getContext();
                 mTitleTextView = new AppCompatTextView(context);
-                mTitleTextView.setId(View.generateViewId());
                 LayoutParams lp = (LayoutParams) generateDefaultLayoutParams();
                 mTitleTextView.setLayoutParams(lp);
                 mTitleTextView.setSingleLine();
                 mTitleTextView.setEllipsize(TextUtils.TruncateAt.END);
+                mTitleTextView.setOnClickListener(mTitleClickListener);
                 if (mTitleTextAppearance != 0) {
                     mTitleTextView.setTextAppearance(context, mTitleTextAppearance);
                 }
@@ -109,11 +108,9 @@ public class WToolbar extends RelativeLayout {
             }
             ensureTitleLinearLayout();
             mTitleLinearLayout.addView(mTitleTextView, 0);
-        }
-        if (mTitleTextView != null) {
             mTitleTextView.setText(title);
+            mTitleText = title;
         }
-        mTitleText = title;
     }
 
     public CharSequence getSubtitle() {
@@ -127,12 +124,9 @@ public class WToolbar extends RelativeLayout {
     public void setSubtitle(CharSequence subtitle) {
         if (!TextUtils.isEmpty(subtitle)) {
             ensureSubtitleTextView();
-            mTitleLinearLayout.addView(mSubtitleTextView);
-        }
-        if (mSubtitleTextView != null) {
             mSubtitleTextView.setText(subtitle);
+            mSubtitleText = subtitle;
         }
-        mSubtitleText = subtitle;
     }
 
     public void setTitleTextColor(@ColorInt int color) {
@@ -165,19 +159,14 @@ public class WToolbar extends RelativeLayout {
     }
 
     public void ensureSubtitleTextView() {
-        ensureTitleLinearLayout();
         if (mSubtitleTextView == null) {
             final Context context = getContext();
             mSubtitleTextView = new AppCompatTextView(context);
-            mSubtitleTextView.setId(View.generateViewId());
             mSubtitleTextView.setSingleLine();
             mSubtitleTextView.setEllipsize(TextUtils.TruncateAt.END);
             mSubtitleTextView.setOnClickListener(mSubtitleClickListener);
             LayoutParams lp = (LayoutParams) generateDefaultLayoutParams();
             lp.addRule(CENTER_IN_PARENT);
-            if (mTitleTextView != null) {
-                lp.addRule(BELOW, mTitleTextView.getId());
-            }
             mSubtitleTextView.setLayoutParams(lp);
             if (mSubtitleTextAppearance != 0) {
                 mSubtitleTextView.setTextAppearance(context, mSubtitleTextAppearance);
@@ -185,6 +174,8 @@ public class WToolbar extends RelativeLayout {
             if (mSubtitleTextColor != null) {
                 mSubtitleTextView.setTextColor(mSubtitleTextColor);
             }
+            ensureTitleLinearLayout();
+            mTitleLinearLayout.addView(mSubtitleTextView);
         }
     }
 
@@ -247,7 +238,7 @@ public class WToolbar extends RelativeLayout {
             LayoutParams lp = new LayoutParams(dp24, dp24);
             lp.addRule(CENTER_VERTICAL);
             lp.addRule(ALIGN_PARENT_START);
-            lp.setMarginStart((int) DensityUtils.dp2px(getContext(), 16));
+            lp.setMarginStart((int) DensityUtils.dp2px(getContext(), 8));
             int dp4 = (int) DensityUtils.dp2px(getContext(), 4);
             mNavButtonView.setPadding(dp4, dp4, dp4, dp4);
             mNavButtonView.setLayoutParams(lp);

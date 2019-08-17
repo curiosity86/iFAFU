@@ -1,5 +1,9 @@
 package cn.ifafu.ifafu.util;
 
+import android.annotation.SuppressLint;
+
+import androidx.annotation.StringRes;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -37,6 +41,38 @@ public class DateUtils {
             }
         }
         return result;
+    }
+
+    @SuppressLint("DefaultLocale")
+    public static String calcIntervalTime(long startMill, long endMill) {
+        long sec = (endMill - startMill) / 1000;
+        if (sec < 0) {
+            return "";
+        }
+        if (sec < 60) {
+            return String.format("%d秒", sec);
+        }
+        long min = sec / 60;
+        if (min < 60) {
+            return String.format("%d分钟", min);
+        }
+        long hour = min / 60;
+        if (hour < 24) {
+            if (min % 60 != 0) {
+                return String.format("%d小时%d分钟", hour, min % 60);
+            } else {
+                return String.format("%d小时", hour);
+            }
+        }
+        long day = hour / 24;
+        if (day < 7) {
+            if (hour % 24 != 00) {
+                return String.format("%d天%d小时", day, hour % 24);
+            } else {
+                return String.format("%d天", day);
+            }
+        }
+        return String.format("%d天", day);
     }
 
     /**

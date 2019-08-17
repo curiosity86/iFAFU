@@ -13,15 +13,17 @@ import io.reactivex.Observable;
 class SyllabusContract {
 
     interface Presenter extends IZFPresenter {
-
+        /**
+         * 显示 完成Toast
+         * 静默更新课表，不强制刷新，除非数据库数据为空
+         */
+        void updateSyllabusLocal();
 
         /**
-         * 刷新课表。若数据库为空，则自动刷新
-         *
-         * @param refresh   是否强制刷新
-         * @param showToast 加载完是否显示Toast
+         * 显示 加载Progress 与 完成Toast
+         * 强制刷新
          */
-        void updateSyllabus(boolean refresh, boolean showToast);
+        void updateSyllabusNet();
 
         /**
          * 删除课程

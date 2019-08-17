@@ -1,8 +1,14 @@
 package cn.ifafu.ifafu.mvp.exam;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.ifafu.ifafu.app.School;
 import cn.ifafu.ifafu.dao.ExamDao;
@@ -43,7 +49,44 @@ class ExamModel extends BaseZFModel implements ExamContract.Model {
         return Observable.fromCallable(() -> examDao.queryBuilder()
                 .where(ExamDao.Properties.Year.eq(year), ExamDao.Properties.Term.eq(term))
                 .list());
+//        return Observable.just(Collections.emptyList());
     }
+
+    @SuppressLint("DefaultLocale")
+    @Override
+    public Observable<Map<String, List<String>>> getYearTermList() {
+        return Observable.fromCallable(() -> {
+            List<String> yearList = new ArrayList<>();
+            Calendar c = Calendar.getInstance();
+            c.add(Calendar.MONTH, 6);
+            int year = c.get(Calendar.YEAR);
+            for (int i = 0; i < 4; i++) {
+                yearList.add(String.format("%d-%d", year - i - 1, year - i));
+            }
+            List<String> termList = Arrays.asList("1", "2", "3");
+            Map<String, List<String>> map = new HashMap<>();
+            map.put("xnd", yearList);
+            map.put("xqd", termList);
+            return map;
+        });
+    }
+
+    @SuppressLint("DefaultLocale")
+    @Override
+    public Map<String, String> getYearTerm() {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.MONTH, 6);
+        Map<String, String> map = new HashMap<>();
+        if (c.get(Calendar.MONTH) < 8) {
+            map.put("xqd", "1");
+        } else {
+            map.put("xqd", "2");
+        }
+        int year = c.get(Calendar.YEAR);
+        map.put("xnd", String.format("%d-%d", year - 1, year));
+        return map;
+    }
+
 
     @Override
     public void save(List<Exam> list) {

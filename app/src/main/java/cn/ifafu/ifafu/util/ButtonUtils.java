@@ -40,6 +40,7 @@ public class ButtonUtils {
         long time = System.currentTimeMillis();
         long timeD = time - lastClickTime;
         if (lastButtonId == buttonId && lastClickTime > 0 && timeD < diff) {
+            lastClickTime = 0;
             return true;
         }
         lastClickTime = time;

@@ -14,9 +14,12 @@ import cn.ifafu.ifafu.mvp.base.i.IView;
 import cn.ifafu.ifafu.util.RxUtils;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 
 public abstract class BaseZFPresenter<V extends IView, M extends IZFModel> extends BasePresenter<V, M> implements IZFPresenter {
+
+    protected static Disposable loginD;
 
     /**
      * 通过{@link Observable#retryWhen(Function)}捕捉{@link LoginException}异常后，触发登录账号
@@ -24,12 +27,13 @@ public abstract class BaseZFPresenter<V extends IView, M extends IZFModel> exten
      * Need {@link LoginException}
      */
     protected ObservableSource<?> ensureTokenAlive(Observable<Throwable> throwableObservable) {
-        return throwableObservable.flatMap((Function<Throwable, ObservableSource<?>>) throwable -> {
+        if (loginD != null) {
+            loginD.dispose();
+        }
+        return throwableObservable.flatMap(throwable -> {
             if (throwable instanceof NoAuthException) {
-                Log.d(TAG, "需要登录账号");
                 return reLogin();
             } else {
-                Log.d(TAG, "抛出异常");
                 return Observable.error(throwable);
             }
         });

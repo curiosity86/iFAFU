@@ -2,8 +2,6 @@ package cn.ifafu.ifafu.view.adapter;
 
 import android.content.Context;
 import android.util.SparseArray;
-import android.view.Choreographer;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -21,9 +19,10 @@ import cn.ifafu.ifafu.util.DateUtils;
 import cn.ifafu.ifafu.view.syllabus.CourseView;
 import cn.ifafu.ifafu.view.syllabus.DateView;
 import cn.ifafu.ifafu.view.syllabus.SideView;
+import cn.ifafu.ifafu.view.syllabus.SyllabusView;
 import cn.ifafu.ifafu.view.syllabus.data.DayOfWeek;
 
-public class SyllabusPageAdapter extends RecyclerView.Adapter<SyllabusPageAdapter.ViewPagerViewHolder> {
+public class SyllabusPageAdapter extends RecyclerView.Adapter<SyllabusPageAdapter.VH> {
 
     private int mPageCount = 24;
 
@@ -45,31 +44,40 @@ public class SyllabusPageAdapter extends RecyclerView.Adapter<SyllabusPageAdapte
 
     @NonNull
     @Override
-    public ViewPagerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 //        l("onCreateViewHolder");
-        View view = LayoutInflater.from(mContext).inflate(R.layout.fragment_syllabus, parent, false);
-        return new ViewPagerViewHolder(view);
+//        View syllabusView = LayoutInflater.from(mContext).inflate(R.layout.fragment_syllabus, parent, false);
+//        return new ViewPagerViewHolder(syllabusView);
+        View view = new SyllabusView(mContext);
+        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+        );
+        view.setLayoutParams(lp);
+        return new VH(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewPagerViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull VH holder, int position) {
 //        l("onBindViewHolder");
-        if (holder.sideView.getBeginTimeTexts() != mBeginTimes) {
-            holder.sideView.setBeginTimeTexts(mBeginTimes);
-        }
-        holder.courseView.setFirstDayOfWeek(firstDayOfWeek);
-        holder.courseView.setOnCourseClickListener((v, course) -> {
-            if (onCourseClickListener != null) {
-                onCourseClickListener.onClick(v, course);
-            }
-        });
-        holder.courseView.setCourses(mCourseList.get(position));
-        holder.courseView.redraw();
-        holder.dateView.setFirstDayOfWeek(firstDayOfWeek);
-        if (dateOfFirstStudyDay != null) {
-            holder.dateView.setDateTexts(DateUtils.getWeekDates(dateOfFirstStudyDay, position, firstDayOfWeek, "MM-dd"));
-            holder.dateView.redraw();
-        }
+//        if (holder.sideView.getBeginTimeTexts() != mBeginTimes) {
+//            holder.sideView.setBeginTimeTexts(mBeginTimes);
+//        }
+//        holder.courseView.setFirstDayOfWeek(firstDayOfWeek);
+//        holder.courseView.setOnCourseClickListener(onCourseClickListener);
+//        holder.courseView.setCourses(mCourseList.get(position));
+//        holder.courseView.redraw();
+//        holder.dateView.setFirstDayOfWeek(firstDayOfWeek);
+//        if (dateOfFirstStudyDay != null) {
+//            holder.dateView.setDateTexts(DateUtils.getWeekDates(dateOfFirstStudyDay, position, firstDayOfWeek, "MM-dd"));
+//            holder.dateView.redraw();
+//        }
+        SyllabusView view = holder.syllabusView;
+        view.setBeginTimeTexts(mBeginTimes);
+        view.setFirstDayOfWeek(firstDayOfWeek);
+        view.setOnCourseClickListener(onCourseClickListener);
+        view.setCourseData(mCourseList.get(position));
+        view.setDateTexts(DateUtils.getWeekDates(dateOfFirstStudyDay, position, firstDayOfWeek, "MM-dd"));
+        view.redraw();
     }
 
     /**
@@ -92,6 +100,10 @@ public class SyllabusPageAdapter extends RecyclerView.Adapter<SyllabusPageAdapte
         } else {
             notifyItemMoved(pageCount, old - 1);
         }
+    }
+
+    public void setCornerText(String text) {
+
     }
 
     /**
@@ -151,21 +163,14 @@ public class SyllabusPageAdapter extends RecyclerView.Adapter<SyllabusPageAdapte
         }
     }
 
-    private void l(CourseView view, Object... msg) {
-        String code = view.toString();
-        code = code.substring(code.indexOf("{") + 1, code.indexOf(" V.E"));
-        StringBuilder sb = new StringBuilder(code);
-        sb.append("    ");
-        for (Object s : msg) {
-            sb.append(s).append(" ");
+    class VH extends ViewPagerViewHolder {
+
+        SyllabusView syllabusView;
+
+        VH(@NonNull View syllabusView) {
+            super(syllabusView);
+            this.syllabusView = (SyllabusView) syllabusView;
         }
     }
 
-    private void l(Object... msg) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("    ");
-        for (Object s : msg) {
-            sb.append(s).append(" ");
-        }
-    }
 }

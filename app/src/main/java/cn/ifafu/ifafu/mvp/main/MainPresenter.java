@@ -35,11 +35,10 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
     @Override
     public void update() {
         if (mView.getActivity().getIntent().getIntExtra("come_from", -1) != 0){
-            mCompDisposable.add(
-                reLogin()
-                        .compose(RxUtils.ioToMainScheduler())
-                        .subscribe(response -> {}, this::onError)
-            );
+            loginD = reLogin()
+                    .compose(RxUtils.ioToMainScheduler())
+                    .subscribe(response -> {}, this::onError);
+            mCompDisposable.add(loginD);
         }
         // 获取主页菜单
         mCompDisposable.add(mModel.getMenus()

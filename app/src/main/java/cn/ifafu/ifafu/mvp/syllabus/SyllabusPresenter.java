@@ -1,7 +1,5 @@
 package cn.ifafu.ifafu.mvp.syllabus;
 
-import android.util.Log;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -41,48 +39,37 @@ public class SyllabusPresenter extends BaseZFPresenter<SyllabusContract.View, Sy
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        updateSyllabus(false, false);
+        updateSyllabusLocal();
     }
 
     @Override
-    public void updateSyllabus(boolean refresh, boolean showToast) {
-        mCompDisposable.add(Observable.just(refresh)
-                .flatMap(isRefresh -> {
-                    if (isRefresh) {
-                        Log.d(TAG, "force refresh");
-                        return onlineCoursesObservable()
-                                .doOnNext(courses -> {
-                                    // 保存到数据库
-                                    mModel.clearOnlineCourses();
-                                    mModel.saveCourses(courses);
-                                })
-                                .map(courses -> {
-                                    // 加入本地课程
-                                    courses.addAll(mModel.getLocalCoursesFromDB());
-                                    return courses;
-                                });
+    public void updateSyllabusNet() {
+        mCompDisposable.add(onlineCoursesObservable()
+                .compose(RxUtils.ioToMainScheduler())
+                .doOnSubscribe(disposable -> mView.showLoading())
+                .doFinally(() -> mView.hideLoading())
+                .subscribe(list -> {
+                    mView.setSyllabusDate(list);
+                    mView.redrawSyllabus();
+                    mView.showMessage(R.string.refresh_success);
+                }, this::onError)
+        );
+    }
+
+    @Override
+    public void updateSyllabusLocal() {
+        mCompDisposable.add(Observable
+                .fromCallable(() -> mModel.getAllCoursesFromDB())
+                .flatMap(o -> {
+                    if (o.isEmpty()) {
+                        return onlineCoursesObservable();
                     } else {
-                        Log.d(TAG, "not force refresh");
-                        return Observable.fromCallable(() -> mModel.getAllCoursesFromDB())
-                                .flatMap(o -> {
-                                    if (o.isEmpty()) {
-                                        return mModel.getCoursesFromNet()
-                                                .retryWhen(this::ensureTokenAlive)
-                                                .doOnNext(courses -> mModel.saveCourses(courses));
-                                    } else {
-                                        return Observable.just(o);
-                                    }
-                                });
+                        return Observable.just(o);
                     }
                 })
                 .compose(RxUtils.ioToMainScheduler())
-                .doOnSubscribe( disposable -> mView.showLoading())
+                .doOnSubscribe(disposable -> mView.showLoading())
                 .doFinally(() -> mView.hideLoading())
-                .doOnNext(courses -> {
-                    if (showToast) {
-                        mView.showMessage(R.string.refresh_success);
-                    }
-                })
                 .subscribe(list -> {
                     mView.setSyllabusDate(list);
                     mView.redrawSyllabus();
@@ -92,7 +79,12 @@ public class SyllabusPresenter extends BaseZFPresenter<SyllabusContract.View, Sy
 
     private Observable<List<Course>> onlineCoursesObservable() {
         return mModel.getCoursesFromNet()
-                .retryWhen(this::ensureTokenAlive); // 保活
+                .retryWhen(this::ensureTokenAlive)
+                .doOnNext(courses -> {
+                    // 保存到数据库
+                    mModel.clearOnlineCourses();
+                    mModel.saveCourses(courses);
+                }); // 保活
     }
 
     private int getCurrentWeek(Date firstStudyDate, @DayOfWeek int firstDayOfWeek) {
@@ -107,6 +99,6 @@ public class SyllabusPresenter extends BaseZFPresenter<SyllabusContract.View, Sy
     @Override
     public void onDelete(Course course) {
         mModel.deleteCourse(course);
-        updateSyllabus(false, false);
+        updateSyllabusLocal();
     }
 }

@@ -1,6 +1,7 @@
 package cn.ifafu.ifafu.mvp.base;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.Map;
 
@@ -56,6 +57,7 @@ public class BaseZFModel extends BaseModel implements IZFModel {
                     return params;
                 })
                 .flatMap(params -> {
+                    Log.d("OnLoginTest", TAG + "  " + "onLogin");
                     VerifyParser verifyParser = new VerifyParser(mContext);
                     LoginParser loginParser = new LoginParser();
                     return zhengFang.getCaptcha(verifyUrl)

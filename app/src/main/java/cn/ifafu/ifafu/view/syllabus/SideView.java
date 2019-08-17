@@ -124,6 +124,10 @@ public class SideView extends LinearLayout {
         this.mRowCount = rowCount;
     }
 
+    public void redraw() {
+        initSideItemView();
+    }
+
     public void setBeginTimeTexts(String[] timeTexts) {
         this.timeTexts = timeTexts;
     }

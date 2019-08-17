@@ -3,37 +3,40 @@ package cn.ifafu.ifafu;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 import cn.ifafu.ifafu.data.entity.QueryApi;
 import cn.ifafu.ifafu.data.entity.ZFUrl;
 
 public class UnitTest {
 
-    public static final int FAFU = 0x001;
-    public static final int FAFU_JS = 0x002;
+    @Test
+    public void test() throws InterruptedException {
 
-    public static final Map<Integer, ZFUrl> URL_MAP = new HashMap<>();
-
-    static {
-        URL_MAP.put(FAFU, new ZFUrl(FAFU, "http://jwgl.fafu.edu.cn/",
-                "default2.aspx",
-                "CheckCode.aspx",
-                "xs_main.aspx",
-                new QueryApi("xskbcx.aspx", "N121602"),
-                new QueryApi("xscjcx_dq_fafu.aspx", "N121605")));
-        URL_MAP.put(FAFU_JS, new ZFUrl(FAFU_JS, "http://js.ifafu.cn/",
-                "default.aspx",
-                "CheckCode.aspx",
-                "xs_main.aspx",
-                new QueryApi("xskbcx.aspx", "N121602"),
-                new QueryApi("Xscjcx.aspx", "N121613")));
+        Calendar c = Calendar.getInstance();
+        System.out.println(c.get(Calendar.YEAR));
+        c.add(Calendar.MONTH, 6);
+        System.out.println(c.get(Calendar.YEAR));
+        c.add(Calendar.MONTH, 6);
+        System.out.println(c.get(Calendar.YEAR));
     }
 
-    @Test
-    public void test() {
-        boolean[] bs = new boolean[24];
-        System.out.println(Arrays.toString(bs));
+    static class TestRunnable implements Runnable {
+
+        static int index = 0;
+
+        static void increase() {
+            index++;
+        }
+
+        @Override
+        public void run() {
+            for (int i = 0; i < 10000; i++) {
+                increase();
+            }
+        }
     }
 }

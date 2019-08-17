@@ -1,6 +1,7 @@
 package cn.ifafu.ifafu.view.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Exam;
+import cn.ifafu.ifafu.util.DateUtils;
 
 public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ExamViewHolder> {
 
@@ -29,7 +31,7 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ExamViewHolder
 
     public ExamAdapter(Context context, List<Exam> data) {
         mContext = context;
-        mExamList = data;
+        setExamData(data);
     }
 
     @NonNull
@@ -44,16 +46,26 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ExamViewHolder
         Exam exam = mExamList.get(position);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
         holder.tvExamDate.setText(format.format(new Date(exam.getStartTime())));
+        SimpleDateFormat format2 = new SimpleDateFormat("HH:mm", Locale.CHINA);
+        Calendar start = Calendar.getInstance();
+        start.setTime(new Date(exam.getStartTime()));
+        String weekday = DateUtils.getWeekdayCN(start.get(Calendar.DAY_OF_WEEK));
+        holder.tvExamTime.setText(String.format("(%s %s~%s)", weekday,
+                format2.format(new Date(exam.getStartTime())),
+                format2.format(new Date(exam.getEndTime()))));
         holder.tvExamName.setText(exam.getName());
         holder.tvExamAddress.setText(String.format("%s   %s号", exam.getAddress(), exam.getSeatNumber()));
         if (exam.getEndTime() < System.currentTimeMillis()) {
             holder.tvExamLast.setText(R.string.exam_over);
+        } else {
+            holder.tvExamLast.setText(String.format("剩余%s",
+                    DateUtils.calcIntervalTime(System.currentTimeMillis(), exam.getStartTime())));
         }
     }
 
     @Override
     public int getItemCount() {
-        return mExamList.size();
+        return mExamList.isEmpty()? 1 : mExamList.size();
     }
 
     public void setExamData(List<Exam> data) {
@@ -62,15 +74,12 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ExamViewHolder
         Collections.sort(data, (o1, o2) -> {
             if (o1.getEndTime() < now && o2.getEndTime() < now) {
                 return Long.compare(o2.getEndTime(), o1.getEndTime());
-            } else if (o1.getEndTime() < now) {
+            } else if (o1.getEndTime() < now || o2.getEndTime() < now) {
                 return -1;
-            } else if (o2.getEndTime() < now) {
-                return 1;
             } else {
                 return Long.compare(o1.getEndTime(), o2.getEndTime());
             }
         });
-        notifyDataSetChanged();
     }
 
     class ExamViewHolder extends RecyclerView.ViewHolder {

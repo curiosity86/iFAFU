@@ -1,8 +1,14 @@
 package cn.ifafu.ifafu.data.entity;
 
+import androidx.annotation.NonNull;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 @Entity
 public class Exam extends YearTerm {
@@ -108,4 +114,20 @@ public class Exam extends YearTerm {
         this.term = term;
     }
 
+    @NonNull
+    @Override
+    public String toString() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss", Locale.CHINA);
+        return "Exam{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", startTime=" + format.format(new Date(startTime)) +
+                ", endTime=" + format.format(new Date(endTime)) +
+                ", address='" + address + '\'' +
+                ", seatNumber='" + seatNumber + '\'' +
+                ", account='" + account + '\'' +
+                ", year='" + year + '\'' +
+                ", term='" + term + '\'' +
+                '}';
+    }
 }
