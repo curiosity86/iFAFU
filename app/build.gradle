@@ -54,7 +54,7 @@ android {
 
     greendao {
         //版本号，升级时可配置
-        schemaVersion 8
+        schemaVersion 9
         daoPackage 'cn.ifafu.ifafu.dao'
     }
 

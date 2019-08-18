@@ -22,7 +22,7 @@ import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
 import cn.ifafu.ifafu.mvp.syllabus_item.SyllabusItemActivity;
-import cn.ifafu.ifafu.util.NumberUtils;
+import cn.ifafu.ifafu.util.ChineseNumbers;
 import cn.ifafu.ifafu.view.adapter.SyllabusPageAdapter;
 import cn.ifafu.ifafu.view.dialog.ProgressDialog;
 
@@ -69,7 +69,7 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
-                String numCN = NumberUtils.numberToChinese(position + 1);
+                String numCN = ChineseNumbers.englishNumberToChinese(String.valueOf(position + 1));
                 if (mCurrentWeek - 1 < 0) {
                     if (position != 0) {
                         tvSubtitle.setText(getString(R.string.week_format_not_return, numCN, "第一周"));

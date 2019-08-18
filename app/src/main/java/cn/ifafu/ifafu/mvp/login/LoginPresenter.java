@@ -18,8 +18,7 @@ class LoginPresenter extends BaseZFPresenter<LoginContract.View, LoginContract.M
     private int schoolCode = School.FAFU;
 
     LoginPresenter(LoginContract.View view) {
-        mView = view;
-        mModel = new LoginModel(view.getContext());
+        super(view, new LoginModel(view.getContext()));
     }
 
     @Override

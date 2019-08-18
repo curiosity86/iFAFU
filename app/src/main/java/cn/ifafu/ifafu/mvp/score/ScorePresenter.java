@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.mvp.exam;
+package cn.ifafu.ifafu.mvp.score;
 
 import java.util.List;
 import java.util.Map;
@@ -8,8 +8,8 @@ import cn.ifafu.ifafu.mvp.base.BaseZFPresenter;
 import cn.ifafu.ifafu.util.RxUtils;
 import io.reactivex.Observable;
 
-class ExamPresenter extends BaseZFPresenter<ExamContract.View, ExamContract.Model>
-        implements ExamContract.Presenter {
+class ScorePresenter extends BaseZFPresenter<ScoreContract.View, ScoreContract.Model>
+        implements ScoreContract.Presenter {
 
     private List<String> years;
     private List<String> terms;
@@ -17,49 +17,55 @@ class ExamPresenter extends BaseZFPresenter<ExamContract.View, ExamContract.Mode
     private String mCurrentYear;
     private String mCurrentTerm;
 
-    ExamPresenter(ExamContract.View view) {
-        super(view, new ExamModel(view.getContext()));
+    ScorePresenter(ScoreContract.View view) {
+        super(view, new ScoreModel(view.getContext()));
     }
 
     @Override
     public void onStart() {
-//        mView.setYearTermOptions(yearIndex, termIndex);
         mCompDisposable.add(mModel
-                .getYearTermList()
-                .doOnNext(map -> {
-                    years = map.get("xnd");
-                    terms = map.get("xqd");
-                })
-                .flatMap(map -> {
-                    Map<String, String> map2 = mModel.getYearTerm();
-                    mCurrentYear = map2.get("xnd");
-                    mCurrentTerm = map2.get("xqd");
-                    return mModel.getExamsFromDB(mCurrentYear, mCurrentTerm);
-                })
-                .flatMap(exams -> {
-                    if (exams.isEmpty()) {
-                        return mModel.getExamsFromNet(mCurrentYear, mCurrentTerm)
+                .getYearTerm()
+                .flatMap(map -> mModel.getScoresFromDB(map.get("ddlxn"), map.get("ddlxq")))
+                .flatMap(scores -> {
+                    if (scores.isEmpty()) {
+                        return mModel.getScoresFromNet(mCurrentYear, mCurrentTerm)
                                 .map(Response::getBody)
                                 .retryWhen(this::ensureTokenAlive)
                                 .doOnNext(list -> mModel.save(list));
                     } else {
-                        return Observable.just(exams);
+                        return Observable.just(scores);
                     }
                 })
                 .compose(RxUtils.ioToMain())
                 .doOnSubscribe(d -> mView.showLoading())
                 .doFinally(() -> mView.hideLoading())
                 .subscribe(list -> {
+                    mView.setScoreData(list);
+                }, this::onError)
+        );
+        mCompDisposable.add(mModel
+                .getYearTermList()
+                .doOnNext(map -> {
+                    years = map.get("ddlxn");
+                    terms = map.get("ddlxq");
+                })
+                .flatMap(map -> mModel.getYearTerm())
+                .doOnNext(map -> {
+                    mCurrentYear = map.get("ddlxn");
+                    mCurrentTerm = map.get("ddlxq");
+                })
+                .compose(RxUtils.ioToMain())
+                .subscribe(map -> {
+                    mView.setYearTermTitle(mCurrentYear, mCurrentTerm);
                     mView.setYearTermData(years, terms);
                     mView.setYearTermOptions(years.indexOf(mCurrentYear), terms.indexOf(mCurrentTerm));
-                    mView.setExamAdapterData(list);
                 }, this::onError)
         );
     }
 
     @Override
     public void update() {
-        mCompDisposable.add(mModel.getExamsFromNet(mCurrentYear, mCurrentTerm)
+        mCompDisposable.add(mModel.getScoresFromNet(mCurrentYear, mCurrentTerm)
                 .map(Response::getBody)
                 .retryWhen(this::ensureTokenAlive)
                 .doOnNext(list -> mModel.save(list))
@@ -67,32 +73,32 @@ class ExamPresenter extends BaseZFPresenter<ExamContract.View, ExamContract.Mode
                 .doOnSubscribe(disposable -> mView.showLoading())
                 .doFinally(() -> mView.hideLoading())
                 .subscribe(list -> {
-                    mView.setExamAdapterData(list);
+                    mView.setScoreData(list);
                 }, this::onError)
         );
     }
 
     @Override
-    public void switchYearTerm(int op1, int op2) {
-        mCurrentYear = years.get(op1);
-        mCurrentTerm = terms.get(op2);
+    public void switchYearTerm(int options1, int options2) {
+        mCurrentYear = years.get(options1);
+        mCurrentTerm = terms.get(options2);
         mCompDisposable.add(mModel
-                .getExamsFromDB(mCurrentYear, mCurrentTerm)
-                .flatMap(exams -> {
-                    if (exams.isEmpty()) {
-                        return mModel.getExamsFromNet(mCurrentYear, mCurrentTerm)
+                .getScoresFromDB(mCurrentYear, mCurrentTerm)
+                .flatMap(scores -> {
+                    if (scores.isEmpty()) {
+                        return mModel.getScoresFromNet(mCurrentYear, mCurrentTerm)
                                 .map(Response::getBody)
                                 .retryWhen(this::ensureTokenAlive)
                                 .doOnNext(list -> mModel.save(list));
                     } else {
-                        return Observable.just(exams);
+                        return Observable.just(scores);
                     }
                 })
                 .compose(RxUtils.ioToMain())
                 .doOnSubscribe(d -> mView.showLoading())
                 .doFinally(() -> mView.hideLoading())
                 .subscribe(list -> {
-                    mView.setExamAdapterData(list);
+                    mView.setScoreData(list);
                 }, this::onError)
         );
     }

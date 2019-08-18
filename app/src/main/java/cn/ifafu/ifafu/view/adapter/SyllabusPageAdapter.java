@@ -58,19 +58,6 @@ public class SyllabusPageAdapter extends RecyclerView.Adapter<SyllabusPageAdapte
 
     @Override
     public void onBindViewHolder(@NonNull VH holder, int position) {
-//        l("onBindViewHolder");
-//        if (holder.sideView.getBeginTimeTexts() != mBeginTimes) {
-//            holder.sideView.setBeginTimeTexts(mBeginTimes);
-//        }
-//        holder.courseView.setFirstDayOfWeek(firstDayOfWeek);
-//        holder.courseView.setOnCourseClickListener(onCourseClickListener);
-//        holder.courseView.setCourses(mCourseList.get(position));
-//        holder.courseView.redraw();
-//        holder.dateView.setFirstDayOfWeek(firstDayOfWeek);
-//        if (dateOfFirstStudyDay != null) {
-//            holder.dateView.setDateTexts(DateUtils.getWeekDates(dateOfFirstStudyDay, position, firstDayOfWeek, "MM-dd"));
-//            holder.dateView.redraw();
-//        }
         SyllabusView view = holder.syllabusView;
         view.setBeginTimeTexts(mBeginTimes);
         view.setFirstDayOfWeek(firstDayOfWeek);

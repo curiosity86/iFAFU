@@ -20,6 +20,7 @@ import cn.ifafu.ifafu.data.http.service.WeatherService;
 import cn.ifafu.ifafu.data.local.DaoManager;
 import cn.ifafu.ifafu.mvp.base.BaseZFModel;
 import cn.ifafu.ifafu.mvp.exam.ExamActivity;
+import cn.ifafu.ifafu.mvp.score.ScoreActivity;
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusActivity;
 import cn.ifafu.ifafu.mvp.web.WebActivity;
 import cn.ifafu.ifafu.util.SPUtils;
@@ -40,6 +41,7 @@ public class MainModel extends BaseZFModel implements MainContract.Model {
             List<Menu> menus = new ArrayList<>();
             menus.add(new Menu(mContext.getDrawable(R.drawable.tab_syllabus), "课程表", SyllabusActivity.class));
             menus.add(new Menu(mContext.getDrawable(R.drawable.tab_exam), "考试计划", ExamActivity.class));
+            menus.add(new Menu(mContext.getDrawable(R.drawable.tab_score), "成绩查询", ScoreActivity.class));
             menus.add(new Menu(mContext.getDrawable(R.drawable.tab_web), "网页模式", WebActivity.class));
             return menus;
         });

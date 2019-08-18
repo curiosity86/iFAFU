@@ -2,6 +2,7 @@ package cn.ifafu.ifafu.data.entity;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Map;
 import java.util.Random;
 
 public class ZFUrl {
@@ -11,32 +12,32 @@ public class ZFUrl {
     public static final int MAIN = 99;
     public static final int SYLLABUS = 354;
     public static final int EXAM = 985;
+    public static final int SCORE = 284;
 
     private int schoolCode;
     private String baseUrl;
     private String login;
     private String verify;
     private String main;
-    private QueryApi syllabus;
-    private QueryApi exam;
+
     private String baseUrlTemp;
 
-    public ZFUrl(int schoolCode, String baseUrl, String login, String verify, String main, QueryApi syllabus, QueryApi exam) {
+    private Map<Integer, QueryApi> queryApiMap;
+
+    public ZFUrl(int schoolCode, String baseUrl, String login, String verify, String main, Map<Integer, QueryApi> queryApiMap) {
         this.schoolCode = schoolCode;
         this.baseUrl = baseUrl;
         this.login = login;
         this.verify = verify;
         this.main = main;
-        this.syllabus = syllabus;
-        this.exam = exam;
+        this.queryApiMap = queryApiMap;
     }
 
-    public String getBaseUrl() {
-        if (baseUrlTemp != null) {
-            return baseUrlTemp;
+    private String getBaseUrl() {
+        if (baseUrlTemp == null) {
+            baseUrlTemp = baseUrl
+                    .replace("{token}", makeToken());
         }
-        baseUrlTemp = baseUrl
-                .replace("{token}", makeToken());
         return baseUrlTemp;
     }
 
@@ -50,28 +51,27 @@ public class ZFUrl {
         return '(' + token.toString() + ')';
     }
 
-    public String get(int filed, String xh, String xm) {
-        try {
-            String baseUrl = getBaseUrl();
-            switch (filed) {
-                case VERIFY:
-                    return String.format("%s%s", baseUrl, verify);
-                case LOGIN:
-                    return String.format("%s%s", baseUrl, login);
-                case MAIN:
-                    return String.format("%s%s?xh=%s", baseUrl, main, xh);
-                case SYLLABUS:
-                    return String.format("%s%s?xh=%s&xm=%s&gnmkdm=%s",
-                            baseUrl, syllabus.getApi(), xh, URLEncoder.encode(xm, "GBK"), syllabus.getGnmkdm());
-                case EXAM:
-                    return String.format("%s%s?xh=%s&xm=%s&gnmkdm=%s",
-                            baseUrl, exam.getApi(), xh, URLEncoder.encode(xm, "GBK"), exam.getGnmkdm());
-                default:
-                    throw new IllegalArgumentException("field is invalid");
-            }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return null;
+    public String get2(int filed, String xh, String xm) {
+        switch (filed) {
+            case VERIFY:
+                return String.format("%s%s", getBaseUrl(), verify);
+            case LOGIN:
+                return String.format("%s%s", getBaseUrl(), login);
+            case MAIN:
+                return String.format("%s%s?xh=%s", getBaseUrl(), main, xh);
+            default:
+                try {
+                    QueryApi api = queryApiMap.get(filed);
+                    if (api != null) {
+                        return String.format("%s%s?xh=%s&xm=%s&gnmkdm=%s",
+                                getBaseUrl(), api.getApi(), xh, URLEncoder.encode(xm, "GBK"), api.getGnmkdm());
+                    } else {
+                        throw new IllegalArgumentException("url is not found");
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    return "";
+                }
         }
     }
 }

@@ -11,12 +11,22 @@ import android.view.inputmethod.InputMethodManager;
 
 public class GlobalLib {
 
-    public static String getLocalVersionName(Context ctx) {
+    public static String trimZero(String s) {
+        if (s.indexOf(".") > 0) {
+            // 去掉多余的0
+            s = s.replaceAll("0+?$", "");
+            // 如最后一位是.则去掉
+            s = s.replaceAll("[.]$", "");
+        }
+        return s;
+    }
+
+    public static String getLocalVersionName(Context context) {
         String localVersion = "";
         try {
-            PackageInfo packageInfo = ctx.getApplicationContext()
+            PackageInfo packageInfo = context.getApplicationContext()
                     .getPackageManager()
-                    .getPackageInfo(ctx.getPackageName(), 0);
+                    .getPackageInfo(context.getPackageName(), 0);
             localVersion = packageInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import cn.ifafu.ifafu.data.entity.Exam;
@@ -23,12 +22,14 @@ public class ExamParser extends BaseParser<Response<List<Exam>>> {
 
     private List<Exam> parse(String html) {
         Document document = Jsoup.parse(html);
-        String account = getAccount(document);
         Elements elementsTemp = document.select("table[id=\"DataGrid1\"]");
-        if (elementsTemp.size() == 0) return Collections.emptyList();
+        if (elementsTemp.size() == 0) {
+            return Collections.emptyList();
+        }
         Elements elements = elementsTemp.get(0).getElementsByTag("tr");
         List<Exam> list = new ArrayList<>();
         Elements termAndYear = document.select("option[selected=\"selected\"]");
+        String account = getAccount(document);
         String year = termAndYear.get(0).text();
         String term = termAndYear.get(1).text();
         for (int i = 1; i < elements.size(); i++) {

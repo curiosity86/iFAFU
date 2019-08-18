@@ -8,7 +8,7 @@ import io.reactivex.ObservableSource;
 import io.reactivex.functions.Function;
 import okhttp3.ResponseBody;
 
-public class DefaultParser2 extends BaseParser<Map<String, String>>{
+public class ParamsParser extends BaseParser<Map<String, String>>{
 
     @Override
     public ObservableSource<Map<String, String>> apply(Observable<ResponseBody> upstream) {

@@ -12,7 +12,7 @@ import cn.ifafu.ifafu.data.entity.User;
 import cn.ifafu.ifafu.data.entity.ZFUrl;
 import cn.ifafu.ifafu.data.exception.VerifyException;
 import cn.ifafu.ifafu.data.http.APIManager;
-import cn.ifafu.ifafu.data.http.parser.DefaultParser2;
+import cn.ifafu.ifafu.data.http.parser.ParamsParser;
 import cn.ifafu.ifafu.data.http.parser.LoginParser;
 import cn.ifafu.ifafu.data.http.parser.VerifyParser;
 import cn.ifafu.ifafu.data.http.service.ZhengFangService;
@@ -32,12 +32,12 @@ public class BaseZFModel extends BaseModel implements IZFModel {
 
     protected Observable<Map<String, String>> base(String url) {
         return zhengFang.base(url)
-                .compose(new DefaultParser2());
+                .compose(new ParamsParser());
     }
 
     protected Observable<Map<String, String>> base(String url, String referer) {
         return zhengFang.base(url, referer)
-                .compose(new DefaultParser2());
+                .compose(new ParamsParser());
     }
 
     @Override

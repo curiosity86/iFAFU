@@ -2,6 +2,8 @@ package cn.ifafu.ifafu.app;
 
 import android.util.SparseArray;
 
+import java.util.HashMap;
+
 import cn.ifafu.ifafu.data.entity.QueryApi;
 import cn.ifafu.ifafu.data.entity.ZFUrl;
 import cn.ifafu.ifafu.data.entity.User;
@@ -18,14 +20,20 @@ public class School {
                 "default2.aspx",
                 "CheckCode.aspx",
                 "xs_main.aspx",
-                new QueryApi("xskbcx.aspx", "N121602"),
-                new QueryApi("xskscx.aspx", "N121605")));
+                new HashMap<Integer, QueryApi>() {{
+                    put(ZFUrl.SYLLABUS, new QueryApi("xskbcx.aspx", "N121602"));
+                    put(ZFUrl.EXAM, new QueryApi("xskscx.aspx", "N121605"));
+                    put(ZFUrl.SCORE, new QueryApi("xscjcx_dq_fafu.aspx", "N121605"));
+                }}));
         URL_MAP.put(FAFU_JS, new ZFUrl(FAFU_JS, "http://js.ifafu.cn/",
                 "default.aspx",
                 "CheckCode.aspx",
                 "xs_main.aspx",
-                new QueryApi("xskbcx.aspx", "N121602"),
-                new QueryApi("Xscjcx.aspx", "N121613")));
+                new HashMap<Integer, QueryApi>() {{
+                    put(ZFUrl.SYLLABUS, new QueryApi("xskbcx.aspx", "N121602"));
+                    put(ZFUrl.EXAM, new QueryApi("Xscjcx.aspx", "N121613"));
+                    put(ZFUrl.SCORE, new QueryApi("xscjcx_dq_fafu.aspx", "N121605"));
+                }}));
     }
 
     /**
@@ -36,10 +44,7 @@ public class School {
      * @return url
      */
     public static String getUrl(int filed, User user) {
-        return URL_MAP.get(user.getSchoolCode()).get(filed, user.getAccount(), user.getName());
+        return URL_MAP.get(user.getSchoolCode()).get2(filed, user.getAccount(), user.getName());
     }
 
-    public static String getBaseUrl(User user) {
-        return URL_MAP.get(user.getSchoolCode()).getBaseUrl();
-    }
 }

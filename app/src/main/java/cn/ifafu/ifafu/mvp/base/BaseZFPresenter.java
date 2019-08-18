@@ -21,6 +21,14 @@ public abstract class BaseZFPresenter<V extends IView, M extends IZFModel> exten
 
     protected static Disposable loginD;
 
+    public BaseZFPresenter(V view) {
+        super(view);
+    }
+
+    public BaseZFPresenter(V view, M model) {
+        super(view, model);
+    }
+
     /**
      * 通过{@link Observable#retryWhen(Function)}捕捉{@link LoginException}异常后，触发登录账号
      *
@@ -41,7 +49,7 @@ public abstract class BaseZFPresenter<V extends IView, M extends IZFModel> exten
 
     protected Observable<Response<String>> reLogin() {
         return mModel.login(mModel.getUser())
-                .compose(RxUtils.ioToMainScheduler())
+                .compose(RxUtils.ioToMain())
                 .doOnNext(response -> {
                     if (response.getCode() == Response.FAILURE) {
                         Log.d(TAG, "信息错误");

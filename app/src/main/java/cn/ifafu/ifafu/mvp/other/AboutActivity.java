@@ -19,6 +19,7 @@ import java.util.Locale;
 
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.util.GlobalLib;
+import cn.ifafu.ifafu.view.WToolbar;
 
 public class AboutActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -29,7 +30,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
 
         StatusBarUtil.setLightMode(this);
         StatusBarUtil.setTransparent(this);
-        Toolbar toolbar = findViewById(R.id.tb_about);
+        WToolbar toolbar = findViewById(R.id.tb_about);
         toolbar.setNavigationOnClickListener(v -> finish());
 
         TextView aboutAppSubName = findViewById(R.id.aboutAppSubName);

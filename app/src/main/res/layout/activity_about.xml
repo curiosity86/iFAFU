@@ -8,10 +8,10 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.MyToolbar
+    <cn.ifafu.ifafu.view.WToolbar
         android:id="@+id/tb_about"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         app:navigationIcon="@drawable/ic_back"
         app:title="@string/about" />
 

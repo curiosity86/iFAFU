@@ -18,8 +18,7 @@ public class SyllabusPresenter extends BaseZFPresenter<SyllabusContract.View, Sy
         implements SyllabusContract.Presenter {
 
     SyllabusPresenter(SyllabusContract.View view) {
-        mView = view;
-        mModel = new SyllabusModel(view.getContext());
+        super(view, new SyllabusModel(view.getContext()));
     }
 
     @Override
@@ -45,7 +44,7 @@ public class SyllabusPresenter extends BaseZFPresenter<SyllabusContract.View, Sy
     @Override
     public void updateSyllabusNet() {
         mCompDisposable.add(onlineCoursesObservable()
-                .compose(RxUtils.ioToMainScheduler())
+                .compose(RxUtils.ioToMain())
                 .doOnSubscribe(disposable -> mView.showLoading())
                 .doFinally(() -> mView.hideLoading())
                 .subscribe(list -> {
@@ -67,7 +66,7 @@ public class SyllabusPresenter extends BaseZFPresenter<SyllabusContract.View, Sy
                         return Observable.just(o);
                     }
                 })
-                .compose(RxUtils.ioToMainScheduler())
+                .compose(RxUtils.ioToMain())
                 .doOnSubscribe(disposable -> mView.showLoading())
                 .doFinally(() -> mView.hideLoading())
                 .subscribe(list -> {

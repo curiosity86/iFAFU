@@ -52,9 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#EEEEEE"
-            tools:listitem="@layout/item_exam">
-
-        </androidx.recyclerview.widget.RecyclerView>
+            tools:listitem="@layout/item_exam"/>
 
     </LinearLayout>
 

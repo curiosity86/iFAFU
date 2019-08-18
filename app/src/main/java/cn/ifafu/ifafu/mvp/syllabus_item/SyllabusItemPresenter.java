@@ -20,8 +20,7 @@ class SyllabusItemPresenter extends BasePresenter<SyllabusItemContract.View, Syl
     private Course course;
 
     SyllabusItemPresenter(SyllabusItemContract.View view) {
-        mView = view;
-        mModel = new SyllabusItemModel(view.getContext());
+        super(view, new SyllabusItemModel(view.getContext()));
     }
 
     @Override
@@ -84,7 +83,7 @@ class SyllabusItemPresenter extends BasePresenter<SyllabusItemContract.View, Syl
                     resultCode = Activity.RESULT_OK;
                     return R.string.save_successful;
                 })
-                .compose(RxUtils.ioToMainScheduler())
+                .compose(RxUtils.ioToMain())
                 .subscribe(stringRes -> {
                     mView.showMessage(stringRes);
                     if (come_from == 1) {

@@ -32,12 +32,17 @@
     <string name="exam_hint">考试记得带齐证件和文具哦</string>
     <string name="exam_data_empty">本学期暂无考试信息</string>
 
+    <!--ScoreActivity-->
+    <string name="score">成绩查询</string>
+    <string name="score_cnt">课程数</string>
+    <string name="score_ies">智育分</string>
+
     <!--AboutActivity-->
     <string name="about">关于iFAFU</string>
     <string name="app_sub_name">For Android V%s</string>
     <string name="about_1">基于福建农林大学教务管理系统</string>
     <string name="about_2">iFAFU官网: https://ifafu.cn</string>
-    <string name="about_3">Design by Wooslen</string>
+    <string name="about_3">Designed by Woolsen</string>
     <string name="text_QQ_group">&#160;意见反馈</string>
     <string name="text_weibo">&#160;关注微博</string>
     <string name="text_email">&#160;发送邮件</string>

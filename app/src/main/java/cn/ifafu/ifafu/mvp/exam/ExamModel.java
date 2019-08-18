@@ -47,7 +47,9 @@ class ExamModel extends BaseZFModel implements ExamContract.Model {
     @Override
     public Observable<List<Exam>> getExamsFromDB(String year, String term) {
         return Observable.fromCallable(() -> examDao.queryBuilder()
-                .where(ExamDao.Properties.Year.eq(year), ExamDao.Properties.Term.eq(term))
+                .where(ExamDao.Properties.Year.eq(year),
+                        ExamDao.Properties.Term.eq(term),
+                        ExamDao.Properties.Account.eq(user.getAccount()))
                 .list());
 //        return Observable.just(Collections.emptyList());
     }

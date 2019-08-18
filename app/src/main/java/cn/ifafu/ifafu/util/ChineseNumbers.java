@@ -86,7 +86,7 @@ public class ChineseNumbers {
      */
     public static String englishNumberToChinese(String text) {
         if (text.isEmpty()) {
-            throw new IllegalArgumentException("drawable_empty input");
+            throw new IllegalArgumentException("empty input");
         }
         boolean negative = false;
         if (text.length() == 1 && text.charAt(0) == '0') {
@@ -266,9 +266,7 @@ public class ChineseNumbers {
             char c = chars[i];
             if (i == 0 && (c == '负' || c == '負' || c == '-')) { // 负数，跳过首字母，记录标记位，剩下部分转化为英文数字
                 negative = true;
-                continue;
             } else if (i == 0 && c == '第') { // 序数，跳过首字母，后面部分转化成英文数字
-                continue;
             } else if (c == '點' || c == '点' || c == '.' || c == '．') {
                 afterDecimal = true;
                 power = -1; // 小数点之后的第一位是10^-1，第二位是10^-2，以此类推

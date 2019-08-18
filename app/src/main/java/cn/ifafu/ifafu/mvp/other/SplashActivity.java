@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.tencent.bugly.Bugly;
+
 import java.util.concurrent.Callable;
 
 import cn.ifafu.ifafu.R;
@@ -33,6 +35,7 @@ public class SplashActivity extends BaseActivity {
         setContentView(R.layout.activity_splash);
         Observable
                 .fromCallable((Callable<Class<? extends Activity>>) () -> {
+                    Bugly.init(getApplicationContext(), "46836c4eaa", false);
                     String account = SPUtils.get(Constant.SP_USER_INFO).getString("account");
                     User user = DaoManager.getInstance().getDaoSession().getUserDao().load(account);
                     if (user == null) {
@@ -41,7 +44,7 @@ public class SplashActivity extends BaseActivity {
                         return MainActivity.class;
                     }
                 })
-                .compose(RxUtils.ioToMainScheduler())
+                .compose(RxUtils.ioToMain())
                 .subscribe(clazz -> {
                     startActivity(new Intent(this, clazz));
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

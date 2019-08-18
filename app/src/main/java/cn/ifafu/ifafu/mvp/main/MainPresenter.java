@@ -11,8 +11,7 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
         implements MainContract.Presenter {
 
     MainPresenter(MainContract.View view) {
-        mView = view;
-        mModel = new MainModel(view.getContext());
+        super(view, new MainModel(view.getContext()));
     }
 
     @Override
@@ -36,18 +35,18 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
     public void update() {
         if (mView.getActivity().getIntent().getIntExtra("come_from", -1) != 0){
             loginD = reLogin()
-                    .compose(RxUtils.ioToMainScheduler())
+                    .compose(RxUtils.ioToMain())
                     .subscribe(response -> {}, this::onError);
             mCompDisposable.add(loginD);
         }
         // 获取主页菜单
         mCompDisposable.add(mModel.getMenus()
-                .compose(RxUtils.ioToMainScheduler())
+                .compose(RxUtils.ioToMain())
                 .subscribe(menus -> mView.setMenuAdapterData(menus), this::onError)
         );
         // 获取天气
         mCompDisposable.add(mModel.getWeather("101230101")
-                .compose(RxUtils.ioToMainScheduler())
+                .compose(RxUtils.ioToMain())
                 .subscribe(weather -> mView.setWeatherText(weather), this::onError)
         );
     }
