@@ -20,6 +20,10 @@ class ScoreContract {
         void setYearTermData(List<String> years, List<String> terms);
 
         void setYearTermTitle(String year, String term);
+
+        void setIESText(String big, String little);
+
+        void setGPAText(String text);
     }
 
     interface Presenter extends IZFPresenter {

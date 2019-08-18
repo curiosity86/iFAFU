@@ -9,7 +9,6 @@
         android:id="@+id/layout_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/bg_gray"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -43,8 +42,9 @@
             android:layout_marginTop="4dp"
             android:background="@color/white"
             android:overScrollMode="never"
-            android:paddingStart="32dp"
-            android:paddingEnd="32dp"
+            android:paddingStart="16dp"
+            android:paddingTop="16dp"
+            android:paddingEnd="16dp"
             android:scrollbars="none" />
 
     </LinearLayout>

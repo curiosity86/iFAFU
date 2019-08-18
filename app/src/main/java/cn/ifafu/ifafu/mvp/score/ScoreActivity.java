@@ -42,6 +42,8 @@ public class ScoreActivity extends BaseActivity<ScoreContract.Presenter>
     TextView tvCntBig;
     @BindView(R.id.tv_cnt_little)
     TextView tvCntLittle;
+    @BindView(R.id.tv_gpa)
+    TextView tvGPA;
     @BindView(R.id.rv_score)
     RecyclerView rvScore;
     @BindView(R.id.view_exam_empty)
@@ -116,6 +118,17 @@ public class ScoreActivity extends BaseActivity<ScoreContract.Presenter>
                     .build();
         }
         yearTermOPV.setNPicker(years, terms, null);
+    }
+
+    @Override
+    public void setIESText(String big, String little) {
+        tvIesBig.setText(big);
+        tvIesLittle.setText(little);
+    }
+
+    @Override
+    public void setGPAText(String text) {
+        tvGPA.setText(text);
     }
 
     @Override

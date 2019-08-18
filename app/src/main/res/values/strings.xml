@@ -36,6 +36,7 @@
     <string name="score">成绩查询</string>
     <string name="score_cnt">课程数</string>
     <string name="score_ies">智育分</string>
+    <string name="score_gpa">总绩点：%s</string>
 
     <!--AboutActivity-->
     <string name="about">关于iFAFU</string>

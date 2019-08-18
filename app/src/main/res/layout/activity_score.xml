@@ -32,7 +32,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:layout_marginBottom="20dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
@@ -67,7 +66,8 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="4dp"
-                android:text="@string/score_ies" />
+                android:text="@string/score_ies"
+                android:textSize="14sp" />
 
         </RelativeLayout>
 
@@ -102,15 +102,24 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="4dp"
-                android:text="@string/score_cnt" />
+                android:text="@string/score_cnt"
+                android:textSize="14sp" />
 
         </RelativeLayout>
 
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/tv_gpa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:textSize="14sp" />
+
     <View
         android:layout_width="match_parent"
-        android:layout_height="4dp"
+        android:layout_height="2dp"
         android:background="@color/bg_gray" />
 
     <cn.ifafu.ifafu.view.EmptyView

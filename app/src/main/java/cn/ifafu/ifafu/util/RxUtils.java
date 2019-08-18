@@ -18,4 +18,9 @@ public class RxUtils {
         return upstream -> upstream.subscribeOn(Schedulers.single())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
+    public static <T> ObservableTransformer<T, T> computationToMain() {
+        return upstream -> upstream.subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 }
