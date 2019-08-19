@@ -1,11 +1,18 @@
 package cn.ifafu.ifafu.mvp.main;
 
 import android.content.Intent;
+import android.util.Log;
+
+import com.tencent.bugly.beta.Beta;
+import com.tencent.bugly.beta.UpgradeInfo;
 
 import cn.ifafu.ifafu.BuildConfig;
+import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.mvp.base.BaseZFPresenter;
 import cn.ifafu.ifafu.mvp.login.LoginActivity;
+import cn.ifafu.ifafu.util.GlobalLib;
 import cn.ifafu.ifafu.util.RxUtils;
+import io.reactivex.Observable;
 
 public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContract.Model>
         implements MainContract.Presenter {
@@ -18,7 +25,30 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
     public void onStart() {
         mView.setLeftMenuHeadName(mModel.getUserName());
         mView.setLeftMenuHeadIcon(mModel.getSchoolIcon());
-        update();
+        updateView();
+    }
+
+    @Override
+    public void updateApp() {
+        mCompDisposable.add(Observable
+                .fromCallable(() -> {
+                    UpgradeInfo info = Beta.getUpgradeInfo();
+                    if (info != null) {
+                        Log.d(TAG, "info.versionCode = " + info.versionCode + "     LocalVersionCode = " + GlobalLib.getLocalVersionCode(mView.getActivity()));
+                    } else {
+                        Log.d(TAG, "info.versionCode = null" + "     LocalVersionCode = " + GlobalLib.getLocalVersionCode(mView.getActivity()));
+                    }
+                    return info != null && info.versionCode > GlobalLib.getLocalVersionCode(mView.getActivity());
+                })
+                .compose(RxUtils.ioToMain())
+                .subscribe(aBoolean -> {
+                    if (aBoolean) {
+                        Beta.checkUpgrade();
+                    } else {
+                        mView.showMessage(R.string.is_last_version);
+                    }
+                }, this::onError)
+        );
     }
 
     @Override
@@ -32,11 +62,12 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
     }
 
     @Override
-    public void update() {
-        if (mView.getActivity().getIntent().getIntExtra("come_from", -1) != 0){
+    public void updateView() {
+        if (mView.getActivity().getIntent().getIntExtra("come_from", -1) != 0) {
             loginD = reLogin()
                     .compose(RxUtils.ioToMain())
-                    .subscribe(response -> {}, this::onError);
+                    .subscribe(response -> {
+                    }, this::onError);
             mCompDisposable.add(loginD);
         }
         // 获取主页菜单

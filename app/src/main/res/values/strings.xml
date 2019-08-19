@@ -18,6 +18,7 @@
 
     <!--MainActivity-->
     <string name="back_again">再次按下返回键退出程序</string>
+    <string name="is_last_version">当前已经是最新版了</string>
     
     <!--SyllabusActivity-->
     <string name="week_format">第%s周&#160;&#160;本周</string>
