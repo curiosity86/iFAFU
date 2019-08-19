@@ -35,7 +35,7 @@ public class SyllabusParser extends BaseParser<List<Course>> {
 
     private String account;
 
-    private List<Course> parse(String html) {
+    public List<Course> parse(String html) {
         List<Course> courses = new ArrayList<>();
         Document doc = Jsoup.parse(html);
         account = getAccount(doc);
@@ -139,16 +139,16 @@ public class SyllabusParser extends BaseParser<List<Course>> {
         }
     }
 
-    private void parseTime(Course course, String t, Help help) {
+    private void parseTime(Course course, String text, Help help) {
         //beginNode, nodeNum
-        Matcher m1 = Pattern.compile("第.*节").matcher(t);
+        Matcher m1 = Pattern.compile("第.*节").matcher(text);
         if (m1.find() && !m1.group().contains("-")) {
             List<Integer> intList = RegexUtils.getNumbers(m1.group());
             course.setBeginNode(intList.get(0));
             course.setNodeCnt(intList.size());
         } else {
             course.setBeginNode(help.beginNode);
-            Matcher m2 = Pattern.compile("[0-9]+节\\\\周").matcher(t);
+            Matcher m2 = Pattern.compile("[0-9]+节\\\\周").matcher(text);
             if (m2.find()) {
                 course.setNodeCnt(RegexUtils.getNumbers(m2.group()).get(0));
             } else {
@@ -158,8 +158,8 @@ public class SyllabusParser extends BaseParser<List<Course>> {
 
         //weekdayCN
         boolean flag = false;
-        for (int i = 1; i <= 7; i++) {
-            if (t.contains(weekdayCN[i])) {
+        for (int i = 0; i < 7; i++) {
+            if (text.contains(weekdayCN[i])) {
                 course.setWeekday(weekday[i]);
                 flag = true;
                 break;
@@ -195,18 +195,18 @@ public class SyllabusParser extends BaseParser<List<Course>> {
             course.setWeekday(weekday);
         }
 
-        Matcher m2 = Pattern.compile("第[0-9]+-[0-9]+周").matcher(t);
+        Matcher m2 = Pattern.compile("第[0-9]+-[0-9]+周").matcher(text);
         if (m2.find()) {
             List<Integer> intList = RegexUtils.getNumbers(m2.group());
             int beginWeek = intList.get(0);
             int endWeek = intList.get(1);
             //weekType
-            if (t.contains("单周")) {
+            if (text.contains("单周")) {
                 beginWeek = beginWeek % 2 == 1 ? beginWeek : beginWeek + 1;
                 for (int i = beginWeek; i <= endWeek; i += 2) {
                     course.getWeekSet().add(i);
                 }
-            } else if (t.contains("双周")) {
+            } else if (text.contains("双周")) {
                 beginWeek = beginWeek % 2 == 0 ? beginWeek : beginWeek + 1;
                 for (int i = beginWeek; i <= endWeek; i += 2) {
                     course.getWeekSet().add(i);
