@@ -1,5 +1,6 @@
 package cn.ifafu.ifafu.mvp.syllabus;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.List;
 
@@ -43,12 +44,17 @@ class SyllabusContract {
         /**
          * @return 上课时间
          */
-        String[] getCourseBeginTime();
+        int[] getCourseBeginTime();
 
         /**
          * @return 课程表列数
          */
         int getRowCount();
+
+        int getCurrentWeek() throws ParseException;
+
+        //一节课时间，单位分钟
+        int getOneNodeLength();
 
         /**
          * 从数据库获取所有课程

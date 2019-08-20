@@ -10,5 +10,12 @@ public class Constant {
     public static final String SP_SETTING = "setting";
     public static final String SP_COOKIE = "cookie";
 
+    public static final int MAIN_ACTIVITY = 866;
+    public static final int SYLLABUS_ACTIVITY = 96;
+    public static final int SYLLABUS_ITEM_ACTIVITY = 98;
+    public static final int EXAM_ACTIVITY = 33;
+    public static final int SCORE_ACTIVITY = 47;
+    public static final int SCORE_FILTER_ACTIVITY = 579;
+    public static final int SCORE_ITEM_ACTIVITY = 365;
 
 }

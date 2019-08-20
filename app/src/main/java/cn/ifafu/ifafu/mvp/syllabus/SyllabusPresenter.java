@@ -1,5 +1,7 @@
 package cn.ifafu.ifafu.mvp.syllabus;
 
+import android.annotation.SuppressLint;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,10 +23,17 @@ public class SyllabusPresenter extends BaseZFPresenter<SyllabusContract.View, Sy
         super(view, new SyllabusModel(view.getContext()));
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onStart() {
+        int count = mModel.getRowCount();
         mView.setSyllabusRowCount(mModel.getRowCount());
-        mView.setCourseBeginTime(mModel.getCourseBeginTime());
+        String[] strTime = new String[count];
+        int[] intTime = mModel.getCourseBeginTime();
+        for (int i = 0; i < strTime.length && i < intTime.length; i++) {
+            strTime[i] = String.format("%d:%02d", intTime[i] / 100, intTime[i] % 100);
+        }
+        mView.setCourseBeginTime(strTime);
         String firstStudyDay = mModel.getFirstStudyDay();
         mView.setFirstStudyDay(firstStudyDay);
         // 设置每周首日

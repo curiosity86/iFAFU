@@ -8,6 +8,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.tencent.bugly.Bugly;
+import com.tencent.bugly.beta.Beta;
 
 import java.util.concurrent.Callable;
 
@@ -36,6 +37,7 @@ public class SplashActivity extends BaseActivity {
         Observable
                 .fromCallable((Callable<Class<? extends Activity>>) () -> {
                     Bugly.init(getApplicationContext(), "46836c4eaa", false);
+                    Beta.enableHotfix = false;
                     String account = SPUtils.get(Constant.SP_USER_INFO).getString("account");
                     User user = DaoManager.getInstance().getDaoSession().getUserDao().load(account);
                     if (user == null) {

@@ -27,13 +27,13 @@ import cn.ifafu.ifafu.util.DensityUtils;
 
 /**
  * 自定义侧面菜单布局
+ * Created by BlueMor
+ * https://github.com/BlueMor/DragLayout
  */
 public class DragLayout extends FrameLayout {
 
     private boolean isShowShadow = true;
 
-    private GestureDetectorCompat mGestureDetector;
-    private DragListener dragListener;
     private int range;//排除主页面的左侧页面宽度
     private int width;
     private int height;
@@ -48,6 +48,23 @@ public class DragLayout extends FrameLayout {
 
     private ViewDragHelper mDragHelper;
     private ViewDragHelper.Callback mDragCallback = new DragCallback();
+    private GestureDetectorCompat mGestureDetector;
+    private DragListener mDragListener = new DragListener() {
+        @Override
+        public void onOpen() {
+
+        }
+
+        @Override
+        public void onClose() {
+
+        }
+
+        @Override
+        public void onDrag(float percent) {
+
+        }
+    };
 
     public DragLayout(Context context) {
         this(context, null);
@@ -65,8 +82,8 @@ public class DragLayout extends FrameLayout {
         mDragHelper = ViewDragHelper.create(this, mDragCallback);
     }
 
-    public void setDragListener(DragListener dragListener) {
-        this.dragListener = dragListener;
+    public void setmDragListener(DragListener mDragListener) {
+        this.mDragListener = mDragListener;
     }
 
     @Override
@@ -102,14 +119,11 @@ public class DragLayout extends FrameLayout {
         //range = (int) (width * 0.6f);
         //改良贴近美工图  最大滑动范围为宽度减200 但是主页面会进行缩小0.7倍所以最终左侧显示大小为宽度-140（200*0.7） 在layout文件中右边距为140dp
         int temp = (int) DensityUtils.dp2px(context, 200);
-        Log.d("DragLayout", "onSizeChanged");
         range = width - temp;
     }
 
     @Override
-    protected void onLayout(boolean changed, int left, int top, int right,
-                            int bottom) {
-        Log.d("DragLayout", "onLayout");
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         mLeftLayout.layout(0, 0, width, height);
         mMainLayout.layout(mainLeft, 0, mainLeft + width, height);
     }
@@ -135,17 +149,17 @@ public class DragLayout extends FrameLayout {
 
     private void dispatchDragEvent(int mainLeft) {
         //mianleft 左侧手指拖动的宽度
-        if (dragListener == null) {
+        if (mDragListener == null) {
             return;
         }
         float percent = mainLeft / (float) range;//已经滑动的范围占可滑动范围的百分比
         animateView(percent);
-        dragListener.onDrag(percent);
+        mDragListener.onDrag(percent);
         Status lastStatus = status;
         if (lastStatus != getStatus() && status == Status.Close) {
-            dragListener.onClose();
+            mDragListener.onClose();
         } else if (lastStatus != getStatus() && status == Status.Open) {
-            dragListener.onOpen();
+            mDragListener.onOpen();
         }
     }
 

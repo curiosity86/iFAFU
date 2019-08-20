@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -22,7 +21,6 @@ import butterknife.OnClick;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Score;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
-import cn.ifafu.ifafu.mvp.score_filter.ScoreFilterActivity;
 import cn.ifafu.ifafu.view.adapter.ScoreAdapter;
 import cn.ifafu.ifafu.view.custom.EmptyView;
 import cn.ifafu.ifafu.view.custom.RecyclerViewDivider;

@@ -22,13 +22,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.ifafu.ifafu.R;
+import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.data.entity.Menu;
 import cn.ifafu.ifafu.data.entity.Weather;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
 import cn.ifafu.ifafu.mvp.other.AboutActivity;
 import cn.ifafu.ifafu.util.ButtonUtils;
-import cn.ifafu.ifafu.view.custom.DragLayout;
 import cn.ifafu.ifafu.view.adapter.MenuAdapter;
+import cn.ifafu.ifafu.view.custom.DragLayout;
 
 public class MainActivity extends BaseActivity<MainContract.Presenter>
         implements MainContract.View {
@@ -45,9 +46,15 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
     RecyclerView rvMenu;
     @BindView(R.id.drawer_main)
     DragLayout drawerMain;
+    @BindView(R.id.tv_course_title)
+    TextView tvCourseTitle;
+    @BindView(R.id.tv_course_name)
+    TextView tvCourseName;
+    @BindView(R.id.tv_course_address)
+    TextView tvCourseAddress;
+    @BindView(R.id.tv_course_time)
+    TextView tvCourseTime;
     private MenuAdapter mMenuAdapter;
-
-    private boolean isDrawerOpen = false;
 
     @Override
     public int initLayout(@Nullable Bundle savedInstanceState) {
@@ -59,29 +66,13 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
         StatusBarUtil.setTransparent(this);
         ViewGroup contentView = getWindow().getDecorView().findViewById(Window.ID_ANDROID_CONTENT);
         contentView.getChildAt(0).setFitsSystemWindows(false);
-
         mPresenter = new MainPresenter(this);
-        initNavigationView();
     }
 
-    //初始化侧滑栏样式
-    private void initNavigationView() {
-        drawerMain.setDragListener(new DragLayout.DragListener() {
-            @Override
-            public void onOpen() {
-                isDrawerOpen = true;
-            }
-
-            @Override
-            public void onClose() {
-                isDrawerOpen = false;
-            }
-
-            @Override
-            public void onDrag(float percent) {
-
-            }
-        });
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mPresenter.updateCourseView();
     }
 
     @Override
@@ -116,7 +107,7 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if (isDrawerOpen) {
+            if (drawerMain.getStatus() == DragLayout.Status.Open) {
                 drawerMain.close(true);
             } else if (ButtonUtils.isFastDoubleClick()) {
                 finish();
@@ -157,5 +148,22 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
     public void setWeatherText(Weather weather) {
         tvWeather1.setText((weather.getNowTemp() + "℃"));
         tvWeather2.setText(String.format("%s | %s", weather.getCityName(), weather.getWeather()));
+    }
+
+    @Override
+    public void setCourseText(String title, String name, String address, String time) {
+        tvCourseTitle.setText(title);
+        tvCourseName.setText(name);
+        tvCourseAddress.setText(address);
+        tvCourseTime.setText(time);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == Constant.SYLLABUS_ACTIVITY) {
+            mPresenter.updateCourseView();
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

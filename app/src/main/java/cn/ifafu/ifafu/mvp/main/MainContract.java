@@ -22,6 +22,8 @@ public class MainContract {
         void setLeftMenuHeadName(String name);
 
         void setWeatherText(Weather weather);
+
+        void setCourseText(String title, String name, String address, String time);
     }
 
     public interface Presenter extends IPresenter {
@@ -31,6 +33,8 @@ public class MainContract {
         void shareApp();
 
         void updateView();
+
+        void updateCourseView();
 
         /**
          * 退出账号

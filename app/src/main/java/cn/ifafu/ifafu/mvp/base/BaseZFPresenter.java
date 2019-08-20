@@ -35,11 +35,14 @@ public abstract class BaseZFPresenter<V extends IView, M extends IZFModel> exten
      * Need {@link LoginException}
      */
     protected ObservableSource<?> ensureTokenAlive(Observable<Throwable> throwableObservable) {
-        if (loginD != null) {
-            loginD.dispose();
-        }
         return throwableObservable.flatMap(throwable -> {
             if (throwable instanceof NoAuthException) {
+                if (loginD != null) {
+                    while (!loginD.isDisposed()) {
+                        Thread.sleep(100);
+                    }
+                    return Observable.just(true);
+                }
                 return reLogin();
             } else {
                 return Observable.error(throwable);

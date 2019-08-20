@@ -4,7 +4,6 @@
 
     <!--MVP Base-->
     <string name="net_error">网络错误，请检查网络设置</string>
-    <string name="empty_data">暂无数据</string>
 
     <!--LoginActivity-->
     <string name="account">学号</string>
@@ -25,7 +24,6 @@
     <string name="week_format_not">第%s周&#160;&#160;非本周</string>
     <string name="week_format_not_return">第%s周&#160;&#160;非本周(长按返回%s)</string>
     <string name="syllabus_refresh_success">课表刷新成功</string>
-    <string name="syllabus_refresh_failure">课表刷新失败</string>
 
     <!--ExamActivity-->
     <string name="exam">考试查询</string>
@@ -39,14 +37,14 @@
     <string name="score_ies">智育分</string>
     <string name="score_gpa">总绩点：%s</string>
     <string name="score_refresh_successful">成绩刷新成功</string>
-    <string name="score_refresh_failure">成绩刷新失败</string>
 
     <!--AboutActivity-->
     <string name="about">关于iFAFU</string>
     <string name="app_sub_name">For Android V%s</string>
     <string name="about_1">基于福建农林大学教务管理系统</string>
     <string name="about_2">iFAFU官网: https://ifafu.cn</string>
-    <string name="about_3">Designed by Woolsen</string>
+    <string name="about_3">Android Developer: Woolsen</string>
+    <string name="about_4">开源地址: https://github.com/woolsen/iFAFU</string>
     <string name="text_QQ_group">&#160;意见反馈</string>
     <string name="text_weibo">&#160;关注微博</string>
     <string name="text_email">&#160;发送邮件</string>

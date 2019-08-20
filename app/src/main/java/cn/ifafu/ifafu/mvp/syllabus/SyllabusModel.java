@@ -2,9 +2,13 @@ package cn.ifafu.ifafu.mvp.syllabus;
 
 import android.content.Context;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import cn.ifafu.ifafu.app.School;
 import cn.ifafu.ifafu.dao.CourseDao;
@@ -16,7 +20,7 @@ import cn.ifafu.ifafu.data.local.DaoManager;
 import cn.ifafu.ifafu.mvp.base.BaseZFModel;
 import io.reactivex.Observable;
 
-class SyllabusModel extends BaseZFModel implements SyllabusContract.Model {
+public class SyllabusModel extends BaseZFModel implements SyllabusContract.Model {
 
     private final int firstDayOfWeek = Calendar.SUNDAY;
 
@@ -26,13 +30,13 @@ class SyllabusModel extends BaseZFModel implements SyllabusContract.Model {
 
     private final User user = getUser();
 
-    private final String[][] courseBeginTime = new String[][]{
-            {"8:00", "8:50", "9:55", "10:45", "11:35", "14:00", "14:50", "15:50", "16:40", "18:25", "19:15", "20:05"},
-            {"8:30", "9:20", "10:25", "11:15", "12:05", "14:00", "14:50", "15:45", "16:35", "18:25", "19:15", "20:05"}};
+    private final int[][] courseBeginTime = new int[][]{
+            {800, 850, 955, 1045, 1135, 1400, 1450, 1550, 1640, 1825, 1915, 2005},
+            {830, 920, 1025, 1115, 1205, 1400, 1450, 1545, 1635, 1825, 1915, 2005}};
 
     private CourseDao courseDao = DaoManager.getInstance().getDaoSession().getCourseDao();
 
-    SyllabusModel(Context context) {
+    public SyllabusModel(Context context) {
         super(context);
     }
 
@@ -47,13 +51,31 @@ class SyllabusModel extends BaseZFModel implements SyllabusContract.Model {
     }
 
     @Override
-    public String[] getCourseBeginTime() {
+    public int[] getCourseBeginTime() {
         return courseBeginTime[0];
     }
 
     @Override
     public int getRowCount() {
         return mRowCount;
+    }
+
+    @Override
+    public int getCurrentWeek() throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+        Date firstStudyDate = format.parse(getFirstStudyDay());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setFirstDayOfWeek(getFirstDayOfWeek());
+        int currentYearWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+        calendar.setTime(firstStudyDate);
+        int firstYearWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+        int nowWeek = currentYearWeek - firstYearWeek + 1;
+        return nowWeek > 0? nowWeek: -1;
+    }
+
+    @Override
+    public int getOneNodeLength() {
+        return 45;
     }
 
     @Override

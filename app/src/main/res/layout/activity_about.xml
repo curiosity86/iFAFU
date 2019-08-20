@@ -39,7 +39,7 @@
         android:textSize="12sp" />
 
     <TextView
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:autoLink="web"
@@ -51,12 +51,23 @@
 
     <TextView
         android:id="@+id/gotoGroupAbout"
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/about_3"
         android:textAlignment="center"
         android:textColor="#04e614"
+        android:textSize="12sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/about_4"
+        android:textAlignment="center"
+        android:autoLink="web"
+        android:textColor="#944"
+        android:textColorLink="#944"
         android:textSize="12sp" />
 
     <View
@@ -74,7 +85,7 @@
         <ImageView
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:src="@drawable/ic_group" />
+            android:src="@drawable/icon_group" />
 
         <TextView
             android:id="@+id/btn_goto_qq_group"
@@ -87,7 +98,7 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginStart="10dp"
-            android:src="@drawable/ic_weibo" />
+            android:src="@drawable/icon_weibo" />
 
         <TextView
             android:id="@+id/btn_goto_weibo"
@@ -100,7 +111,7 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginStart="10dp"
-            android:src="@drawable/ic_email" />
+            android:src="@drawable/icon_email" />
 
         <TextView
             android:id="@+id/btn_goto_email"

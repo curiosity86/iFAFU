@@ -10,16 +10,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 
 import cn.ifafu.ifafu.R;
-import cn.ifafu.ifafu.data.entity.Exam;
 import cn.ifafu.ifafu.data.entity.Score;
 import cn.ifafu.ifafu.util.GlobalLib;
 
-public class ScoreAdapter  extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHolder> {
+public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHolder> {
 
     private Context mContext;
     private List<Score> mScoreList;

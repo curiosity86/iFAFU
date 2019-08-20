@@ -6,7 +6,6 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import cn.ifafu.ifafu.data.entity.Score;

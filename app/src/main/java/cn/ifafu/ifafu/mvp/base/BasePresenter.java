@@ -7,7 +7,6 @@ import cn.ifafu.ifafu.mvp.base.i.IModel;
 import cn.ifafu.ifafu.mvp.base.i.IPresenter;
 import cn.ifafu.ifafu.mvp.base.i.IView;
 
-import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 
 public abstract class BasePresenter<V extends IView, M extends IModel> implements IPresenter {

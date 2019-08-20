@@ -5,6 +5,11 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
 
+/**
+ * 自定义侧面菜单布局
+ * Created by BlueMor
+ * https://github.com/BlueMor/DragLayout
+ */
 public class MyLinearLayout extends LinearLayout {
     private DragLayout dl;
 
@@ -38,6 +43,5 @@ public class MyLinearLayout extends LinearLayout {
         }
         return super.onTouchEvent(event);
     }
-
 
 }

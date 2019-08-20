@@ -24,14 +24,6 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="TextView.CourseDetail">
-        <item name="android:drawablePadding">12dp</item>
-        <item name="android:lines">1</item>
-        <item name="android:background">@null</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/ifafu_blue</item>
-    </style>
-
     <style name="Button" parent="Widget.AppCompat.Button">
         <item name="android:textColor">@color/effective_black</item>
         <item name="android:layout_height">48dp</item>
@@ -66,11 +58,6 @@
 
     <style name="TextInput" parent="Base.TextAppearance.AppCompat.Caption">
         <item name="android:textColor">@color/little_blue</item>
-    </style>
-
-    <style name="TextView.Exam">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/global_blue</item>
     </style>
 
     <style name="Dialog.Loading" parent="@android:style/Theme.Dialog">

@@ -2,8 +2,6 @@ package cn.ifafu.ifafu.util;
 
 import android.annotation.SuppressLint;
 
-import androidx.annotation.StringRes;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -161,6 +159,15 @@ public class DateUtils {
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         return cal.getTime();
+    }
+
+    /**
+     * 获取当前星期
+     * @return {@link Calendar}
+     */
+    public static int getCurrentDayOfWeek() {
+        Calendar c = Calendar.getInstance();
+        return c.get(Calendar.DAY_OF_WEEK);
     }
 
 }

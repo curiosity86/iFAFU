@@ -6,10 +6,8 @@ import java.util.List;
 
 import cn.ifafu.ifafu.dao.ScoreDao;
 import cn.ifafu.ifafu.data.entity.Score;
-import cn.ifafu.ifafu.data.entity.User;
 import cn.ifafu.ifafu.data.local.DaoManager;
 import cn.ifafu.ifafu.mvp.base.BaseModel;
-import io.reactivex.Observable;
 
 public class ScoreFilterModel extends BaseModel implements ScoreFilterConstant.Model {
 

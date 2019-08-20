@@ -136,7 +136,8 @@ class ScorePresenter extends BaseZFPresenter<ScoreContract.View, ScoreContract.M
     @Override
     public void updateIES() {
         mCompDisposable.add(mModel
-                .getScoresFromDB(mCurrentYear, mCurrentTerm)
+                .getScoresFromNet(mCurrentYear, mCurrentTerm)
+                .map(Response::getBody)
                 .flatMap(this::ies)
                 .compose(RxUtils.computationToMain())
                 .subscribe(map -> {
