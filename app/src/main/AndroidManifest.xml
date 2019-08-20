@@ -27,6 +27,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="ExportedService,GoogleAppIndexingWarning,UnusedAttribute">
+        <activity android:name=".mvp.score_item.ScoreItemActivity"></activity>
         <activity android:name=".mvp.other.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,22 +43,16 @@
         <activity android:name=".mvp.score.ScoreActivity" />
         <activity android:name=".mvp.web.WebActivity" />
         <activity android:name=".mvp.other.AboutActivity" />
-
-        <!-- 配置APP渠道号 -->
+        <activity android:name=".mvp.score_filter.ScoreFilterActivity" /> <!-- 配置APP渠道号 -->
         <meta-data
             android:name="BUGLY_APP_CHANNEL"
-            android:value="${channel}" />
-
-        <!--适配华为（huawei）刘海屏-->
+            android:value="${channel}" /> <!-- 适配华为（huawei）刘海屏 -->
         <meta-data
             android:name="android.notch_support"
-            android:value="true" />
-        <!--适配小米（xiaomi）刘海屏-->
+            android:value="true" /> <!-- 适配小米（xiaomi）刘海屏 -->
         <meta-data
             android:name="notch.config"
             android:value="portrait|landscape" />
-
-
     </application>
 
 </manifest>

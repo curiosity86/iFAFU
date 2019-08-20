@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <cn.ifafu.ifafu.view.WToolbar
+    <cn.ifafu.ifafu.view.custom.WToolbar
         android:id="@+id/tb_exam"
         android:layout_width="match_parent"
         android:layout_height="56dp"
@@ -22,7 +22,7 @@
             android:padding="4dp"
             android:src="@drawable/ic_refresh" />
 
-    </cn.ifafu.ifafu.view.WToolbar>
+    </cn.ifafu.ifafu.view.custom.WToolbar>
 
     <TextView
         android:layout_width="match_parent"
@@ -40,7 +40,7 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <cn.ifafu.ifafu.view.EmptyView
+        <cn.ifafu.ifafu.view.custom.EmptyView
             android:id="@+id/view_exam_empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

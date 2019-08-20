@@ -6,4 +6,8 @@
 
     <size android:height="1dp" />
 
+    <padding
+        android:left="8dp"
+        android:right="8dp" />
+
 </shape>

@@ -6,6 +6,7 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import cn.ifafu.ifafu.data.entity.Score;
@@ -24,16 +25,17 @@ public class ScoreParser extends BaseParser<List<Score>> {
         }
         Elements elements = elementsTemp.get(0).getElementsByTag("tr");
         List<Score> list = new ArrayList<>();
-        Elements termAndYear = document.select("option[selected=\"selected\"]");
         String account = getAccount(document);
         for (int i = 1; i < elements.size(); i++) {
             try {
                 Score score = getScore(elements.get(i).children());
                 score.setAccount(account);
                 list.add(score);
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
+        Collections.sort(list, (o1, o2) -> o1.getId().compareTo(o2.getId()));
         return list;
     }
 
@@ -62,6 +64,7 @@ public class ScoreParser extends BaseParser<List<Score>> {
         score.setGpa(Float.parseFloat(e.get(11).text()));
         score.setRemarks(e.get(12).text());
         score.setMakeupRemarks(e.get(13).text());
+        score.setIsIESItem(!score.getNature().contains("任意选修") && !score.getName().contains("体育"));
         return score;
     }
 

@@ -50,7 +50,7 @@ public class SyllabusPresenter extends BaseZFPresenter<SyllabusContract.View, Sy
                 .subscribe(list -> {
                     mView.setSyllabusDate(list);
                     mView.redrawSyllabus();
-                    mView.showMessage(R.string.refresh_success);
+                    mView.showMessage(R.string.syllabus_refresh_success);
                 }, this::onError)
         );
     }

@@ -14,7 +14,7 @@ import com.jaeger.library.StatusBarUtil;
 
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
-import cn.ifafu.ifafu.view.WToolbar;
+import cn.ifafu.ifafu.view.custom.WToolbar;
 import cn.ifafu.ifafu.view.dialog.ProgressDialog;
 
 public class WebActivity extends BaseActivity<WebContract.Presenter> implements WebContract.View {
@@ -52,14 +52,14 @@ public class WebActivity extends BaseActivity<WebContract.Presenter> implements 
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                progressDialog.show();
+                showLoading();
                 super.onPageStarted(view, url, favicon);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                progressDialog.cancel();
+                hideLoading();
             }
         });
         WebSettings webSettings = webView.getSettings();
@@ -71,7 +71,6 @@ public class WebActivity extends BaseActivity<WebContract.Presenter> implements 
         webSettings.setLoadsImagesAutomatically(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setAppCacheEnabled(true);
-//        webSettings.setBuiltInZoomControls(false);
         webSettings.setAppCachePath(
                 getApplicationContext().getDir("cache", Context.MODE_PRIVATE).getPath());
     }
@@ -88,11 +87,15 @@ public class WebActivity extends BaseActivity<WebContract.Presenter> implements 
 
     @Override
     public void showLoading() {
-        progressDialog.show();
+        if (!this.isDestroyed()) {
+            progressDialog.show();
+        }
     }
 
     @Override
     public void hideLoading() {
-        progressDialog.cancel();
+        if (!this.isDestroyed()) {
+            progressDialog.cancel();
+        }
     }
 }

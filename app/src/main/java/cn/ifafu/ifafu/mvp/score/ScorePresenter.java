@@ -1,6 +1,7 @@
 package cn.ifafu.ifafu.mvp.score;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +11,7 @@ import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Response;
 import cn.ifafu.ifafu.data.entity.Score;
 import cn.ifafu.ifafu.mvp.base.BaseZFPresenter;
+import cn.ifafu.ifafu.mvp.score_filter.ScoreFilterActivity;
 import cn.ifafu.ifafu.util.GlobalLib;
 import cn.ifafu.ifafu.util.RxUtils;
 import io.reactivex.Observable;
@@ -79,6 +81,7 @@ class ScorePresenter extends BaseZFPresenter<ScoreContract.View, ScoreContract.M
                 .subscribe(list -> {
                     calcIES(list);
                     mView.setScoreData(list);
+                    mView.showMessage(R.string.score_refresh_successful);
                 }, this::onError)
         );
     }
@@ -109,8 +112,32 @@ class ScorePresenter extends BaseZFPresenter<ScoreContract.View, ScoreContract.M
         );
     }
 
-    private void calcIES(final List<Score> list) {
-        mCompDisposable.add(ies(list)
+    @Override
+    public void openFilterActivity() {
+        Intent intent = new Intent(mView.getActivity(), ScoreFilterActivity.class);
+        intent.putExtra("year", mCurrentYear);
+        intent.putExtra("term", mCurrentTerm);
+        intent.putExtra("account", mModel.getUser().getAccount());
+        mView.getActivity().startActivityForResult(intent, 100);
+    }
+
+    private void calcIES(List<Score> list) {
+        mCompDisposable.add(Observable
+                .just(list)
+                .flatMap(this::ies)
+                .compose(RxUtils.computationToMain())
+                .subscribe(map -> {
+                    mView.setIESText(map.get("big"), map.get("little"));
+                    mView.setGPAText(mView.getContext().getString(R.string.score_gpa, map.get("gpa")));
+                }, this::onError)
+        );
+    }
+
+    @Override
+    public void updateIES() {
+        mCompDisposable.add(mModel
+                .getScoresFromDB(mCurrentYear, mCurrentTerm)
+                .flatMap(this::ies)
                 .compose(RxUtils.computationToMain())
                 .subscribe(map -> {
                     mView.setIESText(map.get("big"), map.get("little"));
@@ -127,8 +154,7 @@ class ScorePresenter extends BaseZFPresenter<ScoreContract.View, ScoreContract.M
             float totalMinus = 0;
             float totalGPA = 0;
             for (Score score : list) {
-                if (!score.getNature().contains("任意选修") &&
-                        !score.getName().contains("体育")) {
+                if (score.getIsIESItem()) {
                     totalScore += score.getScore() * score.getCredit();
                     totalCredit += score.getCredit();
                     if (score.getScore() < 60 && score.getMakeupScore() < 60) {

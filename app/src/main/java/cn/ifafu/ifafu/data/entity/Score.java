@@ -1,5 +1,7 @@
 package cn.ifafu.ifafu.data.entity;
 
+import androidx.annotation.NonNull;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
@@ -19,17 +21,18 @@ public class Score extends YearTerm {
     private float gpa; //绩点
     private String remarks; //备注
     private String makeupRemarks; //补考备注
+    private boolean isIESItem = true; //是否记入智育分
 
     private String account;
     private String year;
     private String term;
 
 
-    @Generated(hash = 467991559)
+    @Generated(hash = 984428122)
     public Score(Long id, String name, String nature, String attr, float credit,
             float score, float makeupScore, boolean restudy, String institute,
-            float gpa, String remarks, String makeupRemarks, String account,
-            String year, String term) {
+            float gpa, String remarks, String makeupRemarks, boolean isIESItem,
+            String account, String year, String term) {
         this.id = id;
         this.name = name;
         this.nature = nature;
@@ -42,6 +45,7 @@ public class Score extends YearTerm {
         this.gpa = gpa;
         this.remarks = remarks;
         this.makeupRemarks = makeupRemarks;
+        this.isIESItem = isIESItem;
         this.account = account;
         this.year = year;
         this.term = term;
@@ -148,6 +152,7 @@ public class Score extends YearTerm {
         this.account = account;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Score{" +
@@ -188,5 +193,13 @@ public class Score extends YearTerm {
 
     public void setMakeupRemarks(String makeupRemarks) {
         this.makeupRemarks = makeupRemarks;
+    }
+
+    public boolean getIsIESItem() {
+        return this.isIESItem;
+    }
+
+    public void setIsIESItem(boolean isIESItem) {
+        this.isIESItem = isIESItem;
     }
 }

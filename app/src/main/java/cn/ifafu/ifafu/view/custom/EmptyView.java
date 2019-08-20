@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.view;
+package cn.ifafu.ifafu.view.custom;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.TintTypedArray;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.util.DensityUtils;

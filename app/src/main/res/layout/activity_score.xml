@@ -8,12 +8,23 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <cn.ifafu.ifafu.view.WToolbar
+    <cn.ifafu.ifafu.view.custom.WToolbar
         android:id="@+id/tb_score"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         app:navigationIcon="@drawable/ic_back"
-        app:title="@string/score" />
+        app:title="@string/score" >
+
+        <ImageButton
+            android:id="@+id/btn_refresh"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:padding="4dp"
+            android:src="@drawable/ic_refresh"
+            android:layout_marginEnd="8dp"
+            android:layout_alignParentEnd="true"/>
+
+    </cn.ifafu.ifafu.view.custom.WToolbar>
 
     <View
         android:layout_width="match_parent"
@@ -122,7 +133,7 @@
         android:layout_height="2dp"
         android:background="@color/bg_gray" />
 
-    <cn.ifafu.ifafu.view.EmptyView
+    <cn.ifafu.ifafu.view.custom.EmptyView
         android:id="@+id/view_exam_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -11,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import com.jaeger.library.StatusBarUtil;
 
@@ -19,7 +18,7 @@ import java.util.Locale;
 
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.util.GlobalLib;
-import cn.ifafu.ifafu.view.WToolbar;
+import cn.ifafu.ifafu.view.custom.WToolbar;
 
 public class AboutActivity extends AppCompatActivity implements View.OnClickListener {
 

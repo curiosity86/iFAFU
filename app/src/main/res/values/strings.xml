@@ -19,13 +19,13 @@
     <!--MainActivity-->
     <string name="back_again">再次按下返回键退出程序</string>
     <string name="is_last_version">当前已经是最新版了</string>
-    
+
     <!--SyllabusActivity-->
     <string name="week_format">第%s周&#160;&#160;本周</string>
     <string name="week_format_not">第%s周&#160;&#160;非本周</string>
     <string name="week_format_not_return">第%s周&#160;&#160;非本周(长按返回%s)</string>
-    <string name="refresh_success">课表刷新成功</string>
-    <string name="refresh_failure">课表刷新失败</string>
+    <string name="syllabus_refresh_success">课表刷新成功</string>
+    <string name="syllabus_refresh_failure">课表刷新失败</string>
 
     <!--ExamActivity-->
     <string name="exam">考试查询</string>
@@ -38,6 +38,8 @@
     <string name="score_cnt">课程数</string>
     <string name="score_ies">智育分</string>
     <string name="score_gpa">总绩点：%s</string>
+    <string name="score_refresh_successful">成绩刷新成功</string>
+    <string name="score_refresh_failure">成绩刷新失败</string>
 
     <!--AboutActivity-->
     <string name="about">关于iFAFU</string>
@@ -68,4 +70,10 @@
     <string name="select_course_week">请选择周数</string>
     <string name="save_successful">保存成功</string>
     <string name="delete_successful">删除成功</string>
+
+    <!--ScoreFilterActivity-->
+    <string name="score_filter_hint">选择需要记入智育分的成绩</string>
+    <string name="score_filter_now_ies">当前智育分：%s分</string>
+    <string name="score_filter_title">智育分计算筛选</string>
+    <string name="score_filter_all">全选</string>
 </resources>

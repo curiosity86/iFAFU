@@ -1,14 +1,13 @@
 package cn.ifafu.ifafu.mvp.score;
 
+import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,10 +22,11 @@ import butterknife.OnClick;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Score;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
-import cn.ifafu.ifafu.view.EmptyView;
-import cn.ifafu.ifafu.view.RecyclerViewDivider;
-import cn.ifafu.ifafu.view.WToolbar;
+import cn.ifafu.ifafu.mvp.score_filter.ScoreFilterActivity;
 import cn.ifafu.ifafu.view.adapter.ScoreAdapter;
+import cn.ifafu.ifafu.view.custom.EmptyView;
+import cn.ifafu.ifafu.view.custom.RecyclerViewDivider;
+import cn.ifafu.ifafu.view.custom.WToolbar;
 import cn.ifafu.ifafu.view.dialog.ProgressDialog;
 
 public class ScoreActivity extends BaseActivity<ScoreContract.Presenter>
@@ -72,12 +72,14 @@ public class ScoreActivity extends BaseActivity<ScoreContract.Presenter>
         rvScore.addItemDecoration(new RecyclerViewDivider(
                 this, LinearLayoutManager.VERTICAL, R.drawable.shape_divider));
 
+        findViewById(R.id.btn_refresh).setOnClickListener(v -> mPresenter.update());
+
         progressDialog = new ProgressDialog(this);
     }
 
     @Override
     public void setYearTermOptions(int option1, int option2) {
-        yearTermOPV.setSelectOptions(option1, option2);;
+        yearTermOPV.setSelectOptions(option1, option2);
     }
 
     @Override
@@ -140,11 +142,14 @@ public class ScoreActivity extends BaseActivity<ScoreContract.Presenter>
         }
     }
 
-    @OnClick({R.id.tv_score_title})
+    @OnClick({R.id.tv_score_title, R.id.tv_cnt_big})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_score_title:
                 yearTermOPV.show();
+                break;
+            case R.id.tv_cnt_big:
+                mPresenter.openFilterActivity();
                 break;
         }
     }
@@ -157,5 +162,14 @@ public class ScoreActivity extends BaseActivity<ScoreContract.Presenter>
     @Override
     public void hideLoading() {
         progressDialog.cancel();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == 100) {
+            mPresenter.updateIES();
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

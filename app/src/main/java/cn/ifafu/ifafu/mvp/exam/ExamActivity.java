@@ -21,8 +21,8 @@ import butterknife.BindView;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Exam;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
-import cn.ifafu.ifafu.view.EmptyView;
-import cn.ifafu.ifafu.view.WToolbar;
+import cn.ifafu.ifafu.view.custom.EmptyView;
+import cn.ifafu.ifafu.view.custom.WToolbar;
 import cn.ifafu.ifafu.view.adapter.ExamAdapter;
 import cn.ifafu.ifafu.view.dialog.ProgressDialog;
 

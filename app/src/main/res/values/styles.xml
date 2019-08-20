@@ -89,6 +89,7 @@
     <!--WToolbarStyle-->
     <style name="toolbarStyle">
         <item name="android:title">123</item>
+        <item name="navigationIcon">@drawable/ic_back</item>
         <item name="titleTextAppearance">@style/titleTextAppearance</item>
         <item name="subtitleTextAppearance">@style/subtitleTextAppearance</item>
     </style>

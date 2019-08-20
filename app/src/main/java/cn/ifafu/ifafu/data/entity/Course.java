@@ -10,6 +10,7 @@ import org.greenrobot.greendao.annotation.Id;
 import java.util.TreeSet;
 
 import cn.ifafu.ifafu.data.local.IntTreeSetConverter;
+import cn.ifafu.ifafu.util.DateUtils;
 import cn.ifafu.ifafu.view.syllabus.data.CourseBase;
 import cn.ifafu.ifafu.view.syllabus.data.ToCourse;
 
@@ -161,7 +162,7 @@ public class Course implements ToCourse {
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", teacher='" + teacher + '\'' +
-                ", weekday=" + weekday +
+                ", weekday=" + DateUtils.getWeekdayCN(weekday) +
                 ", beginNode=" + beginNode +
                 ", nodeCnt=" + nodeCnt +
                 ", weekSet=" + weekSet +

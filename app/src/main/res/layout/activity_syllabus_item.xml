@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <cn.ifafu.ifafu.view.WToolbar
+    <cn.ifafu.ifafu.view.custom.WToolbar
         android:id="@+id/tb_exam_item"
         android:layout_width="match_parent"
         android:layout_height="56dp"
@@ -44,7 +44,7 @@
             android:src="@drawable/ic_done"
             android:visibility="gone" />
 
-    </cn.ifafu.ifafu.view.WToolbar>
+    </cn.ifafu.ifafu.view.custom.WToolbar>
 
     <TextView
         android:layout_width="wrap_content"

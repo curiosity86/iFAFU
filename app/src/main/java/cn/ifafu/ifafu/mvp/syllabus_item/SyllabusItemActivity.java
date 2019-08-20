@@ -23,7 +23,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
-import cn.ifafu.ifafu.view.WToolbar;
+import cn.ifafu.ifafu.view.custom.WToolbar;
 import cn.ifafu.ifafu.view.adapter.WeekItemAdapter;
 
 public class SyllabusItemActivity extends BaseActivity<SyllabusItemContract.Presenter>

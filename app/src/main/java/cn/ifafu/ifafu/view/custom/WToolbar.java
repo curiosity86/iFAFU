@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.view;
+package cn.ifafu.ifafu.view.custom;
 
 import android.content.Context;
 import android.content.res.ColorStateList;

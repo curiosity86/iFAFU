@@ -1,86 +1,87 @@
 package cn.ifafu.ifafu.mvp.main;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.jaeger.library.StatusBarUtil;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.OnClick;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Menu;
 import cn.ifafu.ifafu.data.entity.Weather;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
 import cn.ifafu.ifafu.mvp.other.AboutActivity;
 import cn.ifafu.ifafu.util.ButtonUtils;
-import cn.ifafu.ifafu.util.GlobalLib;
+import cn.ifafu.ifafu.view.custom.DragLayout;
 import cn.ifafu.ifafu.view.adapter.MenuAdapter;
-import cn.ifafu.ifafu.view.listener.ZoomDrawerListener;
 
 public class MainActivity extends BaseActivity<MainContract.Presenter>
-        implements MainContract.View, View.OnClickListener {
+        implements MainContract.View {
 
-    private DrawerLayout mDrawerLayout;
-    private LinearLayout mContentLayout;
-    private LinearLayout mLeftMenuView;
-    private RecyclerView mMenuRecycleView;
+    @BindView(R.id.iv_menu_icon)
+    ImageView ivMenuIcon;
+    @BindView(R.id.tv_menu_name)
+    TextView tvMenuName;
+    @BindView(R.id.tv_weather_1)
+    TextView tvWeather1;
+    @BindView(R.id.tv_weather_2)
+    TextView tvWeather2;
+    @BindView(R.id.rv_menu)
+    RecyclerView rvMenu;
+    @BindView(R.id.drawer_main)
+    DragLayout drawerMain;
     private MenuAdapter mMenuAdapter;
 
-    private TextView weatherTV1;
-    private TextView weatherTV2;
-
-    private ImageView mLeftMenuIconIV;
-    private TextView mLeftMenuNameTV;
+    private boolean isDrawerOpen = false;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        GlobalLib.transparentStatus(this);
-        setContentView(R.layout.activity_main);
-
-        mPresenter = new MainPresenter(this);
-
-        initViewAndEvent();
-        initNavigationView();
-
-        mPresenter.onStart();
+    public int initLayout(@Nullable Bundle savedInstanceState) {
+        return R.layout.activity_main;
     }
 
-    //初始化View
-    private void initViewAndEvent() {
-        weatherTV1 = findViewById(R.id.tv_weather_1);
-        weatherTV2 = findViewById(R.id.tv_weather_2);
-        mDrawerLayout = findViewById(R.id.drawer_main);
-        mLeftMenuView = findViewById(R.id.left_menu_main);
-        mContentLayout = findViewById(R.id.layout_content);
-        mMenuRecycleView = findViewById(R.id.rv_menu);
-        mLeftMenuIconIV = mLeftMenuView.findViewById(R.id.iv_menu_icon);
-        mLeftMenuNameTV = mLeftMenuView.findViewById(R.id.tv_menu_name);
-        findViewById(R.id.btn_menu).setOnClickListener(this);
+    @Override
+    public void initData(@Nullable Bundle savedInstanceState) {
+        StatusBarUtil.setTransparent(this);
+        ViewGroup contentView = getWindow().getDecorView().findViewById(Window.ID_ANDROID_CONTENT);
+        contentView.getChildAt(0).setFitsSystemWindows(false);
+
+        mPresenter = new MainPresenter(this);
+        initNavigationView();
     }
 
     //初始化侧滑栏样式
     private void initNavigationView() {
-        mDrawerLayout.setScrimColor(Color.TRANSPARENT);
-        mDrawerLayout.addDrawerListener(new ZoomDrawerListener(mContentLayout, mLeftMenuView));
-        findViewById(R.id.tv_nav_about).setOnClickListener(this);
-        findViewById(R.id.tv_nav_share).setOnClickListener(this);
-        findViewById(R.id.tv_nav_fback).setOnClickListener(this);
-        findViewById(R.id.tv_nav_update).setOnClickListener(this);
-        findViewById(R.id.tv_nav_logout).setOnClickListener(this);
+        drawerMain.setDragListener(new DragLayout.DragListener() {
+            @Override
+            public void onOpen() {
+                isDrawerOpen = true;
+            }
+
+            @Override
+            public void onClose() {
+                isDrawerOpen = false;
+            }
+
+            @Override
+            public void onDrag(float percent) {
+
+            }
+        });
     }
 
     @Override
@@ -92,9 +93,9 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
                     openActivity(new Intent(this, menu.getActivityClass()));
                 }
             });
-            mMenuRecycleView.setLayoutManager(new GridLayoutManager(
+            rvMenu.setLayoutManager(new GridLayoutManager(
                     this, 4, RecyclerView.VERTICAL, false));
-            mMenuRecycleView.setAdapter(mMenuAdapter);
+            rvMenu.setAdapter(mMenuAdapter);
         } else {
             mMenuAdapter.setMenuList(menus);
         }
@@ -104,19 +105,19 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
     public void setLeftMenuHeadIcon(Drawable headIcon) {
         Glide.with(this)
                 .load(headIcon)
-                .into(mLeftMenuIconIV);
+                .into(ivMenuIcon);
     }
 
     @Override
     public void setLeftMenuHeadName(String name) {
-        mLeftMenuNameTV.setText(name);
+        tvMenuName.setText(name);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-                mDrawerLayout.closeDrawers();
+            if (isDrawerOpen) {
+                drawerMain.close(true);
             } else if (ButtonUtils.isFastDoubleClick()) {
                 finish();
             } else {
@@ -127,11 +128,15 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
         return super.onKeyDown(keyCode, event);
     }
 
-    @Override
-    public void onClick(View v) {
+    @OnClick({R.id.btn_menu, R.id.tv_nav_about, R.id.tv_nav_share, R.id.tv_nav_fback,
+            R.id.tv_nav_update, R.id.tv_nav_logout})
+    public void onViewClicked(View v) {
         switch (v.getId()) {
             case R.id.btn_menu:
-                mDrawerLayout.openDrawer(GravityCompat.START);
+                drawerMain.open();
+                break;
+            case R.id.tv_nav_update:
+                mPresenter.updateApp();
                 break;
             case R.id.tv_nav_about:
                 startActivity(new Intent(this, AboutActivity.class));
@@ -142,9 +147,6 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
             case R.id.tv_nav_fback:
                 showMessage("反馈问题");
                 break;
-            case R.id.tv_nav_update:
-                showMessage("检查更新");
-                break;
             case R.id.tv_nav_logout:
                 mPresenter.quitAccount();
                 break;
@@ -153,7 +155,7 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
 
     @Override
     public void setWeatherText(Weather weather) {
-        weatherTV1.setText((weather.getNowTemp() + "℃"));
-        weatherTV2.setText(String.format("%s | %s", weather.getCityName(), weather.getWeather()));
+        tvWeather1.setText((weather.getNowTemp() + "℃"));
+        tvWeather2.setText(String.format("%s | %s", weather.getCityName(), weather.getWeather()));
     }
 }

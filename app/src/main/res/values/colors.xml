@@ -17,5 +17,6 @@
     <color name="little_blue">#5697E5</color>
     <color name="global_blue">#157EFB</color>
     <color name="light_gray">#dbdbdb</color>
+    <color name="transparent">#00000000</color>
 
 </resources>

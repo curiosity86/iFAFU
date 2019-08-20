@@ -31,6 +31,10 @@ class ScoreContract {
         void update();
 
         void switchYearTerm(int op1, int op2);
+
+        void openFilterActivity();
+
+        void updateIES();
     }
 
     interface Model extends IZFModel {

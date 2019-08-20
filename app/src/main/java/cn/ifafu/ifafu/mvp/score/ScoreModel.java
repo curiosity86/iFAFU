@@ -97,6 +97,9 @@ class ScoreModel extends BaseZFModel implements ScoreContract.Model {
 
     @Override
     public void save(List<Score> list) {
+        for (Score score : list) {
+            score.setAccount(user.getAccount());
+        }
         scoreDao.insertOrReplaceInTx(list);
     }
 }

@@ -26,12 +26,11 @@ public class MainContract {
 
     public interface Presenter extends IPresenter {
 
-        /**
-         * 分享应用
-         */
+        void updateApp();
+
         void shareApp();
 
-        void update();
+        void updateView();
 
         /**
          * 退出账号
