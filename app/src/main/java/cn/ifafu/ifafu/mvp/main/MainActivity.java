@@ -30,6 +30,8 @@ import cn.ifafu.ifafu.mvp.other.AboutActivity;
 import cn.ifafu.ifafu.util.ButtonUtils;
 import cn.ifafu.ifafu.view.adapter.MenuAdapter;
 import cn.ifafu.ifafu.view.custom.DragLayout;
+import cn.ifafu.ifafu.view.timeline.TimeAxis;
+import cn.ifafu.ifafu.view.timeline.TimeLine;
 
 public class MainActivity extends BaseActivity<MainContract.Presenter>
         implements MainContract.View {
@@ -54,6 +56,9 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
     TextView tvCourseAddress;
     @BindView(R.id.tv_course_time)
     TextView tvCourseTime;
+    @BindView(R.id.view_timeline)
+    TimeLine timeLine;
+
     private MenuAdapter mMenuAdapter;
 
     @Override
@@ -73,6 +78,7 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
     protected void onStart() {
         super.onStart();
         mPresenter.updateCourseView();
+        mPresenter.updateView();
     }
 
     @Override
@@ -156,6 +162,12 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
         tvCourseName.setText(name);
         tvCourseAddress.setText(address);
         tvCourseTime.setText(time);
+    }
+
+    @Override
+    public void setTimeLineData(List<TimeAxis> data) {
+        timeLine.setTimeAxisList(data)
+                .invalidate();
     }
 
     @Override

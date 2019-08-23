@@ -7,11 +7,14 @@ import com.alibaba.fastjson.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.app.School;
 import cn.ifafu.ifafu.dao.DaoSession;
+import cn.ifafu.ifafu.data.entity.Course;
+import cn.ifafu.ifafu.data.entity.Holiday;
 import cn.ifafu.ifafu.data.entity.Menu;
 import cn.ifafu.ifafu.data.entity.User;
 import cn.ifafu.ifafu.data.entity.Weather;
@@ -74,7 +77,7 @@ public class MainModel extends BaseZFModel implements MainContract.Model {
             // 获取城市名和当前温度
             String url1 = "http://d1.weather.com.cn/sk_2d/" + cityCode + ".html";
             ResponseBody body1 = service.getWeather(url1, referer).execute().body();
-            String jsonStr1 = body1.string();
+            String jsonStr1 = Objects.requireNonNull(body1).string();
             jsonStr1 = jsonStr1.replace("var dataSK = ", "");
             JSONObject jo1 = JSONObject.parseObject(jsonStr1);
             weather.setCityName(jo1.getString("cityname"));
@@ -84,7 +87,7 @@ public class MainModel extends BaseZFModel implements MainContract.Model {
             // 获取白天温度和晚上温度
             String url2 = "http://d1.weather.com.cn/dingzhi/" + cityCode + ".html";
             ResponseBody body2 = service.getWeather(url2, referer).execute().body();
-            String jsonStr2 = body2.string();
+            String jsonStr2 = Objects.requireNonNull(body2).string();
             jsonStr2 = jsonStr2.substring(jsonStr2.indexOf('=')+1, jsonStr2.indexOf(";"));
             JSONObject jo2 = JSONObject.parseObject(jsonStr2);
             jo2 = jo2.getJSONObject("weatherinfo");
@@ -96,13 +99,27 @@ public class MainModel extends BaseZFModel implements MainContract.Model {
     }
 
     @Override
+    public List<Holiday> getHoliday() {
+        List<Holiday> holidays = new ArrayList<>();
+        holidays.add(new Holiday("教师节", "2019-09-10"));
+        holidays.add(new Holiday("中秋节", "2019-09-13"));
+        holidays.add(new Holiday("国庆节", "2019-10-01"));
+        holidays.add(new Holiday("圣诞节", "2019-12-25"));
+        holidays.add(new Holiday("元旦", "2020-01-01"));
+        holidays.add(new Holiday("春节", "2020-01-25"));
+        holidays.add(new Holiday("清明节", "2020-04-04"));
+        holidays.add(new Holiday("劳动节", "2020-05-01"));
+        return holidays;
+    }
+
+    @Override
     public void clearAllDate() {
         SPUtils.get(Constant.SP_SETTING).clear();
         SPUtils.get(Constant.SP_USER_INFO).clear();
         DaoSession daoSession = DaoManager.getInstance().getDaoSession();
+        daoSession.getScoreDao().deleteAll();
         daoSession.getCourseDao().deleteAll();
         daoSession.getExamDao().deleteAll();
-        daoSession.getNoticeDao().deleteAll();
         daoSession.getUserDao().deleteAll();
     }
 }

@@ -4,8 +4,8 @@ package cn.ifafu.ifafu.util;
  * Created by gaop on 16-11-4.
  */
 public class ButtonUtils {
+    private static final long DEFAULT_DIFF = 1000;
     private static long lastClickTime = 0;
-    private static long DIFF = 1000;
     private static int lastButtonId = -1;
 
     /**
@@ -14,7 +14,7 @@ public class ButtonUtils {
      * @return 点击有效性
      */
     public static boolean isFastDoubleClick() {
-        return isFastDoubleClick(-1, DIFF);
+        return isFastDoubleClick(-1, DEFAULT_DIFF);
     }
 
     public static boolean isFastDoubleClick(long diff) {
@@ -27,7 +27,7 @@ public class ButtonUtils {
      * @return 点击有效性
      */
     public static boolean isFastDoubleClick(int buttonId) {
-        return isFastDoubleClick(buttonId, DIFF);
+        return isFastDoubleClick(buttonId, DEFAULT_DIFF);
     }
 
     /**

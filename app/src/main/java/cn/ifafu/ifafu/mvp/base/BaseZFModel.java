@@ -23,7 +23,7 @@ import io.reactivex.Observable;
 
 public class BaseZFModel extends BaseModel implements IZFModel {
 
-    protected ZhengFangService zhengFang;
+    protected final ZhengFangService zhengFang;
 
     public BaseZFModel(Context context) {
         super(context);

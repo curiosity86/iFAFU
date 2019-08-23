@@ -27,7 +27,6 @@ public class Score extends YearTerm {
     private String year;
     private String term;
 
-
     @Generated(hash = 984428122)
     public Score(Long id, String name, String nature, String attr, float credit,
             float score, float makeupScore, boolean restudy, String institute,

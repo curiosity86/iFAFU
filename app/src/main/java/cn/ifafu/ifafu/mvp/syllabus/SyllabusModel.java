@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -18,6 +19,7 @@ import cn.ifafu.ifafu.data.entity.ZFUrl;
 import cn.ifafu.ifafu.data.http.parser.SyllabusParser;
 import cn.ifafu.ifafu.data.local.DaoManager;
 import cn.ifafu.ifafu.mvp.base.BaseZFModel;
+import cn.ifafu.ifafu.util.DateUtils;
 import io.reactivex.Observable;
 
 public class SyllabusModel extends BaseZFModel implements SyllabusContract.Model {
@@ -119,4 +121,21 @@ public class SyllabusModel extends BaseZFModel implements SyllabusContract.Model
                 .where(CourseDao.Properties.Account.eq(user.getAccount()), CourseDao.Properties.Local.eq(local))
                 .list();
     }
+
+    /**
+     * 获取指定周指定星期的课程
+     * @param week 周数
+     * @param weekday 星期
+     * @return 课程
+     */
+    public List<Course> getCoursesFromDB(int week, int weekday) {
+        List<Course> toWeekList = new ArrayList<>();
+        for (Course course : getAllCoursesFromDB()) {
+            if (course.getWeekSet().contains(week) && course.getWeekday() == weekday) {
+                toWeekList.add(course);
+            }
+        }
+        return toWeekList;
+    }
+
 }

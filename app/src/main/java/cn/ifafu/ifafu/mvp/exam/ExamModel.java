@@ -21,13 +21,13 @@ import cn.ifafu.ifafu.data.local.DaoManager;
 import cn.ifafu.ifafu.mvp.base.BaseZFModel;
 import io.reactivex.Observable;
 
-class ExamModel extends BaseZFModel implements ExamContract.Model {
+public class ExamModel extends BaseZFModel implements ExamContract.Model {
 
     private ExamDao examDao;
 
     private final User user = getUser();
 
-    ExamModel(Context context) {
+    public ExamModel(Context context) {
         super(context);
         examDao = DaoManager.getInstance().getDaoSession().getExamDao();
     }
@@ -40,7 +40,13 @@ class ExamModel extends BaseZFModel implements ExamContract.Model {
                     params.put("xnd", year);
                     params.put("xqd", term);
                     return zhengFang.getInfo(url, url, params)
-                            .compose(new ExamParser());
+                            .compose(new ExamParser())
+                            .map(listResponse -> {
+                                for (Exam exam : listResponse.getBody()) {
+                                    exam.setAccount(user.getAccount());
+                                }
+                                return listResponse;
+                            });
                 });
     }
 
@@ -108,5 +114,15 @@ class ExamModel extends BaseZFModel implements ExamContract.Model {
     @Override
     public void delete(long id) {
         examDao.deleteByKey(id);
+    }
+
+    @SuppressLint("DefaultLocale")
+    public List<Exam> getThisTermExams() {
+        Map<String, String> map = getYearTerm();
+        return examDao.queryBuilder()
+                .where(ExamDao.Properties.Year.eq(map.get("xnd")),
+                        ExamDao.Properties.Term.eq(map.get("xqd")),
+                        ExamDao.Properties.Account.eq(user.getAccount()))
+                .list();
     }
 }

@@ -4,11 +4,13 @@ import android.graphics.drawable.Drawable;
 
 import java.util.List;
 
+import cn.ifafu.ifafu.data.entity.Holiday;
 import cn.ifafu.ifafu.data.entity.Menu;
 import cn.ifafu.ifafu.data.entity.Weather;
 import cn.ifafu.ifafu.mvp.base.i.IPresenter;
 import cn.ifafu.ifafu.mvp.base.i.IView;
 import cn.ifafu.ifafu.mvp.base.i.IZFModel;
+import cn.ifafu.ifafu.view.timeline.TimeAxis;
 import io.reactivex.Observable;
 
 public class MainContract {
@@ -24,6 +26,8 @@ public class MainContract {
         void setWeatherText(Weather weather);
 
         void setCourseText(String title, String name, String address, String time);
+
+        void setTimeLineData(List<TimeAxis> data);
     }
 
     public interface Presenter extends IPresenter {
@@ -54,6 +58,8 @@ public class MainContract {
         String getUserName();
 
         Observable<Weather> getWeather(String cityCode);
+
+        List<Holiday> getHoliday();
 
         /**
          * used in DEBUG

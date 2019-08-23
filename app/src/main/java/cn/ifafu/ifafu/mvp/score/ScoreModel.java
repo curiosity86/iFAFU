@@ -13,6 +13,7 @@ import java.util.Map;
 
 import cn.ifafu.ifafu.app.School;
 import cn.ifafu.ifafu.dao.ScoreDao;
+import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.data.entity.Response;
 import cn.ifafu.ifafu.data.entity.Score;
 import cn.ifafu.ifafu.data.entity.User;
@@ -25,7 +26,7 @@ import io.reactivex.Observable;
 class ScoreModel extends BaseZFModel implements ScoreContract.Model {
 
     private final User user = getUser();
-    private ScoreDao scoreDao;
+    private final ScoreDao scoreDao;
 
     ScoreModel(Context context) {
         super(context);

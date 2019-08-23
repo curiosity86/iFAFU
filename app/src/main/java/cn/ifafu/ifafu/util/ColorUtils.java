@@ -12,7 +12,7 @@ import java.util.Random;
  * Created by mnnyang on 17-10-22.
  */
 public class ColorUtils {
-    public static int[] colorList = new int[]{
+    public static final int[] colorList = new int[]{
             0xFF8AD297,
             0xFFF9A883,
             0xFF88CFCC,
@@ -29,7 +29,7 @@ public class ColorUtils {
             0xFFE2C490,
     };
 
-    public static int[] darkColorList = new int[]{
+    public static final int[] darkColorList = new int[]{
             0xFF5ABF6C,
             0xFFF79060,
             0xFF63C0BD,
@@ -64,7 +64,7 @@ public class ColorUtils {
         return drawable;
     }
 
-    private static Random random = new Random();
+    private static final Random random = new Random();
 
     public static int getRandomColor() {
         return colorList[random.nextInt(20) % colorList.length];
@@ -76,15 +76,6 @@ public class ColorUtils {
 
     public static int getDarkRandomColor() {
         return darkColorList[random.nextInt(20) % colorList.length];
-    }
-
-
-    public static int getColor(Context context, int colorId) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return context.getResources().getColor(colorId);
-        } else {
-            return context.getColor(colorId);
-        }
     }
 
     public static int dip2px(Context context, float dpValue) {

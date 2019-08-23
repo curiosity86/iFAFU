@@ -6,20 +6,28 @@ import android.content.Intent;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import cn.ifafu.ifafu.BuildConfig;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Course;
+import cn.ifafu.ifafu.data.entity.Exam;
+import cn.ifafu.ifafu.data.entity.Holiday;
 import cn.ifafu.ifafu.mvp.base.BaseZFPresenter;
+import cn.ifafu.ifafu.mvp.exam.ExamModel;
 import cn.ifafu.ifafu.mvp.login.LoginActivity;
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusModel;
 import cn.ifafu.ifafu.util.DateUtils;
 import cn.ifafu.ifafu.util.GlobalLib;
 import cn.ifafu.ifafu.util.RxUtils;
+import cn.ifafu.ifafu.view.timeline.TimeAxis;
 import io.reactivex.Observable;
 
 public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContract.Model>
@@ -33,7 +41,6 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
     public void onStart() {
         mView.setLeftMenuHeadName(mModel.getUserName());
         mView.setLeftMenuHeadIcon(mModel.getSchoolIcon());
-        updateView();
         Thread thread = new Thread();
         thread.start();
         thread.interrupt();
@@ -42,7 +49,6 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
                 .compose(RxUtils.ioToMain())
                 .subscribe(menus -> mView.setMenuAdapterData(menus), this::onError)
         );
-
     }
 
     @Override
@@ -87,6 +93,7 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
                 .compose(RxUtils.ioToMain())
                 .subscribe(weather -> mView.setWeatherText(weather), this::onError)
         );
+        updateTimeLine();
     }
 
     @SuppressLint("DefaultLocale")
@@ -159,6 +166,47 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
                             onError(throwable);
                             mView.setCourseText("获取课程信息失败", "", "", "");
                         })
+        );
+    }
+
+    private void updateTimeLine() {
+        mCompDisposable.add(Observable
+                .fromCallable(() -> {
+                    List<TimeAxis> list = new ArrayList<>();
+                    long now = System.currentTimeMillis();
+
+                    List<Holiday> holidays = mModel.getHoliday();
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+                    for (Holiday holiday : holidays) {
+                        Date date = format.parse(holiday.getDate());
+                        long interval = date.getTime() - now;
+                        if (interval > 0) {
+                            int day = (int) (interval / 1000 / 60 / 60 / 24);
+                            if (day != 0) {
+                                TimeAxis axis = new TimeAxis(
+                                        holiday.getName(), holiday.getDate(), day);
+                                list.add(axis);
+                            }
+                        }
+                    }
+
+                    List<Exam> exams = new ExamModel(mView.getContext()).getThisTermExams();
+                    for (Exam exam : exams) {
+                        long interval = exam.getStartTime() - now;
+                        if (interval > 0) {
+                            int day = (int) (interval / 1000 / 60 / 60 / 24);
+                            if (day != 0) {
+                                TimeAxis axis = new TimeAxis(
+                                        exam.getName(), format.format(new Date(exam.getStartTime())), day);
+                                list.add(axis);
+                            }
+                        }
+                    }
+                    Collections.sort(list, (o1, o2) -> Integer.compare(o1.getDay(), o2.getDay()));
+                    return list.subList(0, list.size() < 4 ? list.size() : 4);
+                })
+                .compose(RxUtils.ioToMain())
+                .subscribe(list -> mView.setTimeLineData(list), this::onError)
         );
     }
 

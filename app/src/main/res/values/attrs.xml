@@ -25,4 +25,12 @@
         <attr name="color_unchecked" format="color"/>
         <attr name="color_unchecked_stroke" format="color"/>
     </declare-styleable>
+
+    <declare-styleable name="TimeLine">
+        <attr name="max_count" format="integer" />
+        <attr name="line_color" format="color" />
+        <attr name="text_color" format="color" />
+        <attr name="text_size" format="dimension" />
+    </declare-styleable>
+
 </resources>

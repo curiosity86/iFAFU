@@ -12,6 +12,7 @@ import java.util.Locale;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.mvp.base.BaseZFPresenter;
+import cn.ifafu.ifafu.util.DateUtils;
 import cn.ifafu.ifafu.util.RxUtils;
 import cn.ifafu.ifafu.view.syllabus.data.DayOfWeek;
 import io.reactivex.Observable;
@@ -43,7 +44,7 @@ public class SyllabusPresenter extends BaseZFPresenter<SyllabusContract.View, Sy
         try {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
             Date firstStudyDate = format.parse(firstStudyDay);
-            mView.setCurrentWeek(getCurrentWeek(firstStudyDate, firstDayOfWeek));
+            mView.setCurrentWeek(DateUtils.getCurrentWeek(firstStudyDate, firstDayOfWeek));
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -93,15 +94,6 @@ public class SyllabusPresenter extends BaseZFPresenter<SyllabusContract.View, Sy
                     mModel.clearOnlineCourses();
                     mModel.saveCourses(courses);
                 }); // 保活
-    }
-
-    private int getCurrentWeek(Date firstStudyDate, @DayOfWeek int firstDayOfWeek) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setFirstDayOfWeek(firstDayOfWeek);
-        int currentYearWeek = calendar.get(Calendar.WEEK_OF_YEAR);
-        calendar.setTime(firstStudyDate);
-        int firstYearWeek = calendar.get(Calendar.WEEK_OF_YEAR);
-        return currentYearWeek - firstYearWeek + 1;
     }
 
     @Override

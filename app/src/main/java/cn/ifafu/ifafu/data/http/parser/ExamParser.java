@@ -45,7 +45,6 @@ public class ExamParser extends BaseParser<Response<List<Exam>>> {
         return list;
     }
 
-
     private Exam getExam(Elements e) {
         List<Integer> numbers = RegexUtils.getNumbers(e.get(3).text());
         Calendar calendar = Calendar.getInstance();

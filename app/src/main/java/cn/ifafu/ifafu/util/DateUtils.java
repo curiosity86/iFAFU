@@ -64,13 +64,28 @@ public class DateUtils {
         }
         long day = hour / 24;
         if (day < 7) {
-            if (hour % 24 != 00) {
+            if (hour % 24 != 0) {
                 return String.format("%d天%d小时", day, hour % 24);
             } else {
                 return String.format("%d天", day);
             }
         }
         return String.format("%d天", day);
+    }
+
+    /**
+     * 获取当前周
+     * @param firstStudyDate 开学日期
+     * @param firstDayOfWeek 每周第一天是星期几
+     * @return 当前周
+     */
+    public static int getCurrentWeek(Date firstStudyDate, @DayOfWeek int firstDayOfWeek) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setFirstDayOfWeek(firstDayOfWeek);
+        int currentYearWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+        calendar.setTime(firstStudyDate);
+        int firstYearWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+        return currentYearWeek - firstYearWeek + 1;
     }
 
     /**
@@ -126,7 +141,7 @@ public class DateUtils {
      * @param dateFormat     {@link SimpleDateFormat}
      * @return String[]
      */
-    public static String[] getWeekDates(Date date, int offsetWeek, int firstDayOfWeek, String dateFormat) {
+    private static String[] getWeekDates(Date date, int offsetWeek, int firstDayOfWeek, String dateFormat) {
         if (offsetWeek != 0) {
             date.setTime(date.getTime() + offsetWeek * 604800000L);
         }

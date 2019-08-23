@@ -60,10 +60,6 @@ android {
         daoPackage 'cn.ifafu.ifafu.dao'
     }
 
-    dataBinding {
-        enabled = true
-    }
-
     compileOptions {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
@@ -98,6 +94,7 @@ dependencies {
     implementation 'com.alibaba:fastjson:1.2.58'
     // 数据库框架
     implementation 'org.greenrobot:greendao:3.2.2'
+    implementation 'io.github.yuweiguocn:GreenDaoUpgradeHelper:v2.2.1'
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
