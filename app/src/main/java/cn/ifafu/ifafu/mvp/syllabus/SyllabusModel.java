@@ -16,10 +16,10 @@ import cn.ifafu.ifafu.dao.CourseDao;
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.data.entity.User;
 import cn.ifafu.ifafu.data.entity.ZFUrl;
+import cn.ifafu.ifafu.data.http.APIManager;
 import cn.ifafu.ifafu.data.http.parser.SyllabusParser;
 import cn.ifafu.ifafu.data.local.DaoManager;
 import cn.ifafu.ifafu.mvp.base.BaseZFModel;
-import cn.ifafu.ifafu.util.DateUtils;
 import io.reactivex.Observable;
 
 public class SyllabusModel extends BaseZFModel implements SyllabusContract.Model {
@@ -30,7 +30,7 @@ public class SyllabusModel extends BaseZFModel implements SyllabusContract.Model
 
     private final int mRowCount = 12;
 
-    private final User user = getUser();
+    private final User user = repository.getUser();
 
     private final int[][] courseBeginTime = new int[][]{
             {800, 850, 955, 1045, 1135, 1400, 1450, 1550, 1640, 1825, 1915, 2005},
@@ -83,7 +83,7 @@ public class SyllabusModel extends BaseZFModel implements SyllabusContract.Model
     @Override
     public List<Course> getAllCoursesFromDB() {
         return courseDao.queryBuilder()
-                .where(CourseDao.Properties.Account.eq(getUser().getAccount()))
+                .where(CourseDao.Properties.Account.eq(user.getAccount()))
                 .list();
     }
 
@@ -91,7 +91,8 @@ public class SyllabusModel extends BaseZFModel implements SyllabusContract.Model
     public Observable<List<Course>> getCoursesFromNet() {
         String url = School.getUrl(ZFUrl.SYLLABUS, user);
         String referer = School.getUrl(ZFUrl.MAIN, user);
-        return zhengFang.getInfo(url, referer, Collections.emptyMap())
+        return APIManager.getZhengFangAPI()
+                .getInfo(url, referer, Collections.emptyMap())
                 .compose(new SyllabusParser());
     }
 

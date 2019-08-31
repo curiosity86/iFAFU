@@ -2,7 +2,6 @@ package cn.ifafu.ifafu.mvp.base.i;
 
 import cn.ifafu.ifafu.data.entity.Response;
 import cn.ifafu.ifafu.data.entity.User;
-import cn.ifafu.ifafu.mvp.base.i.IModel;
 import io.reactivex.Observable;
 
 public interface IZFModel extends IModel {
@@ -17,6 +16,6 @@ public interface IZFModel extends IModel {
      */
     Observable<Response<String>> login(User user);
 
-    User getUser();
+    Observable<Response<String>> reLogin();
 
 }

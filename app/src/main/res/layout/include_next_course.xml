@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:textSize="14sp" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/tv_course_name"
@@ -19,7 +19,7 @@
         android:layout_marginStart="8dp"
         android:layout_below="@id/tv_course_title"
         android:textColor="@color/white"
-        android:textSize="14sp" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/tv_course_address"
@@ -28,7 +28,7 @@
         android:layout_marginStart="8dp"
         android:layout_below="@id/tv_course_name"
         android:textColor="@color/white"
-        android:textSize="14sp" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/tv_course_time"
@@ -38,6 +38,6 @@
         android:layout_toEndOf="@+id/tv_course_address"
         android:layout_marginStart="12dp"
         android:textColor="@color/white"
-        android:textSize="14sp" />
+        android:textSize="12sp" />
 
 </RelativeLayout>

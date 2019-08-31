@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.annotation.Nullable;
+
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 
@@ -25,15 +27,18 @@ import io.reactivex.Observable;
 
 public class SplashActivity extends BaseActivity {
 
-    @SuppressLint("CheckResult")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public int initLayout(@Nullable Bundle savedInstanceState) {
         //去掉窗口标题
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         //隐藏顶部状态栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_splash);
+        return R.layout.activity_splash;
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void initData(@Nullable Bundle savedInstanceState) {
         Observable
                 .fromCallable((Callable<Class<? extends Activity>>) () -> {
                     Bugly.init(getApplicationContext(), "46836c4eaa", false);
@@ -58,5 +63,4 @@ public class SplashActivity extends BaseActivity {
                     finish();
                 });
     }
-
 }

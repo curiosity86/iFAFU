@@ -17,16 +17,22 @@ public interface ZhengFangService {
     Observable<ResponseBody> getCaptcha(@Url String url);
 
     @GET
-    Observable<ResponseBody> base(@Url String url);
+    Observable<ResponseBody> initParams(@Url String url);
 
     @GET
-    Observable<ResponseBody> base(@Url String url, @Header("Referer") String referer);
+    Observable<ResponseBody> initParams(@Url String url, @Header("Referer") String referer);
 
     @POST
     @FormUrlEncoded
     Observable<ResponseBody> login(
             @Url String url,
             @FieldMap Map<String, String> filedMap);
+
+    @POST
+    Observable<ResponseBody> getInfo(
+            @Url String url,
+            @Header("Referer") String referer
+    );
 
     @POST
     @FormUrlEncoded

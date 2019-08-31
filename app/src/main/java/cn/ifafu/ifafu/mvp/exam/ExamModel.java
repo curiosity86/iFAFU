@@ -16,6 +16,7 @@ import cn.ifafu.ifafu.data.entity.Exam;
 import cn.ifafu.ifafu.data.entity.Response;
 import cn.ifafu.ifafu.data.entity.User;
 import cn.ifafu.ifafu.data.entity.ZFUrl;
+import cn.ifafu.ifafu.data.http.APIManager;
 import cn.ifafu.ifafu.data.http.parser.ExamParser;
 import cn.ifafu.ifafu.data.local.DaoManager;
 import cn.ifafu.ifafu.mvp.base.BaseZFModel;
@@ -25,8 +26,6 @@ public class ExamModel extends BaseZFModel implements ExamContract.Model {
 
     private ExamDao examDao;
 
-    private final User user = getUser();
-
     public ExamModel(Context context) {
         super(context);
         examDao = DaoManager.getInstance().getDaoSession().getExamDao();
@@ -34,12 +33,14 @@ public class ExamModel extends BaseZFModel implements ExamContract.Model {
 
     @Override
     public Observable<Response<List<Exam>>> getExamsFromNet(String year, String term) {
+        User user = repository.getUser();
         String url = School.getUrl(ZFUrl.EXAM, user);
-        return base(url, School.getUrl(ZFUrl.MAIN, user))
+        return initParams(url, School.getUrl(ZFUrl.MAIN, user))
                 .flatMap(params -> {
                     params.put("xnd", year);
                     params.put("xqd", term);
-                    return zhengFang.getInfo(url, url, params)
+                    return APIManager.getZhengFangAPI()
+                            .getInfo(url, url, params)
                             .compose(new ExamParser())
                             .map(listResponse -> {
                                 for (Exam exam : listResponse.getBody()) {
@@ -52,11 +53,7 @@ public class ExamModel extends BaseZFModel implements ExamContract.Model {
 
     @Override
     public Observable<List<Exam>> getExamsFromDB(String year, String term) {
-        return Observable.fromCallable(() -> examDao.queryBuilder()
-                .where(ExamDao.Properties.Year.eq(year),
-                        ExamDao.Properties.Term.eq(term),
-                        ExamDao.Properties.Account.eq(user.getAccount()))
-                .list());
+        return Observable.fromCallable(() -> repository.getExam(year, term));
 //        return Observable.just(Collections.emptyList());
     }
 
@@ -119,10 +116,11 @@ public class ExamModel extends BaseZFModel implements ExamContract.Model {
     @SuppressLint("DefaultLocale")
     public List<Exam> getThisTermExams() {
         Map<String, String> map = getYearTerm();
-        return examDao.queryBuilder()
-                .where(ExamDao.Properties.Year.eq(map.get("xnd")),
-                        ExamDao.Properties.Term.eq(map.get("xqd")),
-                        ExamDao.Properties.Account.eq(user.getAccount()))
-                .list();
+        return repository.getExam(map.get("xnd"), map.get("xqd"));
+//        return examDao.queryBuilder()
+//                .where(ExamDao.Properties.Year.eq(map.get("xnd")),
+//                        ExamDao.Properties.Term.eq(map.get("xqd")),
+//                        ExamDao.Properties.Account.eq(user.getAccount()))
+//                .list();
     }
 }

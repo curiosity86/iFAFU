@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.jaeger.library.StatusBarUtil;
@@ -29,9 +30,12 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter>
     private ProgressDialog progressDialog;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+    public int initLayout(@Nullable Bundle savedInstanceState) {
+        return R.layout.activity_login;
+    }
+
+    @Override
+    public void initData(@Nullable Bundle savedInstanceState) {
         StatusBarUtil.setLightMode(this);
         StatusBarUtil.setTransparent(this);
 
@@ -67,7 +71,6 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter>
         progressDialog = new ProgressDialog(this);
         progressDialog.setText(R.string.logging_in);
 
-        mPresenter.onStart();
     }
 
     @Override

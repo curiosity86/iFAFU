@@ -1,70 +1,81 @@
 package cn.ifafu.ifafu.data.entity;
 
+import com.alibaba.fastjson.JSONObject;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Random;
 
+import cn.ifafu.ifafu.data.local.RepositoryImpl;
+
 public class ZFUrl {
 
-    public static final int LOGIN = 843;
-    public static final int VERIFY = 920;
-    public static final int MAIN = 99;
-    public static final int SYLLABUS = 354;
-    public static final int EXAM = 985;
-    public static final int SCORE = 284;
-
     private int schoolCode;
+
+    public static final String LOGIN = "LOGIN";
+    public static final String VERIFY = "VERIFY";
+    public static final String MAIN = "MAIN";
+    public static final String SYLLABUS = "SYLLABUS";
+    public static final String EXAM = "EXAM";
+    public static final String SCORE = "SCORE";
+
     private String baseUrl;
     private String login;
     private String verify;
     private String main;
+    private Map<String, QueryApi> apiMap;
 
     private String baseUrlTemp;
 
-    private Map<Integer, QueryApi> queryApiMap;
-
-    public ZFUrl(int schoolCode, String baseUrl, String login, String verify, String main, Map<Integer, QueryApi> queryApiMap) {
+    public ZFUrl(int schoolCode, String baseUrl, String login, String verify, String main, Map<String, QueryApi> apiMap) {
         this.schoolCode = schoolCode;
         this.baseUrl = baseUrl;
         this.login = login;
         this.verify = verify;
         this.main = main;
-        this.queryApiMap = queryApiMap;
+        this.apiMap = apiMap;
     }
 
-    private String getBaseUrl() {
+    private String getBaseUrl(String account) {
         if (baseUrlTemp == null) {
             baseUrlTemp = baseUrl
-                    .replace("{token}", makeToken());
+                    .replace("{token}", getToken(account));
         }
         return baseUrlTemp;
     }
 
-    private String makeToken() {
-        char[] randomStr = "abcdefghijklmnopqrstuvwxyz12345".toCharArray();
-        StringBuilder token = new StringBuilder();
-        Random random = new Random();
-        for (int i = 0; i < 24; i++) {
-            token.append(randomStr[random.nextInt(31)]);
+    private String getToken(String account) {
+        Token t = RepositoryImpl.getInstance().getToken(account);
+        if (t == null)  {
+            char[] randomStr = "abcdefghijklmnopqrstuvwxyz12345".toCharArray();
+            StringBuilder token = new StringBuilder();
+            Random random = new Random();
+            for (int i = 0; i < 24; i++) {
+                token.append(randomStr[random.nextInt(31)]);
+            }
+            t = new Token(account, token.toString());
+            RepositoryImpl.getInstance().saveToken(t);
         }
-        return '(' + token.toString() + ')';
+        return '(' + t.getToken() + ')';
     }
 
-    public String get2(int filed, String xh, String xm) {
+    public String get(String filed, String xh, String xm) {
         switch (filed) {
             case VERIFY:
-                return String.format("%s%s", getBaseUrl(), verify);
+                return String.format("%s%s", getBaseUrl(xh), verify);
             case LOGIN:
-                return String.format("%s%s", getBaseUrl(), login);
+                return String.format("%s%s", getBaseUrl(xh), login);
             case MAIN:
-                return String.format("%s%s?xh=%s", getBaseUrl(), main, xh);
+                return String.format("%s%s?xh=%s", getBaseUrl(xh), main, xh);
             default:
                 try {
-                    QueryApi api = queryApiMap.get(filed);
+                    QueryApi api = apiMap.get(filed);
                     if (api != null) {
                         return String.format("%s%s?xh=%s&xm=%s&gnmkdm=%s",
-                                getBaseUrl(), api.getApi(), xh, URLEncoder.encode(xm, "GBK"), api.getGnmkdm());
+                                getBaseUrl(xh), api.getApi(), xh, URLEncoder.encode(xm, "GBK"), api.getGnmkdm());
                     } else {
                         throw new IllegalArgumentException("url is not found");
                     }
@@ -73,5 +84,19 @@ public class ZFUrl {
                     return "";
                 }
         }
+    }
+
+    @NotNull
+    @Override
+    public String toString() {
+        return "ZFUrl{" +
+                "schoolCode=" + schoolCode +
+                ", baseUrl='" + baseUrl + '\'' +
+                ", login='" + login + '\'' +
+                ", verify='" + verify + '\'' +
+                ", main='" + main + '\'' +
+                ", baseUrlTemp='" + baseUrlTemp + '\'' +
+                ", apiMap=" + JSONObject.toJSONString(apiMap) +
+                '}';
     }
 }

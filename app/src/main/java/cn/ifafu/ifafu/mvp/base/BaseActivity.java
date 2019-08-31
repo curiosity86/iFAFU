@@ -25,8 +25,10 @@ public abstract class BaseActivity<P extends IPresenter> extends AppCompatActivi
         super.onCreate(savedInstanceState);
         if (initLayout(savedInstanceState) != 0) {
             setContentView(initLayout(savedInstanceState));
-            unbinder = ButterKnife.bind(this);
-            initData(savedInstanceState);
+        }
+        unbinder = ButterKnife.bind(this);
+        initData(savedInstanceState);
+        if (mPresenter != null) {
             mPresenter.onStart();
         }
     }
@@ -35,9 +37,7 @@ public abstract class BaseActivity<P extends IPresenter> extends AppCompatActivi
         return 0;
     }
 
-    public void initData(@Nullable Bundle savedInstanceState) {
-
-    }
+    public abstract void initData(@Nullable Bundle savedInstanceState);
 
     @Override
     public void showMessage(String msg) {

@@ -12,13 +12,13 @@
         android:id="@+id/iv_menu_icon"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:layout_marginStart="16dp" />
+        android:layout_marginStart="20dp" />
 
     <TextView
         android:id="@+id/tv_menu_name"
         android:layout_width="75dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="15dp"
         android:gravity="center"
         android:textColor="@color/white"

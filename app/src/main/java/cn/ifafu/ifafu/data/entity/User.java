@@ -1,11 +1,11 @@
 package cn.ifafu.ifafu.data.entity;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 
 import cn.ifafu.ifafu.app.School;
 import cn.ifafu.ifafu.data.announce.SchoolCode;
+import org.greenrobot.greendao.annotation.Generated;
 
 @Entity
 public class User {
@@ -14,17 +14,15 @@ public class User {
     private String account; // 学号
     private String password; // 密码
     private String name; // 名字
-    private String token; // Token
 
     @SchoolCode
     private int schoolCode = School.FAFU;
 
-    @Generated(hash = 1559455514)
-    public User(String account, String password, String name, String token, int schoolCode) {
+    @Generated(hash = 201153438)
+    public User(String account, String password, String name, int schoolCode) {
         this.account = account;
         this.password = password;
         this.name = name;
-        this.token = token;
         this.schoolCode = schoolCode;
     }
 
@@ -56,24 +54,12 @@ public class User {
         this.name = name;
     }
 
-    public String getToken() {
-        return this.token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
     public int getSchoolCode() {
         return this.schoolCode;
     }
 
     public void setSchoolCode(int schoolCode) {
         this.schoolCode = schoolCode;
-    }
-
-    public boolean isNull() {
-        return account == null;
     }
 
 }

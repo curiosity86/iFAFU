@@ -25,7 +25,7 @@ class ScoreFilterConstant {
 
     interface Model extends IModel {
 
-        List<Score> getScoresFromDB(String year, String term, String account);
+        List<Score> getScoresFromDB(String year, String term);
 
         void save(Score score);
 

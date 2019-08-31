@@ -2,7 +2,6 @@ package cn.ifafu.ifafu.mvp.score_filter;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.util.Log;
 
 import java.util.List;
 
@@ -26,9 +25,7 @@ class ScoreFilterPresenter extends BasePresenter<ScoreFilterConstant.View, Score
                     Intent intent = mView.getActivity().getIntent();
                     String year = intent.getStringExtra("year");
                     String term = intent.getStringExtra("term");
-                    String account = intent.getStringExtra("account");
-                    Log.d(TAG, "year = " + year + ", term = " + term + ", account = " + account);
-                    return mModel.getScoresFromDB(year, term, account);
+                    return mModel.getScoresFromDB(year, term);
                 })
                 .compose(RxUtils.singleToMain())
                 .doOnSubscribe(d -> mView.showLoading())

@@ -22,6 +22,7 @@ import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
 import cn.ifafu.ifafu.mvp.syllabus_item.SyllabusItemActivity;
+import cn.ifafu.ifafu.mvp.syllabus_setting.SyllabusSettingActivity;
 import cn.ifafu.ifafu.util.ChineseNumbers;
 import cn.ifafu.ifafu.view.adapter.SyllabusPageAdapter;
 import cn.ifafu.ifafu.view.dialog.ProgressDialog;
@@ -124,7 +125,7 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
         progressDialog.cancel();
     }
 
-    @OnClick({R.id.btn_add, R.id.btn_refresh, R.id.btn_back})
+    @OnClick({R.id.btn_add, R.id.btn_refresh, R.id.btn_back, R.id.btn_setting})
     public void onViewClicked(View v) {
         switch (v.getId()) {
             case R.id.btn_add:
@@ -137,6 +138,9 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
                 break;
             case R.id.btn_back:
                 finish();
+                break;
+            case R.id.btn_setting:
+                startActivityForResult(new Intent(this, SyllabusSettingActivity.class), 0x123);
                 break;
         }
     }

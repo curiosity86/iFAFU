@@ -2,6 +2,7 @@ package cn.ifafu.ifafu.mvp.main;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.util.Log;
 
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
@@ -41,9 +42,6 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
     public void onStart() {
         mView.setLeftMenuHeadName(mModel.getUserName());
         mView.setLeftMenuHeadIcon(mModel.getSchoolIcon());
-        Thread thread = new Thread();
-        thread.start();
-        thread.interrupt();
         // 获取主页菜单
         mCompDisposable.add(mModel.getMenus()
                 .compose(RxUtils.ioToMain())
@@ -94,19 +92,42 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
                 .subscribe(weather -> mView.setWeatherText(weather), this::onError)
         );
         updateTimeLine();
+        updateCourseView();
     }
 
     @SuppressLint("DefaultLocale")
     @Override
     public void updateCourseView() {
-        mCompDisposable.add(Observable.fromCallable(() -> {
+        mCompDisposable.add(Observable
+                .fromCallable(() -> {
                     SyllabusModel model = new SyllabusModel(mView.getContext());
                     Map<String, String> map = new HashMap<>();
+
+                    int currentWeek = model.getCurrentWeek();
+                    if (currentWeek == -1) {
+                        map.put("title", "放假中");
+                        return map;
+                    }
+
                     List<Course> courses = model.getAllCoursesFromDB();
                     if (courses.isEmpty()) {
                         map.put("title", "暂无课程信息");
                         return map;
                     }
+
+                    List<Course> todayCourses = new ArrayList<>();
+                    int currentWeekday = DateUtils.getCurrentDayOfWeek();
+
+                    for (Course course : courses) {
+                        if (course.getWeekday() == currentWeekday && course.getWeekSet().contains(currentWeek)) {
+                            todayCourses.add(course);
+                        }
+                    }
+                    if (todayCourses.isEmpty()) {
+                        map.put("title", "今天没课呀！！");
+                        return map;
+                    }
+
                     //计算下一节是第几节课
                     int[] intTime = model.getCourseBeginTime();
                     Date date = new Date();
@@ -118,21 +139,13 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
                             break;
                         }
                     }
-                    int currentWeek = model.getCurrentWeek();
-                    if (currentWeek == -1) {
-                        map.put("title", "放假中");
-                        return map;
-                    }
-                    int currentWeekday = DateUtils.getCurrentDayOfWeek();
+
+                    Collections.sort(todayCourses, (o1, o2) -> Integer.compare(o1.getBeginNode(), o2.getBeginNode()));
                     Course next = null;
-                    for (int i = 1; i < courses.size(); i++) {
-                        if (next == null && courses.get(i).getWeekday() == currentWeekday
-                                || next != null
-                                && courses.get(i).getWeekSet().contains(currentWeek)
-                                && courses.get(i).getWeekday() == currentWeekday
-                                && courses.get(i).getBeginNode() > nextNode
-                                && courses.get(i).getBeginNode() < next.getBeginNode()) {
-                            next = courses.get(i);
+                    for (int i = 0; i < todayCourses.size(); i++) {
+                        if (todayCourses.get(i).getWeekday() == currentWeekday
+                                && todayCourses.get(i).getBeginNode() > nextNode ) {
+                            next = todayCourses.get(i);
                         }
                     }
                     if (next != null) {
@@ -152,20 +165,23 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
                                     intEndTime / 100,
                                     intEndTime % 100));
                         }
+                    } else {
+                        map.put("title", "今天课上完啦！！");
                     }
+                    Log.d(TAG, "updateCourseView");
                     return map;
                 })
-                        .compose(RxUtils.computationToMain())
-                        .subscribe(map -> {
-                            String title = map.containsKey("title") ? map.get("title") : "";
-                            String name = map.containsKey("name") ? map.get("name") : "";
-                            String address = map.containsKey("address") ? map.get("address") : "";
-                            String time = map.containsKey("time") ? map.get("time") : "";
-                            mView.setCourseText(title, name, address, time);
-                        }, throwable -> {
-                            onError(throwable);
-                            mView.setCourseText("获取课程信息失败", "", "", "");
-                        })
+                .compose(RxUtils.computationToMain())
+                .subscribe(map -> {
+                    String title = map.containsKey("title") ? map.get("title") : "No Data";
+                    String name = map.containsKey("name") ? map.get("name") : "";
+                    String address = map.containsKey("address") ? map.get("address") : "";
+                    String time = map.containsKey("time") ? map.get("time") : "";
+                    mView.setCourseText(title, name, address, time);
+                }, throwable -> {
+                    onError(throwable);
+                    mView.setCourseText("获取课程信息失败", "", "", "");
+                })
         );
     }
 

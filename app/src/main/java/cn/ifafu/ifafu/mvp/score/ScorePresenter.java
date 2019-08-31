@@ -117,7 +117,6 @@ class ScorePresenter extends BaseZFPresenter<ScoreContract.View, ScoreContract.M
         Intent intent = new Intent(mView.getActivity(), ScoreFilterActivity.class);
         intent.putExtra("year", mCurrentYear);
         intent.putExtra("term", mCurrentTerm);
-        intent.putExtra("account", mModel.getUser().getAccount());
         mView.getActivity().startActivityForResult(intent, 100);
     }
 

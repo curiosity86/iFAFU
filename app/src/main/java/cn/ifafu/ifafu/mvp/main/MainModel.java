@@ -13,7 +13,6 @@ import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.app.School;
 import cn.ifafu.ifafu.dao.DaoSession;
-import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.data.entity.Holiday;
 import cn.ifafu.ifafu.data.entity.Menu;
 import cn.ifafu.ifafu.data.entity.User;
@@ -21,6 +20,7 @@ import cn.ifafu.ifafu.data.entity.Weather;
 import cn.ifafu.ifafu.data.http.APIManager;
 import cn.ifafu.ifafu.data.http.service.WeatherService;
 import cn.ifafu.ifafu.data.local.DaoManager;
+import cn.ifafu.ifafu.electricity.splash.ElecSplashActivity;
 import cn.ifafu.ifafu.mvp.base.BaseZFModel;
 import cn.ifafu.ifafu.mvp.exam.ExamActivity;
 import cn.ifafu.ifafu.mvp.score.ScoreActivity;
@@ -32,7 +32,7 @@ import okhttp3.ResponseBody;
 
 public class MainModel extends BaseZFModel implements MainContract.Model {
 
-    private User user = getUser();
+    private User user = repository.getUser();
 
     MainModel(Context context) {
         super(context);
@@ -46,6 +46,7 @@ public class MainModel extends BaseZFModel implements MainContract.Model {
             menus.add(new Menu(mContext.getDrawable(R.drawable.tab_exam), "考试计划", ExamActivity.class));
             menus.add(new Menu(mContext.getDrawable(R.drawable.tab_score), "成绩查询", ScoreActivity.class));
             menus.add(new Menu(mContext.getDrawable(R.drawable.tab_web), "网页模式", WebActivity.class));
+            menus.add(new Menu(mContext.getDrawable(R.drawable.ic_electricity), "电费查询", ElecSplashActivity.class));
             return menus;
         });
     }

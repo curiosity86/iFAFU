@@ -7,6 +7,7 @@ import java.util.List;
 import cn.ifafu.ifafu.dao.ScoreDao;
 import cn.ifafu.ifafu.data.entity.Score;
 import cn.ifafu.ifafu.data.local.DaoManager;
+import cn.ifafu.ifafu.data.local.RepositoryImpl;
 import cn.ifafu.ifafu.mvp.base.BaseModel;
 
 public class ScoreFilterModel extends BaseModel implements ScoreFilterConstant.Model {
@@ -18,12 +19,8 @@ public class ScoreFilterModel extends BaseModel implements ScoreFilterConstant.M
     }
 
     @Override
-    public List<Score> getScoresFromDB(String year, String term, String account) {
-        return scoreDao.queryBuilder()
-                        .where(ScoreDao.Properties.Year.eq(year),
-                                ScoreDao.Properties.Term.eq(term),
-                                ScoreDao.Properties.Account.eq(account))
-                        .list();
+    public List<Score> getScoresFromDB(String year, String term) {
+        return RepositoryImpl.getInstance().getScore(year, term);
     }
 
     @Override

@@ -26,9 +26,12 @@ public class WebActivity extends BaseActivity<WebContract.Presenter> implements 
     private WToolbar toolbar;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_web);
+    public int initLayout(@Nullable Bundle savedInstanceState) {
+        return R.layout.activity_web;
+    }
+
+    @Override
+    public void initData(@Nullable Bundle savedInstanceState) {
         StatusBarUtil.setTransparent(this);
         StatusBarUtil.setLightMode(this);
 
@@ -44,7 +47,6 @@ public class WebActivity extends BaseActivity<WebContract.Presenter> implements 
         toolbar = findViewById(R.id.tb_web);
         toolbar.setOnClickListener(v -> finish());
 
-        mPresenter.onStart();
     }
 
     @SuppressLint("SetJavaScriptEnabled")

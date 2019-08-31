@@ -12,36 +12,34 @@ import java.util.List;
 import java.util.Map;
 
 import cn.ifafu.ifafu.app.School;
-import cn.ifafu.ifafu.dao.ScoreDao;
-import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.data.entity.Response;
 import cn.ifafu.ifafu.data.entity.Score;
 import cn.ifafu.ifafu.data.entity.User;
 import cn.ifafu.ifafu.data.entity.ZFUrl;
+import cn.ifafu.ifafu.data.http.APIManager;
 import cn.ifafu.ifafu.data.http.parser.ScoreParser;
-import cn.ifafu.ifafu.data.local.DaoManager;
 import cn.ifafu.ifafu.mvp.base.BaseZFModel;
 import io.reactivex.Observable;
 
 class ScoreModel extends BaseZFModel implements ScoreContract.Model {
 
-    private final User user = getUser();
-    private final ScoreDao scoreDao;
+    private User user = repository.getUser();
 
     ScoreModel(Context context) {
         super(context);
-        scoreDao = DaoManager.getInstance().getDaoSession().getScoreDao();
     }
 
     @Override
     public Observable<Response<List<Score>>> getScoresFromNet(String year, String term) {
+        User user = repository.getUser();
         String url = School.getUrl(ZFUrl.SCORE, user);
-        return base(url, School.getUrl(ZFUrl.MAIN, user))
+        return initParams(url, School.getUrl(ZFUrl.MAIN, user))
                 .flatMap(params -> {
                     params.put("ddlxn", year);
                     params.put("ddlxq", term);
                     params.put("btnCx", " ��  ѯ ");
-                    return zhengFang.getInfo(url, url, params)
+                    return APIManager.getZhengFangAPI()
+                            .getInfo(url, url, params)
                             .compose(new ScoreParser())
                             .map(Response::success);
                 });
@@ -51,11 +49,7 @@ class ScoreModel extends BaseZFModel implements ScoreContract.Model {
     public Observable<List<Score>> getScoresFromDB(String year, String term) {
         Log.d(TAG, year + "   " + term + "    " + user.getAccount());
         return Observable.fromCallable(() ->
-                scoreDao.queryBuilder()
-                        .where(ScoreDao.Properties.Year.eq(year),
-                                ScoreDao.Properties.Term.eq(term),
-                                ScoreDao.Properties.Account.eq(user.getAccount()))
-                        .list());
+                repository.getScore(year, term));
     }
 
     @SuppressLint("DefaultLocale")
@@ -98,9 +92,6 @@ class ScoreModel extends BaseZFModel implements ScoreContract.Model {
 
     @Override
     public void save(List<Score> list) {
-        for (Score score : list) {
-            score.setAccount(user.getAccount());
-        }
-        scoreDao.insertOrReplaceInTx(list);
+        repository.saveScore(list);
     }
 }

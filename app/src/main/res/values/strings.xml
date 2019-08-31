@@ -74,4 +74,32 @@
     <string name="score_filter_now_ies">当前智育分：%s分</string>
     <string name="score_filter_title">智育分计算筛选</string>
     <string name="score_filter_all">全选</string>
+
+    <!--SyllabusSettingActivity-->
+    <string name="title_syllabus_setting">课表设置</string>
+
+    <!--电费模块-->
+    <string name="fafu_elec_title">FAFU电宝</string>
+    <string name="aid1">常工电子电控</string>
+    <string name="aid2">山东科大电子电控</string>
+    <string name="aid3">开普电子电控</string>
+    <string name="aid4">开普电控东苑</string>
+    <string name="choose_xq">点击选择校区</string>
+    <string name="choose_ld">点击选择楼栋</string>
+    <string name="choose_lc">点击选择楼层</string>
+    <string name="input_room">输入房间号</string>
+    <string name="query_elec">点击查询电费</string>
+    <string name="input_price">输入充值金额</string>
+    <string name="confirm">确认缴费</string>
+    <string name="querying">查询中</string>
+    <string name="balance">校园卡余额：%s元</string>
+    <string name="confirm_pay">确认要缴费吗</string>
+    <string name="quit_account">退出账号</string>
+    <string name="hint_sno">请输入学号</string>
+    <string name="hint_password">请输入密码（身份证后六位）</string>
+    <string name="hint_verify">验证码</string>
+    <string name="quick_elec">一键查询电费</string>
+    <string name="announce">技术支持：FAFU电宝App   （实验性功能）\nhttps://github.com/woolsen/FAFUElec\n By: Woolsen</string>
+    <string name="ps">Tip: 部分宿舍电费查询显示的宿舍信息与输入宿舍号不同，\n此为学付宝问题，可用学付宝查询验证</string>
+    <string name="fafu_elec_open_source">https://github.com/woolsen/FAFUElec</string>
 </resources>

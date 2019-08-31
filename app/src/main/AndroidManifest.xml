@@ -44,18 +44,21 @@
         <activity android:name=".mvp.web.WebActivity" />
         <activity android:name=".mvp.other.AboutActivity" />
         <activity android:name=".mvp.score_filter.ScoreFilterActivity" />
+        <activity android:name=".mvp.syllabus_setting.SyllabusSettingActivity" />
+        <activity android:name=".electricity.splash.ElecSplashActivity" />
+        <activity android:name=".electricity.main.ElecMainActivity" />
+        <activity android:name=".electricity.login.ElecLoginActivity" />
 
-        <receiver android:name=".widget.SyllabusProvider">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="android.appwidget.action.ONCLICK" />
-                <action android:name="android.appwidget.action.AROUTER" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_syllabus_info" />
-        </receiver>
-        <service android:name=".widget.SyllabusService" />
+<!--        <receiver android:name=".widget.SyllabusProvider">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />-->
+<!--                <action android:name="android.appwidget.action.ONCLICK" />-->
+<!--                <action android:name="android.appwidget.action.AROUTER" />-->
+<!--            </intent-filter>-->
+<!--            <meta-data-->
+<!--                android:name="android.appwidget.provider"-->
+<!--                android:resource="@xml/widget_syllabus_info" />-->
+<!--        </receiver>-->
 
         <meta-data
             android:name="BUGLY_APP_CHANNEL"

@@ -3,6 +3,7 @@ package cn.ifafu.ifafu.mvp.main;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,7 +78,6 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
     @Override
     protected void onStart() {
         super.onStart();
-        mPresenter.updateCourseView();
         mPresenter.updateView();
     }
 
@@ -158,6 +158,7 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
 
     @Override
     public void setCourseText(String title, String name, String address, String time) {
+        Log.d(TAG, title + "   " + name + "   " + address + "    " + time);
         tvCourseTitle.setText(title);
         tvCourseName.setText(name);
         tvCourseAddress.setText(address);

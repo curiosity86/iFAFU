@@ -4,6 +4,7 @@ import android.content.Context;
 
 import cn.ifafu.ifafu.app.School;
 import cn.ifafu.ifafu.data.entity.ZFUrl;
+import cn.ifafu.ifafu.data.http.APIManager;
 import cn.ifafu.ifafu.mvp.base.BaseZFModel;
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;
@@ -16,12 +17,13 @@ public class WebModel extends BaseZFModel implements WebContract.Model {
 
     @Override
     public String getMainUrl() {
-        return School.getUrl(ZFUrl.MAIN, getUser());
+        return School.getUrl(ZFUrl.MAIN, repository.getUser());
     }
 
     @Override
     public Observable<String> getMainHtml() {
-        return zhengFang.base(getMainUrl())
+        return APIManager.getZhengFangAPI()
+                .initParams(getMainUrl())
                 .map(ResponseBody::string);
     }
 }

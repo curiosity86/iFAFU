@@ -2,13 +2,12 @@ package cn.ifafu.ifafu.view.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-
 import android.graphics.Color;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.CubeGrid;
@@ -35,7 +34,6 @@ public class ProgressDialog extends Dialog {
         fadingCircle.setColor(Color.WHITE);
         progressBar.setIndeterminateDrawable(fadingCircle);
     }
-
 
     public void setText(String text) {
         loadingTV.setText(text);
