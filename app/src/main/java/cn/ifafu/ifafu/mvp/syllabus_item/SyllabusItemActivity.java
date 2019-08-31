@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.view.OptionsPickerView;
+import com.gyf.immersionbar.ImmersionBar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,8 +24,8 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
-import cn.ifafu.ifafu.view.custom.WToolbar;
 import cn.ifafu.ifafu.view.adapter.WeekItemAdapter;
+import cn.ifafu.ifafu.view.custom.WToolbar;
 
 public class SyllabusItemActivity extends BaseActivity<SyllabusItemContract.Presenter>
         implements SyllabusItemContract.View {
@@ -69,6 +70,12 @@ public class SyllabusItemActivity extends BaseActivity<SyllabusItemContract.Pres
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
+        ImmersionBar.with(this)
+                .titleBarMarginTop(tbExamItem)
+                .statusBarColor("#FFFFFF")
+                .statusBarDarkFont(true)
+                .init();
+
         mPresenter = new SyllabusItemPresenter(this);
 
         weekAdapter = new WeekItemAdapter(this);
@@ -105,8 +112,8 @@ public class SyllabusItemActivity extends BaseActivity<SyllabusItemContract.Pres
         setTimeOPVOptions(weekdays, nodes, nodes);
     }
 
-    private void setTimeText(int op1, int op2, int op3) {
-        String text = String.format("%s %s - %s", weekdays.get(op1), nodes.get(op2), nodes.get(op3));
+    private void setTimeText(int weekday, int op2, int op3) {
+        String text = String.format("%s %s - %s", weekdays.get(weekday), nodes.get(op2), nodes.get(op3));
         tvCourseTime.setText(text);
         etCourseTime.setText(text);
     }

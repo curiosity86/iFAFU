@@ -7,6 +7,7 @@ import android.util.Log;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.mvp.base.BasePresenter;
+import cn.ifafu.ifafu.mvp.syllabus.SyllabusActivity;
 import cn.ifafu.ifafu.util.RxUtils;
 import io.reactivex.Observable;
 
@@ -50,8 +51,8 @@ class SyllabusItemPresenter extends BasePresenter<SyllabusItemContract.View, Syl
         mView.setTeacherText(course.getTeacher());
         mView.setAddressText(course.getAddress());
         mView.setWeekData(course.getWeekSet());
-        mView.setTimeOPVSelect(course.getWeekday() - 1, course.getBeginNode(),
-                course.getBeginNode() + course.getNodeCnt() -1);
+        mView.setTimeOPVSelect(course.getWeekday() - 1, course.getBeginNode() - 1,
+                course.getBeginNode() + course.getNodeCnt() - 2);
     }
 
     @Override
@@ -85,9 +86,9 @@ class SyllabusItemPresenter extends BasePresenter<SyllabusItemContract.View, Syl
                 })
                 .compose(RxUtils.ioToMain())
                 .subscribe(stringRes -> {
+                    mView.getActivity().setResult(resultCode);
                     mView.showMessage(stringRes);
-                    if (come_from == 1) {
-                        mView.getActivity().setResult(resultCode);
+                    if (come_from == SyllabusActivity.ADD) {
                         mView.killSelf();
                     } else {
                         resetView(course);
@@ -114,6 +115,6 @@ class SyllabusItemPresenter extends BasePresenter<SyllabusItemContract.View, Syl
     public void onTimeSelect(int options1, int options2, int options3) {
         course.setWeekday(options1 + 1);
         course.setBeginNode(options2 + 1);
-        course.setNodeCnt(options3 - options2);
+        course.setNodeCnt(options3 - options2 + 1);
     }
 }
