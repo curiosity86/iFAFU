@@ -1,7 +1,7 @@
-# iFAFU 1.0
-**iFAFU - An unofficial zfsoft educational management system Android Application**
+# iFAFU 1.0.5
+**iFAFU - An unofficial zfsoft educational management system Application for Android**
 
-![](https://img.shields.io/badge/language-java-lightgrey.svg)&nbsp;&nbsp;![GitHub](https://img.shields.io/github/license/woolsen/iFAFU?)&nbsp;&nbsp;![](https://img.shields.io/badge/version-1.0-blue)&nbsp;&nbsp;![](https://img.shields.io/badge/platform-Android-yellow)
+![](https://img.shields.io/badge/platform-Android-yellow)&nbsp;&nbsp;![](https://img.shields.io/badge/language-java&kotlin-blue.svg)&nbsp;&nbsp;![GitHub](https://img.shields.io/github/license/woolsen/iFAFU?)
 
 ## License
 ```
