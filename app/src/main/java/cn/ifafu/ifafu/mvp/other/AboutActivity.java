@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.jaeger.library.StatusBarUtil;
+import com.gyf.immersionbar.ImmersionBar;
 
 import java.util.Locale;
 
@@ -22,15 +22,21 @@ import cn.ifafu.ifafu.view.custom.WToolbar;
 
 public class AboutActivity extends AppCompatActivity implements View.OnClickListener {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-        StatusBarUtil.setLightMode(this);
-        StatusBarUtil.setTransparent(this);
-        WToolbar toolbar = findViewById(R.id.tb_about);
-        toolbar.setNavigationOnClickListener(v -> finish());
+        WToolbar tbAbout = findViewById(R.id.tb_about);
+        tbAbout.setNavigationOnClickListener(v -> finish());
+
+        ImmersionBar.with(this)
+                .titleBarMarginTop(tbAbout)
+                .statusBarColor("#FFFFFF")
+                .statusBarDarkFont(true)
+                .init();
+
 
         TextView aboutAppSubName = findViewById(R.id.aboutAppSubName);
 

@@ -10,8 +10,9 @@ import android.webkit.WebViewClient;
 
 import androidx.annotation.Nullable;
 
-import com.jaeger.library.StatusBarUtil;
+import com.gyf.immersionbar.ImmersionBar;
 
+import butterknife.BindView;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
 import cn.ifafu.ifafu.view.custom.WToolbar;
@@ -21,9 +22,10 @@ public class WebActivity extends BaseActivity<WebContract.Presenter> implements 
 
     private ProgressDialog progressDialog;
 
-    private WebView webView;
-
-    private WToolbar toolbar;
+    @BindView(R.id.view_web)
+    WebView webView;
+    @BindView(R.id.tb_web)
+    WToolbar tbWeb;
 
     @Override
     public int initLayout(@Nullable Bundle savedInstanceState) {
@@ -32,21 +34,20 @@ public class WebActivity extends BaseActivity<WebContract.Presenter> implements 
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        StatusBarUtil.setTransparent(this);
-        StatusBarUtil.setLightMode(this);
+        ImmersionBar.with(this)
+                .titleBarMarginTop(tbWeb)
+                .statusBarColor("#FFFFFF")
+                .statusBarDarkFont(true)
+                .init();
 
         mPresenter = new WebPresenter(this);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setText("加载中");
 
-        webView = findViewById(R.id.view_web);
-
         initWebView();
 
-        toolbar = findViewById(R.id.tb_web);
-        toolbar.setOnClickListener(v -> finish());
-
+        tbWeb.setOnClickListener(v -> finish());
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -84,7 +85,7 @@ public class WebActivity extends BaseActivity<WebContract.Presenter> implements 
 
     @Override
     public void setTitle(String title) {
-        toolbar.setTitle(title);
+        tbWeb.setTitle(title);
     }
 
     @Override

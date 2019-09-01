@@ -19,6 +19,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.ifafu.ifafu.R;
+import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
 import cn.ifafu.ifafu.mvp.syllabus_item.SyllabusItemActivity;
@@ -40,6 +41,8 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
     private int mCurrentWeek = 1;
 
     private ProgressDialog progressDialog;
+
+    public static final int ADD = 0;
 
     @Override
     public int initLayout(@Nullable Bundle savedInstanceState) {
@@ -64,7 +67,7 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
         adapter.setCourserClickListener((v, course) ->{
             Intent intent = new Intent(this, SyllabusItemActivity.class);
             intent.putExtra("course_id", ((Course) course.getOther()).getId());
-            startActivityForResult(intent, 0x123);
+            startActivityForResult(intent, Constant.SYLLABUS_ITEM_ACTIVITY);
         });
         viewPager.setAdapter(adapter);
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -130,8 +133,8 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
         switch (v.getId()) {
             case R.id.btn_add:
                 Intent intent = new Intent(this, SyllabusItemActivity.class);
-                intent.putExtra("come_from", 1);
-                startActivityForResult(intent, 0x123);
+                intent.putExtra("come_from", ADD);
+                startActivityForResult(intent, Constant.SYLLABUS_ITEM_ACTIVITY);
                 break;
             case R.id.btn_refresh:
                 mPresenter.updateSyllabusNet();
@@ -147,8 +150,9 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == 0x123 && resultCode == Activity.RESULT_OK) {
+        if (requestCode == Constant.SYLLABUS_ITEM_ACTIVITY && resultCode == Activity.RESULT_OK) {
             mPresenter.updateSyllabusLocal();
+            return;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

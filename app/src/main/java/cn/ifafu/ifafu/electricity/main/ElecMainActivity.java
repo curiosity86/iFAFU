@@ -19,7 +19,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.view.OptionsPickerView;
-import com.jaeger.library.StatusBarUtil;
+import com.gyf.immersionbar.ImmersionBar;
 
 import java.util.Collection;
 import java.util.List;
@@ -40,20 +40,17 @@ public class ElecMainActivity extends BaseActivity<ElecMainContract.Presenter>
     private SparseArray<String> viewIdToNameMap;  //记录RadioButtonId对应的电控名字
 
     @BindView(R.id.radioGroup)
-    RadioGroup rg;
-
+    RadioGroup radioGroup;
     @BindView(R.id.xqTV)
     TextView areaTv;
     @BindView(R.id.ldTV)
     TextView buildingTv;
     @BindView(R.id.lcTV)
     TextView floorTv;
-
     @BindView(R.id.elecTV)
     TextView elecTv;
     @BindView(R.id.accountTV)
     TextView snoTv;
-
     @BindView(R.id.balanceTV)
     TextView balanceTv;
     @BindView(R.id.priceET)
@@ -62,6 +59,8 @@ public class ElecMainActivity extends BaseActivity<ElecMainContract.Presenter>
     EditText roomEt;
     @BindView(R.id.payBtn)
     Button payBtn;
+    @BindView(R.id.tb_elec)
+    WToolbar tbElec;
 
     private OptionsPickerView<String> xqOpv;
     private OptionsPickerView<String> ldOpv;
@@ -82,8 +81,11 @@ public class ElecMainActivity extends BaseActivity<ElecMainContract.Presenter>
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        StatusBarUtil.setTransparent(this);
-        StatusBarUtil.setLightMode(this);
+        ImmersionBar.with(this)
+                .titleBarMarginTop(tbElec)
+                .statusBarColor("#FFFFFF")
+                .statusBarDarkFont(true)
+                .init();
 
         mPresenter = new ElecMainPresenter(this);
 
@@ -95,7 +97,7 @@ public class ElecMainActivity extends BaseActivity<ElecMainContract.Presenter>
         progress = new ProgressDialog(this);
         progress.setText("加载中");
 
-        rg.setOnCheckedChangeListener(this);
+        radioGroup.setOnCheckedChangeListener(this);
 
         xqOpv = new OptionsPickerBuilder(this,
                 (options1, options2, options3, v) -> {
@@ -176,7 +178,7 @@ public class ElecMainActivity extends BaseActivity<ElecMainContract.Presenter>
 
     @Override
     public void setSelections(@Nullable String dkName, @Nullable String area, @Nullable String building, @Nullable String floor) {
-        rg.check(viewIdToNameMap.keyAt(viewIdToNameMap.indexOfValue(dkName)));
+        radioGroup.check(viewIdToNameMap.keyAt(viewIdToNameMap.indexOfValue(dkName)));
         if (area != null && !area.isEmpty()) {
             areaTv.setText(area);
             areaTv.setVisibility(View.VISIBLE);
@@ -303,7 +305,7 @@ public class ElecMainActivity extends BaseActivity<ElecMainContract.Presenter>
             int id = View.generateViewId();
             rb1.setId(id);
             viewIdToNameMap.append(id, s);
-            rg.addView(rb1);
+            radioGroup.addView(rb1);
         }
     }
 
@@ -314,7 +316,7 @@ public class ElecMainActivity extends BaseActivity<ElecMainContract.Presenter>
     }
 
     public String getCheckedDKName() {
-        return viewIdToNameMap.get(rg.getCheckedRadioButtonId());
+        return viewIdToNameMap.get(radioGroup.getCheckedRadioButtonId());
     }
 
     @Override

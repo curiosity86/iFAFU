@@ -58,6 +58,10 @@ public class WToolbar extends RelativeLayout {
         final TintTypedArray a = TintTypedArray.obtainStyledAttributes(getContext(), attrs,
                 R.styleable.WToolbar, defStyleAttr, 0);
 
+        if (a.hasValue(R.styleable.WToolbar_elevation)) {
+            setElevation(a.getDimension(R.styleable.WToolbar_elevation, 0));
+        }
+
         mTitleTextAppearance = a.getResourceId(R.styleable.WToolbar_titleTextAppearance, 0);
         mSubtitleTextAppearance = a.getResourceId(R.styleable.WToolbar_subtitleTextAppearance, 0);
 
