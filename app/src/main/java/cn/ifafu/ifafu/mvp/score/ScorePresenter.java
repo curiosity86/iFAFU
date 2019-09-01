@@ -74,7 +74,10 @@ class ScorePresenter extends BaseZFPresenter<ScoreContract.View, ScoreContract.M
         mCompDisposable.add(mModel.getScoresFromNet(mCurrentYear, mCurrentTerm)
                 .map(Response::getBody)
                 .retryWhen(this::ensureTokenAlive)
-                .doOnNext(list -> mModel.save(list))
+                .doOnNext(list -> {
+                    mModel.delete(mCurrentYear, mCurrentTerm);
+                    mModel.save(list);
+                })
                 .compose(RxUtils.ioToMain())
                 .doOnSubscribe(disposable -> mView.showLoading())
                 .doFinally(() -> mView.hideLoading())

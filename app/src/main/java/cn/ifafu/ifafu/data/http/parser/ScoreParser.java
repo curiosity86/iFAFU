@@ -10,6 +10,7 @@ import java.util.List;
 
 import cn.ifafu.ifafu.app.School;
 import cn.ifafu.ifafu.data.entity.Score;
+import cn.ifafu.ifafu.data.entity.User;
 import cn.ifafu.ifafu.data.exception.NoAuthException;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -17,10 +18,12 @@ import okhttp3.ResponseBody;
 
 public class ScoreParser extends BaseParser<List<Score>> {
 
+    private String account;
     private int schoolCode;
 
-    public ScoreParser(int schoolCode) {
-        this.schoolCode = schoolCode;
+    public ScoreParser(User user) {
+        this.account = user.getAccount();
+        this.schoolCode = user.getSchoolCode();
     }
 
     public List<Score> parse(String html) {
@@ -42,7 +45,6 @@ public class ScoreParser extends BaseParser<List<Score>> {
         if (elementsTemp.size() == 0) {
             return Collections.emptyList();
         }
-        String account = getAccount(document, "span[id=\"Label5\"]");
         Elements elements = elementsTemp.get(0).getElementsByTag("tr");
         List<Score> list = new ArrayList<>();
         for (int i = 1; i < elements.size(); i++) {
@@ -73,7 +75,6 @@ public class ScoreParser extends BaseParser<List<Score>> {
                 score.setRemarks(eles.get(12).text());
                 score.setMakeupRemarks(eles.get(13).text());
                 score.setIsIESItem(!score.getNature().contains("任意选修") && !score.getName().contains("体育"));
-
                 score.setAccount(account);
                 list.add(score);
             } catch (Exception e) {
@@ -90,7 +91,6 @@ public class ScoreParser extends BaseParser<List<Score>> {
         if (elementsTemp.size() == 0) {
             return Collections.emptyList();
         }
-        String account = getAccount(document, "span[id=\"lbl_xh\"]");
         Elements elements = elementsTemp.get(0).getElementsByTag("tr");
         List<Score> list = new ArrayList<>();
         for (int i = 1; i < elements.size(); i++) {
@@ -118,7 +118,6 @@ public class ScoreParser extends BaseParser<List<Score>> {
 
                 score.setIsIESItem(!score.getNature().contains("任意选修") && !score.getName().contains("体育"));
 
-                score.setAccount(account);
                 list.add(score);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -126,11 +125,6 @@ public class ScoreParser extends BaseParser<List<Score>> {
         }
         Collections.sort(list, (o1, o2) -> o1.getId().compareTo(o2.getId()));
         return list;
-    }
-
-    protected String getAccount(Document document, String xhCssQuery) {
-        Elements e = document.select(xhCssQuery);
-        return e.text().replace("学号：", "");
     }
 
     @Override

@@ -48,6 +48,8 @@ class ScoreContract {
         Observable<Map<String, String>> getYearTerm();
 
         void save(List<Score> list);
+
+        void delete(String year, String term);
     }
 
 }

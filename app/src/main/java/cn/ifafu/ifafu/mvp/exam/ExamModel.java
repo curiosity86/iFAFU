@@ -41,13 +41,7 @@ public class ExamModel extends BaseZFModel implements ExamContract.Model {
                     params.put("xqd", term);
                     return APIManager.getZhengFangAPI()
                             .getInfo(url, url, params)
-                            .compose(new ExamParser())
-                            .map(listResponse -> {
-                                for (Exam exam : listResponse.getBody()) {
-                                    exam.setAccount(user.getAccount());
-                                }
-                                return listResponse;
-                            });
+                            .compose(new ExamParser(user));
                 });
     }
 

@@ -93,7 +93,7 @@ public class SyllabusModel extends BaseZFModel implements SyllabusContract.Model
         String referer = School.getUrl(ZhengFang.MAIN, user);
         return APIManager.getZhengFangAPI()
                 .getInfo(url, referer, Collections.emptyMap())
-                .compose(new SyllabusParser());
+                .compose(new SyllabusParser(user));
     }
 
     @Override

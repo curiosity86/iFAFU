@@ -31,6 +31,8 @@ public interface Repository {
 
     List<Score> getScore(String year, String term);
 
+    void deleteScore(List<Score> scores);
+
     void saveScore(List<Score> scores);
 
     List<Exam> getExam();

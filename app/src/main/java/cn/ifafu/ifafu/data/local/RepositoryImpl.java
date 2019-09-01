@@ -66,6 +66,7 @@ public class RepositoryImpl implements Repository {
 
     @Override
     public void saveUser(User user) {
+        this.user = user;
         SPUtils.get(Constant.SP_USER_INFO).putString("account", user.getAccount());
         userDao.insertOrReplace(user);
     }
@@ -120,6 +121,11 @@ public class RepositoryImpl implements Repository {
                         ScoreDao.Properties.Year.eq(year),
                         ScoreDao.Properties.Term.eq(term))
                 .list();
+    }
+
+    @Override
+    public void deleteScore(List<Score> scores) {
+        scoreDao.deleteInTx(scores);
     }
 
     @Override

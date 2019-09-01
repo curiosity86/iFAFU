@@ -12,6 +12,7 @@ import java.util.Map;
 
 import cn.ifafu.ifafu.data.entity.Exam;
 import cn.ifafu.ifafu.data.entity.Response;
+import cn.ifafu.ifafu.data.entity.User;
 import cn.ifafu.ifafu.data.exception.NoAuthException;
 import cn.ifafu.ifafu.util.RegexUtils;
 import io.reactivex.Observable;
@@ -19,6 +20,14 @@ import io.reactivex.ObservableSource;
 import okhttp3.ResponseBody;
 
 public class ExamParser extends BaseParser<Response<List<Exam>>> {
+
+    private String account;
+    private int schoolCode;
+
+    public ExamParser(User user) {
+        this.account = user.getAccount();
+        this.schoolCode = user.getSchoolCode();
+    }
 
     private List<Exam> parse(String html) {
         Document document = Jsoup.parse(html);
@@ -29,13 +38,11 @@ public class ExamParser extends BaseParser<Response<List<Exam>>> {
         Elements elements = elementsTemp.get(0).getElementsByTag("tr");
         List<Exam> list = new ArrayList<>();
         Elements termAndYear = document.select("option[selected=\"selected\"]");
-        String account = getAccount(document);
         String year = termAndYear.get(0).text();
         String term = termAndYear.get(1).text();
         for (int i = 1; i < elements.size(); i++) {
             try {
                 Exam exam = getExam(elements.get(i).children());
-                exam.setAccount(account);
                 exam.setTerm(term);
                 exam.setYear(year);
                 list.add(exam);
@@ -69,10 +76,8 @@ public class ExamParser extends BaseParser<Response<List<Exam>>> {
         exam.setStartTime(start);
         exam.setEndTime(end);
         exam.setSeatNumber(e.get(6).text());
+        exam.setAccount(account);
 
-//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-//        System.out.println(exam.getName() + "   " + Arrays.toString(numbers.toArray()) + "     " +
-//                format.format(calendar.getTime()));
         return exam;
     }
 

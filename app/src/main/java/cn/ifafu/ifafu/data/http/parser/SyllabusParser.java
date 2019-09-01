@@ -17,6 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cn.ifafu.ifafu.data.entity.Course;
+import cn.ifafu.ifafu.data.entity.User;
 import cn.ifafu.ifafu.data.exception.NoAuthException;
 import cn.ifafu.ifafu.util.RegexUtils;
 import io.reactivex.Observable;
@@ -34,10 +35,13 @@ public class SyllabusParser extends BaseParser<List<Course>> {
 
     private String account;
 
+    public SyllabusParser(User user) {
+        this.account = user.getAccount();
+    }
+
     public List<Course> parse(String html) {
         List<Course> courses = new ArrayList<>();
         Document doc = Jsoup.parse(html);
-        account = getAccount(doc);
         Elements nodeTrs = doc.getElementById("Table1").getElementsByTag("tr");
         Help help = new Help();
         for (int i = 2; i < nodeTrs.size(); i++) {

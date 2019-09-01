@@ -44,14 +44,14 @@ class ScoreModel extends BaseZFModel implements ScoreContract.Model {
                         } else {
                             params.put("btn_xq", "ѧ�ڳɼ�");
                         }
-                    } else {
+                    } else if (user.getSchoolCode() == School.FAFU) {
                         params.put("ddlxn", year);
                         params.put("ddlxq", term);
                         params.put("btnCx", " ��  ѯ ");
                     }
                     return APIManager.getZhengFangAPI()
                             .getInfo(url, url, params)
-                            .compose(new ScoreParser(user.getSchoolCode()))
+                            .compose(new ScoreParser(user))
                             .map(Response::success);
                 });
     }
@@ -109,5 +109,11 @@ class ScoreModel extends BaseZFModel implements ScoreContract.Model {
     @Override
     public void save(List<Score> list) {
         repository.saveScore(list);
+    }
+
+    @Override
+    public void delete(String year, String term) {
+        List<Score> scores = repository.getScore(year, term);
+        repository.deleteScore(scores);
     }
 }

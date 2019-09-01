@@ -13,7 +13,7 @@ android {
         applicationId "cn.ifafu.ifafu"
         minSdkVersion 22
         targetSdkVersion 29
-        versionCode 7
+        versionCode 9
         versionName "1.0.6"
         resConfigs "zh"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
