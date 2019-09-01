@@ -15,7 +15,7 @@ import cn.ifafu.ifafu.app.School;
 import cn.ifafu.ifafu.dao.CourseDao;
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.data.entity.User;
-import cn.ifafu.ifafu.data.entity.ZFUrl;
+import cn.ifafu.ifafu.data.entity.ZhengFang;
 import cn.ifafu.ifafu.data.http.APIManager;
 import cn.ifafu.ifafu.data.http.parser.SyllabusParser;
 import cn.ifafu.ifafu.data.local.DaoManager;
@@ -89,8 +89,8 @@ public class SyllabusModel extends BaseZFModel implements SyllabusContract.Model
 
     @Override
     public Observable<List<Course>> getCoursesFromNet() {
-        String url = School.getUrl(ZFUrl.SYLLABUS, user);
-        String referer = School.getUrl(ZFUrl.MAIN, user);
+        String url = School.getUrl(ZhengFang.SYLLABUS, user);
+        String referer = School.getUrl(ZhengFang.MAIN, user);
         return APIManager.getZhengFangAPI()
                 .getInfo(url, referer, Collections.emptyMap())
                 .compose(new SyllabusParser());

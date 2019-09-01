@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.tencent.bugly.Bugly;
@@ -36,9 +37,23 @@ public class SplashActivity extends BaseActivity {
         return R.layout.activity_splash;
     }
 
-    @SuppressLint("CheckResult")
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
+//        String[] permissions;
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+//            permissions = new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+//        } else {
+//            permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+//        }
+//        if (PermissionUtils.lacksPermissions(this, permissions)) {
+//            PermissionUtils.requestPermissions(this, permissions);
+//        } else {
+            init();
+//        }
+    }
+
+    @SuppressLint("CheckResult")
+    private void init() {
         Observable
                 .fromCallable((Callable<Class<? extends Activity>>) () -> {
                     Bugly.init(getApplicationContext(), "46836c4eaa", false);
@@ -62,5 +77,11 @@ public class SplashActivity extends BaseActivity {
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                     finish();
                 });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        init();
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

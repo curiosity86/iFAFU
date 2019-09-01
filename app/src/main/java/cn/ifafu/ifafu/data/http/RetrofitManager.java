@@ -62,6 +62,7 @@ public class RetrofitManager {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(Constant.IFAFU_BASE_URL)
+                    .client(getOkHttpClient())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.createAsync())
                     .build();
         }

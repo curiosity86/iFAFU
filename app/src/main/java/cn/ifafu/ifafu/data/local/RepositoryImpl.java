@@ -106,6 +106,14 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
+    public List<Score> getScore(String year) {
+        return scoreDao.queryBuilder()
+                .where(ScoreDao.Properties.Account.eq(getUser().getAccount()),
+                        ScoreDao.Properties.Year.eq(year))
+                .list();
+    }
+
+    @Override
     public List<Score> getScore(String year, String term) {
         return scoreDao.queryBuilder()
                 .where(ScoreDao.Properties.Account.eq(getUser().getAccount()),

@@ -15,7 +15,6 @@
             android:id="@+id/tv_course_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="下一节课：Java从入门到放弃"
             android:textColor="#000"
             android:textSize="16sp" />
 
@@ -28,7 +27,6 @@
             android:layout_marginTop="2dp"
             android:gravity="center"
             android:drawableStart="@drawable/ic_time"
-            android:text="1 - 2 节"
             android:textAlignment="center"
             android:textSize="12sp"
             android:textColor="#000" />
@@ -42,7 +40,6 @@
             android:layout_alignBottom="@id/tv_course_node"
             android:layout_marginStart="16dp"
             android:gravity="center"
-            android:text="明北附123"
             android:textAlignment="center"
             android:textSize="12sp"
             android:textColor="#000" />

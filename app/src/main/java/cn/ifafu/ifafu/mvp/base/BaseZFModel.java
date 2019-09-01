@@ -8,7 +8,7 @@ import java.util.Map;
 import cn.ifafu.ifafu.app.School;
 import cn.ifafu.ifafu.data.entity.Response;
 import cn.ifafu.ifafu.data.entity.User;
-import cn.ifafu.ifafu.data.entity.ZFUrl;
+import cn.ifafu.ifafu.data.entity.ZhengFang;
 import cn.ifafu.ifafu.data.exception.VerifyException;
 import cn.ifafu.ifafu.data.http.APIManager;
 import cn.ifafu.ifafu.data.http.parser.LoginParser;
@@ -42,8 +42,8 @@ public class BaseZFModel extends BaseModel implements IZFModel {
 
     @Override
     public Observable<Response<String>> login(User user) {
-        String loginUrl = School.getUrl(ZFUrl.LOGIN, user);
-        String verifyUrl = School.getUrl(ZFUrl.VERIFY, user);
+        String loginUrl = School.getUrl(ZhengFang.LOGIN, user);
+        String verifyUrl = School.getUrl(ZhengFang.VERIFY, user);
         return initParams(loginUrl)
                 .map(params -> {
                     params.put("txtUserName", user.getAccount());
@@ -76,9 +76,9 @@ public class BaseZFModel extends BaseModel implements IZFModel {
     @Override
     public Observable<Response<String>> reLogin() {
         User user = repository.getUser();
-        String loginUrl = School.getUrl(ZFUrl.LOGIN, user);
-        String verifyUrl = School.getUrl(ZFUrl.VERIFY, user);
-        String mainUrl = School.getUrl(ZFUrl.MAIN, user);
+        String loginUrl = School.getUrl(ZhengFang.LOGIN, user);
+        String verifyUrl = School.getUrl(ZhengFang.VERIFY, user);
+        String mainUrl = School.getUrl(ZhengFang.MAIN, user);
         LoginParser loginParser = new LoginParser();
         return APIManager.getZhengFangAPI()
                 .getInfo(mainUrl, null)

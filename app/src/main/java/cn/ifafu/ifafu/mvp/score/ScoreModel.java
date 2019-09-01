@@ -15,7 +15,7 @@ import cn.ifafu.ifafu.app.School;
 import cn.ifafu.ifafu.data.entity.Response;
 import cn.ifafu.ifafu.data.entity.Score;
 import cn.ifafu.ifafu.data.entity.User;
-import cn.ifafu.ifafu.data.entity.ZFUrl;
+import cn.ifafu.ifafu.data.entity.ZhengFang;
 import cn.ifafu.ifafu.data.http.APIManager;
 import cn.ifafu.ifafu.data.http.parser.ScoreParser;
 import cn.ifafu.ifafu.mvp.base.BaseZFModel;
@@ -32,15 +32,26 @@ class ScoreModel extends BaseZFModel implements ScoreContract.Model {
     @Override
     public Observable<Response<List<Score>>> getScoresFromNet(String year, String term) {
         User user = repository.getUser();
-        String url = School.getUrl(ZFUrl.SCORE, user);
-        return initParams(url, School.getUrl(ZFUrl.MAIN, user))
+        String url = School.getUrl(ZhengFang.SCORE, user);
+        return initParams(url, School.getUrl(ZhengFang.MAIN, user))
                 .flatMap(params -> {
-                    params.put("ddlxn", year);
-                    params.put("ddlxq", term);
-                    params.put("btnCx", " ��  ѯ ");
+                    if (user.getSchoolCode() == School.FAFU_JS) {
+                        params.put("ddlXN", year);
+                        params.put("ddlXQ", term);
+                        params.put("ddl_kcxz", "");
+                        if (term.equals("全部")) {
+                            params.put("btn_xn", "ѧ�ڳɼ�");
+                        } else {
+                            params.put("btn_xq", "ѧ�ڳɼ�");
+                        }
+                    } else {
+                        params.put("ddlxn", year);
+                        params.put("ddlxq", term);
+                        params.put("btnCx", " ��  ѯ ");
+                    }
                     return APIManager.getZhengFangAPI()
                             .getInfo(url, url, params)
-                            .compose(new ScoreParser())
+                            .compose(new ScoreParser(user.getSchoolCode()))
                             .map(Response::success);
                 });
     }
@@ -48,8 +59,13 @@ class ScoreModel extends BaseZFModel implements ScoreContract.Model {
     @Override
     public Observable<List<Score>> getScoresFromDB(String year, String term) {
         Log.d(TAG, year + "   " + term + "    " + user.getAccount());
-        return Observable.fromCallable(() ->
-                repository.getScore(year, term));
+        if (term.equals("全部")) {
+            return Observable.fromCallable(() ->
+                    repository.getScore(year));
+        } else {
+            return Observable.fromCallable(() ->
+                    repository.getScore(year, term));
+        }
     }
 
     @SuppressLint("DefaultLocale")

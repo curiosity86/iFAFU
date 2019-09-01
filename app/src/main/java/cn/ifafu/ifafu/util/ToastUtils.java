@@ -8,7 +8,7 @@ import cn.ifafu.ifafu.mvp.base.BaseApplication;
 /**
  * create by woolsen on 19/7/12
  */
-public class ToastUtil {
+public class ToastUtils {
 
     public static void showToastLong(String msg) {
         showToast(BaseApplication.getContext(), msg, Toast.LENGTH_LONG);

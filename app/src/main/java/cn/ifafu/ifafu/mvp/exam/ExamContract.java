@@ -21,6 +21,8 @@ class ExamContract {
 
     interface View extends IView {
 
+        void showEmptyView();
+
         void setYearTermOptions(int option1, int option2);
 
         void setExamAdapterData(List<Exam> data);

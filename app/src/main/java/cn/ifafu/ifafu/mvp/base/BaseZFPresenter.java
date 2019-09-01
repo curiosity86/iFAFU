@@ -1,16 +1,15 @@
 package cn.ifafu.ifafu.mvp.base;
 
 import android.content.Intent;
-import android.util.Log;
 
 import javax.security.auth.login.LoginException;
 
 import cn.ifafu.ifafu.data.entity.Response;
 import cn.ifafu.ifafu.data.exception.NoAuthException;
+import cn.ifafu.ifafu.mvp.base.i.IView;
 import cn.ifafu.ifafu.mvp.base.i.IZFModel;
 import cn.ifafu.ifafu.mvp.base.i.IZFPresenter;
 import cn.ifafu.ifafu.mvp.login.LoginActivity;
-import cn.ifafu.ifafu.mvp.base.i.IView;
 import cn.ifafu.ifafu.util.RxUtils;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -36,7 +35,7 @@ public abstract class BaseZFPresenter<V extends IView, M extends IZFModel> exten
      */
     protected ObservableSource<?> ensureTokenAlive(Observable<Throwable> throwableObservable) {
         return throwableObservable.flatMap(throwable -> {
-            if (throwable instanceof NoAuthException) {
+            if (throwable instanceof NoAuthException || throwable.getMessage().contains("302")) {
                 if (loginD != null) {
                     while (!loginD.isDisposed()) {
                         Thread.sleep(100);
@@ -67,9 +66,4 @@ public abstract class BaseZFPresenter<V extends IView, M extends IZFModel> exten
                 });
     }
 
-    @Override
-    protected void onError(Throwable throwable) {
-        super.onError(throwable);
-
-    }
 }

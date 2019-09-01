@@ -167,8 +167,11 @@ class ScorePresenter extends BaseZFPresenter<ScoreContract.View, ScoreContract.M
             result = GlobalLib.trimZero(result);
             Map<String, String> retMap = new HashMap<>();
             int index = result.indexOf('.');
-            if (index == -1) {
+            if (result.equals("NaN")) {
                 retMap.put("big", "0");
+                retMap.put("little", "分");
+            } else if (index == -1) {
+                retMap.put("big", result);
                 retMap.put("little", "分");
             } else {
                 retMap.put("big", result.substring(0, index));

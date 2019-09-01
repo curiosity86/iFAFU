@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import cn.ifafu.ifafu.app.School;
 import cn.ifafu.ifafu.data.entity.Score;
 import cn.ifafu.ifafu.data.exception.NoAuthException;
 import io.reactivex.Observable;
@@ -16,18 +17,63 @@ import okhttp3.ResponseBody;
 
 public class ScoreParser extends BaseParser<List<Score>> {
 
+    private int schoolCode;
+
+    public ScoreParser(int schoolCode) {
+        this.schoolCode = schoolCode;
+    }
+
     public List<Score> parse(String html) {
+        List<Score> scoreList = null;
+        if (schoolCode == School.FAFU) {
+            scoreList = getScoresFAFU(html);
+        } else if (schoolCode == School.FAFU_JS) {
+            scoreList = getScoresFAFUJS(html);
+        }
+        if (scoreList != null) {
+            Collections.sort(scoreList, (o1, o2) -> o1.getId().compareTo(o2.getId()));
+        }
+        return scoreList;
+    }
+
+    private List<Score> getScoresFAFU(String html) {
         Document document = Jsoup.parse(html);
         Elements elementsTemp = document.select("table[id=\"DataGrid1\"]");
         if (elementsTemp.size() == 0) {
             return Collections.emptyList();
         }
+        String account = getAccount(document, "span[id=\"Label5\"]");
         Elements elements = elementsTemp.get(0).getElementsByTag("tr");
         List<Score> list = new ArrayList<>();
-        String account = getAccount(document);
         for (int i = 1; i < elements.size(); i++) {
+            Elements eles = elements.get(i).children();
             try {
-                Score score = getScore(elements.get(i).children());
+                Score score = new Score();
+                score.setYear(eles.get(0).text());
+                score.setTerm(eles.get(1).text());
+                score.setId(Long.parseLong(eles.get(2).text()));
+                score.setName(eles.get(3).text());
+                score.setNature(eles.get(4).text());
+                score.setAttr(eles.get(5).text());
+                score.setCredit(Float.parseFloat(eles.get(6).text()));
+                score.setScore(Float.parseFloat(eles.get(7).text()));
+                try {
+                    float makeupScore = Float.parseFloat(eles.get(8).text());
+                    score.setMakeupScore(makeupScore);
+                } catch (Exception ignored) {
+                    score.setMakeupScore(0F);
+                }
+                if (eles.get(9).text().isEmpty()) {
+                    score.setRestudy(false);
+                } else {
+                    score.setRestudy(true);
+                }
+                score.setInstitute(eles.get(10).text());
+                score.setGpa(Float.parseFloat(eles.get(11).text()));
+                score.setRemarks(eles.get(12).text());
+                score.setMakeupRemarks(eles.get(13).text());
+                score.setIsIESItem(!score.getNature().contains("任意选修") && !score.getName().contains("体育"));
+
                 score.setAccount(account);
                 list.add(score);
             } catch (Exception e) {
@@ -38,33 +84,53 @@ public class ScoreParser extends BaseParser<List<Score>> {
         return list;
     }
 
-    private Score getScore(Elements e) {
-        Score score = new Score();
-        score.setYear(e.get(0).text());
-        score.setTerm(e.get(1).text());
-        score.setId(Long.parseLong(e.get(2).text()));
-        score.setName(e.get(3).text());
-        score.setNature(e.get(4).text());
-        score.setAttr(e.get(5).text());
-        score.setCredit(Float.parseFloat(e.get(6).text()));
-        score.setScore(Float.parseFloat(e.get(7).text()));
-        try {
-            float makeupScore = Float.parseFloat(e.get(8).text());
-            score.setMakeupScore(makeupScore);
-        } catch (Exception ignored) {
-            score.setMakeupScore(0F);
+    private List<Score> getScoresFAFUJS(String html) {
+        Document document = Jsoup.parse(html);
+        Elements elementsTemp = document.select("table[id=\"Datagrid1\"]");
+        if (elementsTemp.size() == 0) {
+            return Collections.emptyList();
         }
-        if (e.get(9).text().isEmpty()) {
-            score.setRestudy(false);
-        } else {
-            score.setRestudy(true);
+        String account = getAccount(document, "span[id=\"lbl_xh\"]");
+        Elements elements = elementsTemp.get(0).getElementsByTag("tr");
+        List<Score> list = new ArrayList<>();
+        for (int i = 1; i < elements.size(); i++) {
+            Elements eles = elements.get(i).children();
+            try {
+                Score score = new Score();
+                score.setYear(eles.get(0).text());
+                score.setTerm(eles.get(1).text());
+                score.setId(Long.parseLong(eles.get(2).text()));
+                score.setName(eles.get(3).text());
+                score.setNature(eles.get(4).text());
+                score.setAttr(eles.get(5).text());
+                score.setCredit(Float.parseFloat(eles.get(6).text()));
+                score.setGpa(Float.parseFloat(eles.get(7).text()));
+                score.setScore(Float.parseFloat(eles.get(8).text()));
+                try {
+                    float makeupScore = Float.parseFloat(eles.get(10).text());
+                    score.setMakeupScore(makeupScore);
+                } catch (Exception ignored) {
+                    score.setMakeupScore(0F);
+                }
+                score.setInstitute(eles.get(12).text());
+                score.setRemarks(eles.get(12).text());
+                score.setMakeupRemarks(eles.get(13).text());
+
+                score.setIsIESItem(!score.getNature().contains("任意选修") && !score.getName().contains("体育"));
+
+                score.setAccount(account);
+                list.add(score);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        score.setInstitute(e.get(10).text());
-        score.setGpa(Float.parseFloat(e.get(11).text()));
-        score.setRemarks(e.get(12).text());
-        score.setMakeupRemarks(e.get(13).text());
-        score.setIsIESItem(!score.getNature().contains("任意选修") && !score.getName().contains("体育"));
-        return score;
+        Collections.sort(list, (o1, o2) -> o1.getId().compareTo(o2.getId()));
+        return list;
+    }
+
+    protected String getAccount(Document document, String xhCssQuery) {
+        Elements e = document.select(xhCssQuery);
+        return e.text().replace("学号：", "");
     }
 
     @Override

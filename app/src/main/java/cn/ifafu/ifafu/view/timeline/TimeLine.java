@@ -6,16 +6,13 @@ import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.TintTypedArray;
-import androidx.appcompat.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,16 +70,7 @@ public class TimeLine extends View {
         mPointPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         mPointPaint.setStyle(Paint.Style.FILL);
 
-        if (isInEditMode()) {
-            mTimeAxisList.add(new TimeAxis("元旦", "2019.01.01", 0));
-            mTimeAxisList.add(new TimeAxis("春节", "2019.01.01", 10));
-            mTimeAxisList.add(new TimeAxis("清明节", "2019.01.01", 11));
-            mTimeAxisList.add(new TimeAxis("端午节", "2019.01.01", 17));
-            mTimeAxisList.add(new TimeAxis("中秋节", "2019.01.01", 18));
-            mTimeAxisList.add(new TimeAxis("国庆节", "2019.01.01", 19));
-        }
     }
-
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -90,8 +78,6 @@ public class TimeLine extends View {
         if (isNeedDraw) {
             int width = getWidth();
             float centerHeight = getHeight() / 2F;
-
-            Log.d("TimeLine", "width = " + width);
 
             mLinePaint.setColor(mLineColor);
             mPointPaint.setColor(mLineColor);

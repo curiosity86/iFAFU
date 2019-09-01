@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.mvp.web;
 import android.content.Context;
 
 import cn.ifafu.ifafu.app.School;
-import cn.ifafu.ifafu.data.entity.ZFUrl;
+import cn.ifafu.ifafu.data.entity.ZhengFang;
 import cn.ifafu.ifafu.data.http.APIManager;
 import cn.ifafu.ifafu.mvp.base.BaseZFModel;
 import io.reactivex.Observable;
@@ -17,7 +17,7 @@ public class WebModel extends BaseZFModel implements WebContract.Model {
 
     @Override
     public String getMainUrl() {
-        return School.getUrl(ZFUrl.MAIN, repository.getUser());
+        return School.getUrl(ZhengFang.MAIN, repository.getUser());
     }
 
     @Override

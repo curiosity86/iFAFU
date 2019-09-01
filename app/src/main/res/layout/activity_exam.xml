@@ -44,6 +44,7 @@
             android:id="@+id/view_exam_empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
             app:message="@string/exam_data_empty"
             android:visibility="gone"/>
 

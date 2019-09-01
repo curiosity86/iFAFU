@@ -11,7 +11,7 @@ import java.util.Random;
 
 import cn.ifafu.ifafu.data.local.RepositoryImpl;
 
-public class ZFUrl {
+public class ZhengFang {
 
     private int schoolCode;
 
@@ -30,7 +30,7 @@ public class ZFUrl {
 
     private String baseUrlTemp;
 
-    public ZFUrl(int schoolCode, String baseUrl, String login, String verify, String main, Map<String, QueryApi> apiMap) {
+    public ZhengFang(int schoolCode, String baseUrl, String login, String verify, String main, Map<String, QueryApi> apiMap) {
         this.schoolCode = schoolCode;
         this.baseUrl = baseUrl;
         this.login = login;
@@ -89,7 +89,7 @@ public class ZFUrl {
     @NotNull
     @Override
     public String toString() {
-        return "ZFUrl{" +
+        return "ZhengFang{" +
                 "schoolCode=" + schoolCode +
                 ", baseUrl='" + baseUrl + '\'' +
                 ", login='" + login + '\'' +

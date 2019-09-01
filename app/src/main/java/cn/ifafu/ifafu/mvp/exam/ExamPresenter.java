@@ -96,4 +96,10 @@ class ExamPresenter extends BaseZFPresenter<ExamContract.View, ExamContract.Mode
                 }, this::onError)
         );
     }
+
+    @Override
+    protected void onError(Throwable throwable) {
+        mView.showEmptyView();
+        super.onError(throwable);
+    }
 }

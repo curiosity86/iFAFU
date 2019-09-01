@@ -46,7 +46,7 @@ public class MainModel extends BaseZFModel implements MainContract.Model {
             menus.add(new Menu(mContext.getDrawable(R.drawable.tab_exam), "考试计划", ExamActivity.class));
             menus.add(new Menu(mContext.getDrawable(R.drawable.tab_score), "成绩查询", ScoreActivity.class));
             menus.add(new Menu(mContext.getDrawable(R.drawable.tab_web), "网页模式", WebActivity.class));
-            menus.add(new Menu(mContext.getDrawable(R.drawable.ic_electricity), "电费查询", ElecSplashActivity.class));
+            menus.add(new Menu(mContext.getDrawable(R.drawable.tab_electricity), "电费查询", ElecSplashActivity.class));
             return menus;
         });
     }

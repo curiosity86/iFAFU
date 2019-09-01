@@ -15,7 +15,7 @@ import cn.ifafu.ifafu.dao.ExamDao;
 import cn.ifafu.ifafu.data.entity.Exam;
 import cn.ifafu.ifafu.data.entity.Response;
 import cn.ifafu.ifafu.data.entity.User;
-import cn.ifafu.ifafu.data.entity.ZFUrl;
+import cn.ifafu.ifafu.data.entity.ZhengFang;
 import cn.ifafu.ifafu.data.http.APIManager;
 import cn.ifafu.ifafu.data.http.parser.ExamParser;
 import cn.ifafu.ifafu.data.local.DaoManager;
@@ -34,8 +34,8 @@ public class ExamModel extends BaseZFModel implements ExamContract.Model {
     @Override
     public Observable<Response<List<Exam>>> getExamsFromNet(String year, String term) {
         User user = repository.getUser();
-        String url = School.getUrl(ZFUrl.EXAM, user);
-        return initParams(url, School.getUrl(ZFUrl.MAIN, user))
+        String url = School.getUrl(ZhengFang.EXAM, user);
+        return initParams(url, School.getUrl(ZhengFang.MAIN, user))
                 .flatMap(params -> {
                     params.put("xnd", year);
                     params.put("xqd", term);

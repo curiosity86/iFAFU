@@ -66,12 +66,7 @@ public class ExamActivity extends BaseActivity<ExamContract.Presenter>
 
     @Override
     public void setExamAdapterData(List<Exam> data) {
-        if (data.isEmpty()) {
-            emptyView.setVisibility(View.VISIBLE);
-            rvExam.setVisibility(View.GONE);
-        } else if (examAdapter == null) {
-            emptyView.setVisibility(View.GONE);
-            rvExam.setVisibility(View.VISIBLE);
+        if (examAdapter == null) {
             examAdapter = new ExamAdapter(this, data);
             rvExam.setLayoutManager(new LinearLayoutManager(this));
             DividerItemDecoration dividerItemDecoration =
@@ -82,9 +77,10 @@ public class ExamActivity extends BaseActivity<ExamContract.Presenter>
             }
             rvExam.addItemDecoration(dividerItemDecoration);
             rvExam.setAdapter(examAdapter);
-        } else {
-            emptyView.setVisibility(View.GONE);
-            rvExam.setVisibility(View.VISIBLE);
+        }
+
+        isShowEmptyView(data.isEmpty());
+        if (!data.isEmpty()) {
             examAdapter.setExamData(data);
             examAdapter.notifyDataSetChanged();
         }
@@ -114,6 +110,22 @@ public class ExamActivity extends BaseActivity<ExamContract.Presenter>
             );
         }
         yearTermOPV.setNPicker(years, terms, null);
+    }
+
+    private void isShowEmptyView(boolean show) {
+        if (show) {
+            emptyView.setVisibility(View.VISIBLE);
+            rvExam.setVisibility(View.GONE);
+        } else {
+            emptyView.setVisibility(View.GONE);
+            rvExam.setVisibility(View.VISIBLE);
+        }
+    }
+
+
+    @Override
+    public void showEmptyView() {
+        isShowEmptyView(true);
     }
 
     @Override

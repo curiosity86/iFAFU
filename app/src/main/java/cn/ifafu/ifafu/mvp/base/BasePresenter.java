@@ -1,12 +1,13 @@
 package cn.ifafu.ifafu.mvp.base;
 
 import java.net.ConnectException;
+import java.net.UnknownHostException;
 
 import cn.ifafu.ifafu.R;
+import cn.ifafu.ifafu.data.exception.NoLogException;
 import cn.ifafu.ifafu.mvp.base.i.IModel;
 import cn.ifafu.ifafu.mvp.base.i.IPresenter;
 import cn.ifafu.ifafu.mvp.base.i.IView;
-
 import io.reactivex.disposables.CompositeDisposable;
 
 public abstract class BasePresenter<V extends IView, M extends IModel> implements IPresenter {
@@ -44,10 +45,14 @@ public abstract class BasePresenter<V extends IView, M extends IModel> implement
     }
 
     protected void onError(Throwable throwable) {
-        if (throwable instanceof ConnectException) {
+        if (throwable instanceof ConnectException
+                || throwable instanceof UnknownHostException) {
             mView.showMessage(R.string.net_error);
+        } else {
+            mView.showMessage(throwable.getMessage());
         }
-        mView.showMessage(throwable.getMessage());
-        throwable.printStackTrace();
+        if (!(throwable instanceof NoLogException)) {
+            throwable.printStackTrace();
+        }
     }
 }

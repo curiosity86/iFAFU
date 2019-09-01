@@ -134,7 +134,7 @@ public class ScoreActivity extends BaseActivity<ScoreContract.Presenter>
     @Override
     public void setYearTermTitle(String year, String term) {
         if (term.equals("全部")) {
-            tvScoreTitle.setText(String.format("%s学年全部学期学习成绩", year));
+            tvScoreTitle.setText(String.format("%s学年全部学习成绩", year));
         } else {
             tvScoreTitle.setText(String.format("%s学年第%s学期学习成绩", year, term));
         }

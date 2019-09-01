@@ -27,6 +27,8 @@ public interface Repository {
 
     List<Score> getScore();
 
+    List<Score> getScore(String year);
+
     List<Score> getScore(String year, String term);
 
     void saveScore(List<Score> scores);
