@@ -109,9 +109,9 @@ public class WToolbar extends RelativeLayout {
                 if (mTitleTextColor != null) {
                     mTitleTextView.setTextColor(mTitleTextColor);
                 }
+                ensureTitleLinearLayout();
+                mTitleLinearLayout.addView(mTitleTextView, 0);
             }
-            ensureTitleLinearLayout();
-            mTitleLinearLayout.addView(mTitleTextView, 0);
             mTitleTextView.setText(title);
             mTitleText = title;
         }

@@ -87,7 +87,7 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
             mMenuAdapter = new MenuAdapter(this, menus);
             mMenuAdapter.setOnMenuClickListener((v, menu) -> {
                 if (!ButtonUtils.isFastDoubleClick()) {
-                    openActivity(new Intent(this, menu.getActivityClass()));
+                    openActivity(menu.getIntent());
                 }
             });
             rvMenu.setLayoutManager(new GridLayoutManager(

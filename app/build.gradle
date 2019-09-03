@@ -55,7 +55,7 @@ android {
 
     greendao {
         //版本号，升级时可配置
-        schemaVersion 13
+        schemaVersion 15
         daoPackage 'cn.ifafu.ifafu.dao'
     }
 
@@ -81,6 +81,7 @@ dependencies {
     implementation 'com.contrarywind:Android-PickerView:4.1.7'
     implementation 'com.orhanobut:dialogplus:1.11@aar'
     implementation 'com.afollestad.material-dialogs:datetime:3.1.0'
+    implementation 'com.zhihu.android:matisse:0.5.3-beta2'
     //刷新库
     implementation 'com.github.ybq:Android-SpinKit:1.2.0'
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0'

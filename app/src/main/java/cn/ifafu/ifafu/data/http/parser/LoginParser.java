@@ -31,7 +31,7 @@ public class LoginParser extends BaseParser<Response<String>> {
         }
         Elements script = doc.select("script[language=javascript]");
         if (script.size() < 2) {
-            return Response.error("网络异常");
+            return Response.error("登录：网络异常");
         } else {
             String s = getAlertString(script.get(1).html());
             if (s.contains("用户名") || s.contains("密码")) {
@@ -41,7 +41,7 @@ public class LoginParser extends BaseParser<Response<String>> {
             } else if (s.contains("验证码")) {
                 throw new VerifyException();
             } else {
-                return Response.error("网络异常");
+                return Response.error("登录：网络异常");
             }
         }
     }

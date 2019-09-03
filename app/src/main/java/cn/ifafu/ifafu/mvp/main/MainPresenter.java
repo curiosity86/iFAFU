@@ -3,12 +3,14 @@ package cn.ifafu.ifafu.mvp.main;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.util.Log;
+import android.webkit.CookieManager;
 
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,6 +23,7 @@ import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.data.entity.Exam;
 import cn.ifafu.ifafu.data.entity.Holiday;
+import cn.ifafu.ifafu.data.entity.SyllabusSetting;
 import cn.ifafu.ifafu.mvp.base.BaseZFPresenter;
 import cn.ifafu.ifafu.mvp.exam.ExamModel;
 import cn.ifafu.ifafu.mvp.login.LoginActivity;
@@ -101,6 +104,7 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
         mCompDisposable.add(Observable
                 .fromCallable(() -> {
                     SyllabusModel model = new SyllabusModel(mView.getContext());
+                    SyllabusSetting setting = model.getSyllabusSetting();
                     Map<String, String> map = new HashMap<>();
 
                     int currentWeek = model.getCurrentWeek();
@@ -115,60 +119,57 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
                         return map;
                     }
 
-                    List<Course> todayCourses = new ArrayList<>();
                     int currentWeekday = DateUtils.getCurrentDayOfWeek();
-
-                    for (Course course : courses) {
-                        if (course.getWeekday() == currentWeekday && course.getWeekSet().contains(currentWeek)) {
-                            todayCourses.add(course);
-                        }
-                    }
+                    List<Course> todayCourses = model.getCoursesFromDB(currentWeek, currentWeekday);
+                    Collections.sort(todayCourses, (o1, o2) -> Integer.compare(o1.getBeginNode(), o2.getBeginNode()));
                     if (todayCourses.isEmpty()) {
                         map.put("title", "今天没课呀！！");
                         return map;
                     }
 
                     //计算下一节是第几节课
-                    int[] intTime = model.getCourseBeginTime();
-                    Date date = new Date();
-                    int now = (int) (date.getTime() / 1000 % 10000);
-                    int nextNode = 1;
+                    int[] intTime = setting.getBeginTime();
+                    Calendar c = Calendar.getInstance();
+                    int now = c.get(Calendar.HOUR_OF_DAY) * 100 + c.get(Calendar.MINUTE);
+                    int nextNode = 9999;
                     for (int i = 0; i < intTime.length; i++) {
                         if (now < intTime[i]) {
                             nextNode = i;
                             break;
                         }
                     }
+                    Log.d(TAG, "updateCourseView => nextNode: " + nextNode + "    now: " + now);
+                    StringBuilder sb = new StringBuilder();
+                    for (Course co : todayCourses) {
+                        sb.append(co.getName()).append(", ");
+                    }
+                    Log.d(TAG, "course: " + "[" + sb + "]");
 
-                    Collections.sort(todayCourses, (o1, o2) -> Integer.compare(o1.getBeginNode(), o2.getBeginNode()));
-                    Course next = null;
-                    for (int i = 0; i < todayCourses.size(); i++) {
-                        if (todayCourses.get(i).getWeekday() == currentWeekday
-                                && todayCourses.get(i).getBeginNode() > nextNode ) {
-                            next = todayCourses.get(i);
+                    Course nextCourse = null;
+                    for (Course course: todayCourses) {
+                        if (course.getBeginNode() > nextNode) {
+                            nextCourse = course;
+                            break;
                         }
                     }
-                    if (next != null) {
+                    if (nextCourse != null) {
                         map.put("title", "下一节课：");
-                        map.put("name", next.getName());
-                        map.put("address", next.getAddress());
-                        if (nextNode - 1 < intTime.length) {
-                            int length = model.getOneNodeLength();
-                            int intStartTime = intTime[next.getBeginNode() - 1];
-                            int intEndTime = intTime[next.getBeginNode() + next.getNodeCnt() - 2];
-                            if (intEndTime % 100 + length >= 60) {
-                                intEndTime = intEndTime + 100 - (intEndTime % 100) + ((intEndTime % 100 + length) % 60);
-                            }
-                            map.put("time", String.format("%d:%02d-%d:%02d",
-                                    intStartTime / 100,
-                                    intStartTime % 100,
-                                    intEndTime / 100,
-                                    intEndTime % 100));
+                        map.put("name", nextCourse.getName());
+                        map.put("address", nextCourse.getAddress());
+                        int length = setting.getNodeLength();
+                        int intStartTime = intTime[nextCourse.getBeginNode() - 1];
+                        int intEndTime = intTime[nextCourse.getBeginNode() + nextCourse.getNodeCnt() - 2];
+                        if (intEndTime % 100 + length >= 60) {
+                            intEndTime = intEndTime + 100 - (intEndTime % 100) + ((intEndTime % 100 + length) % 60);
                         }
+                        map.put("time", String.format("%d:%02d-%d:%02d",
+                                intStartTime / 100,
+                                intStartTime % 100,
+                                intEndTime / 100,
+                                intEndTime % 100));
                     } else {
                         map.put("title", "今天课上完啦！！");
                     }
-                    Log.d(TAG, "updateCourseView");
                     return map;
                 })
                 .compose(RxUtils.computationToMain())
@@ -231,6 +232,7 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
         if (BuildConfig.DEBUG) {
             mModel.clearAllDate();
         }
+        CookieManager.getInstance().removeAllCookies(null);
         Intent intent = new Intent(mView.getContext(), LoginActivity.class);
         mView.openActivity(intent);
         mView.killSelf();

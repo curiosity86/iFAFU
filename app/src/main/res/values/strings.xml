@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">iFAFU内测版</string>
+    <string name="app_name">iFAFU</string>
     <string name="base_on_fafu">基于福建农林大学教务管理系统</string>
 
     <!--MVP Base-->
@@ -101,5 +101,5 @@
     <string name="quick_elec">一键查询电费</string>
     <string name="announce">技术支持：FAFU电宝App   （实验性功能）\nhttps://github.com/woolsen/FAFUElec\n By: Woolsen</string>
     <string name="ps">Tip: 部分宿舍电费查询显示的宿舍信息与输入宿舍号不同，\n此为学付宝问题，可用学付宝查询验证</string>
-    <string name="fafu_elec_open_source">https://github.com/woolsen/FAFUElec</string>
+    <string name="fafu_elec_tip">电费充值太久没到账请联系宿管科\nhttps://github.com/woolsen/FAFUElec</string>
 </resources>

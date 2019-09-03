@@ -4,9 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageButton;
 
 import androidx.annotation.Nullable;
 
@@ -26,6 +30,8 @@ public class WebActivity extends BaseActivity<WebContract.Presenter> implements 
     WebView webView;
     @BindView(R.id.tb_web)
     WToolbar tbWeb;
+    @BindView(R.id.btn_refresh)
+    ImageButton btnRefresh;
 
     @Override
     public int initLayout(@Nullable Bundle savedInstanceState) {
@@ -48,6 +54,7 @@ public class WebActivity extends BaseActivity<WebContract.Presenter> implements 
         initWebView();
 
         tbWeb.setOnClickListener(v -> finish());
+        btnRefresh.setOnClickListener(v -> webView.reload());
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -63,6 +70,12 @@ public class WebActivity extends BaseActivity<WebContract.Presenter> implements 
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 hideLoading();
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                Log.d(TAG, request.getUrl().toString());
+                return super.shouldOverrideUrlLoading(view, request);
             }
         });
         WebSettings webSettings = webView.getSettings();
@@ -100,5 +113,18 @@ public class WebActivity extends BaseActivity<WebContract.Presenter> implements 
         if (!this.isDestroyed()) {
             progressDialog.cancel();
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            //按返回键操作并且能回退网页
+            if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack()) {
+                //后退
+                webView.goBack();
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

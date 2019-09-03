@@ -1,6 +1,7 @@
 package cn.ifafu.ifafu.mvp.main;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 
 import com.alibaba.fastjson.JSONObject;
@@ -42,11 +43,18 @@ public class MainModel extends BaseZFModel implements MainContract.Model {
     public Observable<List<Menu>> getMenus() {
         return Observable.fromCallable(() -> {
             List<Menu> menus = new ArrayList<>();
-            menus.add(new Menu(mContext.getDrawable(R.drawable.tab_syllabus), "课程表", SyllabusActivity.class));
-            menus.add(new Menu(mContext.getDrawable(R.drawable.tab_exam), "考试计划", ExamActivity.class));
-            menus.add(new Menu(mContext.getDrawable(R.drawable.tab_score), "成绩查询", ScoreActivity.class));
-            menus.add(new Menu(mContext.getDrawable(R.drawable.tab_web), "网页模式", WebActivity.class));
-            menus.add(new Menu(mContext.getDrawable(R.drawable.tab_electricity), "电费查询", ElecSplashActivity.class));
+            menus.add(new Menu(mContext.getDrawable(R.drawable.tab_syllabus), "课程表", new Intent(mContext, SyllabusActivity.class)));
+            menus.add(new Menu(mContext.getDrawable(R.drawable.tab_exam), "考试计划", new Intent(mContext, ExamActivity.class)));
+            menus.add(new Menu(mContext.getDrawable(R.drawable.tab_score), "成绩查询", new Intent(mContext, ScoreActivity.class)));
+            menus.add(new Menu(mContext.getDrawable(R.drawable.tab_web), "网页模式", new Intent(mContext, WebActivity.class)));
+            menus.add(new Menu(mContext.getDrawable(R.drawable.tab_electricity), "电费查询", new Intent(mContext, ElecSplashActivity.class)));
+            Intent repairIntent = new Intent(mContext, WebActivity.class);
+            repairIntent.putExtra("title", "报修服务");
+            repairIntent.putExtra("url", Constant.REPAIR_URL);
+//            Intent repairIntent = new Intent();
+//            repairIntent.setData(Uri.parse(Constant.REPAIR_URL));
+//            repairIntent.setAction(Intent.ACTION_VIEW);
+            menus.add(new Menu(mContext.getDrawable(R.drawable.tab_repair), "报修服务", repairIntent));
             return menus;
         });
     }
