@@ -64,9 +64,8 @@ public class SyllabusParser extends BaseParser<List<Course>> {
                 Element td = tds.get(index + j);
                 //列的备用方案
                 help.col = j;
-//                Log.d("SyllabusParser", "help => col = " + help.col);
-                for (int k = 1; k < j; k++) {
-                    if (locFlag[help.beginNode][k]) {
+                for (int col = 1; col < j; col++) {
+                    if (locFlag[help.beginNode][col % 7]) {
                         help.col++;
                     }
                 }
@@ -137,9 +136,24 @@ public class SyllabusParser extends BaseParser<List<Course>> {
      * flag标记课程位置，用于定位
      */
     private void mark(Course course) {
-        for (int i = 0; i < course.getNodeCnt(); i++) {
-            locFlag[i + course.getBeginNode() - 1][course.getWeekday() - 2] = true;
+        int col = course.getWeekday() - 1;
+        if (col == 0) {
+            col = 7;
         }
+        for (int i = 0; i < course.getNodeCnt(); i++) {
+            locFlag[i + course.getBeginNode() - 1][col] = true;
+        }
+//        System.out.println(course);
+//        for (boolean[] booleans : locFlag) {
+//            for (int j = 1; j < booleans.length; j++) {
+//                if (booleans[j]) {
+//                    System.out.print("● ");
+//                } else {
+//                    System.out.print("○ ");
+//                }
+//            }
+//            System.out.println();
+//        }
     }
 
     private void parseTime(Course course, String text, Help help) {
