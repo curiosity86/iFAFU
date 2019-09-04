@@ -99,7 +99,11 @@
     <string name="hint_password">请输入密码（身份证后六位）</string>
     <string name="hint_verify">验证码</string>
     <string name="quick_elec">一键查询电费</string>
-    <string name="announce">技术支持：FAFU电宝App   （实验性功能）\nhttps://github.com/woolsen/FAFUElec\n By: Woolsen</string>
-    <string name="ps">Tip: 部分宿舍电费查询显示的宿舍信息与输入宿舍号不同，\n此为学付宝问题，可用学付宝查询验证</string>
-    <string name="fafu_elec_tip">电费充值太久没到账请联系宿管科\nhttps://github.com/woolsen/FAFUElec</string>
+    <string name="announce">技术支持：FAFU电宝App（实验性功能）\nBy: Woolsen</string>
+    <string name="fafu_elec_tip">Tip1：部分宿舍电费查询显示的宿舍信息与输入宿舍号不同，\n此为学付宝问题，可用学付宝查询验证\nTip2：电费充值到账有延迟，到账后电费信息更新还有延迟\n若太久没到账请联系宿管科\nhttps://github.com/woolsen/FAFUElec</string>
+    
+    <!--Widget-->
+    <string name="refresh_time_format">上次刷新时间：%s</string>
+    <string name="next_course_format">下一节课：%s</string>
+    <string name="next_node_format">第%d~%d节 %s</string>
 </resources>

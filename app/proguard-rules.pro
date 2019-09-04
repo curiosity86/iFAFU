@@ -254,6 +254,7 @@
   **[] $VALUES;
   public *;
 }
+-dontwarn com.squareup.picasso.**
 
 ###################################
 #                                 #

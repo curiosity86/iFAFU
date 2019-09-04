@@ -14,18 +14,13 @@ import cn.ifafu.ifafu.data.http.APIManager;
 import cn.ifafu.ifafu.data.http.parser.LoginParser;
 import cn.ifafu.ifafu.data.http.parser.ParamsParser;
 import cn.ifafu.ifafu.data.http.parser.VerifyParser;
-import cn.ifafu.ifafu.data.local.RepositoryImpl;
-import cn.ifafu.ifafu.data.local.i.Repository;
 import cn.ifafu.ifafu.mvp.base.i.IZFModel;
 import io.reactivex.Observable;
 
-public class BaseZFModel extends BaseModel implements IZFModel {
-
-    protected Repository repository;
+public abstract class BaseZFModel extends BaseModel implements IZFModel {
 
     public BaseZFModel(Context context) {
         super(context);
-        repository = RepositoryImpl.getInstance();
     }
 
     protected Observable<Map<String, String>> initParams(String url) {

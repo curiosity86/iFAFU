@@ -4,12 +4,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.jaeger.library.StatusBarUtil;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.gyf.immersionbar.ImmersionBar;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,6 +25,7 @@ import butterknife.OnClick;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.data.entity.Course;
+import cn.ifafu.ifafu.data.entity.SyllabusSetting;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
 import cn.ifafu.ifafu.mvp.syllabus_item.SyllabusItemActivity;
 import cn.ifafu.ifafu.mvp.syllabus_setting.SyllabusSettingActivity;
@@ -31,12 +36,16 @@ import cn.ifafu.ifafu.view.dialog.ProgressDialog;
 public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
         implements SyllabusContract.View, View.OnLongClickListener {
 
+    @BindView(R.id.iv_background)
+    ImageView ivBackground;
     @BindView(R.id.view_pager)
     ViewPager2 viewPager;
     @BindView(R.id.tv_subtitle)
     TextView tvSubtitle;
+    @BindView(R.id.tb_syllabus)
+    RelativeLayout tbSyllabus;
 
-    private SyllabusPageAdapter adapter;
+    private SyllabusPageAdapter mPageAdapter;
 
     private int mCurrentWeek = 1;
 
@@ -51,8 +60,10 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        StatusBarUtil.setTransparent(this);
-        StatusBarUtil.setLightMode(this);
+        ImmersionBar.with(this)
+                .titleBarMarginTop(tbSyllabus)
+                .statusBarDarkFont(true)
+                .init();
 
         mPresenter = new SyllabusPresenter(this);
 
@@ -63,13 +74,6 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
 
         viewPager = findViewById(R.id.view_pager);
         tvSubtitle.setOnLongClickListener(this);
-        adapter = new SyllabusPageAdapter(this);
-        adapter.setCourserClickListener((v, course) ->{
-            Intent intent = new Intent(this, SyllabusItemActivity.class);
-            intent.putExtra("course_id", ((Course) course.getOther()).getId());
-            startActivityForResult(intent, Constant.SYLLABUS_ITEM_ACTIVITY);
-        });
-        viewPager.setAdapter(adapter);
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -94,28 +98,33 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
     }
 
     @Override
-    public void setFirstStudyDay(String firstStudyDay) {
-        adapter.setDateOfFirstStudyDay(firstStudyDay);
-    }
-
-    @Override
-    public void setSyllabusRowCount(int count) {
-
-    }
-
-    @Override
-    public void setCourseBeginTime(String[] times) {
-        adapter.setSideViewBeginTime(times);
+    public void setSyllabusSetting(SyllabusSetting setting) {
+            Glide.with(this)
+                    .load(setting.getBackground())
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(ivBackground);
+        if (mPageAdapter == null) {
+            mPageAdapter = new SyllabusPageAdapter(this, setting);
+            mPageAdapter.setCourserClickListener((v, course) ->{
+                Intent intent = new Intent(this, SyllabusItemActivity.class);
+                intent.putExtra("course_id", ((Course) course.getOther()).getId());
+                startActivityForResult(intent, Constant.SYLLABUS_ITEM_ACTIVITY);
+            });
+            viewPager.setAdapter(mPageAdapter);
+        } else {
+            mPageAdapter.setSyllabusSetting(setting);
+            mPageAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
     public void setSyllabusDate(List<Course> courses) {
-        adapter.setCourseList(courses);
+        mPageAdapter.setCourseList(courses);
     }
 
     @Override
     public void redrawSyllabus() {
-        adapter.notifyDataSetChanged();
+        mPageAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -143,7 +152,8 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
                 finish();
                 break;
             case R.id.btn_setting:
-                startActivityForResult(new Intent(this, SyllabusSettingActivity.class), 0x123);
+                startActivityForResult(new Intent(
+                        this, SyllabusSettingActivity.class), Constant.SYLLABUS_SETTING_ACTIVITY);
                 break;
         }
     }
@@ -153,26 +163,11 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
         if (requestCode == Constant.SYLLABUS_ITEM_ACTIVITY && resultCode == Activity.RESULT_OK) {
             mPresenter.updateSyllabusLocal();
             return;
+        } else if (requestCode == Constant.SYLLABUS_SETTING_ACTIVITY) {
+            mPresenter.updateSyllabusSetting();
+            return;
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void setFirstDayOfWeek(int firstDayOfWeek) {
-        adapter.setFirstDayOfWeek(firstDayOfWeek);
-    }
-
-    @Override
-    public void setCornerText(String cornerText) {
-        adapter.setCornerText(cornerText);
-    }
-
-    @Override
-    public void setCurrentWeek(int week) {
-        if (viewPager.getCurrentItem() != week - 1) {
-            viewPager.setCurrentItem(week - 1, false);
-        }
-        mCurrentWeek = week;
     }
 
     @Override

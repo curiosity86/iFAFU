@@ -9,18 +9,19 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.ifafu.ifafu.R
 import me.drakeet.multitype.ItemViewBinder
 
-class SeekBarBinder(private val onSeekValueChangeListener: (SeekBarItem, Int) -> Unit)
-    : ItemViewBinder<SeekBarItem, SeekBarBinder.ViewHolder>() {
+class SeekBarBinder: ItemViewBinder<SeekBarItem, SeekBarBinder.ViewHolder>() {
 
     override fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): ViewHolder {
         return ViewHolder(inflater.inflate(R.layout.item_setting_seekbar, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, item: SeekBarItem) {
+        holder.tvSubtitle.text = ("${item.value} ${item.unit}")
+        holder.seekBar.progress = item.value - item.minValue
         holder.seekBar.max = item.maxValue - item.minValue
         holder.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                onSeekValueChangeListener.invoke(item, progress + item.minValue)
+                item.listener.invoke(item.minValue + progress)
                 holder.tvSubtitle.text = ("${item.minValue + progress} ${item.unit}")
             }
 

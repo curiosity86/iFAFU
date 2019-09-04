@@ -20,7 +20,7 @@ public class ScoreFilterModel extends BaseModel implements ScoreFilterConstant.M
 
     @Override
     public List<Score> getScoresFromDB(String year, String term) {
-        return RepositoryImpl.getInstance().getScore(year, term);
+        return RepositoryImpl.getInstance().getScores(year, term);
     }
 
     @Override

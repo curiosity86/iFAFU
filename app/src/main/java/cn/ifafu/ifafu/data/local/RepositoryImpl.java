@@ -72,9 +72,17 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public List<Course> getCourse() {
+    public List<Course> getAllCourses() {
         return courseDao.queryBuilder()
                 .where(CourseDao.Properties.Account.eq(getUser().getAccount()))
+                .list();
+    }
+
+    @Override
+    public List<Course> getCourses(boolean local) {
+        return courseDao.queryBuilder()
+                .where(CourseDao.Properties.Account.eq(getUser().getAccount()),
+                        CourseDao.Properties.Local.eq(local))
                 .list();
     }
 
@@ -95,19 +103,34 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
+    public void deleteCourse(List<Course> courses) {
+        courseDao.deleteInTx(courses);
+    }
+
+    @Override
+    public void deleteCourse(Course course) {
+        courseDao.delete(course);
+    }
+
+    @Override
     public SyllabusSetting getSyllabusSetting() {
         return syllabusSettingDao.load(getUser().getAccount());
     }
 
     @Override
-    public List<Score> getScore() {
+    public void saveSyllabusSetting(SyllabusSetting syllabusSetting) {
+        syllabusSettingDao.insertOrReplace(syllabusSetting);
+    }
+
+    @Override
+    public List<Score> getAllScores() {
         return scoreDao.queryBuilder()
                 .where(ScoreDao.Properties.Account.eq(getUser().getAccount()))
                 .list();
     }
 
     @Override
-    public List<Score> getScore(String year) {
+    public List<Score> getScores(String year) {
         return scoreDao.queryBuilder()
                 .where(ScoreDao.Properties.Account.eq(getUser().getAccount()),
                         ScoreDao.Properties.Year.eq(year))
@@ -115,7 +138,7 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public List<Score> getScore(String year, String term) {
+    public List<Score> getScores(String year, String term) {
         return scoreDao.queryBuilder()
                 .where(ScoreDao.Properties.Account.eq(getUser().getAccount()),
                         ScoreDao.Properties.Year.eq(year),
@@ -134,14 +157,14 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public List<Exam> getExam() {
+    public List<Exam> getAllExams() {
         return examDao.queryBuilder()
                 .where(ExamDao.Properties.Account.eq(getUser().getAccount()))
                 .list();
     }
 
     @Override
-    public List<Exam> getExam(String year, String term) {
+    public List<Exam> getExams(String year, String term) {
         return examDao.queryBuilder()
                 .where(ExamDao.Properties.Account.eq(getUser().getAccount()),
                         ExamDao.Properties.Year.eq(year),

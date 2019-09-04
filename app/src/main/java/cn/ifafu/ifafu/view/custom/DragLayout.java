@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
@@ -82,7 +81,7 @@ public class DragLayout extends FrameLayout {
         mDragHelper = ViewDragHelper.create(this, mDragCallback);
     }
 
-    public void setmDragListener(DragListener mDragListener) {
+    public void setDragListener(DragListener mDragListener) {
         this.mDragListener = mDragListener;
     }
 

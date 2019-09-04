@@ -167,8 +167,8 @@ public class DateView extends LinearLayout {
         private TextView dateTV;
         private boolean today = false;
 
-        private final int weekdayColor = Color.parseColor("#000000");
-        private final int dateColor = Color.parseColor("#AAAAAA");
+        private final int weekdayColor = Color.BLACK;
+        private final int dateColor = Color.BLACK;
 
         public DateItem(Context context) {
             super(context);

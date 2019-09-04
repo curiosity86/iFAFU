@@ -47,7 +47,7 @@ public class ExamModel extends BaseZFModel implements ExamContract.Model {
 
     @Override
     public Observable<List<Exam>> getExamsFromDB(String year, String term) {
-        return Observable.fromCallable(() -> repository.getExam(year, term));
+        return Observable.fromCallable(() -> repository.getExams(year, term));
 //        return Observable.just(Collections.emptyList());
     }
 
@@ -110,7 +110,7 @@ public class ExamModel extends BaseZFModel implements ExamContract.Model {
     @SuppressLint("DefaultLocale")
     public List<Exam> getThisTermExams() {
         Map<String, String> map = getYearTerm();
-        return repository.getExam(map.get("xnd"), map.get("xqd"));
+        return repository.getExams(map.get("xnd"), map.get("xqd"));
 //        return examDao.queryBuilder()
 //                .where(ExamDao.Properties.Year.eq(map.get("xnd")),
 //                        ExamDao.Properties.Term.eq(map.get("xqd")),

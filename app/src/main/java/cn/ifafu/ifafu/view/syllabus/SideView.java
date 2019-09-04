@@ -122,6 +122,7 @@ public class SideView extends LinearLayout {
 
     public void setRowCount(int rowCount) {
         this.mRowCount = rowCount;
+        mRowItemHeight = 1F * mHeight / rowCount;
     }
 
     public void redraw() {

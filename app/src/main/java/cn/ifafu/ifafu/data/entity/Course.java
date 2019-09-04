@@ -143,10 +143,18 @@ public class Course implements ToCourse {
         this.local = local;
     }
 
+    public int getEndNode() {
+        return beginNode + nodeCnt - 1;
+    }
+
     @Override
     public CourseBase toCourseBase() {
         CourseBase courseBase = new CourseBase();
-        courseBase.setText(name + "\n@" + address);
+        if (address.isEmpty()) {
+            courseBase.setText(name);
+        } else {
+            courseBase.setText(name + "\n@" + address);
+        }
         courseBase.setBeginNode(beginNode);
         courseBase.setWeekday(weekday);
         courseBase.setNodeCnt(nodeCnt);
@@ -160,13 +168,13 @@ public class Course implements ToCourse {
         return "Course{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                ", teacher='" + teacher + '\'' +
+//                ", address='" + address + '\'' +
+//                ", teacher='" + teacher + '\'' +
                 ", weekday=" + DateUtils.getWeekdayCN(weekday) +
                 ", beginNode=" + beginNode +
                 ", nodeCnt=" + nodeCnt +
                 ", weekSet=" + weekSet +
-                ", color=" + color +
+//                ", color=" + color +
                 ", account='" + account + '\'' +
                 ", local=" + local +
                 '}';

@@ -173,8 +173,8 @@ public class SmoothCheckBox extends View implements Checkable {
     }
 
     /**
-     * checked with animation
-     * @param checked checked
+     * baseValue with animation
+     * @param checked baseValue
      * @param animate change with animation
      */
     public void setChecked(boolean checked, boolean animate) {

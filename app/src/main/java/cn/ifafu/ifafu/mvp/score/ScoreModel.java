@@ -61,10 +61,10 @@ class ScoreModel extends BaseZFModel implements ScoreContract.Model {
         Log.d(TAG, year + "   " + term + "    " + user.getAccount());
         if (term.equals("全部")) {
             return Observable.fromCallable(() ->
-                    repository.getScore(year));
+                    repository.getScores(year));
         } else {
             return Observable.fromCallable(() ->
-                    repository.getScore(year, term));
+                    repository.getScores(year, term));
         }
     }
 
@@ -113,7 +113,7 @@ class ScoreModel extends BaseZFModel implements ScoreContract.Model {
 
     @Override
     public void delete(String year, String term) {
-        List<Score> scores = repository.getScore(year, term);
+        List<Score> scores = repository.getScores(year, term);
         repository.deleteScore(scores);
     }
 }

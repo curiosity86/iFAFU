@@ -1,28 +1,28 @@
 package cn.ifafu.ifafu.mvp.syllabus;
 
 import java.text.ParseException;
-import java.util.Calendar;
 import java.util.List;
 
 import cn.ifafu.ifafu.data.entity.Course;
+import cn.ifafu.ifafu.data.entity.SyllabusSetting;
+import cn.ifafu.ifafu.mvp.base.i.IView;
 import cn.ifafu.ifafu.mvp.base.i.IZFModel;
 import cn.ifafu.ifafu.mvp.base.i.IZFPresenter;
-import cn.ifafu.ifafu.mvp.base.i.IView;
-import cn.ifafu.ifafu.view.syllabus.data.DayOfWeek;
 import io.reactivex.Observable;
 
 class SyllabusContract {
 
     interface Presenter extends IZFPresenter {
+
+        void updateSyllabusSetting();
+
         /**
-         * 显示 完成Toast
-         * 静默更新课表，不强制刷新，除非数据库数据为空
+         * 静默更新课表，不强制刷新，除非数据库数据为空（显示 Toast）
          */
         void updateSyllabusLocal();
 
         /**
-         * 显示 加载Progress 与 完成Toast
-         * 强制刷新
+         * 强制刷新（显示 Progress 与 Toast）
          */
         void updateSyllabusNet();
 
@@ -34,27 +34,9 @@ class SyllabusContract {
 
     interface Model extends IZFModel {
 
-        String getFirstStudyDay();
-
-        /**
-         * @return 每周的首日 {@link Calendar}
-         */
-        int getFirstDayOfWeek();
-
-        /**
-         * @return 上课时间
-         */
-        int[] getCourseBeginTime();
-
-        /**
-         * @return 课程表列数
-         */
-        int getRowCount();
+        SyllabusSetting getSyllabusSetting();
 
         int getCurrentWeek() throws ParseException;
-
-        //一节课时间，单位分钟
-        int getOneNodeLength();
 
         /**
          * 从数据库获取所有课程
@@ -68,6 +50,13 @@ class SyllabusContract {
          */
         List<Course> getLocalCoursesFromDB();
 
+        /**
+         * 获取指定周指定星期的课程
+         * @param week 周数
+         * @param weekday 星期
+         * @return 课程
+         */
+        List<Course> getCoursesFromDB(int week, int weekday);
 
         /**
          * 获取网络课表。若获取成功，则清除数据库网络课表，并保存
@@ -86,39 +75,16 @@ class SyllabusContract {
         void clearOnlineCourses();
 
         void deleteCourse(Course course);
+
     }
 
     interface View extends IView {
 
-        void setFirstStudyDay(String firstStudyDay);
-
-        /**
-         * 设置课程表行数
-         * @param count 课程表行数
-         */
-        void setSyllabusRowCount(int count);
-
-        /**
-         * 设置上课时间
-         * @param times 上课时间
-         */
-        void setCourseBeginTime(String[] times);
-
-        /**
-         * 设置角落Text
-         */
-        void setCornerText(String cornerText);
-
-        /**
-         * 设置当前周
-         * @param week
-         */
-        void setCurrentWeek(int week);
+        void setSyllabusSetting(SyllabusSetting setting);
 
         void setSyllabusDate(List<Course> courses);
 
         void redrawSyllabus();
 
-        void setFirstDayOfWeek(@DayOfWeek int firstDayOfWeek);
     }
 }

@@ -15,8 +15,6 @@ import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.gyf.immersionbar.ImmersionBar;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -57,8 +55,6 @@ public class SyllabusItemActivity extends BaseActivity<SyllabusItemContract.Pres
     @BindView(R.id.et_course_teacher)
     EditText etCourseTeacher;
 
-    private final List<String> weekdays = Arrays.asList("周日", "周一", "周二", "周三", "周四", "周五", "周六");
-    private List<String> nodes = new ArrayList<>();
     private OptionsPickerView<String> timeOPV;
 
     private WeekItemAdapter weekAdapter;
@@ -91,7 +87,6 @@ public class SyllabusItemActivity extends BaseActivity<SyllabusItemContract.Pres
                     }
                     timeOPV.setSelectOptions(options1, options2, options3);
                     mPresenter.onTimeSelect(options1, options2, options3);
-                    setTimeText(options1, options2, options3);
                 })
                 .setOptionsSelectChangeListener((options1, options2, options3) -> {
                     if (options2 > options3) {
@@ -106,14 +101,9 @@ public class SyllabusItemActivity extends BaseActivity<SyllabusItemContract.Pres
                 .setTitleSize(13)
                 .build();
 
-        for (int i = 1; i <= 12; i++) {
-            nodes.add("第" + i + "节");
-        }
-        setTimeOPVOptions(weekdays, nodes, nodes);
     }
 
-    private void setTimeText(int weekday, int op2, int op3) {
-        String text = String.format("%s %s - %s", weekdays.get(weekday), nodes.get(op2), nodes.get(op3));
+    private void setTimeText(String text) {
         tvCourseTime.setText(text);
         etCourseTime.setText(text);
     }
@@ -136,7 +126,8 @@ public class SyllabusItemActivity extends BaseActivity<SyllabusItemContract.Pres
         }
     }
 
-    private void setTimeOPVOptions(List<String> op1, List<String> op2, List<String> op3) {
+    @Override
+    public void setTimeOPVOptions(List<String> op1, List<String> op2, List<String> op3) {
         timeOPV.setNPicker(op1, op2, op3);
     }
 
@@ -152,9 +143,9 @@ public class SyllabusItemActivity extends BaseActivity<SyllabusItemContract.Pres
     }
 
     @Override
-    public void setTimeOPVSelect(int op1, int op2, int op3) {
+    public void setTimeOPVSelect(int op1, int op2, int op3, String text) {
         timeOPV.setSelectOptions(op1, op2, op3);
-        setTimeText(op1, op2, op3);
+        setTimeText(text);
     }
 
     @Override

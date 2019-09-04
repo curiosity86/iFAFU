@@ -10,15 +10,18 @@ public class SyllabusSettingContract {
     interface View extends IView {
 
         void initRecycleView(SyllabusSetting setting);
-
     }
 
     public interface Presenter extends IPresenter {
 
+        void save(SyllabusSetting setting);
     }
 
     interface Model extends IModel {
+
         SyllabusSetting getSetting();
+
+        void save(SyllabusSetting setting);
     }
 
 }

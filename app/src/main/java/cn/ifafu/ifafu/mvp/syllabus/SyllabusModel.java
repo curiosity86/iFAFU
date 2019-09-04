@@ -2,7 +2,6 @@ package cn.ifafu.ifafu.mvp.syllabus;
 
 import android.content.Context;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,79 +11,54 @@ import java.util.List;
 import java.util.Locale;
 
 import cn.ifafu.ifafu.app.School;
-import cn.ifafu.ifafu.dao.CourseDao;
 import cn.ifafu.ifafu.data.entity.Course;
+import cn.ifafu.ifafu.data.entity.SyllabusSetting;
 import cn.ifafu.ifafu.data.entity.User;
 import cn.ifafu.ifafu.data.entity.ZhengFang;
 import cn.ifafu.ifafu.data.http.APIManager;
 import cn.ifafu.ifafu.data.http.parser.SyllabusParser;
-import cn.ifafu.ifafu.data.local.DaoManager;
 import cn.ifafu.ifafu.mvp.base.BaseZFModel;
 import io.reactivex.Observable;
 
 public class SyllabusModel extends BaseZFModel implements SyllabusContract.Model {
 
-    private final int firstDayOfWeek = Calendar.SUNDAY;
-
-    private final String firstStudyDay = "2019-09-01";
-
-    private final int mRowCount = 12;
-
     private final User user = repository.getUser();
-
-    private final int[][] courseBeginTime = new int[][]{
-            {800, 850, 955, 1045, 1135, 1400, 1450, 1550, 1640, 1825, 1915, 2005},
-            {830, 920, 1025, 1115, 1205, 1400, 1450, 1545, 1635, 1825, 1915, 2005}};
-
-    private CourseDao courseDao = DaoManager.getInstance().getDaoSession().getCourseDao();
 
     public SyllabusModel(Context context) {
         super(context);
     }
 
     @Override
-    public String getFirstStudyDay() {
-        return firstStudyDay;
+    public SyllabusSetting getSyllabusSetting() {
+        SyllabusSetting setting = repository.getSyllabusSetting();
+        if (setting == null) {
+            setting = new SyllabusSetting(repository.getUser().getAccount());
+            repository.saveSyllabusSetting(setting);
+        }
+        return setting;
     }
 
     @Override
-    public int getFirstDayOfWeek() {
-        return firstDayOfWeek;
-    }
-
-    @Override
-    public int[] getCourseBeginTime() {
-        return courseBeginTime[0];
-    }
-
-    @Override
-    public int getRowCount() {
-        return mRowCount;
-    }
-
-    @Override
-    public int getCurrentWeek() throws ParseException {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
-        Date firstStudyDate = format.parse(getFirstStudyDay());
-        Calendar calendar = Calendar.getInstance();
-        calendar.setFirstDayOfWeek(getFirstDayOfWeek());
-        int currentYearWeek = calendar.get(Calendar.WEEK_OF_YEAR);
-        calendar.setTime(firstStudyDate);
-        int firstYearWeek = calendar.get(Calendar.WEEK_OF_YEAR);
-        int nowWeek = currentYearWeek - firstYearWeek + 1;
-        return nowWeek > 0? nowWeek: -1;
-    }
-
-    @Override
-    public int getOneNodeLength() {
-        return 45;
+    public int getCurrentWeek() {
+        try {
+            SyllabusSetting setting = getSyllabusSetting();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+            Date firstStudyDate = format.parse(setting.getOpeningDay());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setFirstDayOfWeek(setting.getFirstDayOfWeek());
+            int currentYearWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+            calendar.setTime(firstStudyDate);
+            int firstYearWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+            int nowWeek = currentYearWeek - firstYearWeek + 1;
+            return nowWeek > 0? nowWeek: -1;
+        } catch (Exception e) {
+            return -1;
+        }
     }
 
     @Override
     public List<Course> getAllCoursesFromDB() {
-        return courseDao.queryBuilder()
-                .where(CourseDao.Properties.Account.eq(user.getAccount()))
-                .list();
+        return repository.getAllCourses();
     }
 
     @Override
@@ -98,45 +72,34 @@ public class SyllabusModel extends BaseZFModel implements SyllabusContract.Model
 
     @Override
     public void saveCourses(List<Course> courses) {
-        courseDao.insertOrReplaceInTx(courses);
+        repository.saveCourse(courses);
     }
 
     @Override
     public void clearOnlineCourses() {
-        List<Course> courses = getCourses(false);
-        courseDao.deleteInTx(courses);
+        List<Course> courses = repository.getCourses(false);
+        repository.deleteCourse(courses);
     }
 
     @Override
     public void deleteCourse(Course course) {
-        courseDao.delete(course);
+        repository.deleteCourse(course);
     }
 
     @Override
     public List<Course> getLocalCoursesFromDB() {
-        return getCourses(true);
+        return repository.getCourses(true);
     }
 
-    private List<Course> getCourses(boolean local) {
-        return courseDao.queryBuilder()
-                .where(CourseDao.Properties.Account.eq(user.getAccount()), CourseDao.Properties.Local.eq(local))
-                .list();
-    }
-
-    /**
-     * 获取指定周指定星期的课程
-     * @param week 周数
-     * @param weekday 星期
-     * @return 课程
-     */
+    @Override
     public List<Course> getCoursesFromDB(int week, int weekday) {
-        List<Course> toWeekList = new ArrayList<>();
+        List<Course> todayCourses = new ArrayList<>();
         for (Course course : getAllCoursesFromDB()) {
             if (course.getWeekSet().contains(week) && course.getWeekday() == weekday) {
-                toWeekList.add(course);
+                todayCourses.add(course);
             }
         }
-        return toWeekList;
+        return todayCourses;
     }
 
 }

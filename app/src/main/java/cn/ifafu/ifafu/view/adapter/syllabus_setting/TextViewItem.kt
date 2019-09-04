@@ -1,7 +1,8 @@
 package cn.ifafu.ifafu.view.adapter.syllabus_setting
 
 data class TextViewItem(
-        val id: Int,
         val title: String,
-        var subtitle: String
-): BaseSettingItem()
+        val subtitle: String,
+        val click: () -> Unit,
+        val longClick: () -> Unit
+): SettingItem()

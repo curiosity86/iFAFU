@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -17,16 +16,15 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import cn.ifafu.ifafu.util.ColorUtils;
 import cn.ifafu.ifafu.util.DensityUtils;
 import cn.ifafu.ifafu.view.syllabus.data.CourseBase;
 import cn.ifafu.ifafu.view.syllabus.data.ToCourse;
-import cn.ifafu.ifafu.util.ColorUtils;
 
 /**
  * Created by woolsen
@@ -61,7 +59,7 @@ public class CourseView extends FrameLayout {
     // 周的第一天
     private int firstDayOfWeek = Calendar.SUNDAY;
     // 课程周数对应的显示X轴偏移量
-    private int indexOfOffset = 6;
+    private int firstDayOfWeekOffset = 6;
 
     // 是否显示分割线
     private boolean mShowHorizontalLine = true;
@@ -77,15 +75,12 @@ public class CourseView extends FrameLayout {
     private OnCourseClickListener onCourseClickListener;
     private OnCourseLongClickListener onCourseLongClickListener;
 
-    private Map<CourseBase, View> mCourseViewMap = new TreeMap<>(new Comparator<CourseBase>() {
-        @Override
-        public int compare(CourseBase courseBase, CourseBase t1) {
-            int weekdayCompare = Integer.compare(courseBase.getWeekday(), t1.getWeekday());
-            if (weekdayCompare == 0) {
-                return Integer.compare(courseBase.getBeginNode(), t1.getBeginNode());
-            } else {
-                return weekdayCompare;
-            }
+    private Map<CourseBase, View> mCourseViewMap = new TreeMap<>((courseBase, t1) -> {
+        int weekdayCompare = Integer.compare(courseBase.getWeekday(), t1.getWeekday());
+        if (weekdayCompare == 0) {
+            return Integer.compare(courseBase.getBeginNode(), t1.getBeginNode());
+        } else {
+            return weekdayCompare;
         }
     });
 
@@ -111,29 +106,16 @@ public class CourseView extends FrameLayout {
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-//        if (!mFirstDraw) {
-//            mFirstDraw = true;
         mHeight = h;
         mWidth = w;
         mColItemWidth = 1F * mWidth / mColCount;
         mRowItemHeight = 1F * mHeight / mRowCount;
-//        l("onSizeChanged", "height:", mHeight, "width:", mWidth);
-//        l("height:", mHeight, "width:", mWidth, "ColItemWidth:", mColItemWidth, "RowItemHeight:", mRowItemHeight);
-//        }
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-//        initCourseItemView();
-//        l("onDraw", "height:", mHeight, "width:", mWidth);
     }
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
         drawSplitLine(canvas);
         super.dispatchDraw(canvas);
-//        l("dispatchDraw", "height:", mHeight, "width:", mWidth, " ",Boolean.valueOf(mFirstDraw).toString());
         if (mFirstDraw) {
             mFirstDraw = false;
             initCourseItemView();
@@ -146,8 +128,13 @@ public class CourseView extends FrameLayout {
 //        l("onMeasure", "width:", widthMeasureSpec & MEASURED_SIZE_MASK, "height:", heightMeasureSpec & MEASURED_SIZE_MASK);
     }
 
+    public int getFirstDayOfWeek() {
+        return firstDayOfWeek;
+    }
+
     public void setRowCount(int rowCount) {
         this.mRowCount = rowCount;
+        mRowItemHeight = 1F * mHeight / mRowCount;
     }
 
     /**
@@ -157,14 +144,13 @@ public class CourseView extends FrameLayout {
      */
     public void setFirstDayOfWeek(int firstDayOfWeek) {
         this.firstDayOfWeek = firstDayOfWeek;
-        indexOfOffset = (Calendar.SUNDAY - firstDayOfWeek + 6) % 7;
+        firstDayOfWeekOffset = (Calendar.SUNDAY - firstDayOfWeek + 6) % 7;
     }
 
     /**
      * 把数组中的数据全部添加到界面
      */
     private void initCourseItemView() {
-//        l("initCourseItemView", "height:", mHeight, "width:", mWidth);
         for (Map.Entry<CourseBase, View> entry : mCourseViewMap.entrySet()) {
             if (entry.getValue() == null && mHeight != 0) {
                 realAddCourseItemView(entry.getKey());
@@ -206,7 +192,7 @@ public class CourseView extends FrameLayout {
         View itemView = createItemView(course);
         LayoutParams params = new LayoutParams((int) (mColItemWidth + 1),
                 (int) (mRowItemHeight * course.getNodeCnt() + 1));
-        params.leftMargin = (int) (((course.getWeekday() + indexOfOffset) % 7) * mColItemWidth + 0.5);
+        params.leftMargin = (int) (((course.getWeekday() + firstDayOfWeekOffset) % 7) * mColItemWidth + 0.5);
         params.topMargin = (int) ((course.getBeginNode() - 1) * mRowItemHeight + 0.5);
         itemView.setLayoutParams(params);
         addView(course, itemView);
@@ -248,22 +234,16 @@ public class CourseView extends FrameLayout {
     }
 
     private void initEvent(View v, final CourseBase course) {
-        v.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onCourseClickListener != null) {
-                    onCourseClickListener.onClick(v, course);
-                }
+        v.setOnClickListener(v1 -> {
+            if (onCourseClickListener != null) {
+                onCourseClickListener.onClick(v1, course);
             }
         });
-        v.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (onCourseLongClickListener != null) {
-                    return onCourseLongClickListener.onLongClick(v, course);
-                }
-                return false;
+        v.setOnLongClickListener(v12 -> {
+            if (onCourseLongClickListener != null) {
+                return onCourseLongClickListener.onLongClick(v12, course);
             }
+            return false;
         });
     }
 
@@ -339,8 +319,6 @@ public class CourseView extends FrameLayout {
         for (Object s : msg) {
             sb.append(s).append(" ");
         }
-        Log.d("Syllabus", sb.toString());
     }
-
 
 }

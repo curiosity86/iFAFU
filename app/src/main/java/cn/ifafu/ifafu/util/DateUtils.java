@@ -22,6 +22,11 @@ public class DateUtils {
         return weekdays[weekday - 1];
     }
 
+    public static int getCurrentWeekday() {
+        Calendar c = Calendar.getInstance();
+        return c.get(Calendar.DAY_OF_WEEK);
+    }
+
     /**
      * 获取星期文本
      *

@@ -35,7 +35,7 @@
                 app:text_size="10sp" />
 
             <include
-                layout="@layout/include_weather"
+                layout="@layout/include_main_weather"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -43,7 +43,7 @@
                 android:layout_marginEnd="16dp" />
 
             <include
-                layout="@layout/include_next_course"
+                layout="@layout/include_main_next_course"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"

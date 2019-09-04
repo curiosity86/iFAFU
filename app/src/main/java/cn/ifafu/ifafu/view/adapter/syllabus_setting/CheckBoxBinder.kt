@@ -9,7 +9,7 @@ import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.view.custom.SmoothCheckBox
 import me.drakeet.multitype.ItemViewBinder
 
-class CheckBoxBinder(private val onCheckedListener: (CheckBoxItem, Boolean) -> Unit)
+class CheckBoxBinder
     : ItemViewBinder<CheckBoxItem, CheckBoxBinder.ViewHolder>() {
 
     override fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): ViewHolder {
@@ -20,7 +20,7 @@ class CheckBoxBinder(private val onCheckedListener: (CheckBoxItem, Boolean) -> U
         holder.tvTitle.text = item.title
         holder.checkBox.setChecked(item.checked, false)
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
-            onCheckedListener.invoke(item, isChecked)
+            item.listener.invoke(isChecked)
         }
     }
 

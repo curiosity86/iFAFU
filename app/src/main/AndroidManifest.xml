@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
     <uses-permission
         android:name="android.permission.READ_LOGS"
         tools:ignore="ProtectedPermissions" />
@@ -28,6 +29,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="ExportedService,GoogleAppIndexingWarning,UnusedAttribute">
         <activity android:name=".mvp.score_item.ScoreItemActivity" />
+
         <activity android:name=".mvp.other.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,32 +50,26 @@
         <activity android:name=".electricity.splash.ElecSplashActivity" />
         <activity android:name=".electricity.login.ElecLoginActivity" />
         <activity android:name=".electricity.main.ElecMainActivity" />
-
-<!--        <activity-->
-<!--            android:name="com.tencent.bugly.beta.ui.BetaActivity"-->
-<!--            android:configChanges="keyboardHidden|orientation|screenSize|locale"-->
-<!--            android:theme="@android:style/Theme.Translucent" />-->
-
-<!--        <receiver android:name=".widget.SyllabusProvider">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />-->
-<!--                <action android:name="android.appwidget.action.ONCLICK" />-->
-<!--                <action android:name="android.appwidget.action.AROUTER" />-->
-<!--            </intent-filter>-->
-<!--            <meta-data-->
-<!--                android:name="android.appwidget.provider"-->
-<!--                android:resource="@xml/widget_syllabus_info" />-->
-<!--        </receiver>-->
-
         <meta-data
             android:name="BUGLY_APP_CHANNEL"
-            android:value="${channel}" /> <!-- 配置APP渠道号 -->
+            android:value="${channel}" />
+
         <meta-data
             android:name="android.notch_support"
-            android:value="true" /> <!-- 适配小米（xiaomi）刘海屏 -->
+            android:value="true" />
         <meta-data
             android:name="notch.config"
-            android:value="portrait|landscape" /><!-- 适配华为（huawei）刘海屏 -->
+            android:value="portrait|landscape" />
+        <receiver android:name=".widget.SyllabusWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="ifafu.widget.syllabus.REFRESH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/syllabus_widget_info" />
+        </receiver>
     </application>
 
 </manifest>

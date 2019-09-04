@@ -13,6 +13,16 @@ public class SyllabusSettingModel extends BaseZFModel implements SyllabusSetting
 
     @Override
     public SyllabusSetting getSetting() {
-        return repository.getSyllabusSetting();
+        SyllabusSetting setting = repository.getSyllabusSetting();
+        if (setting == null) {
+            setting = new SyllabusSetting(repository.getUser().getAccount());
+            repository.saveSyllabusSetting(setting);
+        }
+        return setting;
+    }
+
+    @Override
+    public void save(SyllabusSetting setting) {
+        repository.saveSyllabusSetting(setting);
     }
 }

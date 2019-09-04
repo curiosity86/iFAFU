@@ -15,7 +15,9 @@ public interface Repository {
 
     void saveUser(User user);
 
-    List<Course> getCourse();
+    List<Course> getAllCourses();
+
+    List<Course> getCourses(boolean local);
 
     Course getCourseById(long id);
 
@@ -23,25 +25,32 @@ public interface Repository {
 
     void saveCourse(List<Course> courses);
 
+    void deleteCourse(List<Course> courses);
+
+    void deleteCourse(Course course);
+
     SyllabusSetting getSyllabusSetting();
 
-    List<Score> getScore();
+    void saveSyllabusSetting(SyllabusSetting syllabusSetting);
 
-    List<Score> getScore(String year);
+    List<Score> getAllScores();
 
-    List<Score> getScore(String year, String term);
+    List<Score> getScores(String year);
+
+    List<Score> getScores(String year, String term);
 
     void deleteScore(List<Score> scores);
 
     void saveScore(List<Score> scores);
 
-    List<Exam> getExam();
+    List<Exam> getAllExams();
 
-    List<Exam> getExam(String year, String term);
+    List<Exam> getExams(String year, String term);
 
     void saveExam(List<Exam> exams);
 
     Token getToken(String account);
 
     void saveToken(Token token);
+
 }

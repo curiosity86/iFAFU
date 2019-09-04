@@ -4,8 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Course;
+import cn.ifafu.ifafu.data.entity.SyllabusSetting;
 import cn.ifafu.ifafu.mvp.base.BasePresenter;
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusActivity;
 import cn.ifafu.ifafu.util.RxUtils;
@@ -20,16 +25,25 @@ class SyllabusItemPresenter extends BasePresenter<SyllabusItemContract.View, Syl
 
     private Course course;
 
+    private final List<String> weekdays = Arrays.asList("周日", "周一", "周二", "周三", "周四", "周五", "周六");
+    private final List<String> nodes = new ArrayList<>();
+
     SyllabusItemPresenter(SyllabusItemContract.View view) {
         super(view, new SyllabusItemModel(view.getContext()));
     }
 
     @Override
     public void onStart() {
+        SyllabusSetting setting = mModel.getSyllabusSetting();
+        for (int i = 1; i <= setting.getNodeCnt(); i++) {
+            nodes.add("第" + i + "节");
+        }
+        mView.setTimeOPVOptions(weekdays, nodes, nodes);
+
         Intent intent = mView.getActivity().getIntent();
         // 1 表示通过添加按钮打开Activity
         come_from = intent.getIntExtra("come_from", -1);
-        if (come_from == 1) {
+        if (come_from == SyllabusActivity.ADD) {
             mView.isEditMode(true);
         }
         // 获取跳转课程id
@@ -51,7 +65,7 @@ class SyllabusItemPresenter extends BasePresenter<SyllabusItemContract.View, Syl
         mView.setTeacherText(course.getTeacher());
         mView.setAddressText(course.getAddress());
         mView.setWeekData(course.getWeekSet());
-        mView.setTimeOPVSelect(course.getWeekday() - 1, course.getBeginNode() - 1,
+        onTimeSelect(course.getWeekday() - 1, course.getBeginNode() - 1,
                 course.getBeginNode() + course.getNodeCnt() - 2);
     }
 
@@ -69,7 +83,7 @@ class SyllabusItemPresenter extends BasePresenter<SyllabusItemContract.View, Syl
                     if (name.isEmpty()) {
                         return R.string.input_course_name;
                     }
-                    if (course.getNodeCnt() == 0) {
+                    if (course.getNodeCnt() <= 0) {
                         return R.string.select_course_time;
                     }
                     if (mView.getWeekData().isEmpty()) {
@@ -89,7 +103,9 @@ class SyllabusItemPresenter extends BasePresenter<SyllabusItemContract.View, Syl
                     mView.getActivity().setResult(resultCode);
                     mView.showMessage(stringRes);
                     if (come_from == SyllabusActivity.ADD) {
-                        mView.killSelf();
+                        if (stringRes == R.string.save_successful) {
+                            mView.killSelf();
+                        }
                     } else {
                         resetView(course);
                         mView.isEditMode(false);
@@ -116,5 +132,7 @@ class SyllabusItemPresenter extends BasePresenter<SyllabusItemContract.View, Syl
         course.setWeekday(options1 + 1);
         course.setBeginNode(options2 + 1);
         course.setNodeCnt(options3 - options2 + 1);
+        String text = String.format("%s %s - %s", weekdays.get(options1), nodes.get(options2), nodes.get(options3));
+        mView.setTimeOPVSelect(options1, options2, options3, text);
     }
 }

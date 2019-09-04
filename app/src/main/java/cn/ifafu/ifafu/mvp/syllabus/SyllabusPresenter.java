@@ -2,19 +2,12 @@ package cn.ifafu.ifafu.mvp.syllabus;
 
 import android.annotation.SuppressLint;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.mvp.base.BaseZFPresenter;
-import cn.ifafu.ifafu.util.DateUtils;
 import cn.ifafu.ifafu.util.RxUtils;
-import cn.ifafu.ifafu.view.syllabus.data.DayOfWeek;
 import io.reactivex.Observable;
 
 public class SyllabusPresenter extends BaseZFPresenter<SyllabusContract.View, SyllabusContract.Model>
@@ -27,27 +20,7 @@ public class SyllabusPresenter extends BaseZFPresenter<SyllabusContract.View, Sy
     @SuppressLint("DefaultLocale")
     @Override
     public void onStart() {
-        int count = mModel.getRowCount();
-        mView.setSyllabusRowCount(mModel.getRowCount());
-        String[] strTime = new String[count];
-        int[] intTime = mModel.getCourseBeginTime();
-        for (int i = 0; i < strTime.length && i < intTime.length; i++) {
-            strTime[i] = String.format("%d:%02d", intTime[i] / 100, intTime[i] % 100);
-        }
-        mView.setCourseBeginTime(strTime);
-        String firstStudyDay = mModel.getFirstStudyDay();
-        mView.setFirstStudyDay(firstStudyDay);
-        // 设置每周首日
-        int firstDayOfWeek = mModel.getFirstDayOfWeek();
-        mView.setFirstDayOfWeek(firstDayOfWeek);
-        // 设置当前周
-        try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
-            Date firstStudyDate = format.parse(firstStudyDay);
-            mView.setCurrentWeek(DateUtils.getCurrentWeek(firstStudyDate, firstDayOfWeek));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        mView.setSyllabusSetting(mModel.getSyllabusSetting());
         updateSyllabusLocal();
     }
 
@@ -63,6 +36,11 @@ public class SyllabusPresenter extends BaseZFPresenter<SyllabusContract.View, Sy
                     mView.showMessage(R.string.syllabus_refresh_success);
                 }, this::onError)
         );
+    }
+
+    @Override
+    public void updateSyllabusSetting() {
+        mView.setSyllabusSetting(mModel.getSyllabusSetting());
     }
 
     @Override

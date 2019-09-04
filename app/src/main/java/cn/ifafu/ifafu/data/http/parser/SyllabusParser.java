@@ -24,6 +24,9 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import okhttp3.ResponseBody;
 
+/**
+ * Created by woolsen on 19/8/1
+ */
 public class SyllabusParser extends BaseParser<List<Course>> {
 
     private String[] weekdayCN = {"周日", "周一", "周二", "周三", "周四", "周五", "周六"};
