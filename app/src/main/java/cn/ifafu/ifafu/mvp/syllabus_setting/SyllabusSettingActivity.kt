@@ -58,6 +58,9 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(
                 SeekBarItem("总共周数", setting.weekCnt, "周", 18, 24) {
                     setting.weekCnt = it
                 },
+                SeekBarItem("课程字体大小", setting.textSize, "sp", 8, 18) {
+                    setting.textSize = it
+                },
                 CheckBoxItem("周日为每周第一天", setting.firstDayOfWeek == Calendar.SUNDAY) {
                     if (it) {
                         setting.firstDayOfWeek = Calendar.SUNDAY

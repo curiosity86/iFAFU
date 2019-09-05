@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.List;
 
 import cn.ifafu.ifafu.data.entity.Course;
+import cn.ifafu.ifafu.data.entity.NextCourse;
 import cn.ifafu.ifafu.data.entity.SyllabusSetting;
 import cn.ifafu.ifafu.mvp.base.i.IView;
 import cn.ifafu.ifafu.mvp.base.i.IZFModel;
@@ -33,6 +34,8 @@ class SyllabusContract {
     }
 
     interface Model extends IZFModel {
+
+        NextCourse getNextCourse();
 
         SyllabusSetting getSyllabusSetting();
 

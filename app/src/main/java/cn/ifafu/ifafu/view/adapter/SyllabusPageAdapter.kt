@@ -34,6 +34,7 @@ class SyllabusPageAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         val view = holder.syllabusView
 
+        view.setCourseTextSize(setting.textSize)
         view.setRowCount(setting.nodeCnt)
         view.setBeginTimeTexts(setting.beginTimeText)
         view.setFirstDayOfWeek(setting.firstDayOfWeek)

@@ -31,7 +31,7 @@ public class SyllabusSetting {
 
     private String background;
 
-    private float textSize = 0F;
+    private int textSize = 12;
 
     @Transient
     private int[] beginTime = new int[]{800, 850, 955, 1045, 1135, 1400, 1450, 1550, 1640, 1825, 1915, 2005};
@@ -40,9 +40,9 @@ public class SyllabusSetting {
         this.account = account;
     }
 
-    @Generated(hash = 1096443212)
+    @Generated(hash = 1620739694)
     public SyllabusSetting(String account, int weekCnt, int nodeCnt, boolean showSaturday, boolean showSunday,
-            String openingDay, int nodeLength, int firstDayOfWeek, String background, float textSize) {
+            String openingDay, int nodeLength, int firstDayOfWeek, String background, int textSize) {
         this.account = account;
         this.weekCnt = weekCnt;
         this.nodeCnt = nodeCnt;
@@ -156,11 +156,11 @@ public class SyllabusSetting {
         this.background = background;
     }
 
-    public float getTextSize() {
+    public int getTextSize() {
         return this.textSize;
     }
 
-    public void setTextSize(float textSize) {
+    public void setTextSize(int textSize) {
         this.textSize = textSize;
     }
 }

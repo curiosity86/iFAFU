@@ -2,7 +2,6 @@ package cn.ifafu.ifafu.mvp.main;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.util.Log;
 import android.webkit.CookieManager;
 
 import com.tencent.bugly.beta.Beta;
@@ -10,25 +9,20 @@ import com.tencent.bugly.beta.UpgradeInfo;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import cn.ifafu.ifafu.BuildConfig;
 import cn.ifafu.ifafu.R;
-import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.data.entity.Exam;
 import cn.ifafu.ifafu.data.entity.Holiday;
-import cn.ifafu.ifafu.data.entity.SyllabusSetting;
+import cn.ifafu.ifafu.data.entity.NextCourse;
 import cn.ifafu.ifafu.mvp.base.BaseZFPresenter;
 import cn.ifafu.ifafu.mvp.exam.ExamModel;
 import cn.ifafu.ifafu.mvp.login.LoginActivity;
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusModel;
-import cn.ifafu.ifafu.util.DateUtils;
 import cn.ifafu.ifafu.util.GlobalLib;
 import cn.ifafu.ifafu.util.RxUtils;
 import cn.ifafu.ifafu.view.timeline.TimeAxis;
@@ -104,81 +98,88 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
         mCompDisposable.add(Observable
                 .fromCallable(() -> {
                     SyllabusModel model = new SyllabusModel(mView.getContext());
-                    SyllabusSetting setting = model.getSyllabusSetting();
-                    Map<String, String> map = new HashMap<>();
-
-                    int currentWeek = model.getCurrentWeek();
-                    if (currentWeek == -1) {
-                        map.put("title", "放假中");
-                        return map;
-                    }
-
-                    List<Course> courses = model.getAllCoursesFromDB();
-                    if (courses.isEmpty()) {
-                        map.put("title", "暂无课程信息");
-                        return map;
-                    }
-
-                    int currentWeekday = DateUtils.getCurrentDayOfWeek();
-                    List<Course> todayCourses = model.getCoursesFromDB(currentWeek, currentWeekday);
-                    Collections.sort(todayCourses, (o1, o2) -> Integer.compare(o1.getBeginNode(), o2.getBeginNode()));
-                    if (todayCourses.isEmpty()) {
-                        map.put("title", "今天没课呀！！");
-                        return map;
-                    }
-
-                    //计算下一节是第几节课
-                    int[] intTime = setting.getBeginTime();
-                    Calendar c = Calendar.getInstance();
-                    int now = c.get(Calendar.HOUR_OF_DAY) * 100 + c.get(Calendar.MINUTE);
-                    int nextNode = 9999;
-                    for (int i = 0; i < intTime.length; i++) {
-                        if (now < intTime[i]) {
-                            nextNode = i;
-                            break;
-                        }
-                    }
-                    Log.d(TAG, "updateCourseView => nextNode: " + nextNode + "    now: " + now);
-                    StringBuilder sb = new StringBuilder();
-                    for (Course co : todayCourses) {
-                        sb.append(co.getName()).append(", ");
-                    }
-                    Log.d(TAG, "course: " + "[" + sb + "]");
-
-                    Course nextCourse = null;
-                    for (Course course: todayCourses) {
-                        if (course.getBeginNode() > nextNode) {
-                            nextCourse = course;
-                            break;
-                        }
-                    }
-                    if (nextCourse != null) {
-                        map.put("title", "下一节课：");
-                        map.put("name", nextCourse.getName());
-                        map.put("address", nextCourse.getAddress());
-                        int length = setting.getNodeLength();
-                        int intStartTime = intTime[nextCourse.getBeginNode() - 1];
-                        int intEndTime = intTime[nextCourse.getBeginNode() + nextCourse.getNodeCnt() - 2];
-                        if (intEndTime % 100 + length >= 60) {
-                            intEndTime = intEndTime + 100 - (intEndTime % 100) + ((intEndTime % 100 + length) % 60);
-                        }
-                        map.put("time", String.format("%d:%02d-%d:%02d",
-                                intStartTime / 100,
-                                intStartTime % 100,
-                                intEndTime / 100,
-                                intEndTime % 100));
-                    } else {
-                        map.put("title", "今天课上完啦！！");
-                    }
-                    return map;
+                    NextCourse next = model.getNextCourse();
+//                    SyllabusSetting setting = model.getSyllabusSetting();
+//                    Map<String, String> map = new HashMap<>();
+//
+//                    int currentWeek = model.getCurrentWeek();
+//                    if (currentWeek == -1) {
+//                        map.put("title", "放假中");
+//                        return map;
+//                    }
+//
+//                    List<Course> courses = model.getAllCoursesFromDB();
+//                    if (courses.isEmpty()) {
+//                        map.put("title", "暂无课程信息");
+//                        return map;
+//                    }
+//
+//                    int currentWeekday = DateUtils.getCurrentDayOfWeek();
+//                    List<Course> todayCourses = model.getCoursesFromDB(currentWeek, currentWeekday);
+//                    Collections.sort(todayCourses, (o1, o2) -> Integer.compare(o1.getBeginNode(), o2.getBeginNode()));
+//                    if (todayCourses.isEmpty()) {
+//                        map.put("title", "今天没课呀！！");
+//                        return map;
+//                    }
+//
+//                    //计算下一节是第几节课
+//                    int[] intTime = setting.getBeginTime();
+//                    Calendar c = Calendar.getInstance();
+//                    int now = c.get(Calendar.HOUR_OF_DAY) * 100 + c.get(Calendar.MINUTE);
+//                    int nextNode = 9999;
+//                    for (int i = 0; i < intTime.length; i++) {
+//                        if (now < intTime[i]) {
+//                            nextNode = i;
+//                            break;
+//                        }
+//                    }
+//                    Log.d(TAG, "updateCourseView => nextNode: " + nextNode + "    now: " + now);
+//                    StringBuilder sb = new StringBuilder();
+//                    for (Course co : todayCourses) {
+//                        sb.append(co.getName()).append(", ");
+//                    }
+//                    Log.d(TAG, "course: " + "[" + sb + "]");
+//
+//                    Course nextCourse = null;
+//                    for (Course course: todayCourses) {
+//                        if (course.getBeginNode() > nextNode) {
+//                            nextCourse = course;
+//                            break;
+//                        }
+//                    }
+//                    if (nextCourse != null) {
+//                        map.put("title", "下一节课：");
+//                        map.put("name", nextCourse.getName());
+//                        map.put("address", nextCourse.getAddress());
+//                        int length = setting.getNodeLength();
+//                        int intStartTime = intTime[nextCourse.getBeginNode() - 1];
+//                        int intEndTime = intTime[nextCourse.getBeginNode() + nextCourse.getNodeCnt() - 2];
+//                        if (intEndTime % 100 + length >= 60) {
+//                            intEndTime = intEndTime + 100 - (intEndTime % 100) + ((intEndTime % 100 + length) % 60);
+//                        }
+//                        map.put("time", String.format("%d:%02d-%d:%02d",
+//                                intStartTime / 100,
+//                                intStartTime % 100,
+//                                intEndTime / 100,
+//                                intEndTime % 100));
+//                    } else {
+//                        map.put("title", "今天课上完啦！！");
+//                    }
+                    return next;
                 })
                 .compose(RxUtils.computationToMain())
-                .subscribe(map -> {
-                    String title = map.containsKey("title") ? map.get("title") : "No Data";
-                    String name = map.containsKey("name") ? map.get("name") : "";
-                    String address = map.containsKey("address") ? map.get("address") : "";
-                    String time = map.containsKey("time") ? map.get("time") : "";
-                    mView.setCourseText(title, name, address, time);
+                .subscribe(next -> {
+                    switch (next.getResult()) {
+                        case NextCourse.IN_HOLIDAY:
+                        case NextCourse.EMPTY_DATA:
+                        case NextCourse.NO_TODAY_COURSE:
+                        case NextCourse.NO_NEXT_COURSE:
+                            mView.setCourseText(next.getTitle(), "", "", "");
+                            break;
+                        case NextCourse.HAS_NEXT_COURSE:
+                            mView.setCourseText(next.getTitle(),  next.getName(), next.getAddress(), next.getTimeText());
+                            break;
+                    }
                 }, throwable -> {
                     onError(throwable);
                     mView.setCourseText("获取课程信息失败", "", "", "");

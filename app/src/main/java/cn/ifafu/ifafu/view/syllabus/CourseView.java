@@ -137,6 +137,10 @@ public class CourseView extends FrameLayout {
         mRowItemHeight = 1F * mHeight / mRowCount;
     }
 
+    public void setTextSize(int textSize) {
+        mCourseTextSize = textSize;
+    }
+
     /**
      * 设置每周的第一天
      *
@@ -198,6 +202,7 @@ public class CourseView extends FrameLayout {
         addView(course, itemView);
     }
 
+    //创建CourseItemView
     private View createItemView(final CourseBase course) {
         final FrameLayout backgroundLayout = new FrameLayout(getContext());
         // 绘制TextView

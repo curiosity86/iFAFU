@@ -34,9 +34,8 @@
         android:id="@+id/tv_course_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/tv_course_address"
-        android:layout_toEndOf="@+id/tv_course_address"
-        android:layout_marginStart="12dp"
+        android:layout_below="@id/tv_course_address"
+        android:layout_marginStart="8dp"
         android:textColor="@color/white"
         android:textSize="13sp" />
 

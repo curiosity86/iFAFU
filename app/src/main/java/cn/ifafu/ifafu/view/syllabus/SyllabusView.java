@@ -48,6 +48,10 @@ public class SyllabusView extends LinearLayout {
         addView(rootView, lp);
     }
 
+    public void setCourseTextSize(int textSize) {
+        courseView.setTextSize(textSize);
+    }
+
     public void setCourseData(List<? extends ToCourse> courses) {
         courseView.setCourses(courses);
         courseViewChange = true;

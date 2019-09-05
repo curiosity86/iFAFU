@@ -105,5 +105,6 @@
     <!--Widget-->
     <string name="refresh_time_format">上次刷新时间：%s</string>
     <string name="next_course_format">下一节课：%s</string>
-    <string name="next_node_format">第%d~%d节 %s</string>
+    <string name="next_node_format">第%d节 %s</string>
+    <string name="click_to_refresh">点击此处刷新</string>
 </resources>

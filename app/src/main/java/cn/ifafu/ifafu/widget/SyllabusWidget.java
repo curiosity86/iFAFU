@@ -11,27 +11,18 @@ import android.net.Uri;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import cn.ifafu.ifafu.R;
-import cn.ifafu.ifafu.data.entity.Course;
-import cn.ifafu.ifafu.data.entity.SyllabusSetting;
+import cn.ifafu.ifafu.data.entity.NextCourse;
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusModel;
-import cn.ifafu.ifafu.util.DateUtils;
 
-/**
- * Implementation of App Widget functionality.
- */
 public class SyllabusWidget extends AppWidgetProvider {
 
     private static String ACTION_SYLLABUS_REFRESH = "ifafu.widget.syllabus.REFRESH";
-
-    private static List<Course> courses;
 
     private void updateSyllabusWidget(Context context, AppWidgetManager appWidgetManager,
                                       int appWidgetId) {
@@ -51,80 +42,31 @@ public class SyllabusWidget extends AppWidgetProvider {
     @SuppressLint("DefaultLocale")
     private void updateSyllabusWidget(Context context, RemoteViews remoteViews) {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss", Locale.CHINA);
+        SimpleDateFormat format1 = new SimpleDateFormat("MM月dd日 E", Locale.CHINA);
+        Date date = new Date();
         remoteViews.setOnClickPendingIntent(R.id.tv_refresh, getPendingIntent(context, R.id.tv_refresh));
-        remoteViews.setTextViewText(R.id.tv_refresh_time, context.getString(R.string.refresh_time_format, format.format(new Date())));
+        remoteViews.setTextViewText(R.id.tv_refresh_time, context.getString(R.string.refresh_time_format, format.format(date)));
 
         SyllabusModel model = new SyllabusModel(context);
-        SyllabusSetting setting = model.getSyllabusSetting();
-
-        int currentWeek = model.getCurrentWeek();
-        if (currentWeek == -1) {
-            isShowCourseInfo(remoteViews, false);
-            remoteViews.setTextViewText(R.id.tv_tip, "放假中");
-            return;
-        }
-
-        List<Course> courses = model.getAllCoursesFromDB();
-        if (courses.isEmpty()) {
-            isShowCourseInfo(remoteViews, false);
-            remoteViews.setTextViewText(R.id.tv_tip, "暂无课程信息");
-            return;
-        }
-
-        int currentWeekday = DateUtils.getCurrentDayOfWeek();
-        List<Course> todayCourses = model.getCoursesFromDB(currentWeek, currentWeekday);
-        Collections.sort(todayCourses, (o1, o2) -> Integer.compare(o1.getBeginNode(), o2.getBeginNode()));
-        if (todayCourses.isEmpty()) {
-            isShowCourseInfo(remoteViews, false);
-            remoteViews.setTextViewText(R.id.tv_tip, "今天没课呀！！");
-            return;
-        }
-
-        //计算下一节是第几节课
-        int[] intTime = setting.getBeginTime();
-        Calendar c = Calendar.getInstance();
-        int now = c.get(Calendar.HOUR_OF_DAY) * 100 + c.get(Calendar.MINUTE);
-        int nextNode = 9999;
-        for (int i = 0; i < intTime.length; i++) {
-            if (now < intTime[i]) {
-                nextNode = i;
+        NextCourse next = model.getNextCourse();
+        switch (next.getResult()) {
+            case NextCourse.IN_HOLIDAY:
+                remoteViews.setTextViewText(R.id.tv_time, String.format("%s 放假中", format1.format(date)));
+            case NextCourse.EMPTY_DATA:
+            case NextCourse.NO_TODAY_COURSE:
+            case NextCourse.NO_NEXT_COURSE:
+                isShowCourseInfo(remoteViews, false);
+                remoteViews.setTextViewText(R.id.tv_tip, next.getTitle());
                 break;
-            }
-        }
-        StringBuilder sb = new StringBuilder();
-        for (Course co : todayCourses) {
-            sb.append(co.getName()).append(", ");
-        }
-
-        Course nextCourse = null;
-        for (Course course: todayCourses) {
-            if (course.getBeginNode() > nextNode) {
-                nextCourse = course;
+            case NextCourse.HAS_NEXT_COURSE:
+                isShowCourseInfo(remoteViews, true);
+                remoteViews.setTextViewText(R.id.tv_course_name, next.getTitle() + next.getName());
+                remoteViews.setTextViewText(R.id.tv_course_address, next.getAddress());
+                remoteViews.setTextViewText(R.id.tv_course_node,
+                        MessageFormat.format("{0} {1}", next.getNodeText(), next.getTimeText()));
                 break;
-            }
         }
-        if (nextCourse != null) {
-            isShowCourseInfo(remoteViews, true);
-            remoteViews.setTextViewText(R.id.tv_course_name,
-                    context.getString(R.string.next_course_format, nextCourse.getName()));
-            remoteViews.setTextViewText(R.id.tv_course_address, nextCourse.getAddress());
-            int length = setting.getNodeLength();
-            int intStartTime = intTime[nextCourse.getBeginNode() - 1];
-            int intEndTime = intTime[nextCourse.getBeginNode() + nextCourse.getNodeCnt() - 2];
-            if (intEndTime % 100 + length >= 60) {
-                intEndTime = intEndTime + 100 - (intEndTime % 100) + ((intEndTime % 100 + length) % 60);
-            }
-            String time =  String.format("%d:%02d-%d:%02d",
-                    intStartTime / 100,
-                    intStartTime % 100,
-                    intEndTime / 100,
-                    intEndTime % 100);
-            remoteViews.setTextViewText(R.id.tv_course_node, context.getString(R.string.next_node_format,
-                            nextCourse.getBeginNode(), nextCourse.getEndNode(), time));
-        } else {
-            isShowCourseInfo(remoteViews, false);
-            remoteViews.setTextViewText(R.id.tv_tip, "今天课上完啦！！");
-        }
+        remoteViews.setTextViewText(R.id.tv_time, String.format("%s %s", format1.format(date), next.getWeekText()));
     }
 
     private void isShowCourseInfo(RemoteViews remoteViews, boolean isShow) {
