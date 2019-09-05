@@ -148,7 +148,7 @@ class ElecMainContract {
         /**
          * 充值电费
          */
-        Observable<String> queryElec(QueryData data);
+        Observable<String> queryElectricity(QueryData data);
 
         Observable<String> elecPay(QueryData data, String price);
 

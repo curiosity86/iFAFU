@@ -55,7 +55,7 @@ public class ElecMainModel extends BaseModel implements ElecMainContract.Model {
         return SPUtils.get("UserInfo").getString("account");
     }
 
-    public Observable<String> queryElec(QueryData data) {
+    public Observable<String> queryElectricity(QueryData data) {
         return Observable.fromCallable(() -> {
             ResponseBody responseBody = service.query(
                     data.toFiledMap(QueryData.Query.ROOMINFO)

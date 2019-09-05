@@ -127,7 +127,7 @@ public class QueryData {
     private String toJsonString() {
         return "{\"aid\":\"" + aid + "\"," +
                 "\"account\":\"" + account + "\"," +
-                "\"room\":{\"roomid\":\"" + room + "\",\"room\":\"" + account + "\"}," +
+                "\"room\":{\"roomid\":\"" + room + "\",\"room\":\"" + room + "\"}," +
                 "\"floor\":{\"floorid\":\"" + floorId + "\",\"floor\":\"" + floor + "\"}," +
                 "\"area\":{\"area\":\"" + areaId + "\",\"areaname\":\"" + area + "\"}," +
                 "\"building\":{\"buildingid\":\"" + buildingId + "\",\"building\":\"" + building + "\"}}";

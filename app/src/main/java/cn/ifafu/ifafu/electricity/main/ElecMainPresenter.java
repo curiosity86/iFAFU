@@ -277,7 +277,7 @@ public class ElecMainPresenter extends BasePresenter<ElecMainContract.View, Elec
         //设置楼层
         String floor = mView.getFloorText();
         if (!floor.isEmpty() && floorInfos != null) {
-            userQuery.setFloor(building);
+            userQuery.setFloor(floor);
             for (Selection floorInfo : floorInfos.getData()) {
                 if (floorInfo.getName().equals(floor)) {
                     userQuery.setFloorId(floorInfo.getId());
@@ -291,7 +291,7 @@ public class ElecMainPresenter extends BasePresenter<ElecMainContract.View, Elec
             mView.showMessage("请输入正确的宿舍号");
             return;
         }
-        mCompDisposable.add(mModel.queryElec(userQuery)
+        mCompDisposable.add(mModel.queryElectricity(userQuery)
                 .compose(RxUtils.ioToMain())
                 .doOnSubscribe(disposable -> mView.showLoading())
                 .doFinally(() -> mView.hideLoading())
