@@ -109,8 +109,8 @@ public class SyllabusModel extends BaseZFModel implements SyllabusContract.Model
             result.setName(nextCourse.getName());
             result.setAddress(nextCourse.getAddress());
             int length = setting.getNodeLength();
-            int intStartTime = intTime[courseNode];
-            int intEndTime = intTime[courseNode];
+            int intStartTime = intTime[courseNode - 1];
+            int intEndTime = intTime[courseNode - 1];
             if (intEndTime % 100 + length >= 60) {
                 intEndTime = intEndTime + 100 - (intEndTime % 100) + ((intEndTime % 100 + length) % 60);
             } else {
