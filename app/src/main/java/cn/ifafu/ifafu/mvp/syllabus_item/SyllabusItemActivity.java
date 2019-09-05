@@ -16,7 +16,7 @@ import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.gyf.immersionbar.ImmersionBar;
 
 import java.util.List;
-import java.util.Set;
+import java.util.TreeSet;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -132,12 +132,12 @@ public class SyllabusItemActivity extends BaseActivity<SyllabusItemContract.Pres
     }
 
     @Override
-    public Set<Integer> getWeekData() {
+    public TreeSet<Integer> getWeekData() {
         return weekAdapter.getWeekList();
     }
 
     @Override
-    public void setWeekData(Set<Integer> weekData) {
+    public void setWeekData(TreeSet<Integer> weekData) {
         weekAdapter.setWeekList(weekData);
         weekAdapter.notifyDataSetChanged();
     }

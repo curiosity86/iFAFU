@@ -94,6 +94,7 @@ class SyllabusItemPresenter extends BasePresenter<SyllabusItemContract.View, Syl
                     course.setName(name);
                     course.setTeacher(teacher);
                     course.setAddress(address);
+                    course.setWeekSet(mView.getWeekData());
                     mModel.save(course);
                     resultCode = Activity.RESULT_OK;
                     return R.string.save_successful;

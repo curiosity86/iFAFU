@@ -1,7 +1,7 @@
 package cn.ifafu.ifafu.mvp.syllabus_item;
 
 import java.util.List;
-import java.util.Set;
+import java.util.TreeSet;
 
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.data.entity.SyllabusSetting;
@@ -19,7 +19,7 @@ class SyllabusItemContract {
 
         void setTimeOPVOptions(List<String> op1, List<String> op2, List<String> op3);
 
-        Set<Integer> getWeekData();
+        TreeSet<Integer> getWeekData();
 
         String getNameText();
 
@@ -33,7 +33,7 @@ class SyllabusItemContract {
 
         void setTeacherText(String teacher);
 
-        void setWeekData(Set<Integer> weekData);
+        void setWeekData(TreeSet<Integer> weekData);
     }
 
     interface Presenter extends IPresenter {
