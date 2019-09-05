@@ -26,105 +26,91 @@ public class ScoreParser extends BaseParser<List<Score>> {
         this.schoolCode = user.getSchoolCode();
     }
 
-    public List<Score> parse(String html) {
-        List<Score> scoreList = null;
-        if (schoolCode == School.FAFU) {
-            scoreList = getScoresFAFU(html);
-        } else if (schoolCode == School.FAFU_JS) {
-            scoreList = getScoresFAFUJS(html);
-        }
-        if (scoreList != null) {
-            Collections.sort(scoreList, (o1, o2) -> o1.getId().compareTo(o2.getId()));
-        }
-        return scoreList;
-    }
-
-    private List<Score> getScoresFAFU(String html) {
-        Document document = Jsoup.parse(html);
-        Elements elementsTemp = document.select("table[id=\"DataGrid1\"]");
-        if (elementsTemp.size() == 0) {
-            return Collections.emptyList();
-        }
-        Elements elements = elementsTemp.get(0).getElementsByTag("tr");
+    private List<Score> parse(String html) {
         List<Score> list = new ArrayList<>();
-        for (int i = 1; i < elements.size(); i++) {
-            Elements eles = elements.get(i).children();
-            try {
-                Score score = new Score();
-                score.setYear(eles.get(0).text());
-                score.setTerm(eles.get(1).text());
-                score.setId(Long.parseLong(eles.get(2).text()));
-                score.setName(eles.get(3).text());
-                score.setNature(eles.get(4).text());
-                score.setAttr(eles.get(5).text());
-                score.setCredit(Float.parseFloat(eles.get(6).text()));
-                score.setScore(Float.parseFloat(eles.get(7).text()));
-                try {
-                    float makeupScore = Float.parseFloat(eles.get(8).text());
-                    score.setMakeupScore(makeupScore);
-                } catch (Exception ignored) {
-                    score.setMakeupScore(0F);
-                }
-                if (eles.get(9).text().isEmpty()) {
-                    score.setRestudy(false);
-                } else {
-                    score.setRestudy(true);
-                }
-                score.setInstitute(eles.get(10).text());
-                score.setGpa(Float.parseFloat(eles.get(11).text()));
-                score.setRemarks(eles.get(12).text());
-                score.setMakeupRemarks(eles.get(13).text());
-                score.setIsIESItem(!score.getNature().contains("任意选修") && !score.getName().contains("体育"));
-                score.setAccount(account);
-                list.add(score);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        Collections.sort(list, (o1, o2) -> o1.getId().compareTo(o2.getId()));
-        return list;
-    }
 
-    private List<Score> getScoresFAFUJS(String html) {
         Document document = Jsoup.parse(html);
         Elements elementsTemp = document.select("table[id=\"Datagrid1\"]");
         if (elementsTemp.size() == 0) {
             return Collections.emptyList();
         }
         Elements elements = elementsTemp.get(0).getElementsByTag("tr");
-        List<Score> list = new ArrayList<>();
-        for (int i = 1; i < elements.size(); i++) {
-            Elements eles = elements.get(i).children();
-            try {
-                Score score = new Score();
-                score.setYear(eles.get(0).text());
-                score.setTerm(eles.get(1).text());
-                score.setId(Long.parseLong(eles.get(2).text()));
-                score.setName(eles.get(3).text());
-                score.setNature(eles.get(4).text());
-                score.setAttr(eles.get(5).text());
-                score.setCredit(Float.parseFloat(eles.get(6).text()));
-                score.setGpa(Float.parseFloat(eles.get(7).text()));
-                score.setScore(Float.parseFloat(eles.get(8).text()));
+        if (schoolCode == School.FAFU) {
+            for (int i = 1; i < elements.size(); i++) {
                 try {
-                    float makeupScore = Float.parseFloat(eles.get(10).text());
-                    score.setMakeupScore(makeupScore);
-                } catch (Exception ignored) {
-                    score.setMakeupScore(0F);
+                    list.add(paresToScoreFAFU(elements.get(i).children()));
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                score.setInstitute(eles.get(12).text());
-                score.setRemarks(eles.get(12).text());
-                score.setMakeupRemarks(eles.get(13).text());
-
-                score.setIsIESItem(!score.getNature().contains("任意选修") && !score.getName().contains("体育"));
-
-                list.add(score);
-            } catch (Exception e) {
-                e.printStackTrace();
+            }
+        } else if (schoolCode == School.FAFU_JS) {
+            for (int i = 1; i < elements.size(); i++) {
+                try {
+                    list.add(paresToScoreFAFUJS(elements.get(i).children()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
+
         Collections.sort(list, (o1, o2) -> o1.getId().compareTo(o2.getId()));
+        for (Score score : list) {
+            score.setAccount(account);
+        }
         return list;
+    }
+
+    private Score paresToScoreFAFU(Elements eles) {
+        Score score = new Score();
+        score.setYear(eles.get(0).text());
+        score.setTerm(eles.get(1).text());
+        score.setId(Long.parseLong(eles.get(2).text()));
+        score.setName(eles.get(3).text());
+        score.setNature(eles.get(4).text());
+        score.setAttr(eles.get(5).text());
+        score.setCredit(Float.parseFloat(eles.get(6).text()));
+        score.setScore(Float.parseFloat(eles.get(7).text()));
+        try {
+            float makeupScore = Float.parseFloat(eles.get(8).text());
+            score.setMakeupScore(makeupScore);
+        } catch (Exception ignored) {
+            score.setMakeupScore(0F);
+        }
+        if (!eles.get(9).text().isEmpty()) {
+            score.setRestudy(false);
+        } else {
+            score.setRestudy(true);
+        }
+        score.setInstitute(eles.get(10).text());
+        score.setGpa(Float.parseFloat(eles.get(11).text()));
+        score.setRemarks(eles.get(12).text());
+        score.setMakeupRemarks(eles.get(13).text());
+        score.setIsIESItem(!score.getNature().contains("任意选修") && !score.getName().contains("体育"));
+        return score;
+    }
+
+    private Score paresToScoreFAFUJS(Elements eles) {
+        Score score = new Score();
+        score.setYear(eles.get(0).text());
+        score.setTerm(eles.get(1).text());
+        score.setId(Long.parseLong(eles.get(2).text()));
+        score.setName(eles.get(3).text());
+        score.setNature(eles.get(4).text());
+        score.setAttr(eles.get(5).text());
+        score.setCredit(Float.parseFloat(eles.get(6).text()));
+        score.setGpa(Float.parseFloat(eles.get(7).text()));
+        score.setScore(Float.parseFloat(eles.get(8).text()));
+        try {
+            float makeupScore = Float.parseFloat(eles.get(10).text());
+            score.setMakeupScore(makeupScore);
+        } catch (Exception ignored) {
+            score.setMakeupScore(0F);
+        }
+        score.setInstitute(eles.get(12).text());
+        score.setRemarks(eles.get(13).text());
+        score.setMakeupRemarks(eles.get(14).text());
+        score.setIsIESItem(!score.getNature().contains("任意选修") && !score.getName().contains("体育"));
+        return score;
     }
 
     @Override
