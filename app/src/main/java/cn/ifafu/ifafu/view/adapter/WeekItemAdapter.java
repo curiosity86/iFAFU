@@ -12,7 +12,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.Set;
 import java.util.TreeSet;
 
 import cn.ifafu.ifafu.R;
@@ -21,7 +20,7 @@ import cn.ifafu.ifafu.util.DensityUtils;
 public class WeekItemAdapter extends RecyclerView.Adapter<WeekItemAdapter.VH> {
 
     private Context context;
-    private Set<Integer> weekList;
+    private TreeSet<Integer> weekList;
     private OnItemClickListener listener;
 
     public boolean EDIT_MODE = false;
@@ -31,7 +30,7 @@ public class WeekItemAdapter extends RecyclerView.Adapter<WeekItemAdapter.VH> {
         weekList = new TreeSet<>();
     }
 
-    public WeekItemAdapter(Context context, Set<Integer> weekList) {
+    public WeekItemAdapter(Context context, TreeSet<Integer> weekList) {
         this.context = context;
         this.weekList = weekList;
     }
@@ -79,11 +78,11 @@ public class WeekItemAdapter extends RecyclerView.Adapter<WeekItemAdapter.VH> {
         return 24;
     }
 
-    public Set<Integer> getWeekList() {
+    public TreeSet<Integer> getWeekList() {
         return weekList;
     }
 
-    public void setWeekList(Set<Integer> weekList) {
+    public void setWeekList(TreeSet<Integer> weekList) {
         this.weekList = weekList;
     }
 

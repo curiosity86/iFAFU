@@ -93,6 +93,16 @@ public class SyllabusView extends LinearLayout {
         dateViewChange = true;
     }
 
+    public void setShowHorizontalDivider(boolean isShow) {
+        sideView.setShowHorizontalDivider(isShow);
+        courseView.setShowHorizontalDivider(isShow);
+    }
+
+    public void setShowVerticalDivider(boolean isShow) {
+        dateView.setShowVerticalDivider(isShow);
+        courseView.setShowVerticalDivider(isShow);
+    }
+
     public void redraw() {
         if (courseViewChange) {
             courseView.redraw();

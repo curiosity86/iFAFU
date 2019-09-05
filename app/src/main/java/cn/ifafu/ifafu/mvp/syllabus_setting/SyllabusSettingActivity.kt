@@ -68,6 +68,15 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(
                         setting.firstDayOfWeek = Calendar.MONDAY
                     }
                 },
+                CheckBoxItem("显示水平分割线", setting.showHorizontalLine) {
+                    setting.showHorizontalLine = it
+                },
+                CheckBoxItem("显示垂直分割线", setting.showVerticalLine) {
+                    setting.showVerticalLine = it
+                },
+                CheckBoxItem("显示上课时间", setting.showBeginTimeText) {
+                    setting.showBeginTimeText = it
+                },
                 TextViewItem("课表背景", "长按重置为默认背景", {
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)

@@ -23,6 +23,12 @@ public class SyllabusSetting {
 
     private boolean showSunday = true; //显示周日
 
+    private boolean showBeginTimeText = true; //显示侧边栏时间
+
+    private boolean showHorizontalLine = true; //显示水平分割线
+
+    private boolean showVerticalLine = true; //显示竖直分割线
+
     private String openingDay = "2019-09-01";
 
     private int nodeLength = 45;
@@ -40,14 +46,18 @@ public class SyllabusSetting {
         this.account = account;
     }
 
-    @Generated(hash = 1620739694)
+    @Generated(hash = 145296264)
     public SyllabusSetting(String account, int weekCnt, int nodeCnt, boolean showSaturday, boolean showSunday,
-            String openingDay, int nodeLength, int firstDayOfWeek, String background, int textSize) {
+            boolean showBeginTimeText, boolean showHorizontalLine, boolean showVerticalLine, String openingDay,
+            int nodeLength, int firstDayOfWeek, String background, int textSize) {
         this.account = account;
         this.weekCnt = weekCnt;
         this.nodeCnt = nodeCnt;
         this.showSaturday = showSaturday;
         this.showSunday = showSunday;
+        this.showBeginTimeText = showBeginTimeText;
+        this.showHorizontalLine = showHorizontalLine;
+        this.showVerticalLine = showVerticalLine;
         this.openingDay = openingDay;
         this.nodeLength = nodeLength;
         this.firstDayOfWeek = firstDayOfWeek;
@@ -162,5 +172,29 @@ public class SyllabusSetting {
 
     public void setTextSize(int textSize) {
         this.textSize = textSize;
+    }
+
+    public boolean getShowBeginTimeText() {
+        return this.showBeginTimeText;
+    }
+
+    public void setShowBeginTimeText(boolean showBeginTimeText) {
+        this.showBeginTimeText = showBeginTimeText;
+    }
+
+    public boolean getShowHorizontalLine() {
+        return this.showHorizontalLine;
+    }
+
+    public void setShowHorizontalLine(boolean showHorizontalLine) {
+        this.showHorizontalLine = showHorizontalLine;
+    }
+
+    public boolean getShowVerticalLine() {
+        return this.showVerticalLine;
+    }
+
+    public void setShowVerticalLine(boolean showVerticalLine) {
+        this.showVerticalLine = showVerticalLine;
     }
 }

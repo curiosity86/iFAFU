@@ -32,7 +32,7 @@ public class DateView extends LinearLayout {
     private int mColCount = 7;
 
     // 是否显示分割线
-    private boolean mShowVerticalLine = true;
+    private boolean mShowVerticalDivider = true;
     // 绘制分割线
     private Paint mLinePaint;
     private Path mLinePath = new Path();
@@ -132,7 +132,7 @@ public class DateView extends LinearLayout {
 
     private void drawSplitLine(Canvas canvas) {
         //垂直分割线
-        if (mShowVerticalLine) {
+        if (mShowVerticalDivider) {
             for (int i = 0; i <= mColCount; i++) {
                 mLinePath.reset();
                 mLinePath.moveTo((int) (i * mColItemWidth + 0.5F), 0);
@@ -140,6 +140,10 @@ public class DateView extends LinearLayout {
                 canvas.drawPath(mLinePath, mLinePaint);
             }
         }
+    }
+
+    public void setShowVerticalDivider(boolean isShow) {
+        mShowVerticalDivider = isShow;
     }
 
     /**

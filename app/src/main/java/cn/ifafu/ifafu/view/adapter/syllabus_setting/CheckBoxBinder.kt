@@ -19,7 +19,12 @@ class CheckBoxBinder
     override fun onBindViewHolder(holder: ViewHolder, item: CheckBoxItem) {
         holder.tvTitle.text = item.title
         holder.checkBox.setChecked(item.checked, false)
-        holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
+        holder.itemView.setOnClickListener {
+            holder.checkBox.isChecked = !holder.checkBox.isChecked
+            holder.checkBox.setChecked(holder.checkBox.isChecked, true)
+            item.listener.invoke(holder.checkBox.isChecked)
+        }
+        holder.checkBox.setOnCheckedChangeListener { checkBox, isChecked ->
             item.listener.invoke(isChecked)
         }
     }

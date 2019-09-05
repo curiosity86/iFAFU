@@ -62,8 +62,8 @@ public class CourseView extends FrameLayout {
     private int firstDayOfWeekOffset = 6;
 
     // 是否显示分割线
-    private boolean mShowHorizontalLine = true;
-    private boolean mShowVerticalLine = true;
+    private boolean mShowHorizontalDivider = true;
+    private boolean mShowVerticalDivider = true;
 
     // 绘制分割线
     private Paint mLinePaint;
@@ -126,6 +126,14 @@ public class CourseView extends FrameLayout {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 //        l("onMeasure", "width:", widthMeasureSpec & MEASURED_SIZE_MASK, "height:", heightMeasureSpec & MEASURED_SIZE_MASK);
+    }
+
+    public void setShowHorizontalDivider(boolean isShow) {
+        mShowHorizontalDivider = isShow;
+    }
+
+    public void setShowVerticalDivider(boolean isShow) {
+        mShowVerticalDivider = isShow;
     }
 
     public int getFirstDayOfWeek() {
@@ -278,7 +286,7 @@ public class CourseView extends FrameLayout {
 
     private void drawSplitLine(Canvas canvas) {
         //水平分割线
-        if (mShowHorizontalLine) {
+        if (mShowHorizontalDivider) {
             for (int i = 0; i <= mRowCount; i++) {
                 mLinePath.reset();
                 mLinePath.moveTo(0, (int) (i * mRowItemHeight + 0.5F));
@@ -288,7 +296,7 @@ public class CourseView extends FrameLayout {
         }
 
         //垂直分割线
-        if (mShowVerticalLine) {
+        if (mShowVerticalDivider) {
             for (int i = 0; i <= mColCount; i++) {
                 mLinePath.reset();
                 mLinePath.moveTo((int) (i * mColItemWidth + 0.5F), 0);

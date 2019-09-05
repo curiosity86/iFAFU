@@ -54,17 +54,6 @@
         android:textSize="12sp"
         android:visibility="gone" />
 
-    <!--    <TextView-->
-    <!--        android:id="@+id/tv_course_remain"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        android:layout_marginTop="2dp"-->
-    <!--        android:layout_weight="1"-->
-    <!--        android:drawableStart="@drawable/ic_remain"-->
-    <!--        android:gravity="center_vertical"-->
-    <!--        android:textColor="@color/black"-->
-    <!--        android:textSize="14sp" />-->
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="24dp">
@@ -74,7 +63,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="9月22日 周三 第1周"
             android:textColor="@color/black"
             android:textSize="12sp" />
 

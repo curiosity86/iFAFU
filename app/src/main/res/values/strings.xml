@@ -4,6 +4,7 @@
 
     <!--MVP Base-->
     <string name="net_error">网络错误，请检查网络设置</string>
+    <string name="net_timeout_error">服务器连接超时</string>
 
     <!--LoginActivity-->
     <string name="account">学号</string>

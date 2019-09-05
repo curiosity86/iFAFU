@@ -34,7 +34,7 @@ public class SideView extends LinearLayout {
     private final int nodeNumColor = 0xFF157EFB;
 
     // 是否显示分割线
-    private boolean mShowHorizontalLine = true;
+    private boolean mShowHorizontalDivider = true;
     // 绘制分割线
     private Paint mLinePaint;
     private Path mLinePath = new Path();
@@ -88,17 +88,18 @@ public class SideView extends LinearLayout {
             sideItems = new SideItem[mRowCount];
         }
         for (int i = 0; i < mRowCount; i++) {
-            String time = null;
-            if (timeTexts != null && i < timeTexts.length) {
-                time = timeTexts[i];
-            }
+            String time = timeTexts != null && i < timeTexts.length ? timeTexts[i] : null;
             realAddSideItemView(i, String.valueOf(i + 1), time);
         }
     }
 
+    public void setShowHorizontalDivider(boolean isShow) {
+        mShowHorizontalDivider = isShow;
+    }
+
     private void drawSplitLine(Canvas canvas) {
         //水平分割线
-        if (mShowHorizontalLine) {
+        if (mShowHorizontalDivider) {
             for (int i = 0; i <= mRowCount; i++) {
                 mLinePath.reset();
                 mLinePath.moveTo(0, (int) (i * mRowItemHeight + 0.5F));
