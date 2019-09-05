@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import androidx.collection.SimpleArrayMap;
 
+import java.util.Map;
 import java.util.Set;
 
 import cn.ifafu.ifafu.mvp.base.BaseApplication;
@@ -63,6 +64,10 @@ public class SPUtils {
 
     public boolean getBoolean(String key) {
         return sp.getBoolean(key, false);
+    }
+
+    public Map<String, ?> getAll() {
+        return sp.getAll();
     }
 
     public void remove(String key) {

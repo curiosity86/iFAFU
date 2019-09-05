@@ -1,5 +1,7 @@
 package cn.ifafu.ifafu.electricity.util;
 
+import cn.ifafu.ifafu.app.Constant;
+
 public class CookieUtils {
     public static String getCookie() {
         return getACookie("ASP.NET_SessionId") +
@@ -10,7 +12,7 @@ public class CookieUtils {
     }
 
     private static String getACookie(String name) {
-        String value = SPUtils.get("Cookie").getString(name);
+        String value = SPUtils.get(Constant.SP_COOKIE + "_Elec").getString(name);
         if (!value.isEmpty()) {
            return name + "=" + value + "; ";
         } else {

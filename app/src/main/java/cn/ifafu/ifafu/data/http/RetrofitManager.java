@@ -2,6 +2,7 @@ package cn.ifafu.ifafu.data.http;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import cn.ifafu.ifafu.app.Constant;
@@ -21,6 +22,11 @@ public class RetrofitManager {
     private static final int WRITE_TIME_OUT = 10;//写数据接超时时长x秒
 
     private static List<String> cookieList = new ArrayList<>();
+
+    static {
+        Map<String, String> cookieMap = (Map<String, String>) SPUtils.get(Constant.SP_COOKIE).getAll();
+        cookieList.addAll(cookieMap.values());
+    }
 
     private RetrofitManager() {
     }
