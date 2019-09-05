@@ -6,10 +6,13 @@ import cn.ifafu.ifafu.data.entity.Score;
 import cn.ifafu.ifafu.mvp.base.i.IModel;
 import cn.ifafu.ifafu.mvp.base.i.IPresenter;
 import cn.ifafu.ifafu.mvp.base.i.IView;
+import io.reactivex.Observable;
 
 class ScoreFilterConstant {
 
     interface Presenter extends IPresenter {
+
+        void onCheck(Score score, boolean checked);
 
         void updateIES();
     }
@@ -20,15 +23,13 @@ class ScoreFilterConstant {
 
         void setIES(String ies);
 
-        List<Score> getAdapterData();
     }
 
     interface Model extends IModel {
 
-        List<Score> getScoresFromDB(String year, String term);
+        Observable<List<Score>> getScoresFromDB(String year, String term);
 
         void save(Score score);
 
-        void save(List<Score> scores);
     }
 }

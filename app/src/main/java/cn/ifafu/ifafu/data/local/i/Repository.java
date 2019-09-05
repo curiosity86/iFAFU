@@ -35,7 +35,9 @@ public interface Repository {
 
     List<Score> getAllScores();
 
-    List<Score> getScores(String year);
+    List<Score> getScoresByYear(String year);
+
+    List<Score> getScoresByTerm(String term);
 
     List<Score> getScores(String year, String term);
 

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.ifafu.ifafu.R;
+import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.data.entity.Response;
 import cn.ifafu.ifafu.data.entity.Score;
 import cn.ifafu.ifafu.mvp.base.BaseZFPresenter;
@@ -32,24 +33,6 @@ class ScorePresenter extends BaseZFPresenter<ScoreContract.View, ScoreContract.M
     @Override
     public void onStart() {
         mCompDisposable.add(mModel
-                        .getYearTerm()
-                        .doOnNext(map -> {
-                            mCurrentYear = map.get("ddlxn");
-                            mCurrentTerm = map.get("ddlxq");
-                        })
-                        .flatMap(map -> mModel.getScoresFromNet(mCurrentYear, mCurrentTerm)
-                                .map(Response::getBody)
-                                .retryWhen(this::ensureTokenAlive)
-                                .doOnNext(list -> mModel.save(list)))
-                        .compose(RxUtils.singleToMain())
-                        .doOnSubscribe(d -> mView.showLoading())
-                        .doFinally(() -> mView.hideLoading())
-                        .subscribe(list -> {
-                            calcIES(list);
-                            mView.setScoreData(list);
-                        }, this::onError)
-        );
-        mCompDisposable.add(mModel
                 .getYearTermList()
                 .doOnNext(map -> {
                     years = map.get("ddlxn");
@@ -62,6 +45,7 @@ class ScorePresenter extends BaseZFPresenter<ScoreContract.View, ScoreContract.M
                 })
                 .compose(RxUtils.ioToMain())
                 .subscribe(map -> {
+                    update(true);
                     mView.setYearTermTitle(mCurrentYear, mCurrentTerm);
                     mView.setYearTermData(years, terms);
                     mView.setYearTermOptions(years.indexOf(mCurrentYear), terms.indexOf(mCurrentTerm));
@@ -71,20 +55,29 @@ class ScorePresenter extends BaseZFPresenter<ScoreContract.View, ScoreContract.M
 
     @Override
     public void update() {
-        mCompDisposable.add(mModel.getScoresFromNet(mCurrentYear, mCurrentTerm)
+        update(false);
+    }
+
+    private void update(boolean showMessage) {
+        mCompDisposable.add(mModel
+                .getScoresFromNet(mCurrentYear, mCurrentTerm)
                 .map(Response::getBody)
-                .retryWhen(this::ensureTokenAlive)
                 .doOnNext(list -> {
                     mModel.delete(mCurrentYear, mCurrentTerm);
                     mModel.save(list);
                 })
-                .compose(RxUtils.ioToMain())
-                .doOnSubscribe(disposable -> mView.showLoading())
+                .retryWhen(this::ensureTokenAlive)
+                .doOnNext(list -> mModel.save(list))
+                .compose(RxUtils.singleToMain())
+                .doOnSubscribe(d -> mView.showLoading())
                 .doFinally(() -> mView.hideLoading())
                 .subscribe(list -> {
                     calcIES(list);
-                    mView.setScoreData(list);
-                    mView.showMessage(R.string.score_refresh_successful);
+                    calcGPA(list);
+                    mView.setRvScoreData(list);
+                    if (!showMessage) {
+                        mView.showMessage(R.string.score_refresh_successful);
+                    }
                 }, this::onError)
         );
     }
@@ -93,8 +86,10 @@ class ScorePresenter extends BaseZFPresenter<ScoreContract.View, ScoreContract.M
     public void switchYearTerm(int options1, int options2) {
         mCurrentYear = years.get(options1);
         mCurrentTerm = terms.get(options2);
-        mCompDisposable.add(mModel
-                .getScoresFromDB(mCurrentYear, mCurrentTerm)
+        mCompDisposable.add(Observable
+                .fromCallable(() ->
+                        mModel.getScoresFromDB(mCurrentYear, mCurrentTerm)
+                )
                 .flatMap(scores -> {
                     if (scores.isEmpty()) {
                         return mModel.getScoresFromNet(mCurrentYear, mCurrentTerm)
@@ -110,7 +105,9 @@ class ScorePresenter extends BaseZFPresenter<ScoreContract.View, ScoreContract.M
                 .doFinally(() -> mView.hideLoading())
                 .subscribe(list -> {
                     calcIES(list);
-                    mView.setScoreData(list);
+                    calcGPA(list);
+                    mView.setIESText(String.valueOf(list.size()), "门");
+                    mView.setRvScoreData(list);
                 }, this::onError)
         );
     }
@@ -120,68 +117,64 @@ class ScorePresenter extends BaseZFPresenter<ScoreContract.View, ScoreContract.M
         Intent intent = new Intent(mView.getActivity(), ScoreFilterActivity.class);
         intent.putExtra("year", mCurrentYear);
         intent.putExtra("term", mCurrentTerm);
-        mView.getActivity().startActivityForResult(intent, 100);
+        mView.getActivity().startActivityForResult(intent, Constant.SCORE_FILTER_ACTIVITY);
     }
 
-    private void calcIES(List<Score> list) {
+    private void calcIES(List<Score> scores) {
         mCompDisposable.add(Observable
-                .just(list)
-                .flatMap(this::ies)
+                .just(scores)
+                .map(list -> {
+                    float totalScore = 0;
+                    float totalCredit = 0;
+                    float totalMinus = 0;
+                    for (Score score : list) {
+                        if (score.getIsIESItem()) {
+                            totalScore += score.getScore() * score.getCredit();
+                            totalCredit += score.getCredit();
+                            if (score.getScore() < 60 && score.getMakeupScore() < 60) {
+                                totalMinus += score.getCredit();
+                            }
+                        }
+                    }
+                    Map<String, String> retMap = new HashMap<>();
+                    if (totalCredit == 0) {
+                        retMap.put("big", "0");
+                        retMap.put("little", "分");
+                    } else {
+                        @SuppressLint("DefaultLocale")
+                        String result = String.format("%.2f", totalScore / totalCredit - totalMinus);
+                        result = GlobalLib.trimZero(result);
+                        int index = result.indexOf('.');
+                        if (index == -1) {
+                            retMap.put("big", result);
+                            retMap.put("little", "分");
+                        } else {
+                            retMap.put("big", result.substring(0, index));
+                            retMap.put("little", result.substring(index) + "分");
+                        }
+                    }
+                    return retMap;
+                })
                 .compose(RxUtils.computationToMain())
                 .subscribe(map -> {
                     mView.setIESText(map.get("big"), map.get("little"));
-                    mView.setGPAText(mView.getContext().getString(R.string.score_gpa, map.get("gpa")));
                 }, this::onError)
         );
+    }
+
+    private void calcGPA(List<Score> list) {
+        float totalGPA = 0;
+        for (Score score : list) {
+            totalGPA += score.getGpa();
+        }
+        @SuppressLint("DefaultLocale")
+        String gpa = GlobalLib.trimZero(String.format("%.2f", totalGPA));
+        mView.setGPAText(mView.getContext().getString(R.string.score_gpa, gpa));
     }
 
     @Override
     public void updateIES() {
-        mCompDisposable.add(mModel
-                .getScoresFromNet(mCurrentYear, mCurrentTerm)
-                .map(Response::getBody)
-                .flatMap(this::ies)
-                .compose(RxUtils.computationToMain())
-                .subscribe(map -> {
-                    mView.setIESText(map.get("big"), map.get("little"));
-                    mView.setGPAText(mView.getContext().getString(R.string.score_gpa, map.get("gpa")));
-                }, this::onError)
-        );
+        calcIES(mModel.getScoresFromDB(mCurrentYear, mCurrentTerm));
     }
 
-    @SuppressLint("DefaultLocale")
-    private Observable<Map<String, String>> ies(final List<Score> list) {
-        return Observable.fromCallable(() -> {
-            float totalScore = 0;
-            float totalCredit = 0;
-            float totalMinus = 0;
-            float totalGPA = 0;
-            for (Score score : list) {
-                if (score.getIsIESItem()) {
-                    totalScore += score.getScore() * score.getCredit();
-                    totalCredit += score.getCredit();
-                    if (score.getScore() < 60 && score.getMakeupScore() < 60) {
-                        totalMinus += score.getCredit();
-                    }
-                }
-                totalGPA += score.getGpa();
-            }
-            String result = String.format("%.2f",totalScore / totalCredit - totalMinus);
-            result = GlobalLib.trimZero(result);
-            Map<String, String> retMap = new HashMap<>();
-            int index = result.indexOf('.');
-            if (result.equals("NaN")) {
-                retMap.put("big", "0");
-                retMap.put("little", "分");
-            } else if (index == -1) {
-                retMap.put("big", result);
-                retMap.put("little", "分");
-            } else {
-                retMap.put("big", result.substring(0, index));
-                retMap.put("little", result.substring(index) + "分");
-            }
-            retMap.put("gpa", GlobalLib.trimZero(String.format("%.2f", totalGPA)));
-            return retMap;
-        });
-    }
 }

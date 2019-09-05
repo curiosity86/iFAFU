@@ -54,14 +54,10 @@ public abstract class BaseZFPresenter<V extends IView, M extends IZFModel> exten
                 .compose(RxUtils.ioToMain())
                 .doOnNext(response -> {
                     if (response.getCode() == Response.FAILURE) {
-//                        Log.d(TAG, "信息错误");
                         mView.openActivity(new Intent(mView.getContext(), LoginActivity.class));
                         mView.killSelf();
                     } else if (response.getCode() == Response.ERROR) {
-//                        Log.d(TAG, "登录出错");
                         throw new Exception(response.getMessage());
-                    } else {
-//                        Log.d(TAG, "登录成功");
                     }
                 });
     }

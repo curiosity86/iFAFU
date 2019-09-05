@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.Locale;
 
 @Entity
-public class Exam extends YearTerm {
+public class Exam {
     @Id
     private Long id;
     private String name;

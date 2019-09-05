@@ -14,32 +14,40 @@ import io.reactivex.Observable;
 class ScoreFilterPresenter extends BasePresenter<ScoreFilterConstant.View, ScoreFilterConstant.Model>
         implements ScoreFilterConstant.Presenter {
 
+    private List<Score> scores;
+
     ScoreFilterPresenter(ScoreFilterConstant.View view) {
         super(view, new ScoreFilterModel(view.getContext()));
     }
 
     @Override
     public void onStart() {
-        mCompDisposable.add(Observable
-                .fromCallable(() -> {
-                    Intent intent = mView.getActivity().getIntent();
-                    String year = intent.getStringExtra("year");
-                    String term = intent.getStringExtra("term");
-                    return mModel.getScoresFromDB(year, term);
-                })
+        Intent intent = mView.getActivity().getIntent();
+        String year = intent.getStringExtra("year");
+        String term = intent.getStringExtra("term");
+        mCompDisposable.add(mModel
+                .getScoresFromDB(year, term)
+                .doOnNext(list -> scores = list)
                 .compose(RxUtils.singleToMain())
                 .doOnSubscribe(d -> mView.showLoading())
                 .doFinally(() -> mView.hideLoading())
                 .subscribe(list -> {
-                    calcIES(list);
+                    calcIES(scores);
                     mView.setAdapterData(list);
                 }, this::onError)
         );
     }
 
     @Override
+    public void onCheck(Score score, boolean checked) {
+        score.setIsIESItem(checked);
+        mModel.save(score);
+        updateIES();
+    }
+
+    @Override
     public void updateIES() {
-        calcIES(mView.getAdapterData());
+        calcIES(scores);
     }
 
     private void calcIES(List<Score> scoreList) {
@@ -69,9 +77,4 @@ class ScoreFilterPresenter extends BasePresenter<ScoreFilterConstant.View, Score
         );
     }
 
-    @Override
-    public void onDestroy() {
-        mModel.save(mView.getAdapterData());
-        super.onDestroy();
-    }
 }

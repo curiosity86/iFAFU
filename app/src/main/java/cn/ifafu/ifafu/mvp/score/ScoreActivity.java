@@ -19,6 +19,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.ifafu.ifafu.R;
+import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.data.entity.Score;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
 import cn.ifafu.ifafu.view.adapter.ScoreAdapter;
@@ -81,7 +82,7 @@ public class ScoreActivity extends BaseActivity<ScoreContract.Presenter>
     }
 
     @Override
-    public void setScoreData(List<Score> data) {
+    public void setRvScoreData(List<Score> data) {
         if (data.isEmpty()) {
             emptyView.setVisibility(View.VISIBLE);
             rvScore.setVisibility(View.GONE);
@@ -127,6 +128,12 @@ public class ScoreActivity extends BaseActivity<ScoreContract.Presenter>
     }
 
     @Override
+    public void setCntText(String big, String little) {
+        tvCntBig.setText(big);
+        tvCntLittle.setText(little);
+    }
+
+    @Override
     public void setGPAText(String text) {
         tvGPA.setText(text);
     }
@@ -164,7 +171,7 @@ public class ScoreActivity extends BaseActivity<ScoreContract.Presenter>
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == 100) {
+        if (requestCode == Constant.SCORE_FILTER_ACTIVITY) {
             mPresenter.updateIES();
             return;
         }

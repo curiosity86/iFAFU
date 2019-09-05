@@ -1,6 +1,7 @@
 package cn.ifafu.ifafu.mvp.base;
 
 import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import cn.ifafu.ifafu.R;
@@ -48,6 +49,8 @@ public abstract class BasePresenter<V extends IView, M extends IModel> implement
         if (throwable instanceof ConnectException
                 || throwable instanceof UnknownHostException) {
             mView.showMessage(R.string.net_error);
+        } else if (throwable instanceof SocketTimeoutException) {
+            mView.showMessage(R.string.net_timeout_error);
         } else {
             mView.showMessage(throwable.getMessage());
         }

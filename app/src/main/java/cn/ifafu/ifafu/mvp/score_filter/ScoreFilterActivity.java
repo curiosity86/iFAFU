@@ -50,8 +50,7 @@ public class ScoreFilterActivity extends BaseActivity<ScoreFilterConstant.Presen
         if (mAdapter == null) {
             mAdapter = new ScoreFilterAdapter(this, list);
             mAdapter.setOnCheckedListener((v, score, isChecked) -> {
-                score.setIsIESItem(isChecked);
-                mPresenter.updateIES();
+                mPresenter.onCheck(score, isChecked);
             });
             rvScoreFilter.setAdapter(mAdapter);
             rvScoreFilter.setLayoutManager(new LinearLayoutManager(this));
@@ -66,11 +65,6 @@ public class ScoreFilterActivity extends BaseActivity<ScoreFilterConstant.Presen
     @Override
     public void setIES(String ies) {
         tvNowIes.setText(getString(R.string.score_filter_now_ies, ies));
-    }
-
-    @Override
-    public List<Score> getAdapterData() {
-        return mAdapter.getData();
     }
 
     @OnClick(R.id.btn_filter_all)

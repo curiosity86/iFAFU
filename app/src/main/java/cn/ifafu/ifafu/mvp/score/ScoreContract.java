@@ -15,13 +15,15 @@ class ScoreContract {
     interface View extends IView {
         void setYearTermOptions(int option1, int option2);
 
-        void setScoreData(List<Score> data);
+        void setRvScoreData(List<Score> data);
 
         void setYearTermData(List<String> years, List<String> terms);
 
         void setYearTermTitle(String year, String term);
 
         void setIESText(String big, String little);
+
+        void setCntText(String big, String little);
 
         void setGPAText(String text);
     }
@@ -41,7 +43,7 @@ class ScoreContract {
 
         Observable<Response<List<Score>>> getScoresFromNet(String year, String term);
 
-        Observable<List<Score>> getScoresFromDB(String year, String term);
+        List<Score> getScoresFromDB(String year, String term);
 
         Observable<Map<String, List<String>>> getYearTermList();
 

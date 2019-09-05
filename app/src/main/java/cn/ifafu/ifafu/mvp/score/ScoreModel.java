@@ -2,7 +2,6 @@ package cn.ifafu.ifafu.mvp.score;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,14 +56,15 @@ class ScoreModel extends BaseZFModel implements ScoreContract.Model {
     }
 
     @Override
-    public Observable<List<Score>> getScoresFromDB(String year, String term) {
-        Log.d(TAG, year + "   " + term + "    " + user.getAccount());
-        if (term.equals("全部")) {
-            return Observable.fromCallable(() ->
-                    repository.getScores(year));
+    public List<Score> getScoresFromDB(String year, String term) {
+        if (year.equals("全部") && term.equals("全部")) {
+            return repository.getAllScores();
+        } else if (year.equals("全部")) {
+            return repository.getScoresByTerm(term);
+        } else if (term.equals("全部")) {
+            return repository.getScoresByYear(year);
         } else {
-            return Observable.fromCallable(() ->
-                    repository.getScores(year, term));
+            return repository.getScores(year, term);
         }
     }
 
