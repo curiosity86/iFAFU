@@ -1,6 +1,7 @@
 package cn.ifafu.ifafu.electricity.util;
 
 import cn.ifafu.ifafu.app.Constant;
+import cn.ifafu.ifafu.util.SPUtils;
 
 public class CookieUtils {
     public static String getCookie() {
@@ -12,7 +13,7 @@ public class CookieUtils {
     }
 
     private static String getACookie(String name) {
-        String value = SPUtils.get(Constant.SP_COOKIE + "_Elec").getString(name);
+        String value = SPUtils.get(Constant.SP_ELEC).getString(name);
         if (!value.isEmpty()) {
            return name + "=" + value + "; ";
         } else {

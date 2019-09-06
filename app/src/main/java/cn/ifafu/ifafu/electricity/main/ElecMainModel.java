@@ -14,14 +14,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.dao.QueryDataDao;
 import cn.ifafu.ifafu.data.local.DaoManager;
 import cn.ifafu.ifafu.electricity.data.QueryData;
 import cn.ifafu.ifafu.electricity.data.Selection;
 import cn.ifafu.ifafu.electricity.http.MainService;
 import cn.ifafu.ifafu.electricity.http.RetrofitFactory;
-import cn.ifafu.ifafu.electricity.util.SPUtils;
 import cn.ifafu.ifafu.mvp.base.BaseModel;
+import cn.ifafu.ifafu.util.SPUtils;
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;
 
@@ -39,12 +40,12 @@ public class ElecMainModel extends BaseModel implements ElecMainContract.Model {
     @Override
     public Observable<Boolean> initCookie() {
         return Observable.fromCallable(() -> {
-            service.default2(SPUtils.get("Cookie").getString("RescouseType")).execute();
+            service.default2(SPUtils.get(Constant.SP_ELEC).getString("RescouseType")).execute();
             return service.page(
                     "31", "3", "2", "", "electricity",
                     URLEncoder.encode("交电费", "gbk"),
-                    SPUtils.get("Cookie").getString("sourcetypeticket"),
-                    SPUtils.get("Const").getString("IMEI"),
+                    SPUtils.get(Constant.SP_ELEC).getString("sourcetypeticket"),
+                    SPUtils.get(Constant.SP_ELEC).getString("IMEI"),
                     "0", "1"
             ).execute().body().string().contains("<title>登录</title>");
         });
@@ -52,7 +53,7 @@ public class ElecMainModel extends BaseModel implements ElecMainContract.Model {
 
     @Override
     public String getAccount() {
-        return SPUtils.get("UserInfo").getString("account");
+        return SPUtils.get(Constant.SP_ELEC).getString("account");
     }
 
     public Observable<String> queryElectricity(QueryData data) {
@@ -145,13 +146,12 @@ public class ElecMainModel extends BaseModel implements ElecMainContract.Model {
 
     @Override
     public String getSno() {
-        return SPUtils.get("UserInfo").getString("sno");
+        return SPUtils.get(Constant.SP_ELEC).getString("sno");
     }
 
     @Override
     public void clearAll() {
-        SPUtils.get("UserInfo").clear();
-        SPUtils.get("Cookie").clear();
+        SPUtils.get(Constant.SP_ELEC).clear();
     }
 
     @Override
@@ -161,7 +161,7 @@ public class ElecMainModel extends BaseModel implements ElecMainContract.Model {
 
     @Override
     public QueryData getQueryData() {
-        String account = SPUtils.get("UserInfo").getString("account");
+        String account = SPUtils.get(Constant.SP_ELEC).getString("account");
         return queryDao.load(account);
     }
 }

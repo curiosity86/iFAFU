@@ -11,6 +11,9 @@ public class Constant {
     public static final String SP_SETTING = "setting";
     public static final String SP_COOKIE = "cookie";
 
+
+    public static final String SP_ELEC = "elec";
+
     public static final int MAIN_ACTIVITY = 866;
     public static final int SYLLABUS_ACTIVITY = 96;
     public static final int SYLLABUS_ITEM_ACTIVITY = 98;

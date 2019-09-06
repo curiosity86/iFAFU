@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.electricity.util.CookieUtils;
-import cn.ifafu.ifafu.electricity.util.SPUtils;
+import cn.ifafu.ifafu.util.SPUtils;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -25,7 +25,7 @@ public class CookieInterceptor implements Interceptor {
         if (!response.headers("Set-Cookie").isEmpty()) {
             for (String header: response.headers("Set-Cookie")) {
                 String[] kv = header.substring(0, header.indexOf(";")).split("=");
-                SPUtils.get(Constant.SP_COOKIE + "_Elec").putString(kv[0], kv[1]);
+                SPUtils.get(Constant.SP_ELEC).putString(kv[0], kv[1]);
             }
         }
         return response;

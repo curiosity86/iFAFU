@@ -3,12 +3,13 @@ package cn.ifafu.ifafu.electricity.splash;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 
+import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.electricity.login.ElecLoginActivity;
 import cn.ifafu.ifafu.electricity.main.ElecMainActivity;
-import cn.ifafu.ifafu.electricity.util.SPUtils;
 import cn.ifafu.ifafu.electricity.util.StringUtils;
 import cn.ifafu.ifafu.mvp.base.BasePresenter;
 import cn.ifafu.ifafu.mvp.base.i.IModel;
+import cn.ifafu.ifafu.util.SPUtils;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -24,11 +25,8 @@ public class ElecSplashPresenter extends BasePresenter<ElecSplashContract.View, 
     @Override
     public void onStart() {
         Observable
-                .<Boolean>create(emitter -> {
-                    SPUtils.init(mView.getContext());
-                    emitter.onNext(jumpJudge());
-                    emitter.onComplete();
-                }).subscribeOn(Schedulers.io())
+                .fromCallable(this::jumpJudge)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally(() -> mView.killSelf())
                 .subscribe(b -> {
@@ -44,18 +42,15 @@ public class ElecSplashPresenter extends BasePresenter<ElecSplashContract.View, 
     }
 
     private boolean jumpJudge() {
-        boolean b = SPUtils.get("Cookie").contain("sourcetypeticket") && SPUtils.get("UserInfo").contain("account");
+        boolean b = SPUtils.get(Constant.SP_ELEC).contain("sourcetypeticket") && SPUtils.get(Constant.SP_ELEC).contain("account");
         if (!b) {
-            SPUtils.get("Cookie").clear();
-            SPUtils.get("UserInfo").clear();
+            SPUtils.get(Constant.SP_ELEC).clear();
         }
-//        Log.d("ElecSplashActivity", "IMEI ==> " + StringUtils.imei());
-//        Log.d("ElecSplashActivity", "User-Agent ==> " + StringUtils.getUserAgent());
-        if (!SPUtils.get("Const").contain("IMEI")) {
-            SPUtils.get("Const").putString("IMEI", StringUtils.imei());
+        if (!SPUtils.get(Constant.SP_ELEC).contain("IMEI")) {
+            SPUtils.get(Constant.SP_ELEC).putString("IMEI", StringUtils.imei());
         }
-        if (!SPUtils.get("Const").contain("User-Agent")) {
-            SPUtils.get("Const").putString("User-Agent", StringUtils.getUserAgent());
+        if (!SPUtils.get(Constant.SP_ELEC).contain("User-Agent")) {
+            SPUtils.get(Constant.SP_ELEC).putString("User-Agent", StringUtils.getUserAgent());
         }
         return b;
     }

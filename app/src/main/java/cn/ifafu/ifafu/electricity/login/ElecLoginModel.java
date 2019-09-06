@@ -7,11 +7,12 @@ import android.util.Base64;
 
 import java.io.IOException;
 
-import cn.ifafu.ifafu.mvp.base.BaseModel;
+import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.electricity.data.UserMe;
 import cn.ifafu.ifafu.electricity.http.LoginService;
 import cn.ifafu.ifafu.electricity.http.RetrofitFactory;
-import cn.ifafu.ifafu.electricity.util.SPUtils;
+import cn.ifafu.ifafu.mvp.base.BaseModel;
+import cn.ifafu.ifafu.util.SPUtils;
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;
 
@@ -26,10 +27,10 @@ public class ElecLoginModel extends BaseModel implements ElecLoginContract.Model
 
     @Override
     public UserMe getUserMe() {
-        if (SPUtils.get("UserInfo").contain("sno") && SPUtils.get("UserInfo").contain("password")) {
+        if (SPUtils.get(Constant.SP_ELEC).contain("sno") && SPUtils.get(Constant.SP_ELEC).contain("password")) {
             UserMe user = new UserMe();
-            user.setSno(SPUtils.get("UserInfo").getString("sno"));
-            user.setPassword(SPUtils.get("UserInfo").getString("password"));
+            user.setSno(SPUtils.get(Constant.SP_ELEC).getString("sno"));
+            user.setPassword(SPUtils.get(Constant.SP_ELEC).getString("password"));
             return user;
         }
         return null;
@@ -40,7 +41,7 @@ public class ElecLoginModel extends BaseModel implements ElecLoginContract.Model
         return Observable.create(emitter -> {
             if (!isInit) {
                 isInit = true;
-                service.init("0", SPUtils.get("Const").getString("IMEI"), "0").execute();
+                service.init("0", SPUtils.get(Constant.SP_ELEC).getString("IMEI"), "0").execute();
             }
             ResponseBody responseBody = service.verify(
                     String.valueOf(System.currentTimeMillis())
@@ -60,7 +61,7 @@ public class ElecLoginModel extends BaseModel implements ElecLoginContract.Model
     public Observable<String> login(String sno, String password, String verify) {
         return Observable.create(emitter -> {
             ResponseBody responseBody = service.login(
-                    "http://cardapp.fafu.edu.cn:8088/Phone/Login?sourcetype=0&IMEI=" + SPUtils.get("Const").getString("IMEI") + "&language=0",
+                    "http://cardapp.fafu.edu.cn:8088/Phone/Login?sourcetype=0&IMEI=" + SPUtils.get(Constant.SP_ELEC).getString("IMEI") + "&language=0",
                     sno, new String(Base64.encode(password.getBytes(), Base64.DEFAULT)),
                     verify, "1", "1", "", "true"
             ).execute().body();
@@ -72,11 +73,11 @@ public class ElecLoginModel extends BaseModel implements ElecLoginContract.Model
 
     @Override
     public void save(UserMe user, String rescouseType) {
-        SPUtils.get("UserInfo").putString("account", user.getAccount());
-        SPUtils.get("UserInfo").putString("sno", user.getSno());
-        SPUtils.get("UserInfo").putString("password", user.getPassword());
-        SPUtils.get("UserInfo").putString("name", user.getName());
-        SPUtils.get("Cookie").putString("RescouseType", rescouseType);
+        SPUtils.get(Constant.SP_ELEC).putString("account", user.getAccount());
+        SPUtils.get(Constant.SP_ELEC).putString("sno", user.getSno());
+        SPUtils.get(Constant.SP_ELEC).putString("password", user.getPassword());
+        SPUtils.get(Constant.SP_ELEC).putString("name", user.getName());
+        SPUtils.get(Constant.SP_ELEC).putString("RescouseType", rescouseType);
     }
 
 }
