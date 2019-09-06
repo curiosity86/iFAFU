@@ -114,7 +114,7 @@ public class SyllabusModel extends BaseZFModel implements SyllabusContract.Model
             if (intEndTime % 100 + length >= 60) {
                 intEndTime = intEndTime + 100 - (intEndTime % 100) + ((intEndTime % 100 + length) % 60);
             } else {
-                intEndTime += 60;
+                intEndTime += length;
             }
             String time =  String.format(Locale.CHINA, "%d:%02d-%d:%02d",
                     intStartTime / 100,
