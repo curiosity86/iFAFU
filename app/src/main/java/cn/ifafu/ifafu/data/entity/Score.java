@@ -13,12 +13,12 @@ public class Score extends YearTerm {
     private String name; //课程名称
     private String nature; //课程性质
     private String attr; //课程归属
-    private float credit; //学分
-    private float score; //成绩
-    private float makeupScore; //补考成绩
-    private boolean restudy; //是否重修
+    private float credit = -1; //学分
+    private float score = -1; //成绩
+    private float makeupScore = -1; //补考成绩
+    private boolean restudy = false; //是否重修
     private String institute; //开课学院
-    private float gpa; //绩点
+    private float gpa = -1; //绩点
     private String remarks; //备注
     private String makeupRemarks; //补考备注
     private boolean isIESItem = true; //是否记入智育分
@@ -151,25 +151,6 @@ public class Score extends YearTerm {
         this.account = account;
     }
 
-    @NonNull
-    @Override
-    public String toString() {
-        return "Score{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", nature='" + nature + '\'' +
-                ", credit=" + credit +
-                ", score=" + score +
-                ", makeupScore=" + makeupScore +
-                ", restudy=" + restudy +
-                ", institute='" + institute + '\'' +
-                ", gpa=" + gpa +
-                ", account='" + account + '\'' +
-                ", year='" + year + '\'' +
-                ", term='" + term + '\'' +
-                '}';
-    }
-
     public String getAttr() {
         return this.attr;
     }
@@ -200,5 +181,38 @@ public class Score extends YearTerm {
 
     public void setIsIESItem(boolean isIESItem) {
         this.isIESItem = isIESItem;
+    }
+
+    public float getCalcScore() {
+        if (score < 60) { //不及格
+            if (makeupScore == -1) { //补考成绩未出，以原成绩计算
+                return score;
+            } else if (makeupScore >= 60) { //补考成绩及格，以60分计算
+                return 60;
+            } else { //补考成绩不及格，以补考成绩计算，并以学分1:1比例扣除相应智育分
+                return makeupScore;
+            }
+        } else { //及格
+            return score;
+        }
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Score{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", nature='" + nature + '\'' +
+                ", credit=" + credit +
+                ", score=" + score +
+                ", makeupScore=" + makeupScore +
+                ", restudy=" + restudy +
+                ", institute='" + institute + '\'' +
+                ", gpa=" + gpa +
+                ", account='" + account + '\'' +
+                ", year='" + year + '\'' +
+                ", term='" + term + '\'' +
+                '}';
     }
 }

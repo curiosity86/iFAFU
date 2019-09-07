@@ -3,8 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     tools:context=".mvp.score_item.ScoreItemActivity">
 
+    <cn.ifafu.ifafu.view.custom.WToolbar
+        android:id="@+id/tb_score_item"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        app:elevation="4dp"
+        app:title="成绩详情" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_score_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

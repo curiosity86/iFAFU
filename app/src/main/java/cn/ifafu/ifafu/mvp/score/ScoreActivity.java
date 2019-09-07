@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.view.OptionsPickerView;
-import com.jaeger.library.StatusBarUtil;
+import com.gyf.immersionbar.ImmersionBar;
 
 import java.util.List;
 
@@ -22,10 +22,10 @@ import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.data.entity.Score;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
+import cn.ifafu.ifafu.mvp.score_item.ScoreItemActivity;
 import cn.ifafu.ifafu.view.adapter.ScoreAdapter;
 import cn.ifafu.ifafu.view.custom.EmptyView;
 import cn.ifafu.ifafu.view.custom.RecyclerViewDivider;
-import cn.ifafu.ifafu.view.custom.WToolbar;
 import cn.ifafu.ifafu.view.dialog.ProgressDialog;
 
 public class ScoreActivity extends BaseActivity<ScoreContract.Presenter>
@@ -48,7 +48,7 @@ public class ScoreActivity extends BaseActivity<ScoreContract.Presenter>
     @BindView(R.id.view_exam_empty)
     EmptyView emptyView;
 
-    private ScoreAdapter scoreAdapter;
+    private ScoreAdapter mAdapter;
 
     private ProgressDialog progressDialog;
     private OptionsPickerView<String> yearTermOPV;
@@ -60,18 +60,13 @@ public class ScoreActivity extends BaseActivity<ScoreContract.Presenter>
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        StatusBarUtil.setTransparent(this);
-        StatusBarUtil.setLightMode(this);
+        ImmersionBar.with(this)
+                .titleBarMarginTop(findViewById(R.id.tb_score))
+                .statusBarColor("#FFFFFF")
+                .statusBarDarkFont(true)
+                .init();
+
         mPresenter = new ScorePresenter(this);
-
-        WToolbar tb = findViewById(R.id.tb_score);
-        tb.setOnClickListener(v -> finish());
-
-        rvScore.setLayoutManager(new LinearLayoutManager(this));
-        rvScore.addItemDecoration(new RecyclerViewDivider(
-                this, LinearLayoutManager.VERTICAL, R.drawable.shape_divider));
-
-        findViewById(R.id.btn_refresh).setOnClickListener(v -> mPresenter.update());
 
         progressDialog = new ProgressDialog(this);
     }
@@ -87,17 +82,24 @@ public class ScoreActivity extends BaseActivity<ScoreContract.Presenter>
             emptyView.setVisibility(View.VISIBLE);
             rvScore.setVisibility(View.GONE);
         } else {
-            if (scoreAdapter == null) {
-                emptyView.setVisibility(View.GONE);
-                rvScore.setVisibility(View.VISIBLE);
-                scoreAdapter = new ScoreAdapter(this, data);
-                rvScore.setAdapter(scoreAdapter);
+            if (mAdapter == null) {
+                mAdapter = new ScoreAdapter(this, data);
+                mAdapter.setOnScoreClickListener(score -> {
+                    Intent intent = new Intent(this, ScoreItemActivity.class);
+                    intent.putExtra("id", score.getId());
+                    startActivity(intent);
+                });
+                rvScore.setLayoutManager(new LinearLayoutManager(this));
+                rvScore.addItemDecoration(new RecyclerViewDivider(
+                        this, LinearLayoutManager.VERTICAL, R.drawable.shape_divider));
+
+                rvScore.setAdapter(mAdapter);
             } else {
-                emptyView.setVisibility(View.GONE);
-                rvScore.setVisibility(View.VISIBLE);
-                scoreAdapter.setScoreData(data);
-                scoreAdapter.notifyDataSetChanged();
+                mAdapter.setScoreData(data);
+                mAdapter.notifyDataSetChanged();
             }
+            emptyView.setVisibility(View.GONE);
+            rvScore.setVisibility(View.VISIBLE);
         }
         tvCntBig.setText(String.valueOf(data.size()));
         tvCntLittle.setText("门");
@@ -147,7 +149,7 @@ public class ScoreActivity extends BaseActivity<ScoreContract.Presenter>
         }
     }
 
-    @OnClick({R.id.tv_score_title, R.id.tv_cnt_big})
+    @OnClick({R.id.tv_score_title, R.id.tv_cnt_big, R.id.btn_refresh})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_score_title:
@@ -155,6 +157,9 @@ public class ScoreActivity extends BaseActivity<ScoreContract.Presenter>
                 break;
             case R.id.tv_cnt_big:
                 mPresenter.openFilterActivity();
+                break;
+            case R.id.btn_refresh:
+                mPresenter.updateFromNet();
                 break;
         }
     }

@@ -29,6 +29,8 @@ public interface Repository {
 
     void deleteCourse(Course course);
 
+    void deleteAllOnlineCourse();
+
     SyllabusSetting getSyllabusSetting();
 
     void saveSyllabusSetting(SyllabusSetting syllabusSetting);
@@ -38,6 +40,8 @@ public interface Repository {
     List<Score> getScoresByYear(String year);
 
     List<Score> getScoresByTerm(String term);
+
+    Score getScoreById(long id);
 
     List<Score> getScores(String year, String term);
 

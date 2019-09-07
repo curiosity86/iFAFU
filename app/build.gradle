@@ -111,9 +111,10 @@ dependencies {
     //动画低版本支持
     implementation 'com.nineoldandroids:library:2.4.0'
 
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50'
+    implementation 'me.drakeet.multitype:multitype:4.0.0-alpha3'
     implementation "org.permissionsdispatcher:permissionsdispatcher:4.5.0"
     annotationProcessor "org.permissionsdispatcher:permissionsdispatcher-processor:4.5.0"
-    implementation 'me.drakeet.multitype:multitype:4.0.0-alpha3'
     
     testImplementation 'junit:junit:4.13-beta-3'
     androidTestImplementation 'androidx.test:runner:1.3.0-alpha02'

@@ -12,7 +12,8 @@
         android:id="@+id/tb_score"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        app:navigationIcon="@drawable/ic_back"
+        android:background="@color/white"
+        app:elevation="4dp"
         app:title="@string/score" >
 
         <ImageButton

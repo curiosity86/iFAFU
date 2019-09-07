@@ -113,6 +113,11 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
+    public void deleteAllOnlineCourse() {
+        deleteCourse(getCourses(false));
+    }
+
+    @Override
     public SyllabusSetting getSyllabusSetting() {
         return syllabusSettingDao.load(getUser().getAccount());
     }
@@ -143,6 +148,11 @@ public class RepositoryImpl implements Repository {
                 .where(ScoreDao.Properties.Account.eq(getUser().getAccount()),
                         ScoreDao.Properties.Term.eq(term))
                 .list();
+    }
+
+    @Override
+    public Score getScoreById(long id) {
+        return scoreDao.load(id);
     }
 
     @Override

@@ -35,27 +35,30 @@ public class ScoreParser extends BaseParser<List<Score>> {
             return Collections.emptyList();
         }
         Elements elements = elementsTemp.get(0).getElementsByTag("tr");
-        if (schoolCode == School.FAFU) {
-            for (int i = 1; i < elements.size(); i++) {
-                try {
-                    list.add(paresToScoreFAFU(elements.get(i).children()));
-                } catch (Exception e) {
-                    e.printStackTrace();
+        switch (schoolCode) {
+            case School.FAFU:
+                for (int i = 1; i < elements.size(); i++) {
+                    try {
+                        list.add(paresToScoreFAFU(elements.get(i).children()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        } else if (schoolCode == School.FAFU_JS) {
-            for (int i = 1; i < elements.size(); i++) {
-                try {
-                    list.add(paresToScoreFAFUJS(elements.get(i).children()));
-                } catch (Exception e) {
-                    e.printStackTrace();
+                break;
+            case School.FAFU_JS:
+                for (int i = 1; i < elements.size(); i++) {
+                    try {
+                        list.add(paresToScoreFAFUJS(elements.get(i).children()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
+                break;
         }
-
         Collections.sort(list, (o1, o2) -> o1.getId().compareTo(o2.getId()));
         for (Score score : list) {
             score.setAccount(account);
+            score.setId(score.getId() * 31 + account.hashCode());
         }
         return list;
     }
@@ -74,7 +77,6 @@ public class ScoreParser extends BaseParser<List<Score>> {
             float makeupScore = Float.parseFloat(eles.get(8).text());
             score.setMakeupScore(makeupScore);
         } catch (Exception ignored) {
-            score.setMakeupScore(0F);
         }
         if (!eles.get(9).text().isEmpty()) {
             score.setRestudy(false);
