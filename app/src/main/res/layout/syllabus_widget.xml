@@ -5,14 +5,30 @@
     android:orientation="vertical"
     android:padding="8dp">
 
-    <TextView
-        android:id="@+id/tv_refresh_time"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_gravity="center"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        android:textSize="12sp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="24dp">
+
+        <TextView
+            android:id="@+id/tv_refresh_time"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_centerInParent="true"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="12sp" />
+
+        <ImageButton
+            android:id="@+id/btn_jump"
+            android:layout_width="28dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:paddingStart="4dp"
+            android:paddingEnd="0dp"
+            android:src="@drawable/ic_chevron_right"
+            android:background="@color/transparent"/>
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/tv_course_name"

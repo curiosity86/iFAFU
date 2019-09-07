@@ -19,7 +19,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import cn.ifafu.ifafu.util.ColorUtils;
 import cn.ifafu.ifafu.util.DensityUtils;
@@ -75,14 +74,7 @@ public class CourseView extends FrameLayout {
     private OnCourseClickListener onCourseClickListener;
     private OnCourseLongClickListener onCourseLongClickListener;
 
-    private Map<CourseBase, View> mCourseViewMap = new TreeMap<>((courseBase, t1) -> {
-        int weekdayCompare = Integer.compare(courseBase.getWeekday(), t1.getWeekday());
-        if (weekdayCompare == 0) {
-            return Integer.compare(courseBase.getBeginNode(), t1.getBeginNode());
-        } else {
-            return weekdayCompare;
-        }
-    });
+    private Map<CourseBase, View> courseToView = new HashMap<>();
 
     private int colorIndex = 0;
     private Map<String, Integer> colorMap = new HashMap<>();
@@ -122,12 +114,6 @@ public class CourseView extends FrameLayout {
         }
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-//        l("onMeasure", "width:", widthMeasureSpec & MEASURED_SIZE_MASK, "height:", heightMeasureSpec & MEASURED_SIZE_MASK);
-    }
-
     public void setShowHorizontalDivider(boolean isShow) {
         mShowHorizontalDivider = isShow;
     }
@@ -163,7 +149,7 @@ public class CourseView extends FrameLayout {
      * 把数组中的数据全部添加到界面
      */
     private void initCourseItemView() {
-        for (Map.Entry<CourseBase, View> entry : mCourseViewMap.entrySet()) {
+        for (Map.Entry<CourseBase, View> entry : courseToView.entrySet()) {
             if (entry.getValue() == null && mHeight != 0) {
                 realAddCourseItemView(entry.getKey());
             }
@@ -172,7 +158,7 @@ public class CourseView extends FrameLayout {
 
     public <T extends ToCourse> void addCourse(T course) {
         CourseBase base = course.toCourseBase();
-        if (mCourseViewMap.get(base) == null) {
+        if (courseToView.get(base) == null) {
             realAddCourseItemView(course.toCourseBase());
         }
     }
@@ -180,7 +166,7 @@ public class CourseView extends FrameLayout {
     public <T extends ToCourse> void addCourse(List<T> courses) {
         for (T course : courses) {
             CourseBase base = course.toCourseBase();
-            if (!mCourseViewMap.containsKey(base) || mCourseViewMap.get(base) == null) {
+            if (!courseToView.containsKey(base) || courseToView.get(base) == null) {
                 realAddCourseItemView(course.toCourseBase());
             }
         }
@@ -193,10 +179,10 @@ public class CourseView extends FrameLayout {
      * @param <T>
      */
     public <T extends ToCourse> void setCourses(List<T> courses) {
-        mCourseViewMap.clear();
+        courseToView.clear();
         if (courses == null) return;
         for (T t : courses) {
-            mCourseViewMap.put(t.toCourseBase(), null);
+            courseToView.put(t.toCourseBase(), null);
         }
     }
 
@@ -270,7 +256,7 @@ public class CourseView extends FrameLayout {
 
     public void addView(CourseBase courseBase, View view) {
         addView(view);
-        mCourseViewMap.put(courseBase, view);
+        courseToView.put(courseBase, view);
     }
 
     /**
@@ -278,8 +264,8 @@ public class CourseView extends FrameLayout {
      */
     public void redraw() {
         removeAllViews();
-        for (CourseBase base : mCourseViewMap.keySet()) {
-            mCourseViewMap.put(base, null);
+        for (CourseBase base : courseToView.keySet()) {
+            courseToView.put(base, null);
         }
         initCourseItemView();
     }

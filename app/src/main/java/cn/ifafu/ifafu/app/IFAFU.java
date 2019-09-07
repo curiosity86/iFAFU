@@ -7,6 +7,8 @@ import io.reactivex.plugins.RxJavaPlugins;
 
 public class IFAFU extends BaseApplication {
 
+    public static boolean FIRST_START_APP = true;
+
     @Override
     public void onCreate() {
         super.onCreate();

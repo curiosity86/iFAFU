@@ -86,7 +86,7 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
         if (mMenuAdapter == null) {
             mMenuAdapter = new MenuAdapter(this, menus);
             mMenuAdapter.setOnMenuClickListener((v, menu) -> {
-                if (!ButtonUtils.isFastDoubleClick()) {
+                if (!ButtonUtils.isFastDoubleClick(Constant.MAIN_ACTIVITY)) {
                     openActivity(menu.getIntent());
                 }
             });

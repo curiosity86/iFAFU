@@ -43,7 +43,7 @@ class SyllabusItemPresenter extends BasePresenter<SyllabusItemContract.View, Syl
         Intent intent = mView.getActivity().getIntent();
         // 1 表示通过添加按钮打开Activity
         come_from = intent.getIntExtra("come_from", -1);
-        if (come_from == SyllabusActivity.ADD) {
+        if (come_from == SyllabusActivity.BUTTON_ADD) {
             mView.isEditMode(true);
         }
         // 获取跳转课程id
@@ -103,7 +103,7 @@ class SyllabusItemPresenter extends BasePresenter<SyllabusItemContract.View, Syl
                 .subscribe(stringRes -> {
                     mView.getActivity().setResult(resultCode);
                     mView.showMessage(stringRes);
-                    if (come_from == SyllabusActivity.ADD) {
+                    if (come_from == SyllabusActivity.BUTTON_ADD) {
                         if (stringRes == R.string.save_successful) {
                             mView.killSelf();
                         }

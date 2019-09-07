@@ -3,6 +3,7 @@ package cn.ifafu.ifafu.mvp.syllabus;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -27,6 +28,7 @@ import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.data.entity.SyllabusSetting;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
+import cn.ifafu.ifafu.mvp.main.MainActivity;
 import cn.ifafu.ifafu.mvp.syllabus_item.SyllabusItemActivity;
 import cn.ifafu.ifafu.mvp.syllabus_setting.SyllabusSettingActivity;
 import cn.ifafu.ifafu.util.ChineseNumbers;
@@ -51,7 +53,7 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
 
     private ProgressDialog progressDialog;
 
-    public static final int ADD = 0;
+    public static final int BUTTON_ADD = 0;
 
     @Override
     public int initLayout(@Nullable Bundle savedInstanceState) {
@@ -142,20 +144,41 @@ public class SyllabusActivity extends BaseActivity<SyllabusContract.Presenter>
         switch (v.getId()) {
             case R.id.btn_add:
                 Intent intent = new Intent(this, SyllabusItemActivity.class);
-                intent.putExtra("come_from", ADD);
+                intent.putExtra("come_from", BUTTON_ADD);
                 startActivityForResult(intent, Constant.SYLLABUS_ITEM_ACTIVITY);
                 break;
             case R.id.btn_refresh:
                 mPresenter.updateSyllabusNet();
                 break;
             case R.id.btn_back:
-                finish();
+                onFinishActivity();
                 break;
             case R.id.btn_setting:
-                startActivityForResult(new Intent(
-                        this, SyllabusSettingActivity.class), Constant.SYLLABUS_SETTING_ACTIVITY);
+                startActivityForResult(new Intent(this, SyllabusSettingActivity.class),
+                        Constant.SYLLABUS_SETTING_ACTIVITY);
                 break;
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            onFinishActivity();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void onFinishActivity() {
+        switch (getIntent().getIntExtra("from", -1)) {
+            case Constant.SYLLABUS_WIDGET:
+            case Constant.SPLASH_ACTIVITY:
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                break;
+        }
+        finish();
     }
 
     @Override

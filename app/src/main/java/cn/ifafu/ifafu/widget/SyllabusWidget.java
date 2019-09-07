@@ -17,12 +17,16 @@ import java.util.Date;
 import java.util.Locale;
 
 import cn.ifafu.ifafu.R;
+import cn.ifafu.ifafu.app.Constant;
+import cn.ifafu.ifafu.app.IFAFU;
 import cn.ifafu.ifafu.data.entity.NextCourse;
+import cn.ifafu.ifafu.mvp.other.SplashActivity;
+import cn.ifafu.ifafu.mvp.syllabus.SyllabusActivity;
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusModel;
 
 public class SyllabusWidget extends AppWidgetProvider {
 
-    private static String ACTION_SYLLABUS_REFRESH = "ifafu.widget.syllabus.REFRESH";
+    private static String ACTION_WIDGET_SYLLABUS_CLICK = "ifafu.widget.syllabus.REFRESH";
 
     private void updateSyllabusWidget(Context context, AppWidgetManager appWidgetManager,
                                       int appWidgetId) {
@@ -34,17 +38,22 @@ public class SyllabusWidget extends AppWidgetProvider {
     private PendingIntent getPendingIntent(Context context, int resId) {
         Intent intent = new Intent();
         intent.setClass(context, SyllabusWidget.class);
-        intent.setAction(ACTION_SYLLABUS_REFRESH);
         intent.setData(Uri.parse("Id:" + resId));
+        intent.setAction(ACTION_WIDGET_SYLLABUS_CLICK);
         return PendingIntent.getBroadcast(context, 0, intent, 0);
     }
 
     @SuppressLint("DefaultLocale")
     private void updateSyllabusWidget(Context context, RemoteViews remoteViews) {
+
+        remoteViews.setOnClickPendingIntent(R.id.tv_refresh,
+                getPendingIntent(context, R.id.tv_refresh));
+        remoteViews.setOnClickPendingIntent(R.id.btn_jump,
+                getPendingIntent(context, R.id.btn_jump));
+
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss", Locale.CHINA);
         SimpleDateFormat format1 = new SimpleDateFormat("MM月dd日 E", Locale.CHINA);
         Date date = new Date();
-        remoteViews.setOnClickPendingIntent(R.id.tv_refresh, getPendingIntent(context, R.id.tv_refresh));
         remoteViews.setTextViewText(R.id.tv_refresh_time, context.getString(R.string.refresh_time_format, format.format(date)));
 
         SyllabusModel model = new SyllabusModel(context);
@@ -95,7 +104,7 @@ public class SyllabusWidget extends AppWidgetProvider {
         if (intent.getAction() == null) {
             return;
         }
-        if (intent.getAction().equals(ACTION_SYLLABUS_REFRESH)) {
+        if (intent.getAction().equals(ACTION_WIDGET_SYLLABUS_CLICK)) {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.syllabus_widget);
             Uri data = intent.getData();
             int resId = -1;
@@ -105,6 +114,18 @@ public class SyllabusWidget extends AppWidgetProvider {
             switch (resId) {
                 case R.id.tv_refresh:
                     updateSyllabusWidget(context, remoteViews);
+                    break;
+                case R.id.btn_jump:
+                    Intent jumpIntent;
+                    if (IFAFU.FIRST_START_APP) {
+                        jumpIntent = new Intent(context, SplashActivity.class);
+                        jumpIntent.putExtra("jump", Constant.SYLLABUS_ACTIVITY);
+                    } else {
+                        jumpIntent = new Intent(context, SyllabusActivity.class);
+                    }
+                    jumpIntent.putExtra("from", Constant.SYLLABUS_WIDGET);
+                    jumpIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(jumpIntent);
                     break;
             }
             AppWidgetManager manger = AppWidgetManager.getInstance(context);

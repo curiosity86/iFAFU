@@ -30,13 +30,15 @@ class ScoreFilterAdapter(context: Context, var data: List<Score>) : RecyclerView
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val score = data[position]
         holder.titleTV.text = score.name
-        holder.scoreTV.text =  GlobalLib.trimZero(String.format("%.2f", score.score)) + "分"
+        holder.scoreTV.text = GlobalLib.trimZero(String.format("%.2f", score.calcScore)) + "分"
         holder.checkBox.setChecked(score.isIESItem, false)
         holder.checkBox.setOnCheckedChangeListener { checkBox, isChecked ->
             mOnCheckedListener?.onCheckedChanged(checkBox, score, isChecked)
+            score.isIESItem = isChecked
         }
         holder.itemView.setOnClickListener {
             mOnCheckedListener?.onCheckedChanged(it, score, holder.checkBox.isChecked)
+            score.isIESItem = holder.checkBox.isChecked
         }
     }
 

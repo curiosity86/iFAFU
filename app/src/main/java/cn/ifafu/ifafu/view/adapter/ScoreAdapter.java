@@ -21,7 +21,7 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
     private Context mContext;
     private List<Score> mScoreList;
 
-    private View.OnClickListener itemClickListener;
+    private OnScoreClickListener mClickListener;
 
     public ScoreAdapter(Context context, List<Score> scores) {
         mContext = context;
@@ -38,10 +38,14 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
     @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull ScoreViewHolder holder, int position) {
-        Score score = mScoreList.get(position);
+        final Score score = mScoreList.get(position);
         holder.tvName.setText(score.getName());
-        holder.tvScore.setText(GlobalLib.trimZero(String.valueOf(score.getScore())));
-        holder.itemView.setOnClickListener(itemClickListener);
+        holder.tvScore.setText(GlobalLib.formatFloat(score.getCalcScore(), 2));
+        holder.itemView.setOnClickListener(v -> {
+            if (mClickListener != null) {
+                mClickListener.onClick(score);
+            }
+        });
     }
 
     @Override
@@ -53,8 +57,8 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
         mScoreList = scores;
     }
 
-    public void setItemClickListener(View.OnClickListener listener) {
-        itemClickListener = listener;
+    public void setOnScoreClickListener(OnScoreClickListener listener) {
+        mClickListener = listener;
     }
 
     class ScoreViewHolder extends RecyclerView.ViewHolder {
@@ -67,5 +71,9 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
             tvName = itemView.findViewById(R.id.tv_score_name);
             tvScore = itemView.findViewById(R.id.tv_score_score);
         }
+    }
+
+    public interface OnScoreClickListener {
+        void onClick(Score score);
     }
 }
