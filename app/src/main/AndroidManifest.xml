@@ -28,7 +28,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="ExportedService,GoogleAppIndexingWarning,UnusedAttribute">
-        <activity android:name=".mvp.score_item.ScoreItemActivity" />
 
         <activity android:name=".mvp.other.SplashActivity">
             <intent-filter>
@@ -40,16 +39,17 @@
         <activity android:name=".mvp.main.MainActivity" />
         <activity android:name=".mvp.login.LoginActivity" />
         <activity android:name=".mvp.syllabus.SyllabusActivity" />
-        <activity android:name=".mvp.syllabus_item.SyllabusItemActivity" />
+        <activity android:name=".mvp.syllabus_item.SyllabusItemActivity"/>
         <activity android:name=".mvp.syllabus_setting.SyllabusSettingActivity" />
-        <activity android:name=".mvp.exam.ExamActivity" />
         <activity android:name=".mvp.score.ScoreActivity" />
+        <activity android:name=".mvp.score_item.ScoreItemActivity" />
         <activity android:name=".mvp.score_filter.ScoreFilterActivity" />
-        <activity android:name=".mvp.web.WebActivity" />
-        <activity android:name=".mvp.other.AboutActivity" />
         <activity android:name=".electricity.splash.ElecSplashActivity" />
         <activity android:name=".electricity.login.ElecLoginActivity" />
         <activity android:name=".electricity.main.ElecMainActivity" />
+        <activity android:name=".mvp.exam.ExamActivity" />
+        <activity android:name=".mvp.web.WebActivity" />
+        <activity android:name=".mvp.other.AboutActivity" />
         <meta-data
             android:name="BUGLY_APP_CHANNEL"
             android:value="${channel}" />

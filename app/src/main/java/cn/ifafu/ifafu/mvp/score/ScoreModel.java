@@ -22,8 +22,6 @@ import io.reactivex.Observable;
 
 class ScoreModel extends BaseZFModel implements ScoreContract.Model {
 
-    private User user = repository.getUser();
-
     ScoreModel(Context context) {
         super(context);
     }
@@ -38,7 +36,9 @@ class ScoreModel extends BaseZFModel implements ScoreContract.Model {
                         params.put("ddlXN", year);
                         params.put("ddlXQ", term);
                         params.put("ddl_kcxz", "");
-                        if (term.equals("全部")) {
+                        if (year.equals("全部") && term.equals("全部")) {
+                            params.put("btn_zcj", "����ɼ�");
+                        } else if (term.equals("全部")) {
                             params.put("btn_xn", "ѧ�ڳɼ�");
                         } else {
                             params.put("btn_xq", "ѧ�ڳɼ�");
@@ -47,6 +47,32 @@ class ScoreModel extends BaseZFModel implements ScoreContract.Model {
                         params.put("ddlxn", year);
                         params.put("ddlxq", term);
                         params.put("btnCx", " ��  ѯ ");
+                    }
+                    return APIManager.getZhengFangAPI()
+                            .getInfo(url, url, params)
+                            .compose(new ScoreParser(user))
+                            .map(Response::success);
+                });
+    }
+
+    @Override
+    public Observable<Response<List<Score>>> getScoresFromNet() {
+        User user = repository.getUser();
+        String url = School.getUrl(ZhengFang.SCORE, user);
+        return initParams(url, School.getUrl(ZhengFang.MAIN, user))
+                .flatMap(params -> {
+                    switch (user.getSchoolCode()) {
+                        case School.FAFU:
+                            params.put("ddlxn", "全部");
+                            params.put("ddlxq", "全部");
+                            params.put("btnCx", " ��  ѯ ");
+                            break;
+                        case School.FAFU_JS:
+                            params.put("ddlXN", "");
+                            params.put("ddlXQ", "");
+                            params.put("ddl_kcxz", "");
+                            params.put("btn_zcj", "����ɼ�");
+                            break;
                     }
                     return APIManager.getZhengFangAPI()
                             .getInfo(url, url, params)
@@ -79,7 +105,9 @@ class ScoreModel extends BaseZFModel implements ScoreContract.Model {
             for (int i = 0; i < 4; i++) {
                 yearList.add(String.format("%d-%d", year - i - 1, year - i));
             }
-            yearList.add("全部");
+            if (repository.getUser().getSchoolCode() == School.FAFU) {
+                yearList.add("全部");
+            }
             List<String> termList = Arrays.asList("1", "2", "全部");
             Map<String, List<String>> map = new HashMap<>();
             map.put("ddlxn", yearList);
@@ -115,5 +143,10 @@ class ScoreModel extends BaseZFModel implements ScoreContract.Model {
     public void delete(String year, String term) {
         List<Score> scores = repository.getScores(year, term);
         repository.deleteScore(scores);
+    }
+
+    @Override
+    public void deleteAllOnlineCourse() {
+        repository.deleteAllOnlineCourse();
     }
 }

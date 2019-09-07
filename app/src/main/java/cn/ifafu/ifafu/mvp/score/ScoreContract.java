@@ -30,7 +30,7 @@ class ScoreContract {
 
     interface Presenter extends IZFPresenter {
 
-        void update();
+        void updateFromNet();
 
         void switchYearTerm(int op1, int op2);
 
@@ -43,6 +43,8 @@ class ScoreContract {
 
         Observable<Response<List<Score>>> getScoresFromNet(String year, String term);
 
+        Observable<Response<List<Score>>> getScoresFromNet();
+
         List<Score> getScoresFromDB(String year, String term);
 
         Observable<Map<String, List<String>>> getYearTermList();
@@ -52,6 +54,8 @@ class ScoreContract {
         void save(List<Score> list);
 
         void delete(String year, String term);
+
+        void deleteAllOnlineCourse();
     }
 
 }

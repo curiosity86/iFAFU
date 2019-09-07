@@ -37,7 +37,6 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                 .statusBarDarkFont(true)
                 .init();
 
-
         TextView aboutAppSubName = findViewById(R.id.aboutAppSubName);
 
         aboutAppSubName.setText(String.format(

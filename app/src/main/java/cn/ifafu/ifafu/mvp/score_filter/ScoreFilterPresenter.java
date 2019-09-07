@@ -1,6 +1,5 @@
 package cn.ifafu.ifafu.mvp.score_filter;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 
 import java.util.List;
@@ -52,26 +51,7 @@ class ScoreFilterPresenter extends BasePresenter<ScoreFilterConstant.View, Score
 
     private void calcIES(List<Score> scoreList) {
         mCompDisposable.add(Observable
-                .fromCallable(() -> {
-                    if (scoreList == null || scoreList.isEmpty()) {
-                        return "0";
-                    }
-                    float totalScore = 0;
-                    float totalCredit = 0;
-                    float totalMinus = 0;
-                    for (Score score : scoreList) {
-                        if (score.getIsIESItem()) {
-                            totalScore += score.getScore() * score.getCredit();
-                            totalCredit += score.getCredit();
-                            if (score.getScore() < 60 && score.getMakeupScore() < 60) {
-                                totalMinus += score.getCredit();
-                            }
-                        }
-                    }
-                    @SuppressLint("DefaultLocale")
-                    String result = String.format("%.2f",totalScore / totalCredit - totalMinus);
-                    return GlobalLib.trimZero(result);
-                })
+                .fromCallable(() -> GlobalLib.formatFloat(GlobalLib.getIES(scoreList), 2))
                 .compose(RxUtils.singleToMain())
                 .subscribe(ies -> mView.setIES(ies), this::onError)
         );

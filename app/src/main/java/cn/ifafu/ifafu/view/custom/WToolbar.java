@@ -1,5 +1,6 @@
 package cn.ifafu.ifafu.view.custom;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
@@ -23,6 +24,7 @@ import androidx.appcompat.widget.TintTypedArray;
 
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.util.DensityUtils;
+import cn.ifafu.ifafu.util.GlobalLib;
 
 public class WToolbar extends RelativeLayout {
 
@@ -78,7 +80,16 @@ public class WToolbar extends RelativeLayout {
         final Drawable navIcon = a.getDrawable(R.styleable.WToolbar_navigationIcon);
         if (navIcon != null) {
             setNavigationIcon(navIcon);
+        } else {
+            setNavigationIcon(context.getDrawable(R.drawable.ic_back));
         }
+        setNavigationOnClickListener(v -> {
+            Activity activity = GlobalLib.getActivityFromView(WToolbar.this);
+            if (activity != null) {
+                activity.finish();
+            }
+        });
+
         final CharSequence navDesc = a.getText(R.styleable.WToolbar_navigationContentDescription);
         if (!TextUtils.isEmpty(navDesc)) {
             setNavigationContentDescription(navDesc);

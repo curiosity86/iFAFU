@@ -14,13 +14,19 @@ public class Constant {
 
     public static final String SP_ELEC = "elec";
 
-    public static final int MAIN_ACTIVITY = 866;
-    public static final int SYLLABUS_ACTIVITY = 96;
-    public static final int SYLLABUS_ITEM_ACTIVITY = 98;
-    public static final int SYLLABUS_SETTING_ACTIVITY = 35;
-    public static final int EXAM_ACTIVITY = 33;
-    public static final int SCORE_ACTIVITY = 47;
-    public static final int SCORE_ITEM_ACTIVITY = 365;
-    public static final int SCORE_FILTER_ACTIVITY = 579;
+    public static final int SPLASH_ACTIVITY = 100;
+    public static final int MAIN_ACTIVITY = 200;
+
+    public static final int SYLLABUS_ACTIVITY = 300;
+    public static final int SYLLABUS_ITEM_ACTIVITY = 301;
+    public static final int SYLLABUS_SETTING_ACTIVITY = 302;
+    public static final int SYLLABUS_WIDGET = 310;
+
+    public static final int EXAM_ACTIVITY = 400;
+    public static final int SCORE_ACTIVITY = 500;
+    public static final int SCORE_ITEM_ACTIVITY = 600;
+    public static final int SCORE_FILTER_ACTIVITY = 700;
+
+
 
 }
