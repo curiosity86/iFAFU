@@ -2,6 +2,7 @@ package cn.ifafu.ifafu.view.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,16 +30,19 @@ class ScoreFilterAdapter(context: Context, var data: List<Score>) : RecyclerView
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val score = data[position]
+        Log.d("ScoreFilterAdapter", "$score")
         holder.titleTV.text = score.name
         holder.scoreTV.text = GlobalLib.trimZero(String.format("%.2f", score.calcScore)) + "分"
+        holder.checkBox.setOnCheckedChangeListener(null)
         holder.checkBox.setChecked(score.isIESItem, false)
         holder.checkBox.setOnCheckedChangeListener { checkBox, isChecked ->
+            Log.d("ScoreFilterAdapter", "OnCheckedChange： $isChecked")
             mOnCheckedListener?.onCheckedChanged(checkBox, score, isChecked)
-            score.isIESItem = isChecked
         }
         holder.itemView.setOnClickListener {
+            Log.d("ScoreFilterAdapter", "OnClick: ${!holder.checkBox.isChecked}")
+            holder.checkBox.setChecked(!holder.checkBox.isChecked, false)
             mOnCheckedListener?.onCheckedChanged(it, score, holder.checkBox.isChecked)
-            score.isIESItem = holder.checkBox.isChecked
         }
     }
 

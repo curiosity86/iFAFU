@@ -36,9 +36,13 @@ public class MainContract {
 
         void shareApp();
 
-        void updateView();
+        void onRefresh();
 
-        void updateCourseView();
+        void updateWeather();
+
+        void updateNextCourseView();
+
+        void updateTimeLine();
 
         /**
          * 退出账号

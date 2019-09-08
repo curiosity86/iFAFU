@@ -23,7 +23,7 @@ public class ElecSplashPresenter extends BasePresenter<ElecSplashContract.View, 
 
     @SuppressLint("CheckResult")
     @Override
-    public void onStart() {
+    public void onCreate() {
         Observable
                 .fromCallable(this::jumpJudge)
                 .subscribeOn(Schedulers.io())

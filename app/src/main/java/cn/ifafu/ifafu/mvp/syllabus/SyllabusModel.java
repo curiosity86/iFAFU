@@ -1,5 +1,6 @@
 package cn.ifafu.ifafu.mvp.syllabus;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
 import java.text.MessageFormat;
@@ -85,6 +86,7 @@ public class SyllabusModel extends BaseZFModel implements SyllabusContract.Model
             }
         }
         //将课程按节数排列
+        @SuppressLint("UseSparseArrays")
         Map<Integer, Course> courseMap = new HashMap<>();
         for (Course course: todayCourses) {
             for (int i = course.getBeginNode(); i <= course.getEndNode(); i++) {
@@ -156,9 +158,11 @@ public class SyllabusModel extends BaseZFModel implements SyllabusContract.Model
     public Observable<List<Course>> getCoursesFromNet() {
         String url = School.getUrl(ZhengFang.SYLLABUS, user);
         String referer = School.getUrl(ZhengFang.MAIN, user);
-        return APIManager.getZhengFangAPI()
-                .getInfo(url, referer, Collections.emptyMap())
-                .compose(new SyllabusParser(user));
+        return initParams(url, referer).flatMap(map ->
+            APIManager.getZhengFangAPI()
+                    .getInfo(url, referer, Collections.emptyMap())
+                    .compose(new SyllabusParser(user))
+        );
     }
 
     @Override

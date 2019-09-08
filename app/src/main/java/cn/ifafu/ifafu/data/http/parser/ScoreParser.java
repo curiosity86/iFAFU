@@ -11,10 +11,7 @@ import java.util.List;
 import cn.ifafu.ifafu.app.School;
 import cn.ifafu.ifafu.data.entity.Score;
 import cn.ifafu.ifafu.data.entity.User;
-import cn.ifafu.ifafu.data.exception.NoAuthException;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import okhttp3.ResponseBody;
+import cn.ifafu.ifafu.util.NumUtils;
 
 public class ScoreParser extends BaseParser<List<Score>> {
 
@@ -26,7 +23,8 @@ public class ScoreParser extends BaseParser<List<Score>> {
         this.schoolCode = user.getSchoolCode();
     }
 
-    private List<Score> parse(String html) {
+    @Override
+    public List<Score> parse(String html) {
         List<Score> list = new ArrayList<>();
 
         Document document = Jsoup.parse(html);
@@ -71,20 +69,12 @@ public class ScoreParser extends BaseParser<List<Score>> {
         score.setName(eles.get(3).text());
         score.setNature(eles.get(4).text());
         score.setAttr(eles.get(5).text());
-        score.setCredit(Float.parseFloat(eles.get(6).text()));
-        score.setScore(Float.parseFloat(eles.get(7).text()));
-        try {
-            float makeupScore = Float.parseFloat(eles.get(8).text());
-            score.setMakeupScore(makeupScore);
-        } catch (Exception ignored) {
-        }
-        if (!eles.get(9).text().isEmpty()) {
-            score.setRestudy(false);
-        } else {
-            score.setRestudy(true);
-        }
+        score.setCredit(NumUtils.toFloat(eles.get(6).text()));
+        score.setScore(NumUtils.toFloat(eles.get(7).text()));
+        score.setMakeupScore(NumUtils.toFloat(eles.get(8).text()));
+        score.setRestudy(eles.get(9).text().isEmpty());
         score.setInstitute(eles.get(10).text());
-        score.setGpa(Float.parseFloat(eles.get(11).text()));
+        score.setGpa(NumUtils.toFloat(eles.get(11).text()));
         score.setRemarks(eles.get(12).text());
         score.setMakeupRemarks(eles.get(13).text());
         score.setIsIESItem(!score.getNature().contains("任意选修") && !score.getName().contains("体育"));
@@ -93,37 +83,21 @@ public class ScoreParser extends BaseParser<List<Score>> {
 
     private Score paresToScoreFAFUJS(Elements eles) {
         Score score = new Score();
+        score.setId(Long.parseLong(eles.get(2).text()));
         score.setYear(eles.get(0).text());
         score.setTerm(eles.get(1).text());
-        score.setId(Long.parseLong(eles.get(2).text()));
         score.setName(eles.get(3).text());
         score.setNature(eles.get(4).text());
         score.setAttr(eles.get(5).text());
-        score.setCredit(Float.parseFloat(eles.get(6).text()));
-        score.setGpa(Float.parseFloat(eles.get(7).text()));
-        score.setScore(Float.parseFloat(eles.get(8).text()));
-        try {
-            float makeupScore = Float.parseFloat(eles.get(10).text());
-            score.setMakeupScore(makeupScore);
-        } catch (Exception ignored) {
-            score.setMakeupScore(0F);
-        }
+        score.setCredit(NumUtils.toFloat(eles.get(6).text()));
+        score.setGpa(NumUtils.toFloat(eles.get(7).text()));
+        score.setMakeupScore(NumUtils.toFloat(eles.get(10).text()));
+        score.setScore(NumUtils.toFloat(eles.get(8).text()));
         score.setInstitute(eles.get(12).text());
         score.setRemarks(eles.get(13).text());
         score.setMakeupRemarks(eles.get(14).text());
         score.setIsIESItem(!score.getNature().contains("任意选修") && !score.getName().contains("体育"));
         return score;
-    }
-
-    @Override
-    public ObservableSource<List<Score>> apply(Observable<ResponseBody> upstream) {
-        return upstream.map(responseBody -> {
-            String html = responseBody.string();
-            if (html.contains("请登录")) {
-                throw new NoAuthException();
-            }
-            return parse(html);
-        });
     }
 
 }

@@ -3,6 +3,7 @@ package cn.ifafu.ifafu.mvp.other;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -16,11 +17,13 @@ import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.app.IFAFU;
 import cn.ifafu.ifafu.data.entity.User;
+import cn.ifafu.ifafu.data.exception.LoginInfoErrorException;
 import cn.ifafu.ifafu.data.local.DaoManager;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
 import cn.ifafu.ifafu.mvp.exam.ExamActivity;
 import cn.ifafu.ifafu.mvp.login.LoginActivity;
 import cn.ifafu.ifafu.mvp.main.MainActivity;
+import cn.ifafu.ifafu.mvp.main.MainModel;
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusActivity;
 import cn.ifafu.ifafu.util.RxUtils;
 import cn.ifafu.ifafu.util.SPUtils;
@@ -40,6 +43,22 @@ public class SplashActivity extends BaseActivity {
     @SuppressLint("CheckResult")
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
+        Log.d("SplashActivity", "IFAFU.FIRST_START_APP: " + IFAFU.FIRST_START_APP);
+        if (IFAFU.FIRST_START_APP) {
+            IFAFU.loginDisposable = (new MainModel(this)).reLogin()
+                    .compose(RxUtils.ioToMain())
+                    .subscribe(response -> {
+                        Log.d("SplashActivity", "reLogin: " + response.getBody());
+                    }, throwable -> {
+                        Log.d("SplashActivity", "onError");
+                        if (throwable instanceof LoginInfoErrorException) {
+                            startActivity(new Intent(this, LoginActivity.class));
+                            showMessage(throwable.getMessage());
+                        }
+                        throwable.printStackTrace();
+                    });
+        }
+
         Observable
                 .fromCallable(() -> {
                     if (IFAFU.FIRST_START_APP) {

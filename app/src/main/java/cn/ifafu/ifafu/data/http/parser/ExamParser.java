@@ -8,18 +8,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import cn.ifafu.ifafu.data.entity.Exam;
 import cn.ifafu.ifafu.data.entity.Response;
 import cn.ifafu.ifafu.data.entity.User;
-import cn.ifafu.ifafu.data.exception.NoAuthException;
 import cn.ifafu.ifafu.util.RegexUtils;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import okhttp3.ResponseBody;
+import io.reactivex.ObservableTransformer;
 
-public class ExamParser extends BaseParser<Response<List<Exam>>> {
+public class ExamParser implements ObservableTransformer<String, Response<List<Exam>>> {
 
     private String account;
     private int schoolCode;
@@ -82,15 +80,10 @@ public class ExamParser extends BaseParser<Response<List<Exam>>> {
     }
 
     @Override
-    public ObservableSource<Response<List<Exam>>> apply(Observable<ResponseBody> upstream) {
-        return upstream.map(responseBody -> {
-            String html = responseBody.string();
-            if (html.contains("请登录")) throw new NoAuthException();
+    public ObservableSource<Response<List<Exam>>> apply(Observable<String> upstream) {
+        return upstream.map(html -> {
             List<Exam> list = parse(html);
-            Map<String, String> params = getHiddenParams(html);
-            Response<List<Exam>> response = Response.success(list);
-            response.setHiddenParams(params);
-            return response;
+            return Response.success(list);
         });
     }
 }

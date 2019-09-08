@@ -21,6 +21,7 @@ import cn.ifafu.ifafu.data.http.parser.ExamParser;
 import cn.ifafu.ifafu.data.local.DaoManager;
 import cn.ifafu.ifafu.mvp.base.BaseZFModel;
 import io.reactivex.Observable;
+import okhttp3.ResponseBody;
 
 public class ExamModel extends BaseZFModel implements ExamContract.Model {
 
@@ -34,13 +35,15 @@ public class ExamModel extends BaseZFModel implements ExamContract.Model {
     @Override
     public Observable<Response<List<Exam>>> getExamsFromNet(String year, String term) {
         User user = repository.getUser();
-        String url = School.getUrl(ZhengFang.EXAM, user);
-        return initParams(url, School.getUrl(ZhengFang.MAIN, user))
+        String examUrl = School.getUrl(ZhengFang.EXAM, user);
+        String mainUrl = School.getUrl(ZhengFang.MAIN, user);
+        return initParams(examUrl, mainUrl)
                 .flatMap(params -> {
                     params.put("xnd", year);
                     params.put("xqd", term);
                     return APIManager.getZhengFangAPI()
-                            .getInfo(url, url, params)
+                            .getInfo(examUrl, examUrl, params)
+                            .map(ResponseBody::string)
                             .compose(new ExamParser(user));
                 });
     }

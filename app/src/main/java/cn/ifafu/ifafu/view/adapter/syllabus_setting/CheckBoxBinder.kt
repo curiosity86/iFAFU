@@ -18,6 +18,12 @@ class CheckBoxBinder
 
     override fun onBindViewHolder(holder: ViewHolder, item: CheckBoxItem) {
         holder.tvTitle.text = item.title
+        if (item.tip.isNotBlank()) {
+            holder.tvTip.visibility = View.VISIBLE
+            holder.tvTip.text = item.tip
+        } else {
+            holder.tvTip.visibility = View.GONE
+        }
         holder.checkBox.setChecked(item.checked, false)
         holder.itemView.setOnClickListener {
             holder.checkBox.isChecked = !holder.checkBox.isChecked
@@ -31,6 +37,7 @@ class CheckBoxBinder
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvTitle : TextView = itemView.findViewById(R.id.tv_title)
+        val tvTip: TextView = itemView.findViewById(R.id.tv_tip)
         val checkBox: SmoothCheckBox = itemView.findViewById(R.id.checkbox)
     }
 }

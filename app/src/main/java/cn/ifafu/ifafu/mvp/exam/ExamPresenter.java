@@ -22,8 +22,7 @@ class ExamPresenter extends BaseZFPresenter<ExamContract.View, ExamContract.Mode
     }
 
     @Override
-    public void onStart() {
-//        mView.setYearTermOptions(yearIndex, termIndex);
+    public void onCreate() {
         mCompDisposable.add(mModel
                 .getYearTermList()
                 .doOnNext(map -> {
@@ -40,7 +39,6 @@ class ExamPresenter extends BaseZFPresenter<ExamContract.View, ExamContract.Mode
                     if (exams.isEmpty()) {
                         return mModel.getExamsFromNet(mCurrentYear, mCurrentTerm)
                                 .map(Response::getBody)
-                                .retryWhen(this::ensureTokenAlive)
                                 .doOnNext(list -> mModel.save(list));
                     } else {
                         return Observable.just(exams);
@@ -61,7 +59,6 @@ class ExamPresenter extends BaseZFPresenter<ExamContract.View, ExamContract.Mode
     public void update() {
         mCompDisposable.add(mModel.getExamsFromNet(mCurrentYear, mCurrentTerm)
                 .map(Response::getBody)
-                .retryWhen(this::ensureTokenAlive)
                 .doOnNext(list -> mModel.save(list))
                 .compose(RxUtils.ioToMain())
                 .doOnSubscribe(disposable -> mView.showLoading())
@@ -82,7 +79,6 @@ class ExamPresenter extends BaseZFPresenter<ExamContract.View, ExamContract.Mode
                     if (exams.isEmpty()) {
                         return mModel.getExamsFromNet(mCurrentYear, mCurrentTerm)
                                 .map(Response::getBody)
-                                .retryWhen(this::ensureTokenAlive)
                                 .doOnNext(list -> mModel.save(list));
                     } else {
                         return Observable.just(exams);

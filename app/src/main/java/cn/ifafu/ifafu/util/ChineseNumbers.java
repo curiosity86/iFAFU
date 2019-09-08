@@ -364,4 +364,5 @@ public class ChineseNumbers {
         }
         return total;
     }
+
 }

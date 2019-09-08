@@ -18,7 +18,7 @@ internal class ScorePresenter(view: ScoreContract.View)
     private var mCurrentYear: String? = null
     private var mCurrentTerm: String? = null
 
-    override fun onStart() {
+    override fun onCreate() {
         mCompDisposable.add(mModel
                 .yearTermList
                 .doOnNext { map: Map<String, List<String>> ->
@@ -49,27 +49,10 @@ internal class ScorePresenter(view: ScoreContract.View)
 
     private fun update(showMessage: Boolean) {
         mCompDisposable.add(mModel
-                .scoresFromNet
-                .retryWhen(this::ensureTokenAlive)
-                .map { it.body }
-                .map { list: List<Score> ->
-                    if (list.isNotEmpty()) {
-                        mModel.deleteAllOnlineCourse()
-                        mModel.save(list)
-                        list.filter {
-                            if (mCurrentYear == "全部" && mCurrentTerm == "全部") {
-                                true;
-                            } else if (mCurrentYear == "全部") {
-                                it.term == mCurrentTerm
-                            } else if (mCurrentTerm == "全部") {
-                                it.year == mCurrentYear
-                            } else {
-                                it.year == mCurrentYear && it.term == mCurrentTerm
-                            }
-                        }
-                    } else {
-                        mModel.getScoresFromDB(mCurrentYear, mCurrentTerm)
-                    }
+                .getScoresFromNet(mCurrentYear, mCurrentTerm)
+                .doOnNext {
+                    mModel.delete(mCurrentYear, mCurrentTerm)
+                    mModel.save(it)
                 }
                 .compose(RxUtils.singleToMain())
                 .doOnSubscribe { mView.showLoading() }
@@ -93,9 +76,10 @@ internal class ScorePresenter(view: ScoreContract.View)
                 .flatMap { scores: List<Score> ->
                     if (scores.isEmpty()) {
                         mModel.getScoresFromNet(mCurrentYear, mCurrentTerm)
-                                .map { it.body }
-                                .retryWhen(this::ensureTokenAlive)
-                                .doOnNext { mModel.save(it) }
+                                .doOnNext {
+                                    mModel.delete(mCurrentYear, mCurrentTerm)
+                                    mModel.save(it)
+                                }
                     } else {
                         Observable.just(scores)
                     }
@@ -148,7 +132,7 @@ internal class ScorePresenter(view: ScoreContract.View)
     private fun calcGPA(list: List<Score>) {
         var totalGPA = 0f
         list.forEach {
-            totalGPA += it.gpa
+            totalGPA += (it.gpa ?: 0F)
         }
         val gpa: String = GlobalLib.formatFloat(totalGPA, 2)
         mView.setGPAText(mView.context.getString(string.score_gpa, gpa))

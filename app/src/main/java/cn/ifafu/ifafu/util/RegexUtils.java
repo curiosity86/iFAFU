@@ -10,14 +10,24 @@ public class RegexUtils {
     /**
      * 查找字符串中的数字
      */
-    public static List<Integer> getNumbers(String str) {
+    public static List<Integer> getNumbers(String text) {
         List<Integer> ans = new ArrayList<>();
         Pattern p = Pattern.compile("[0-9]+");
-        Matcher m = p.matcher(str);
+        Matcher m = p.matcher(text);
         while (m.find()) {
             ans.add(Integer.parseInt(m.group()));
         }
         return ans;
+    }
+
+    private static List<String> getStrings(String text, String regex) {
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(text);
+        List<String> result = new ArrayList<>();
+        while (m.find()) {
+            result.add(m.group());
+        }
+        return result;
     }
 
 }

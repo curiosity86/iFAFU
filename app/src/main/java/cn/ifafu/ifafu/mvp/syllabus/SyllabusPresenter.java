@@ -19,7 +19,7 @@ public class SyllabusPresenter extends BaseZFPresenter<SyllabusContract.View, Sy
 
     @SuppressLint("DefaultLocale")
     @Override
-    public void onStart() {
+    public void onCreate() {
         mView.setSyllabusSetting(mModel.getSyllabusSetting());
         updateSyllabusLocal();
     }
@@ -66,7 +66,6 @@ public class SyllabusPresenter extends BaseZFPresenter<SyllabusContract.View, Sy
 
     private Observable<List<Course>> onlineCoursesObservable() {
         return mModel.getCoursesFromNet()
-                .retryWhen(this::ensureTokenAlive)
                 .doOnNext(courses -> {
                     // 保存到数据库
                     mModel.clearOnlineCourses();

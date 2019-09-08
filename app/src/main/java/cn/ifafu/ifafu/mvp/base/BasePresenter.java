@@ -1,5 +1,7 @@
 package cn.ifafu.ifafu.mvp.base;
 
+import android.database.sqlite.SQLiteConstraintException;
+
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -30,7 +32,7 @@ public abstract class BasePresenter<V extends IView, M extends IModel> implement
     }
 
     @Override
-    public void onStart() {
+    public void onCreate() {
 
     }
 
@@ -50,7 +52,9 @@ public abstract class BasePresenter<V extends IView, M extends IModel> implement
                 || throwable instanceof UnknownHostException) {
             mView.showMessage(R.string.net_error);
         } else if (throwable instanceof SocketTimeoutException) {
-            mView.showMessage(R.string.net_timeout_error);
+            mView.showMessage(R.string.net_socket_timeout_error);
+        } else if (throwable instanceof SQLiteConstraintException) {
+            mView.showMessage(R.string.net_sql_constraint_error);
         } else {
             mView.showMessage(throwable.getMessage());
         }

@@ -61,20 +61,20 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(
                 SeekBarItem("课程字体大小", setting.textSize, "sp", 8, 18) {
                     setting.textSize = it
                 },
-                CheckBoxItem("周日为每周第一天", setting.firstDayOfWeek == Calendar.SUNDAY) {
+                CheckBoxItem("周日为每周第一天", "请根据学校情况设置", setting.firstDayOfWeek == Calendar.SUNDAY) {
                     if (it) {
                         setting.firstDayOfWeek = Calendar.SUNDAY
                     } else {
                         setting.firstDayOfWeek = Calendar.MONDAY
                     }
                 },
-                CheckBoxItem("显示水平分割线", setting.showHorizontalLine) {
+                CheckBoxItem("显示水平分割线", "", setting.showHorizontalLine) {
                     setting.showHorizontalLine = it
                 },
-                CheckBoxItem("显示垂直分割线", setting.showVerticalLine) {
+                CheckBoxItem("显示垂直分割线", "", setting.showVerticalLine) {
                     setting.showVerticalLine = it
                 },
-                CheckBoxItem("显示上课时间", setting.showBeginTimeText) {
+                CheckBoxItem("显示上课时间", "", setting.showBeginTimeText) {
                     setting.showBeginTimeText = it
                 },
                 TextViewItem("课表背景", "长按重置为默认背景", {

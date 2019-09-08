@@ -3,7 +3,6 @@ package cn.ifafu.ifafu.mvp.score;
 import java.util.List;
 import java.util.Map;
 
-import cn.ifafu.ifafu.data.entity.Response;
 import cn.ifafu.ifafu.data.entity.Score;
 import cn.ifafu.ifafu.mvp.base.i.IView;
 import cn.ifafu.ifafu.mvp.base.i.IZFModel;
@@ -41,9 +40,9 @@ class ScoreContract {
 
     interface Model extends IZFModel {
 
-        Observable<Response<List<Score>>> getScoresFromNet(String year, String term);
+        Observable<List<Score>> getScoresFromNet(String year, String term);
 
-        Observable<Response<List<Score>>> getScoresFromNet();
+        Observable<List<Score>> getScoresFromNet();
 
         List<Score> getScoresFromDB(String year, String term);
 

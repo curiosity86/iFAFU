@@ -13,24 +13,24 @@ public class Score extends YearTerm {
     private String name; //课程名称
     private String nature; //课程性质
     private String attr; //课程归属
-    private float credit = -1; //学分
-    private float score = -1; //成绩
-    private float makeupScore = -1; //补考成绩
-    private boolean restudy = false; //是否重修
+    private Float credit; //学分
+    private Float score; //成绩
+    private Float makeupScore; //补考成绩
+    private Boolean restudy = false; //是否重修
     private String institute; //开课学院
-    private float gpa = -1; //绩点
+    private Float gpa; //绩点
     private String remarks; //备注
     private String makeupRemarks; //补考备注
-    private boolean isIESItem = true; //是否记入智育分
+    private Boolean isIESItem; //是否记入智育分
 
     private String account;
     private String year;
     private String term;
 
-    @Generated(hash = 984428122)
-    public Score(Long id, String name, String nature, String attr, float credit,
-            float score, float makeupScore, boolean restudy, String institute,
-            float gpa, String remarks, String makeupRemarks, boolean isIESItem,
+    @Generated(hash = 1567796955)
+    public Score(Long id, String name, String nature, String attr, Float credit,
+            Float score, Float makeupScore, Boolean restudy, String institute,
+            Float gpa, String remarks, String makeupRemarks, Boolean isIESItem,
             String account, String year, String term) {
         this.id = id;
         this.name = name;
@@ -53,7 +53,6 @@ public class Score extends YearTerm {
     @Generated(hash = 226049941)
     public Score() {
     }
-
 
     public Long getId() {
         return this.id;
@@ -79,35 +78,35 @@ public class Score extends YearTerm {
         this.nature = nature;
     }
 
-    public float getCredit() {
+    public Float getCredit() {
         return this.credit;
     }
 
-    public void setCredit(float credit) {
+    public void setCredit(Float credit) {
         this.credit = credit;
     }
 
-    public float getScore() {
+    public Float getScore() {
         return this.score;
     }
 
-    public void setScore(float score) {
+    public void setScore(Float score) {
         this.score = score;
     }
 
-    public float getMakeupScore() {
+    public Float getMakeupScore() {
         return this.makeupScore;
     }
 
-    public void setMakeupScore(float makeupScore) {
+    public void setMakeupScore(Float makeupScore) {
         this.makeupScore = makeupScore;
     }
 
-    public boolean getRestudy() {
+    public Boolean getRestudy() {
         return this.restudy;
     }
 
-    public void setRestudy(boolean restudy) {
+    public void setRestudy(Boolean restudy) {
         this.restudy = restudy;
     }
 
@@ -119,11 +118,11 @@ public class Score extends YearTerm {
         this.institute = institute;
     }
 
-    public float getGpa() {
+    public Float getGpa() {
         return this.gpa;
     }
 
-    public void setGpa(float gpa) {
+    public void setGpa(Float gpa) {
         this.gpa = gpa;
     }
 
@@ -175,20 +174,20 @@ public class Score extends YearTerm {
         this.makeupRemarks = makeupRemarks;
     }
 
-    public boolean getIsIESItem() {
+    public Boolean getIsIESItem() {
         return this.isIESItem;
     }
 
-    public void setIsIESItem(boolean isIESItem) {
+    public void setIsIESItem(Boolean isIESItem) {
         this.isIESItem = isIESItem;
     }
 
-    public float getCalcScore() {
+    public Float getCalcScore() {
         if (score < 60) { //不及格
             if (makeupScore == -1) { //补考成绩未出，以原成绩计算
                 return score;
             } else if (makeupScore >= 60) { //补考成绩及格，以60分计算
-                return 60;
+                return 60F;
             } else { //补考成绩不及格，以补考成绩计算，并以学分1:1比例扣除相应智育分
                 return makeupScore;
             }
@@ -201,18 +200,8 @@ public class Score extends YearTerm {
     @Override
     public String toString() {
         return "Score{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", nature='" + nature + '\'' +
-                ", credit=" + credit +
-                ", score=" + score +
-                ", makeupScore=" + makeupScore +
-                ", restudy=" + restudy +
-                ", institute='" + institute + '\'' +
-                ", gpa=" + gpa +
-                ", account='" + account + '\'' +
-                ", year='" + year + '\'' +
-                ", term='" + term + '\'' +
+                "name='" + name + '\'' +
+                ", isIESItem=" + isIESItem +
                 '}';
     }
 }

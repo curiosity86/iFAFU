@@ -33,7 +33,7 @@ class SyllabusItemPresenter extends BasePresenter<SyllabusItemContract.View, Syl
     }
 
     @Override
-    public void onStart() {
+    public void onCreate() {
         SyllabusSetting setting = mModel.getSyllabusSetting();
         for (int i = 1; i <= setting.getNodeCnt(); i++) {
             nodes.add("第" + i + "节");

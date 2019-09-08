@@ -78,7 +78,7 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
     @Override
     protected void onStart() {
         super.onStart();
-        mPresenter.updateView();
+        mPresenter.updateNextCourseView();
     }
 
     @Override
@@ -174,7 +174,7 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == Constant.SYLLABUS_ACTIVITY) {
-            mPresenter.updateCourseView();
+            mPresenter.updateNextCourseView();
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }

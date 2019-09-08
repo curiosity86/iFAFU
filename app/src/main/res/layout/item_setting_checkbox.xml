@@ -1,16 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
+    android:layout_height="wrap_content"
     android:padding="16dp"
-    android:background="@color/white" >
+    android:background="@color/white"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
-        android:layout_gravity="start|center_vertical"/>
+        android:orientation="vertical"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/tv_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textSize="12sp"
+            android:textColor="#666" />
+
+    </LinearLayout>
 
     <cn.ifafu.ifafu.view.custom.SmoothCheckBox
         android:id="@+id/checkbox"
@@ -19,4 +37,4 @@
         android:layout_marginEnd="4dp"
         android:layout_gravity="end|center_vertical" />
 
-</FrameLayout>
+</LinearLayout>

@@ -19,7 +19,7 @@ public class ElecLoginPresenter extends BasePresenter<ElecLoginContract.View, El
     }
 
     @Override
-    public void onStart() {
+    public void onCreate() {
         UserMe user = mModel.getUserMe();
         if (user != null) {
             mView.setSnoEtText(user.getSno());

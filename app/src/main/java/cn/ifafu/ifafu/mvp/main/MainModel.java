@@ -35,7 +35,7 @@ public class MainModel extends BaseZFModel implements MainContract.Model {
 
     private User user = repository.getUser();
 
-    MainModel(Context context) {
+    public MainModel(Context context) {
         super(context);
     }
 

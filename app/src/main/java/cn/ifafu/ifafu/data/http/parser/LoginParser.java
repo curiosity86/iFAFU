@@ -10,9 +10,6 @@ import java.util.regex.Pattern;
 
 import cn.ifafu.ifafu.data.entity.Response;
 import cn.ifafu.ifafu.data.exception.VerifyException;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import okhttp3.ResponseBody;
 
 public class LoginParser extends BaseParser<Response<String>> {
 
@@ -22,7 +19,7 @@ public class LoginParser extends BaseParser<Response<String>> {
      *         {@link Response#FAILURE} 信息错误 msg = return msg
      *         {@link Response#ERROR}   服务器错误  msg = error msg
      */
-    private Response<String> parse(String html) throws VerifyException {
+    public Response<String> parse(String html) throws VerifyException {
         Document doc = Jsoup.parse(html);
         Element ele = doc.getElementById("xhxm");
         if (ele != null) {
@@ -54,15 +51,5 @@ public class LoginParser extends BaseParser<Response<String>> {
             return s.substring(7, s.length() - 3);
         }
         return "";
-    }
-
-    @Override
-    public ObservableSource<Response<String>> apply(Observable<ResponseBody> upstream) {
-        return upstream.map(responseBody -> {
-            String html = responseBody.string();
-            Response<String> response = parse(html);
-            response.setHiddenParams(getHiddenParams(html));
-            return response;
-        });
     }
 }

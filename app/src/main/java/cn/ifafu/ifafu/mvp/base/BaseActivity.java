@@ -29,7 +29,7 @@ public abstract class BaseActivity<P extends IPresenter> extends AppCompatActivi
         unbinder = ButterKnife.bind(this);
         initData(savedInstanceState);
         if (mPresenter != null) {
-            mPresenter.onStart();
+            mPresenter.onCreate();
         }
     }
 

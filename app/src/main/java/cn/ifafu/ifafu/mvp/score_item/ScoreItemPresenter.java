@@ -20,8 +20,8 @@ public class ScoreItemPresenter extends BasePresenter<ScoreItemConstant.View, Sc
 
     @SuppressLint("DefaultLocale")
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onCreate() {
+        super.onCreate();
         long id = mView.getActivity().getIntent().getLongExtra("id", 0L);
         if (id != 0L) {
             mCompDisposable.add(Observable
@@ -29,13 +29,13 @@ public class ScoreItemPresenter extends BasePresenter<ScoreItemConstant.View, Sc
                         Score score = mModel.getScoreById(id);
                         Map<String, String> map = new LinkedHashMap<>();
                         map.put("课程名称", score.getName());
-                        map.put("成绩", score.getScore() != -1 ?
+                        map.put("成绩", score.getScore() != null ?
                                 GlobalLib.formatFloat(score.getScore(), 2) + "分" : "无");
-                        map.put("学分", score.getCredit() != -1 ?
+                        map.put("学分", score.getCredit() != null ?
                                 GlobalLib.formatFloat(score.getCredit(), 2) + "分" : "无");
-                        map.put("绩点", score.getGpa() != -1 ?
+                        map.put("绩点", score.getGpa() != null ?
                                 GlobalLib.formatFloat(score.getGpa(), 2) + "分" : "无");
-                        map.put("补考成绩", score.getMakeupScore() != -1 ?
+                        map.put("补考成绩", score.getMakeupScore() != null ?
                                 GlobalLib.formatFloat(score.getMakeupScore(), 2) + "分" : "无");
                         map.put("课程性质", score.getNature() != null && !score.getNature().isEmpty() ?
                                 score.getNature() : "无");
@@ -43,6 +43,7 @@ public class ScoreItemPresenter extends BasePresenter<ScoreItemConstant.View, Sc
                                 score.getInstitute() : "无");
                         map.put("学年", score.getYear());
                         map.put("学期", score.getTerm());
+                        map.put("备注", score.getRemarks());
                         return map;
                     })
                     .compose(RxUtils.computationToMain())

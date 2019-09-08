@@ -20,7 +20,7 @@ class ScoreFilterPresenter extends BasePresenter<ScoreFilterConstant.View, Score
     }
 
     @Override
-    public void onStart() {
+    public void onCreate() {
         Intent intent = mView.getActivity().getIntent();
         String year = intent.getStringExtra("year");
         String term = intent.getStringExtra("term");

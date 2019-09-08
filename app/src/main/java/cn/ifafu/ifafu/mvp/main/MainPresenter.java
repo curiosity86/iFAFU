@@ -16,6 +16,7 @@ import java.util.Locale;
 
 import cn.ifafu.ifafu.BuildConfig;
 import cn.ifafu.ifafu.R;
+import cn.ifafu.ifafu.app.IFAFU;
 import cn.ifafu.ifafu.data.entity.Exam;
 import cn.ifafu.ifafu.data.entity.Holiday;
 import cn.ifafu.ifafu.data.entity.NextCourse;
@@ -36,7 +37,7 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
     }
 
     @Override
-    public void onStart() {
+    public void onCreate() {
         mView.setLeftMenuHeadName(mModel.getUserName());
         mView.setLeftMenuHeadIcon(mModel.getSchoolIcon());
         // 获取主页菜单
@@ -44,6 +45,9 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
                 .compose(RxUtils.ioToMain())
                 .subscribe(menus -> mView.setMenuAdapterData(menus), this::onError)
         );
+        updateWeather();
+        updateTimeLine();
+        updateNextCourseView();
     }
 
     @Override
@@ -75,97 +79,34 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
     }
 
     @Override
-    public void updateView() {
+    public void onRefresh() {
         if (mView.getActivity().getIntent().getIntExtra("come_from", -1) != 0) {
-            loginD = reLogin()
+            IFAFU.loginDisposable = mModel.reLogin()
                     .compose(RxUtils.ioToMain())
                     .subscribe(response -> {
                     }, this::onError);
-            mCompDisposable.add(loginD);
         }
+        updateWeather();
+        updateTimeLine();
+        updateNextCourseView();
+    }
+
+    @Override
+    public void updateWeather() {
         // 获取天气
         mCompDisposable.add(mModel.getWeather("101230101")
                 .compose(RxUtils.ioToMain())
                 .subscribe(weather -> mView.setWeatherText(weather), this::onError)
         );
-        updateTimeLine();
-        updateCourseView();
     }
 
     @SuppressLint("DefaultLocale")
     @Override
-    public void updateCourseView() {
+    public void updateNextCourseView() {
         mCompDisposable.add(Observable
                 .fromCallable(() -> {
                     SyllabusModel model = new SyllabusModel(mView.getContext());
-                    NextCourse next = model.getNextCourse();
-//                    SyllabusSetting setting = model.getSyllabusSetting();
-//                    Map<String, String> map = new HashMap<>();
-//
-//                    int currentWeek = model.getCurrentWeek();
-//                    if (currentWeek == -1) {
-//                        map.put("title", "放假中");
-//                        return map;
-//                    }
-//
-//                    List<Course> courses = model.getAllCoursesFromDB();
-//                    if (courses.isEmpty()) {
-//                        map.put("title", "暂无课程信息");
-//                        return map;
-//                    }
-//
-//                    int currentWeekday = DateUtils.getCurrentDayOfWeek();
-//                    List<Course> todayCourses = model.getCoursesFromDB(currentWeek, currentWeekday);
-//                    Collections.sort(todayCourses, (o1, o2) -> Integer.compare(o1.getBeginNode(), o2.getBeginNode()));
-//                    if (todayCourses.isEmpty()) {
-//                        map.put("title", "今天没课呀！！");
-//                        return map;
-//                    }
-//
-//                    //计算下一节是第几节课
-//                    int[] intTime = setting.getBeginTime();
-//                    Calendar c = Calendar.getInstance();
-//                    int now = c.get(Calendar.HOUR_OF_DAY) * 100 + c.get(Calendar.MINUTE);
-//                    int nextNode = 9999;
-//                    for (int i = 0; i < intTime.length; i++) {
-//                        if (now < intTime[i]) {
-//                            nextNode = i;
-//                            break;
-//                        }
-//                    }
-//                    Log.d(TAG, "updateCourseView => nextNode: " + nextNode + "    now: " + now);
-//                    StringBuilder sb = new StringBuilder();
-//                    for (Course co : todayCourses) {
-//                        sb.append(co.getName()).append(", ");
-//                    }
-//                    Log.d(TAG, "course: " + "[" + sb + "]");
-//
-//                    Course nextCourse = null;
-//                    for (Course course: todayCourses) {
-//                        if (course.getBeginNode() > nextNode) {
-//                            nextCourse = course;
-//                            break;
-//                        }
-//                    }
-//                    if (nextCourse != null) {
-//                        map.put("title", "下一节课：");
-//                        map.put("name", nextCourse.getName());
-//                        map.put("address", nextCourse.getAddress());
-//                        int length = setting.getNodeLength();
-//                        int intStartTime = intTime[nextCourse.getBeginNode() - 1];
-//                        int intEndTime = intTime[nextCourse.getBeginNode() + nextCourse.getNodeCnt() - 2];
-//                        if (intEndTime % 100 + length >= 60) {
-//                            intEndTime = intEndTime + 100 - (intEndTime % 100) + ((intEndTime % 100 + length) % 60);
-//                        }
-//                        map.put("time", String.format("%d:%02d-%d:%02d",
-//                                intStartTime / 100,
-//                                intStartTime % 100,
-//                                intEndTime / 100,
-//                                intEndTime % 100));
-//                    } else {
-//                        map.put("title", "今天课上完啦！！");
-//                    }
-                    return next;
+                    return model.getNextCourse();
                 })
                 .compose(RxUtils.computationToMain())
                 .subscribe(next -> {
@@ -187,7 +128,8 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
         );
     }
 
-    private void updateTimeLine() {
+    @Override
+    public void updateTimeLine() {
         mCompDisposable.add(Observable
                 .fromCallable(() -> {
                     List<TimeAxis> list = new ArrayList<>();

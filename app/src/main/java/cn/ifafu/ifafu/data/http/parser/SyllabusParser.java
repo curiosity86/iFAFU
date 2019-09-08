@@ -42,6 +42,7 @@ public class SyllabusParser extends BaseParser<List<Course>> {
         this.account = user.getAccount();
     }
 
+    @Override
     public List<Course> parse(String html) {
         List<Course> courses = new ArrayList<>();
         Document doc = Jsoup.parse(html);

@@ -26,21 +26,22 @@ public class VerifyParser implements ObservableTransformer<ResponseBody, String>
         mContext = context;
     }
 
-    private void init(Context context) {
-        try (InputStream inputStream = context.getAssets().open("theta.dat")) {
-            weight = new BigDecimal[34][337];
-            Scanner scanner = new Scanner(inputStream);
-            for (int i = 0; i < 34; i++) {
-                for (int j = 0; j < 337; j++) {
-                    weight[i][j] = scanner.nextBigDecimal();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private String todo(Bitmap bitmap) {
+        if (weight == null) {
+            try (InputStream inputStream = mContext.getAssets().open("theta.dat")) {
+                weight = new BigDecimal[34][337];
+                Scanner scanner = new Scanner(inputStream);
+                for (int i = 0; i < 34; i++) {
+                    for (int j = 0; j < 337; j++) {
+                        weight[i][j] = scanner.nextBigDecimal();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
         if (bitmap == null) {
             return "";
         }
@@ -147,13 +148,6 @@ public class VerifyParser implements ObservableTransformer<ResponseBody, String>
 
     @Override
     public ObservableSource<String> apply(Observable<ResponseBody> upstream) {
-        return upstream.map(responseBody -> {
-            if (weight == null) {
-                Log.d("VerifyParser", "验证码工具 初始化开始");
-                init(mContext);
-                Log.d("VerifyParser", "验证码工具 初始化完成");
-            }
-            return todo(BitmapUtil.bytesToBitmap(responseBody.bytes()));
-        });
+        return upstream.map(responseBody -> todo(BitmapUtil.bytesToBitmap(responseBody.bytes())));
     }
 }

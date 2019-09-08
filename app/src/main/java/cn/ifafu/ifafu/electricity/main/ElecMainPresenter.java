@@ -33,7 +33,7 @@ public class ElecMainPresenter extends BasePresenter<ElecMainContract.View, Elec
     }
 
     @Override
-    public void onStart() {
+    public void onCreate() {
         // 检查登录态
         checkLoginStatus();
         // 设置学号

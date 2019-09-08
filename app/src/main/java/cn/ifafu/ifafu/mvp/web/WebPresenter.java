@@ -15,7 +15,7 @@ class WebPresenter extends BaseZFPresenter<WebContract.View, WebContract.Model> 
     }
 
     @Override
-    public void onStart() {
+    public void onCreate() {
         String title = mView.getActivity().getIntent().getStringExtra("title");
         String url = mView.getActivity().getIntent().getStringExtra("url");
         if (title != null && url != null) {
@@ -37,7 +37,6 @@ class WebPresenter extends BaseZFPresenter<WebContract.View, WebContract.Model> 
                         return url;
                     }
                 })
-                .retryWhen(this::ensureTokenAlive)
                 .compose(RxUtils.ioToMain())
                 .subscribe(url -> {
                     mView.loadUrl(url);

@@ -13,7 +13,7 @@ android {
         applicationId "cn.ifafu.ifafu"
         minSdkVersion 22
         targetSdkVersion 29
-        versionCode 13
+        versionCode 15
         versionName "1.0.8"
         resConfigs "zh"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -55,7 +55,7 @@ android {
 
     greendao {
         //版本号，升级时可配置
-        schemaVersion 21
+        schemaVersion 22
         daoPackage 'cn.ifafu.ifafu.dao'
     }
 

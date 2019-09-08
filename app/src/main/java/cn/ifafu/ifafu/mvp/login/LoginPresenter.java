@@ -22,7 +22,7 @@ class LoginPresenter extends BaseZFPresenter<LoginContract.View, LoginContract.M
     }
 
     @Override
-    public void onStart() {
+    public void onCreate() {
         Intent intent = mView.getActivity().getIntent();
         comeFromWhere = intent.getIntExtra("come_from", 0);
         mView.setBackgroundLogo(R.drawable.drawable_fafu);

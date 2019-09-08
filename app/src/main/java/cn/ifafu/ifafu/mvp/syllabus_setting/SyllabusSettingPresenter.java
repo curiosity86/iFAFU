@@ -11,8 +11,8 @@ public class SyllabusSettingPresenter extends BasePresenter<SyllabusSettingContr
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onCreate() {
+        super.onCreate();
         mView.initRecycleView(mModel.getSetting());
     }
 

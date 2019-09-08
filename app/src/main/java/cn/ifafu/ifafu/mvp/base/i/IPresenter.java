@@ -2,7 +2,7 @@ package cn.ifafu.ifafu.mvp.base.i;
 
 public interface IPresenter {
 
-    void onStart();
+    void onCreate();
 
     void onDestroy();
 }
