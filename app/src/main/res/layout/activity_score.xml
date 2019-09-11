@@ -48,6 +48,7 @@
         android:orientation="horizontal">
 
         <RelativeLayout
+            android:id="@+id/layout_ies"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -74,6 +75,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/layout_cnt"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:gravity="center">

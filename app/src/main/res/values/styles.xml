@@ -9,6 +9,7 @@
         <item name="buttonStyle">@style/Button</item>
         <item name="titleTextColor">#3E3E3E</item>
         <item name="wToolbarStyle">@style/toolbarStyle</item>
+        <item name="md_color_button_text">@color/black</item>
         <!--<item name="android:windowAnimationStyle">@style/activityAnim</item>-->
         <!--<item name="android:activityCloseExitAnimation">@android:anim/fade_out</item>-->
     </style>

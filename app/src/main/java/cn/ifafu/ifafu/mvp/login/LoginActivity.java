@@ -107,7 +107,9 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter>
 
     @Override
     public void setBackgroundLogo(@DrawableRes int resId) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return;
+        }
         Glide.with(this)
                 .load(resId)
                 .into(logoIV);

@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -16,6 +18,8 @@ import cn.ifafu.ifafu.mvp.base.BaseActivity
 import cn.ifafu.ifafu.util.DensityUtils
 import cn.ifafu.ifafu.util.Glide4Engine
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.*
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.color.colorChooser
 import com.gyf.immersionbar.ImmersionBar
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
@@ -28,6 +32,22 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(
     private lateinit var setting: SyllabusSetting
 
     private val REQUEST_CODE_CHOOSE = 23
+
+    private val colors = intArrayOf(
+            Color.BLACK, Color.DKGRAY, Color.GRAY, Color.LTGRAY,
+            Color.WHITE, Color.RED, Color.GREEN, Color.BLUE,
+            Color.YELLOW, Color.CYAN)
+
+    private val mPicturePicker by lazy {
+        Matisse.from(this)
+                .choose(MimeType.ofImage())
+                .countable(true)
+                .maxSelectable(1)
+                .gridExpectedSize(DensityUtils.dp2px(context, 120F).toInt())
+                .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                .thumbnailScale(0.85f)
+                .imageEngine(Glide4Engine())
+    }
 
     override fun initLayout(savedInstanceState: Bundle?): Int {
         return R.layout.activity_syllabus_setting
@@ -51,6 +71,7 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(
         adapter.register(SeekBarItem::class, SeekBarBinder())
         adapter.register(CheckBoxItem::class, CheckBoxBinder())
         adapter.register(TextViewItem::class, TextViewBinder())
+        adapter.register(ColorItem::class, ColorBinder())
         adapter.items = listOf(
                 SeekBarItem("一天课程的节数", setting.totalNode, "节", 8, 12) {
                     setting.totalNode = it
@@ -77,21 +98,29 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(
                 CheckBoxItem("显示上课时间", "", setting.showBeginTimeText) {
                     setting.showBeginTimeText = it
                 },
+                CheckBoxItem("标题栏深色字体", "", setting.statusDartFont) {
+                    setting.statusDartFont = it
+                },
                 TextViewItem("课表背景", "长按重置为默认背景", {
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
                     } else {
-                        Matisse.from(this)
-                                .choose(MimeType.ofImage())
-                                .countable(true)
-                                .maxSelectable(1)
-                                .gridExpectedSize(DensityUtils.dp2px(context, 120F).toInt())
-                                .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
-                                .thumbnailScale(0.85f)
-                                .imageEngine(Glide4Engine())
-                                .forResult(REQUEST_CODE_CHOOSE)
+                        mPicturePicker.forResult(REQUEST_CODE_CHOOSE)
                     }
-                }, { setting.background = null })
+                }, { setting.background = null }),
+                ColorItem("主题颜色", "按钮颜色，文本颜色（除课程文本）", setting.themeColor) { ivColor ->
+                    MaterialDialog(this).show {
+                        title(text = "请选择颜色")
+                        colorChooser(colors = colors, initialSelection = setting.themeColor)
+                        { _, color ->
+                            val grad = ivColor.background as GradientDrawable
+                            grad.setColor(color)
+                            setting.themeColor = color
+                        }
+                        positiveButton(text = "确认")
+                        negativeButton(text = "取消")
+                    }
+                }
         )
         val dividerItemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         context.getDrawable(R.drawable.shape_divider)?.let {
@@ -113,5 +142,13 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(
             return
         }
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (requestCode == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            mPicturePicker.forResult(REQUEST_CODE_CHOOSE)
+            return
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }

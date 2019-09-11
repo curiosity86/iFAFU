@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:shape="oval"
-    tools:keep="@drawable/shape_red_dot">
+    android:shape="oval">
 
-    <size
-        android:height="1dp"
+    <stroke android:color="@color/black"
         android:width="1dp" />
-    <solid
-        android:color="@android:color/holo_red_light" />
 
 </shape>

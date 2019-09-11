@@ -13,7 +13,11 @@
             android:id="@+id/tv_corner"
             android:layout_width="24dp"
             android:layout_height="match_parent"
-            android:ems="1" />
+            android:ems="1"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
         <cn.ifafu.ifafu.view.syllabus.DateView
             android:id="@+id/view_date"
@@ -36,6 +40,7 @@
             android:id="@+id/view_course"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
 
     </LinearLayout>
 

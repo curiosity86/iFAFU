@@ -26,19 +26,23 @@ public class VerifyParser implements ObservableTransformer<ResponseBody, String>
         mContext = context;
     }
 
+    public void init() {
+        try (InputStream inputStream = mContext.getAssets().open("theta.dat")) {
+            weight = new BigDecimal[34][337];
+            Scanner scanner = new Scanner(inputStream);
+            for (int i = 0; i < 34; i++) {
+                for (int j = 0; j < 337; j++) {
+                    weight[i][j] = scanner.nextBigDecimal();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private String todo(Bitmap bitmap) {
         if (weight == null) {
-            try (InputStream inputStream = mContext.getAssets().open("theta.dat")) {
-                weight = new BigDecimal[34][337];
-                Scanner scanner = new Scanner(inputStream);
-                for (int i = 0; i < 34; i++) {
-                    for (int j = 0; j < 337; j++) {
-                        weight[i][j] = scanner.nextBigDecimal();
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            init();
         }
 
 
