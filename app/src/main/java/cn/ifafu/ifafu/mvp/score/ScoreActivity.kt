@@ -128,6 +128,13 @@ class ScoreActivity : BaseActivity<ScoreContract.Presenter>(), ScoreContract.Vie
         MaterialDialog(this).show {
             title(text = "智育分计算详情")
             message(text = text)
+            negativeButton(text = "智育分计算规则") {
+                MaterialDialog(this@ScoreActivity).show {
+                    title(text = "智育分计算规则")
+                    message(res = R.string.score_ies_rule)
+                    positiveButton(text = "收到")
+                }
+            }
             positiveButton(text = "好嘞~")
         }
     }

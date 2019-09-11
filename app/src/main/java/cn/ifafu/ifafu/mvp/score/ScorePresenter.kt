@@ -50,6 +50,9 @@ class ScorePresenter(view: ScoreContract.View)
     private fun update(showMessage: Boolean) {
         mCompDisposable.add(mModel
                 .getScoresFromNet(mCurrentYear, mCurrentTerm)
+                .map {
+                    it.ifEmpty { mModel.getScoresFromDB(mCurrentYear, mCurrentTerm) }
+                }
                 .compose(RxUtils.ioToMain())
                 .doOnSubscribe { mView.showLoading() }
                 .doFinally { mView.hideLoading() }
@@ -64,9 +67,9 @@ class ScorePresenter(view: ScoreContract.View)
         )
     }
 
-    override fun switchYearTerm(options1: Int, options2: Int) {
-        mCurrentYear = years[options1]
-        mCurrentTerm = terms[options2]
+    override fun switchYearTerm(op1: Int, op2: Int) {
+        mCurrentYear = years[op1]
+        mCurrentTerm = terms[op2]
         mCompDisposable.add(Observable
                 .fromCallable { mModel.getScoresFromDB(mCurrentYear, mCurrentTerm) }
                 .flatMap { scores: List<Score> ->
