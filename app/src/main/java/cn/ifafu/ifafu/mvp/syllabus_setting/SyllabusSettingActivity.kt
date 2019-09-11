@@ -107,17 +107,23 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(
                     } else {
                         mPicturePicker.forResult(REQUEST_CODE_CHOOSE)
                     }
-                }, { setting.background = null }),
+                }, {
+                    setting.background = null
+                    showMessage("课表背景已重置")
+                }),
                 ColorItem("主题颜色", "按钮颜色，文本颜色（除课程文本）", setting.themeColor) { ivColor ->
                     MaterialDialog(this).show {
+                        var selectColor = 0
                         title(text = "请选择颜色")
                         colorChooser(colors = colors, initialSelection = setting.themeColor)
                         { _, color ->
-                            val grad = ivColor.background as GradientDrawable
-                            grad.setColor(color)
-                            setting.themeColor = color
+                            selectColor = color
                         }
-                        positiveButton(text = "确认")
+                        positiveButton(text = "确认") {
+                            val grad = ivColor.background as GradientDrawable
+                            grad.setColor(selectColor)
+                            setting.themeColor
+                        }
                         negativeButton(text = "取消")
                     }
                 }

@@ -44,11 +44,15 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
         float calcScore = score.getRealScore();
         if (calcScore == Score.FREE_COURSE) {
             holder.tvScore.setText("免修");
-            holder.ivTip.setImageResource(R.drawable.ic_no_study);
+            holder.ivTip.setImageResource(R.drawable.ic_score_mian);
         } else {
             holder.tvScore.setText(GlobalLib.formatFloat(calcScore, 2));
-            if (calcScore < 60) {
-                holder.ivTip.setImageResource(R.drawable.ic_warm);
+            if (score.getName().contains("体育")) {
+                holder.ivTip.setImageResource(R.drawable.ic_score_ti);
+            } else if (score.getNature().contains("任意选修")) {
+                holder.ivTip.setImageResource(R.drawable.ic_score_xuan);
+            } else if (calcScore < 60) {
+                holder.ivTip.setImageResource(R.drawable.ic_score_warm);
             } else {
                 holder.ivTip.setImageDrawable(null);
             }

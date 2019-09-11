@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.view.OptionsPickerView;
-import com.jaeger.library.StatusBarUtil;
+import com.gyf.immersionbar.ImmersionBar;
 
 import java.util.List;
 
@@ -21,9 +21,9 @@ import butterknife.BindView;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Exam;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
+import cn.ifafu.ifafu.view.adapter.ExamAdapter;
 import cn.ifafu.ifafu.view.custom.EmptyView;
 import cn.ifafu.ifafu.view.custom.WToolbar;
-import cn.ifafu.ifafu.view.adapter.ExamAdapter;
 import cn.ifafu.ifafu.view.dialog.ProgressDialog;
 
 public class ExamActivity extends BaseActivity<ExamContract.Presenter>
@@ -53,8 +53,11 @@ public class ExamActivity extends BaseActivity<ExamContract.Presenter>
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        StatusBarUtil.setTransparent(this);
-        StatusBarUtil.setLightMode(this);
+        ImmersionBar.with(this)
+                .titleBarMarginTop(tbExam)
+                .statusBarColor("#FFFFFF")
+                .statusBarDarkFont(true)
+                .init();
         mPresenter = new ExamPresenter(this);
         progressDialog = new ProgressDialog(this);
 
