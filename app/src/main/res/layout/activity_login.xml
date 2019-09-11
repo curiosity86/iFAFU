@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
@@ -11,7 +12,7 @@
         android:layout_height="360dp"
         android:layout_centerInParent="true"
         android:alpha="0.05"
-        android:src="@drawable/drawable_fafu" />
+        android:src="@drawable/drawable_fafu_b" />
 
     <ImageView
         android:id="@+id/btn_finish"
@@ -40,12 +41,14 @@
         android:layout_centerInParent="true"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:paddingBottom="48dp">
+        android:paddingBottom="48dp"
+        android:layoutAnimation="@anim/layout_fall_down"
+        tools:layoutAnimation="@null">
 
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/drawable_ifafu2" />
+            android:src="@drawable/drawable_ifafu_round" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -68,7 +71,8 @@
                 android:layout_height="match_parent"
                 android:hint="@string/account"
                 android:inputType="number"
-                android:textColorLink="@color/little_blue" />
+                android:textColorLink="@color/little_blue"
+                android:layoutAnimation="@anim/layout_fall_down" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

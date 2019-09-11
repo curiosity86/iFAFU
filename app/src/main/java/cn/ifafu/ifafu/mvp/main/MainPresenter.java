@@ -118,7 +118,7 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
                             mView.setCourseText(next.getTitle(), "", "", "");
                             break;
                         case NextCourse.HAS_NEXT_COURSE:
-                            mView.setCourseText(next.getTitle(),  next.getName(), next.getAddress(), next.getTimeText());
+                            mView.setCourseText(next.getTitle(), next.getName(), next.getAddress(), next.getTimeText());
                             break;
                     }
                 }, throwable -> {
@@ -139,27 +139,21 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
                     for (Holiday holiday : holidays) {
                         Date date = format.parse(holiday.getDate());
-                        long interval = date.getTime() - now;
-                        if (interval > 0) {
-                            int day = (int) (interval / 1000 / 60 / 60 / 24);
-                            if (day != 0) {
-                                TimeAxis axis = new TimeAxis(
-                                        holiday.getName(), holiday.getDate(), day);
-                                list.add(axis);
-                            }
+                        int day = (int) ((date.getTime() - now) / 1000 / 60 / 60 / 24);
+                        if (day >= 0) {
+                            TimeAxis axis = new TimeAxis(
+                                    holiday.getName(), holiday.getDate(), day);
+                            list.add(axis);
                         }
                     }
 
                     List<Exam> exams = new ExamModel(mView.getContext()).getThisTermExams();
                     for (Exam exam : exams) {
-                        long interval = exam.getStartTime() - now;
-                        if (interval > 0) {
-                            int day = (int) (interval / 1000 / 60 / 60 / 24);
-                            if (day != 0) {
-                                TimeAxis axis = new TimeAxis(
-                                        exam.getName(), format.format(new Date(exam.getStartTime())), day);
-                                list.add(axis);
-                            }
+                        int day = (int) ((exam.getStartTime() - now) / 1000 / 60 / 60 / 24);
+                        if (day >= 0) {
+                            TimeAxis axis = new TimeAxis(
+                                    exam.getName(), format.format(new Date(exam.getStartTime())), day);
+                            list.add(axis);
                         }
                     }
                     Collections.sort(list, (o1, o2) -> Integer.compare(o1.getDay(), o2.getDay()));

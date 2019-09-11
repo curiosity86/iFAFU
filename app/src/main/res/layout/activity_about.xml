@@ -10,14 +10,14 @@
         android:id="@+id/tb_about"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        app:elevation="3dp"
+        app:elevation="4dp"
         app:title="@string/about" />
 
     <ImageView
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_marginTop="120dp"
-        android:src="@drawable/drawable_ifafu2" />
+        android:src="@drawable/drawable_ifafu_round" />
 
     <TextView
         android:id="@+id/aboutAppSubName"

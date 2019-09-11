@@ -14,7 +14,6 @@ import androidx.annotation.StringRes;
 import java.util.List;
 
 import cn.ifafu.ifafu.R;
-import cn.ifafu.ifafu.view.syllabus.data.ToCourse;
 
 public class SyllabusView extends LinearLayout {
 
@@ -52,7 +51,7 @@ public class SyllabusView extends LinearLayout {
         courseView.setTextSize(textSize);
     }
 
-    public void setCourseData(List<? extends ToCourse> courses) {
+    public void setCourseData(List<? extends ToCourseBase> courses) {
         courseView.setCourses(courses);
         courseViewChange = true;
     }

@@ -40,10 +40,14 @@ public class DateView extends LinearLayout {
     // onCreate时首次绘制
     private boolean mFirstDraw;
 
+    private int mFirstDayOfWeek = Calendar.SUNDAY;
+
     private DateItem[] dateItems = new DateItem[7];
 
     private String[] weekdays = {
             "周日", "周一", "周二", "周三", "周四", "周五", "周六"};
+
+    private int mTextColor = 0xFF000000;
 
     private String[] dateTexts;
     private String[] weekdayTexts = getWeekdayText(Calendar.SUNDAY, true);
@@ -107,6 +111,8 @@ public class DateView extends LinearLayout {
         LayoutParams params = new LayoutParams(
                 (int) (mColItemWidth + 0.5F), mHeight);
         itemView.setLayoutParams(params);
+        itemView.setWeekdayColor(mTextColor);
+        itemView.setDateColor(mTextColor);
         dateItems[index] = itemView;
         addView(itemView);
     }
@@ -115,8 +121,25 @@ public class DateView extends LinearLayout {
         this.dateTexts = dateTexts;
     }
 
+    public String[] getDateTexts() {
+        return dateTexts;
+    }
+
     public void setFirstDayOfWeek(int firstDayOfWeek) {
+        mFirstDayOfWeek = firstDayOfWeek;
         weekdayTexts = getWeekdayText(firstDayOfWeek, true);
+    }
+
+    public int getFirstDayOfWeek() {
+        return mFirstDayOfWeek;
+    }
+
+    public int getTextColor() {
+        return mTextColor;
+    }
+
+    public void setTextColor(int textColor) {
+        this.mTextColor = textColor;
     }
 
     public void redraw() {
@@ -146,6 +169,10 @@ public class DateView extends LinearLayout {
         mShowVerticalDivider = isShow;
     }
 
+    public boolean isShowVerticalDivider() {
+        return mShowVerticalDivider;
+    }
+
     /**
      * 获取星期文本
      *
@@ -169,15 +196,11 @@ public class DateView extends LinearLayout {
 
         private TextView weekdayTV;
         private TextView dateTV;
-        private boolean today = false;
-
-        private final int weekdayColor = Color.BLACK;
-        private final int dateColor = Color.BLACK;
 
         public DateItem(Context context) {
             super(context);
-            weekdayTV = createTextView(true, 12, weekdayColor);
-            dateTV = createTextView(false, 10, dateColor);
+            weekdayTV = createTextView(true, 12);
+            dateTV = createTextView(false, 10);
             this.setOrientation(LinearLayout.VERTICAL);
             this.setGravity(Gravity.CENTER);
             this.addView(weekdayTV);
@@ -192,9 +215,16 @@ public class DateView extends LinearLayout {
             this.dateTV.setText(dateTV);
         }
 
-        private TextView createTextView(boolean bold, int size, int color) {
+        public void setWeekdayColor(int weekdayColor) {
+            weekdayTV.setTextColor(weekdayColor);
+        }
+
+        public void setDateColor(int dateColor) {
+            dateTV.setTextColor(dateColor);
+        }
+
+        private TextView createTextView(boolean bold, int size) {
             TextView textView = new TextView(getContext());
-            textView.setTextColor(color);
             textView.getPaint().setFakeBoldText(bold);
             textView.setTextSize(size);
             textView.setGravity(Gravity.CENTER);

@@ -22,8 +22,6 @@ import java.util.Map;
 
 import cn.ifafu.ifafu.util.ColorUtils;
 import cn.ifafu.ifafu.util.DensityUtils;
-import cn.ifafu.ifafu.view.syllabus.data.CourseBase;
-import cn.ifafu.ifafu.view.syllabus.data.ToCourse;
 
 /**
  * Created by woolsen
@@ -47,13 +45,15 @@ public class CourseView extends FrameLayout {
     // CourseView text vertical Padding
     private int mCourseTBPadding = (int) DensityUtils.dp2px(getContext(), 1);
     // CourseView text color
-    private int mCoureseTextColor = Color.WHITE;
+    private int mCourseTextColor = Color.WHITE;
     // CourseView text size
     private int mCourseTextSize = 12;
     // 行数
     private int mRowCount = 12;
     // 列数
     private int mColCount = 7;
+
+    private List<? extends ToCourseBase> courses;
 
     // 周的第一天
     private int firstDayOfWeek = Calendar.SUNDAY;
@@ -118,8 +118,16 @@ public class CourseView extends FrameLayout {
         mShowHorizontalDivider = isShow;
     }
 
+    public boolean isShowHorizontalDivider() {
+        return mShowHorizontalDivider;
+    }
+
     public void setShowVerticalDivider(boolean isShow) {
         mShowVerticalDivider = isShow;
+    }
+
+    public boolean isShowVerticalDivider() {
+        return mShowVerticalDivider;
     }
 
     public int getFirstDayOfWeek() {
@@ -131,8 +139,16 @@ public class CourseView extends FrameLayout {
         mRowItemHeight = 1F * mHeight / mRowCount;
     }
 
+    public int getRowCount() {
+        return mRowCount;
+    }
+
     public void setTextSize(int textSize) {
         mCourseTextSize = textSize;
+    }
+
+    public int getTextSize() {
+        return mCourseTextSize;
     }
 
     /**
@@ -156,14 +172,14 @@ public class CourseView extends FrameLayout {
         }
     }
 
-    public <T extends ToCourse> void addCourse(T course) {
+    public <T extends ToCourseBase> void addCourse(T course) {
         CourseBase base = course.toCourseBase();
         if (courseToView.get(base) == null) {
             realAddCourseItemView(course.toCourseBase());
         }
     }
 
-    public <T extends ToCourse> void addCourse(List<T> courses) {
+    public <T extends ToCourseBase> void addCourse(List<T> courses) {
         for (T course : courses) {
             CourseBase base = course.toCourseBase();
             if (!courseToView.containsKey(base) || courseToView.get(base) == null) {
@@ -178,12 +194,17 @@ public class CourseView extends FrameLayout {
      * @param courses
      * @param <T>
      */
-    public <T extends ToCourse> void setCourses(List<T> courses) {
+    public <T extends ToCourseBase> void setCourses(List<T> courses) {
         courseToView.clear();
+        this.courses = courses;
         if (courses == null) return;
         for (T t : courses) {
             courseToView.put(t.toCourseBase(), null);
         }
+    }
+
+    public List<? extends ToCourseBase> getCourses() {
+        return courses;
     }
 
     private void realAddCourseItemView(CourseBase course) {
@@ -205,7 +226,7 @@ public class CourseView extends FrameLayout {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
         tv.setLayoutParams(params);
-        tv.setTextColor(mCoureseTextColor);
+        tv.setTextColor(mCourseTextColor);
         tv.setPadding(mCourseLRPadding, mCourseTBPadding, mCourseLRPadding, mCourseTBPadding);
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, mCourseTextSize);
         tv.setGravity(Gravity.CENTER);
@@ -248,6 +269,10 @@ public class CourseView extends FrameLayout {
 
     public void setOnCourseClickListener(OnCourseClickListener listener) {
         this.onCourseClickListener = listener;
+    }
+
+    public OnCourseClickListener getOnCourseClickListener() {
+        return onCourseClickListener;
     }
 
     public void setOnCourseLongClickListener(OnCourseLongClickListener listener) {

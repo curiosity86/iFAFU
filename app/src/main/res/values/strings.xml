@@ -1,11 +1,13 @@
 <resources>
     <string name="app_name">iFAFU</string>
+    <string name="app_name_test">iFAFU测试版</string>
     <string name="base_on_fafu">基于福建农林大学教务管理系统</string>
 
     <!--MVP Base-->
     <string name="net_error">网络错误，请检查网络设置</string>
     <string name="net_socket_timeout_error">服务器连接超时</string>
     <string name="net_sql_constraint_error">数据库数据错误</string>
+    <string name="confirm">确认</string>
 
     <!--LoginActivity-->
     <string name="account">学号</string>
@@ -92,10 +94,10 @@
     <string name="input_room">输入房间号</string>
     <string name="query_elec">点击查询电费</string>
     <string name="input_price">输入充值金额</string>
-    <string name="confirm">确认缴费</string>
     <string name="querying">查询中</string>
     <string name="balance">校园卡余额：%s元</string>
-    <string name="confirm_pay">确认要缴费吗</string>
+    <string name="confirm_pay">确认缴费</string>
+    <string name="confirm_need_pay">确认要缴费吗</string>
     <string name="quit_account">退出账号</string>
     <string name="hint_sno">请输入学号</string>
     <string name="hint_password">请输入密码（身份证后六位）</string>

@@ -16,7 +16,7 @@
         <ImageView
             android:layout_width="96dp"
             android:layout_height="96dp"
-            android:src="@drawable/drawable_ifafu2" />
+            android:src="@drawable/drawable_ifafu_round" />
 
         <LinearLayout
             android:layout_width="wrap_content"

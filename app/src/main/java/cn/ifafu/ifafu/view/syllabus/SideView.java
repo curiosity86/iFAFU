@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
 
 import cn.ifafu.ifafu.util.DensityUtils;
@@ -30,8 +31,7 @@ public class SideView extends LinearLayout {
     // 行数
     private int mRowCount = 12;
 
-    private final int timeColor = 0xFFAAAAAA;
-    private final int nodeNumColor = 0xFF157EFB;
+    private int mTextColor = 0xFF000000;
 
     // 是否显示分割线
     private boolean mShowHorizontalDivider = true;
@@ -97,6 +97,10 @@ public class SideView extends LinearLayout {
         mShowHorizontalDivider = isShow;
     }
 
+    public boolean isShowHorizontalDivider() {
+        return mShowHorizontalDivider;
+    }
+
     private void drawSplitLine(Canvas canvas) {
         //水平分割线
         if (mShowHorizontalDivider) {
@@ -110,11 +114,13 @@ public class SideView extends LinearLayout {
     }
 
     private void realAddSideItemView(int index, String indexT, String time) {
-        SideItem itemView = new SideItem(getContext());
+        SideItem itemView = new SideItem(getContext())
+                .setIndexText(indexT)
+                .setIndexTextColor(mTextColor)
+                .setTimeTextColor(mTextColor);
         if (time != null) {
             itemView.setTimeText(time);
         }
-        itemView.setIndexText(indexT);
         LayoutParams params = new LayoutParams(mWidth, (int) (mRowItemHeight + 0.5F));
         itemView.setLayoutParams(params);
         addView(itemView);
@@ -126,12 +132,24 @@ public class SideView extends LinearLayout {
         mRowItemHeight = 1F * mHeight / rowCount;
     }
 
+    public int getRowCount() {
+        return mRowCount;
+    }
+
     public void redraw() {
         initSideItemView();
     }
 
     public void setBeginTimeTexts(String[] timeTexts) {
         this.timeTexts = timeTexts;
+    }
+
+    public void setTextColor(@ColorInt int color) {
+        mTextColor = color;
+    }
+
+    public int getTextColor() {
+        return mTextColor;
     }
 
     public String[] getBeginTimeTexts() {
@@ -153,20 +171,24 @@ public class SideView extends LinearLayout {
             this.addView(indexTV);
         }
 
-        private void setTimeTextColor(int color) {
+        private SideItem setTimeTextColor(int color) {
             timeTV.setTextColor(color);
+            return this;
         }
 
-        private void setIndexTextColor(int color) {
+        private SideItem setIndexTextColor(int color) {
             indexTV.setTextColor(color);
+            return this;
         }
 
-        public void setTimeText(String time) {
+        public SideItem setTimeText(String time) {
             timeTV.setText(time);
+            return this;
         }
 
-        public void setIndexText(String nodeNum) {
+        public SideItem setIndexText(String nodeNum) {
             indexTV.setText(nodeNum);
+            return this;
         }
 
         private TextView drawTextView(int textSize, int... verb) {
