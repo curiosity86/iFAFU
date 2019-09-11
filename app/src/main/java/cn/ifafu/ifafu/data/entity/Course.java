@@ -11,11 +11,11 @@ import java.util.TreeSet;
 
 import cn.ifafu.ifafu.data.local.IntTreeSetConverter;
 import cn.ifafu.ifafu.util.DateUtils;
-import cn.ifafu.ifafu.view.syllabus.data.CourseBase;
-import cn.ifafu.ifafu.view.syllabus.data.ToCourse;
+import cn.ifafu.ifafu.view.syllabus.CourseBase;
+import cn.ifafu.ifafu.view.syllabus.ToCourseBase;
 
 @Entity
-public class Course implements ToCourse {
+public class Course implements ToCourseBase {
 
     @Id
     private Long id;

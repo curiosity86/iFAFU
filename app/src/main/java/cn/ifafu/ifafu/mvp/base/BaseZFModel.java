@@ -16,6 +16,7 @@ import cn.ifafu.ifafu.data.exception.LoginInfoErrorException;
 import cn.ifafu.ifafu.data.exception.NoAuthException;
 import cn.ifafu.ifafu.data.exception.VerifyException;
 import cn.ifafu.ifafu.data.http.APIManager;
+import cn.ifafu.ifafu.data.http.parser.LoginParamParser;
 import cn.ifafu.ifafu.data.http.parser.LoginParser;
 import cn.ifafu.ifafu.data.http.parser.ParamsParser;
 import cn.ifafu.ifafu.data.http.parser.VerifyParser;
@@ -41,7 +42,8 @@ public abstract class BaseZFModel extends BaseModel implements IZFModel {
                 .retryWhen(throwableObservable ->
                         throwableObservable.flatMap(throwable -> {
                             if (throwable instanceof NoAuthException || throwable.getMessage().contains("302")) {
-                                if (IFAFU.loginDisposable != null) {
+                                System.out.println(IFAFU.loginDisposable);
+                                if (IFAFU.loginDisposable != null && !IFAFU.loginDisposable.isDisposed()) {
                                     while (!IFAFU.loginDisposable.isDisposed()) {
                                         Thread.sleep(100);
                                     }
@@ -49,6 +51,7 @@ public abstract class BaseZFModel extends BaseModel implements IZFModel {
                                 }
                                 return reLogin();
                             } else {
+                                System.out.println("Observable.error(throwable)");
                                 return Observable.error(throwable);
                             }
                         })
@@ -63,7 +66,7 @@ public abstract class BaseZFModel extends BaseModel implements IZFModel {
                         School.getUrl(ZhengFang.VERIFY, user),
                         user.getAccount(),
                         user.getPassword(),
-                        new ParamsParser(),
+                        new LoginParamParser(),
                         new LoginParser(),
                         new VerifyParser(mContext)
                 ));
@@ -73,6 +76,7 @@ public abstract class BaseZFModel extends BaseModel implements IZFModel {
     public Observable<Response<String>> reLogin() {
         Log.d("ReLogin", "enter");
         return Observable.just(true).flatMap(T -> {
+            Log.d("ReLogin", "reLogining");
             User user = repository.getUser();
             String loginUrl = School.getUrl(ZhengFang.LOGIN, user);
             String verifyUrl = School.getUrl(ZhengFang.VERIFY, user);
@@ -82,13 +86,14 @@ public abstract class BaseZFModel extends BaseModel implements IZFModel {
                     .getInfo(mainUrl, null)
                     .compose(loginParser)
                     .flatMap(stringResponse -> {
+                        System.out.println("Observable.getInfo");
                         if (!stringResponse.isSuccess()) {
                             return innerLogin(
                                     loginUrl,
                                     verifyUrl,
                                     user.getAccount(),
                                     user.getPassword(),
-                                    new ParamsParser(),
+                                    new LoginParamParser(),
                                     loginParser,
                                     new VerifyParser(mContext)
                             );
@@ -109,13 +114,13 @@ public abstract class BaseZFModel extends BaseModel implements IZFModel {
         });
     }
 
-    private Observable<Response<String>> innerLogin(String loginUrl,
-                                                    String verifyUrl,
-                                                    String account,
-                                                    String password,
-                                                    ParamsParser paramsParser,
-                                                    LoginParser loginParser,
-                                                    VerifyParser verifyParser) {
+    protected Observable<Response<String>> innerLogin(String loginUrl,
+                                                      String verifyUrl,
+                                                      String account,
+                                                      String password,
+                                                      LoginParamParser paramsParser,
+                                                      LoginParser loginParser,
+                                                      VerifyParser verifyParser) {
         return APIManager.getZhengFangAPI()
                 .initParams(loginUrl)
                 .compose(paramsParser)

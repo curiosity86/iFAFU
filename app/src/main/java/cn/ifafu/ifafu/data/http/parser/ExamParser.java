@@ -39,13 +39,10 @@ public class ExamParser implements ObservableTransformer<String, Response<List<E
         String year = termAndYear.get(0).text();
         String term = termAndYear.get(1).text();
         for (int i = 1; i < elements.size(); i++) {
-            try {
-                Exam exam = getExam(elements.get(i).children());
-                exam.setTerm(term);
-                exam.setYear(year);
-                list.add(exam);
-            } catch (Exception ignored) {
-            }
+            Exam exam = getExam(elements.get(i).children());
+            exam.setTerm(term);
+            exam.setYear(year);
+            list.add(exam);
         }
         return list;
     }

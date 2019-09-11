@@ -2,6 +2,8 @@ package cn.ifafu.ifafu.data.local;
 
 import androidx.annotation.Nullable;
 
+import org.greenrobot.greendao.AbstractDao;
+
 import java.util.List;
 
 import cn.ifafu.ifafu.app.Constant;
@@ -165,8 +167,18 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
+    public void deleteScore(String year, String term) {
+        scoreDao.deleteInTx(getScores(year, term));
+    }
+
+    @Override
     public void deleteScore(List<Score> scores) {
         scoreDao.deleteInTx(scores);
+    }
+
+    @Override
+    public void deleteAllScore() {
+        scoreDao.deleteInTx(getAllScores());
     }
 
     @Override
@@ -203,5 +215,12 @@ public class RepositoryImpl implements Repository {
     @Override
     public void saveToken(Token token) {
         tokenDao.insertOrReplace(token);
+    }
+
+    @Override
+    public void clearAllData() {
+        for (AbstractDao<?, ?> allDao : DaoManager.getInstance().getDaoSession().getAllDaos()) {
+            allDao.deleteAll();
+        }
     }
 }

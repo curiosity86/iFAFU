@@ -37,18 +37,11 @@ public class GlobalLib {
         float totalMinus = 0;
         for (Score score : scoreList) {
             if (score.getIsIESItem()) {
+                float calcScore = score.getCalcScore();
+                totalScore += calcScore;
                 totalCredit += score.getCredit();
-                if (score.getScore() < 60) { //不及格
-                    if (score.getMakeupScore() == -1) { //补考成绩未出，以原成绩计算
-                        totalScore += score.getScore() * score.getCredit();
-                    } else if (score.getMakeupScore() >= 60) { //补考成绩及格，以60分计算
-                        totalScore += 60 * score.getCredit();
-                    } else { //补考成绩不及格，以补考成绩计算，并以学分1:1比例扣除相应智育分
-                        totalScore += score.getMakeupScore() * score.getCredit();
-                        totalMinus += score.getCredit();
-                    }
-                } else { //及格
-                    totalScore += score.getScore() * score.getCredit();
+                if (score.getRealScore() < 60) {
+                    totalMinus -= score.getCredit();
                 }
             }
         }

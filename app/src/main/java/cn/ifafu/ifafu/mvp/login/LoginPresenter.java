@@ -7,8 +7,7 @@ import cn.ifafu.ifafu.app.School;
 import cn.ifafu.ifafu.data.entity.User;
 import cn.ifafu.ifafu.mvp.base.BaseZFPresenter;
 import cn.ifafu.ifafu.mvp.main.MainActivity;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import cn.ifafu.ifafu.util.RxUtils;
 
 class LoginPresenter extends BaseZFPresenter<LoginContract.View, LoginContract.Model>
         implements LoginContract.Presenter {
@@ -25,7 +24,7 @@ class LoginPresenter extends BaseZFPresenter<LoginContract.View, LoginContract.M
     public void onCreate() {
         Intent intent = mView.getActivity().getIntent();
         comeFromWhere = intent.getIntExtra("come_from", 0);
-        mView.setBackgroundLogo(R.drawable.drawable_fafu);
+        mView.setBackgroundLogo(R.drawable.drawable_fafu_b);
     }
 
     @Override
@@ -43,8 +42,7 @@ class LoginPresenter extends BaseZFPresenter<LoginContract.View, LoginContract.M
         user.setPassword(password);
         user.setSchoolCode(schoolCode);
         mCompDisposable.add(mModel.login(user)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .compose(RxUtils.ioToMain())
                 .doOnSubscribe(disposable -> mView.showLoading())
                 .doFinally(() -> mView.hideLoading())
                 .subscribe(result -> {
@@ -90,7 +88,7 @@ class LoginPresenter extends BaseZFPresenter<LoginContract.View, LoginContract.M
             mView.setBackgroundLogo(R.drawable.drawable_fafu_js);
         } else if (schoolCode != School.FAFU) {
             schoolCode = School.FAFU;
-            mView.setBackgroundLogo(R.drawable.drawable_fafu);
+            mView.setBackgroundLogo(R.drawable.drawable_fafu_b);
         }
     }
 

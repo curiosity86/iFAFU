@@ -12,4 +12,5 @@ class ScoreItemAdapter(data: Map<String, String>)
                 .setText(R.id.tv_value, item.second)
     }
 
+
 }

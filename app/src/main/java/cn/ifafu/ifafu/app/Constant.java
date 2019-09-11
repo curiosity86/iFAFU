@@ -4,7 +4,7 @@ public class Constant {
 
     public static final String DB_NAME = "ifafu";
 
-    public static final String IFAFU_BASE_URL  = "https://api.ifafu.cn";
+    public static final String IFAFU_BASE_URL = "https://api.ifafu.cn";
     public static final String REPAIR_URL = "http://hq.fafu.edu.cn/agent/app/index.php?i=144&c=entry&do=index&m=maihu_repair";
 
     public static final String SP_USER_INFO = "user_info";
@@ -26,7 +26,5 @@ public class Constant {
     public static final int SCORE_ACTIVITY = 500;
     public static final int SCORE_ITEM_ACTIVITY = 600;
     public static final int SCORE_FILTER_ACTIVITY = 700;
-
-
 
 }

@@ -7,12 +7,14 @@ import java.util.regex.Pattern;
 
 public class RegexUtils {
 
+    public static String REGEX_INT = "[0-9]+";
+
     /**
      * 查找字符串中的数字
      */
     public static List<Integer> getNumbers(String text) {
         List<Integer> ans = new ArrayList<>();
-        Pattern p = Pattern.compile("[0-9]+");
+        Pattern p = Pattern.compile(REGEX_INT);
         Matcher m = p.matcher(text);
         while (m.find()) {
             ans.add(Integer.parseInt(m.group()));

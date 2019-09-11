@@ -8,7 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import cn.ifafu.ifafu.view.syllabus.data.DayOfWeek;
+import cn.ifafu.ifafu.view.syllabus.DayOfWeek;
 
 /**
  * create by woolsen on 19/7/16
@@ -18,13 +18,12 @@ public class DateUtils {
     private static String[] weekdays = {
             "周日", "周一", "周二", "周三", "周四", "周五", "周六"};
 
+    private static Calendar calendar = Calendar.getInstance();
+
+    private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+
     public static String getWeekdayCN(@DayOfWeek int weekday) {
         return weekdays[weekday - 1];
-    }
-
-    public static int getCurrentWeekday() {
-        Calendar c = Calendar.getInstance();
-        return c.get(Calendar.DAY_OF_WEEK);
     }
 
     /**
@@ -79,21 +78,6 @@ public class DateUtils {
     }
 
     /**
-     * 获取当前周
-     * @param firstStudyDate 开学日期
-     * @param firstDayOfWeek 每周第一天是星期几
-     * @return 当前周
-     */
-    public static int getCurrentWeek(Date firstStudyDate, @DayOfWeek int firstDayOfWeek) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setFirstDayOfWeek(firstDayOfWeek);
-        int currentYearWeek = calendar.get(Calendar.WEEK_OF_YEAR);
-        calendar.setTime(firstStudyDate);
-        int firstYearWeek = calendar.get(Calendar.WEEK_OF_YEAR);
-        return currentYearWeek - firstYearWeek + 1;
-    }
-
-    /**
      * 获取一周的日期
      *
      * @param dateText       当日日期 example: 2019-09-01
@@ -116,7 +100,6 @@ public class DateUtils {
      */
     public static String[] getWeekDates(String dateText, int offsetWeek, int firstDayOfWeek, String dateFormat) {
         try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
             Date date = format.parse(dateText);
             return getWeekDates(date, offsetWeek, firstDayOfWeek, dateFormat);
         } catch (ParseException e) {
@@ -126,15 +109,25 @@ public class DateUtils {
     }
 
     /**
-     * 获取一周的日期
-     *
-     * @param date           当日日期
-     * @param firstDayOfWeek {@link Calendar} 每周的首日是周几
-     * @param dateFormat     {@link SimpleDateFormat}
-     * @return String[]
+     * @see #getWeekDates(Date, int, int, String)
      */
     public static String[] getWeekDates(Date date, int firstDayOfWeek, String dateFormat) {
         return getWeekDates(date, 0, firstDayOfWeek, dateFormat);
+    }
+
+    /**
+     *
+     * @param text example: 2019-01-01
+     * @throws ParseException
+     */
+    public static int getMonth(String text) throws ParseException {
+        Date date = format.parse(text);
+        return getMonth(date);
+    }
+
+    public static int getMonth(Date date) {
+        calendar.setTime(date);
+        return calendar.get(Calendar.MONTH) + 1;
     }
 
     /**
@@ -152,42 +145,66 @@ public class DateUtils {
         }
         SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.CHINA);
         String[] dates = new String[7];
-        Calendar c = Calendar.getInstance();
-        c.setTime(getFirstDayOfWeek(date, firstDayOfWeek));
+        calendar.setTime(getFirstDayOfWeek(date, firstDayOfWeek));
         for (int i = 0; i < 7; i++) {
-            dates[i] = format.format(c.getTime());
-            c.add(Calendar.DATE, 1);
+            dates[i] = format.format(calendar.getTime());
+            calendar.add(Calendar.DATE, 1);
         }
-//        Log.d("Syllabus", date + "   " + offsetWeek + "   " + firstDayOfWeek + "   " + dateFormat);
-//        Log.d("Syllabus", Arrays.toString(dates));
         return dates;
     }
 
     /**
-     * 获取date当周第一天的时间
+     * 获取date周第一天的时间
      *
      * @param date           date
      * @param firstDayOfWeek {@link Calendar}
      * @return date
      */
     private static Date getFirstDayOfWeek(Date date, int firstDayOfWeek) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.setFirstDayOfWeek(firstDayOfWeek);
-        cal.set(Calendar.DAY_OF_WEEK, firstDayOfWeek);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        return cal.getTime();
+        calendar.setTime(date);
+        calendar.setFirstDayOfWeek(firstDayOfWeek);
+        calendar.set(Calendar.DAY_OF_WEEK, firstDayOfWeek);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        return calendar.getTime();
     }
 
     /**
      * 获取当前星期
+     *
      * @return {@link Calendar}
      */
-    public static int getCurrentDayOfWeek() {
-        Calendar c = Calendar.getInstance();
-        return c.get(Calendar.DAY_OF_WEEK);
+    public static int getCurrentWeekday() {
+        calendar.setTime(new Date());
+        return calendar.get(Calendar.DAY_OF_WEEK);
+    }
+
+    /**
+     * 获取当前周
+     *
+     * @param firstStudyDate 开学日期
+     * @param date           今日日期
+     * @param firstDayOfWeek 每周第一天是星期几
+     * @return 当前周
+     */
+    public static int getCurrentWeek(Date firstStudyDate, Date date, @DayOfWeek int firstDayOfWeek) {
+        calendar.setTime(date);
+        calendar.setFirstDayOfWeek(firstDayOfWeek);
+        int currentYearWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+        calendar.setTime(firstStudyDate);
+        int firstYearWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+        if (currentYearWeek < firstYearWeek) {
+            firstYearWeek -= 52;
+        }
+        return currentYearWeek - firstYearWeek + 1;
+    }
+
+    /**
+     * @see #getCurrentWeek(Date, Date, int)
+     */
+    public static int getCurrentWeek(Date firstStudyDate, @DayOfWeek int firstDayOfWeek) {
+        return getCurrentWeek(firstStudyDate, new Date(), firstDayOfWeek);
     }
 
 }

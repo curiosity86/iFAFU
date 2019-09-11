@@ -8,7 +8,7 @@ public class NumUtils {
         }
         try {
             return Float.parseFloat(text);
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             return null;
         }
     }
@@ -19,7 +19,7 @@ public class NumUtils {
         }
         try {
             return Double.parseDouble(text);
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             e.printStackTrace();
             return null;
         }
@@ -31,7 +31,7 @@ public class NumUtils {
         }
         try {
             return Integer.parseInt(text);
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             e.printStackTrace();
             return null;
         }
@@ -43,7 +43,7 @@ public class NumUtils {
         }
         try {
             return Long.parseLong(text);
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             e.printStackTrace();
             return null;
         }
@@ -55,7 +55,7 @@ public class NumUtils {
         }
         try {
             return Short.parseShort(text);
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             e.printStackTrace();
             return null;
         }

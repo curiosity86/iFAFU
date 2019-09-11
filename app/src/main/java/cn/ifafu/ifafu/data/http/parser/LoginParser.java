@@ -10,6 +10,9 @@ import java.util.regex.Pattern;
 
 import cn.ifafu.ifafu.data.entity.Response;
 import cn.ifafu.ifafu.data.exception.VerifyException;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import okhttp3.ResponseBody;
 
 public class LoginParser extends BaseParser<Response<String>> {
 
@@ -41,6 +44,13 @@ public class LoginParser extends BaseParser<Response<String>> {
                 return Response.error("登录：网络异常");
             }
         }
+    }
+
+    @Override
+    public ObservableSource<Response<String>> apply(Observable<ResponseBody> upstream) {
+        return upstream.map(responseBody -> {
+            return parse(responseBody.string());
+        });
     }
 
     private String getAlertString(String text) {

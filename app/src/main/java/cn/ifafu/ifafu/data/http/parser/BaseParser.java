@@ -22,7 +22,7 @@ public abstract class BaseParser<T> implements ObservableTransformer<ResponseBod
     public ObservableSource<T> apply(Observable<ResponseBody> upstream) {
         return upstream.map(responseBody -> {
             String html = responseBody.string();
-            if (html.matches("请登录|请重新登陆|302 Found")) {
+            if (html.contains("请登录") || html.contains("请重新登陆") || html.contains("302 Found")) {
                 throw new NoAuthException();
             }
             return parse(html);

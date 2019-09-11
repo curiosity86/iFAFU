@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,7 +41,18 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
     public void onBindViewHolder(@NonNull ScoreViewHolder holder, int position) {
         final Score score = mScoreList.get(position);
         holder.tvName.setText(score.getName());
-        holder.tvScore.setText(GlobalLib.formatFloat(score.getCalcScore(), 2));
+        float calcScore = score.getRealScore();
+        if (calcScore == Score.FREE_COURSE) {
+            holder.tvScore.setText("免修");
+            holder.ivTip.setImageResource(R.drawable.ic_no_study);
+        } else {
+            holder.tvScore.setText(GlobalLib.formatFloat(calcScore, 2));
+            if (calcScore < 60) {
+                holder.ivTip.setImageResource(R.drawable.ic_warm);
+            } else {
+                holder.ivTip.setImageDrawable(null);
+            }
+        }
         holder.itemView.setOnClickListener(v -> {
             if (mClickListener != null) {
                 mClickListener.onClick(score);
@@ -65,11 +77,13 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
 
         TextView tvName;
         TextView tvScore;
+        ImageView ivTip;
 
         ScoreViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tv_score_name);
             tvScore = itemView.findViewById(R.id.tv_score_score);
+            ivTip = itemView.findViewById(R.id.iv_tip);
         }
     }
 

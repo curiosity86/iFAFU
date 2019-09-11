@@ -45,7 +45,11 @@ public interface Repository {
 
     List<Score> getScores(String year, String term);
 
+    void deleteScore(String year, String term);
+
     void deleteScore(List<Score> scores);
+
+    void deleteAllScore();
 
     void saveScore(List<Score> scores);
 
@@ -59,4 +63,5 @@ public interface Repository {
 
     void saveToken(Token token);
 
+    void clearAllData();
 }
