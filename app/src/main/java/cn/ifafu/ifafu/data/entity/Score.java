@@ -27,6 +27,8 @@ public class Score extends YearTerm {
     private String year;
     private String term;
 
+    public static final float FREE_COURSE = -99999;  //免修课程
+
     @Generated(hash = 1567796955)
     public Score(Long id, String name, String nature, String attr, Float credit,
             Float score, Float makeupScore, Boolean restudy, String institute,
@@ -91,6 +93,10 @@ public class Score extends YearTerm {
     }
 
     public void setScore(Float score) {
+        //学分免修课程默认不计入智育分
+        if (score == FREE_COURSE) {
+            isIESItem = false;
+        }
         this.score = score;
     }
 
@@ -182,9 +188,14 @@ public class Score extends YearTerm {
         this.isIESItem = isIESItem;
     }
 
-    public Float getCalcScore() {
+    public float getRealScore() {
+        if (score == null) {
+            return 0F;
+        } else if (score == FREE_COURSE) {
+            return FREE_COURSE;
+        }
         if (score < 60) { //不及格
-            if (makeupScore == -1) { //补考成绩未出，以原成绩计算
+            if (makeupScore == null) { //补考成绩未出，以原成绩计算
                 return score;
             } else if (makeupScore >= 60) { //补考成绩及格，以60分计算
                 return 60F;
@@ -196,12 +207,35 @@ public class Score extends YearTerm {
         }
     }
 
+    public float getCalcScore() {
+        if (score == null) {
+            return 0F;
+        } else if (score == FREE_COURSE) {
+            return FREE_COURSE;
+        }
+        return getRealScore() * credit;
+    }
+
     @NonNull
     @Override
     public String toString() {
         return "Score{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", nature='" + nature + '\'' +
+                ", attr='" + attr + '\'' +
+                ", credit=" + credit +
+                ", score=" + score +
+                ", makeupScore=" + makeupScore +
+                ", restudy=" + restudy +
+                ", institute='" + institute + '\'' +
+                ", gpa=" + gpa +
+                ", remarks='" + remarks + '\'' +
+                ", makeupRemarks='" + makeupRemarks + '\'' +
                 ", isIESItem=" + isIESItem +
+                ", account='" + account + '\'' +
+                ", year='" + year + '\'' +
+                ", term='" + term + '\'' +
                 '}';
     }
 }

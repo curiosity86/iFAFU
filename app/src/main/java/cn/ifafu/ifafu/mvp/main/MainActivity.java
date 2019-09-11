@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,6 +30,7 @@ import cn.ifafu.ifafu.data.entity.Weather;
 import cn.ifafu.ifafu.mvp.base.BaseActivity;
 import cn.ifafu.ifafu.mvp.other.AboutActivity;
 import cn.ifafu.ifafu.util.ButtonUtils;
+import cn.ifafu.ifafu.util.SPUtils;
 import cn.ifafu.ifafu.view.adapter.MenuAdapter;
 import cn.ifafu.ifafu.view.custom.DragLayout;
 import cn.ifafu.ifafu.view.timeline.TimeAxis;
@@ -73,6 +75,17 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
         ViewGroup contentView = getWindow().getDecorView().findViewById(Window.ID_ANDROID_CONTENT);
         contentView.getChildAt(0).setFitsSystemWindows(false);
         mPresenter = new MainPresenter(this);
+
+        if (!SPUtils.get(Constant.SP_USER_INFO).getBoolean("FIRST_START")) {
+            AlertDialog noticeDialog = new AlertDialog.Builder(this)
+                    .setTitle("通知")
+                    .setMessage("新版暂不支持节假日调课，预计在下一版本中更新，请查阅校历来查看节假日调课方式")
+                    .setCancelable(false)
+                    .setPositiveButton("收到", null)
+                    .create();
+            noticeDialog.show();
+            SPUtils.get(Constant.SP_USER_INFO).putBoolean("FIRST_START", true);
+        }
     }
 
     @Override

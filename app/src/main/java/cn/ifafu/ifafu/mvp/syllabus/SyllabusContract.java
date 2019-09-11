@@ -4,16 +4,18 @@ import java.text.ParseException;
 import java.util.List;
 
 import cn.ifafu.ifafu.data.entity.Course;
+import cn.ifafu.ifafu.data.entity.Holiday;
 import cn.ifafu.ifafu.data.entity.NextCourse;
 import cn.ifafu.ifafu.data.entity.SyllabusSetting;
 import cn.ifafu.ifafu.mvp.base.i.IView;
 import cn.ifafu.ifafu.mvp.base.i.IZFModel;
 import cn.ifafu.ifafu.mvp.base.i.IZFPresenter;
+import cn.ifafu.ifafu.view.syllabus.CourseBase;
 import io.reactivex.Observable;
 
-class SyllabusContract {
+public class SyllabusContract {
 
-    interface Presenter extends IZFPresenter {
+    public interface Presenter extends IZFPresenter {
 
         void updateSyllabusSetting();
 
@@ -33,7 +35,7 @@ class SyllabusContract {
         void onDelete(Course course);
     }
 
-    interface Model extends IZFModel {
+    public interface Model extends IZFModel {
 
         NextCourse getNextCourse();
 
@@ -41,17 +43,9 @@ class SyllabusContract {
 
         int getCurrentWeek() throws ParseException;
 
-        /**
-         * 从数据库获取所有课程
-         * @return List<Course>
-         */
         List<Course> getAllCoursesFromDB();
 
-        /**
-         * 从数据库获取本地课程
-         * @return List
-         */
-        List<Course> getLocalCoursesFromDB();
+        List<Holiday> getHolidays();
 
         /**
          * 获取指定周指定星期的课程
@@ -67,27 +61,17 @@ class SyllabusContract {
          */
         Observable<List<Course>> getCoursesFromNet();
 
-        /**
-         * 保存课程
-         */
-        void saveCourses(List<Course> courses);
-
-        /**
-         * 删除数据库中的网络获取的课程
-         */
-        void clearOnlineCourses();
-
         void deleteCourse(Course course);
 
     }
 
-    interface View extends IView {
+    public interface View extends IView {
+
+        void setCurrentWeek(int nowWeek);
 
         void setSyllabusSetting(SyllabusSetting setting);
 
-        void setSyllabusDate(List<Course> courses);
-
-        void redrawSyllabus();
+        void setSyllabusDate(List<List<CourseBase>> courses);
 
     }
 }

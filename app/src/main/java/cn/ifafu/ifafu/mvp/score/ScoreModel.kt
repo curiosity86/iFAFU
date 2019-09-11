@@ -13,10 +13,10 @@ import cn.ifafu.ifafu.mvp.score.ScoreContract.Model
 import io.reactivex.Observable
 import java.util.*
 
-internal class ScoreModel(context: Context?) : BaseZFModel(context), Model {
+class ScoreModel(context: Context?) : BaseZFModel(context), Model {
 
     override fun getScoresFromNet(year: String, term: String): Observable<List<Score>> {
-        return scoresFromNet
+        return getScoresFromNet()
                 .map { list ->
                     list.filter {
                         year == "全部" && term == "全部"
@@ -27,7 +27,7 @@ internal class ScoreModel(context: Context?) : BaseZFModel(context), Model {
                 }
     }
 
-    override fun getScoresFromNet(): Observable<List<Score>> {
+    override fun getScoresFromNet(): Observable<MutableList<Score>> {
         val user: User = repository.user
         val scoreUrl: String = School.getUrl(ZhengFang.SCORE, user)
         val mainUrl = School.getUrl(ZhengFang.MAIN, user)
@@ -49,6 +49,12 @@ internal class ScoreModel(context: Context?) : BaseZFModel(context), Model {
                     APIManager.getZhengFangAPI()
                             .getInfo(scoreUrl, scoreUrl, params)
                             .compose(ScoreParser(user))
+                            .doOnNext {
+                                if (it.isNotEmpty()) {
+                                    repository.deleteAllScore()
+                                    repository.saveScore(it)
+                                }
+                            }
                 }
     }
 
@@ -74,10 +80,8 @@ internal class ScoreModel(context: Context?) : BaseZFModel(context), Model {
             for (i in 0..3) {
                 yearList.add(String.format("%d-%d", year - i - 1, year - i))
             }
-            if (repository.user.schoolCode == School.FAFU) {
-                yearList.add("全部")
-            }
-            val termList: List<String> = Arrays.asList("1", "2", "全部")
+            yearList.add("全部")
+            val termList: List<String> = listOf("1", "2", "全部")
             val map: MutableMap<String, List<String>> = HashMap()
             map["ddlxn"] = yearList
             map["ddlxq"] = termList
@@ -91,27 +95,11 @@ internal class ScoreModel(context: Context?) : BaseZFModel(context), Model {
             val c: Calendar = Calendar.getInstance()
             c.add(Calendar.MONTH, 6)
             val map: MutableMap<String, String> = HashMap()
-            if (c.get(Calendar.MONTH) < 8) {
-                map["ddlxq"] = "1"
-            } else {
-                map["ddlxq"] = "2"
-            }
+            map["ddlxq"] = if (c.get(Calendar.MONTH) < 8) "1" else "2"
             val year = c.get(Calendar.YEAR)
             map["ddlxn"] = String.format("%d-%d", year - 1, year)
             map
         }
     }
 
-    override fun save(list: List<Score>) {
-        repository.saveScore(list)
-    }
-
-    override fun delete(year: String, term: String) {
-        val scores: List<Score?>? = repository.getScores(year, term)
-        repository.deleteScore(scores)
-    }
-
-    override fun deleteAllOnlineCourse() {
-        repository.deleteAllOnlineCourse()
-    }
 }

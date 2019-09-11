@@ -1,13 +1,17 @@
 package cn.ifafu.ifafu.data.entity;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Transient;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 @Entity
 public class SyllabusSetting {
@@ -29,27 +33,34 @@ public class SyllabusSetting {
 
     private boolean showVerticalLine = true; //显示竖直分割线
 
-    private String openingDay = "2019-09-01";
+    private String openingDay = "2019-09-01"; //开学时间
 
-    private int nodeLength = 45;
+    private int nodeLength = 45; //一节课的时间
 
-    private int firstDayOfWeek = Calendar.SUNDAY;
+    private int firstDayOfWeek = Calendar.SUNDAY; //每周的第一天
 
-    private String background;
+    private String background; //课表背景
 
-    private int textSize = 12;
+    private int textSize = 12; //课程字体大小
+
+    private int themeColor = Color.BLACK; //主题颜色
+
+    private boolean statusDartFont = true; //状态栏深色字体
+
+    private boolean isForceRefresh = false; // 每次进入课表，自动刷新课表
 
     @Transient
-    private int[] beginTime = new int[]{800, 850, 955, 1045, 1135, 1400, 1450, 1550, 1640, 1825, 1915, 2005};
+    private int[] beginTime;
 
     public SyllabusSetting(String account) {
         this.account = account;
     }
 
-    @Generated(hash = 145296264)
+    @Generated(hash = 665193961)
     public SyllabusSetting(String account, int weekCnt, int nodeCnt, boolean showSaturday, boolean showSunday,
             boolean showBeginTimeText, boolean showHorizontalLine, boolean showVerticalLine, String openingDay,
-            int nodeLength, int firstDayOfWeek, String background, int textSize) {
+            int nodeLength, int firstDayOfWeek, String background, int textSize, int themeColor,
+            boolean statusDartFont, boolean isForceRefresh) {
         this.account = account;
         this.weekCnt = weekCnt;
         this.nodeCnt = nodeCnt;
@@ -63,6 +74,9 @@ public class SyllabusSetting {
         this.firstDayOfWeek = firstDayOfWeek;
         this.background = background;
         this.textSize = textSize;
+        this.themeColor = themeColor;
+        this.statusDartFont = statusDartFont;
+        this.isForceRefresh = isForceRefresh;
     }
 
     @Generated(hash = 310423812)
@@ -143,6 +157,9 @@ public class SyllabusSetting {
 
     @SuppressLint("DefaultLocale")
     public String[] getBeginTimeText() {
+        if (beginTime == null) {
+            return null;
+        }
         String[] text = new String[weekCnt];
         for (int i = 0; i < text.length && i < beginTime.length; i++) {
             text[i] = String.format("%d:%02d", beginTime[i] / 100, beginTime[i] % 100);
@@ -196,5 +213,46 @@ public class SyllabusSetting {
 
     public void setShowVerticalLine(boolean showVerticalLine) {
         this.showVerticalLine = showVerticalLine;
+    }
+
+    public int getCurrentWeek() {
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+            Date firstStudyDate = format.parse(openingDay);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setFirstDayOfWeek(firstDayOfWeek);
+            int currentYearWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+            calendar.setTime(firstStudyDate);
+            int firstYearWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+            int nowWeek = currentYearWeek - firstYearWeek + 1;
+            System.out.println("now week = " + nowWeek);
+            return nowWeek > 0? nowWeek: -1;
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    public boolean getIsForceRefresh() {
+        return this.isForceRefresh;
+    }
+
+    public void setIsForceRefresh(boolean isForceRefresh) {
+        this.isForceRefresh = isForceRefresh;
+    }
+
+    public int getThemeColor() {
+        return this.themeColor;
+    }
+
+    public void setThemeColor(int themeColor) {
+        this.themeColor = themeColor;
+    }
+
+    public boolean getStatusDartFont() {
+        return this.statusDartFont;
+    }
+
+    public void setStatusDartFont(boolean statusDartFont) {
+        this.statusDartFont = statusDartFont;
     }
 }

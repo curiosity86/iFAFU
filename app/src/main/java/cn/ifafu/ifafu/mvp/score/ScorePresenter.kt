@@ -10,25 +10,25 @@ import cn.ifafu.ifafu.util.GlobalLib
 import cn.ifafu.ifafu.util.RxUtils
 import io.reactivex.Observable
 
-internal class ScorePresenter(view: ScoreContract.View)
+class ScorePresenter(view: ScoreContract.View)
     : BaseZFPresenter<ScoreContract.View, ScoreContract.Model>(view, ScoreModel(view.context)), ScoreContract.Presenter {
 
     private lateinit var years: List<String>
     private lateinit var terms: List<String>
-    private var mCurrentYear: String? = null
-    private var mCurrentTerm: String? = null
+    private lateinit var mCurrentYear: String
+    private lateinit var mCurrentTerm: String
 
     override fun onCreate() {
         mCompDisposable.add(mModel
-                .yearTermList
+                .getYearTermList()
                 .doOnNext { map: Map<String, List<String>> ->
                     years = map["ddlxn"] ?: error("")
                     terms = map["ddlxq"] ?: error("")
                 }
-                .flatMap { mModel.yearTerm }
+                .flatMap { mModel.getYearTerm() }
                 .doOnNext { map: Map<String, String> ->
-                    mCurrentYear = map["ddlxn"]
-                    mCurrentTerm = map["ddlxq"]
+                    mCurrentYear = map["ddlxn"] ?: error("")
+                    mCurrentTerm = map["ddlxq"] ?: error("")
                 }
                 .compose(RxUtils.ioToMain())
                 .subscribe({ map: Map<String, String> ->
@@ -50,11 +50,7 @@ internal class ScorePresenter(view: ScoreContract.View)
     private fun update(showMessage: Boolean) {
         mCompDisposable.add(mModel
                 .getScoresFromNet(mCurrentYear, mCurrentTerm)
-                .doOnNext {
-                    mModel.delete(mCurrentYear, mCurrentTerm)
-                    mModel.save(it)
-                }
-                .compose(RxUtils.singleToMain())
+                .compose(RxUtils.ioToMain())
                 .doOnSubscribe { mView.showLoading() }
                 .doFinally { mView.hideLoading() }
                 .subscribe({ list: List<Score> ->
@@ -76,10 +72,6 @@ internal class ScorePresenter(view: ScoreContract.View)
                 .flatMap { scores: List<Score> ->
                     if (scores.isEmpty()) {
                         mModel.getScoresFromNet(mCurrentYear, mCurrentTerm)
-                                .doOnNext {
-                                    mModel.delete(mCurrentYear, mCurrentTerm)
-                                    mModel.save(it)
-                                }
                     } else {
                         Observable.just(scores)
                     }
@@ -130,12 +122,85 @@ internal class ScorePresenter(view: ScoreContract.View)
     }
 
     private fun calcGPA(list: List<Score>) {
-        var totalGPA = 0f
+        var totalGPA = 0F
         list.forEach {
             totalGPA += (it.gpa ?: 0F)
         }
-        val gpa: String = GlobalLib.formatFloat(totalGPA, 2)
+        val gpa: String = if (totalGPA == 0F) "无" else GlobalLib.formatFloat(totalGPA, 2)
         mView.setGPAText(mView.context.getString(string.score_gpa, gpa))
+    }
+
+    override fun onError(throwable: Throwable?) {
+        super.onError(throwable)
+        mView.setIESText("0", "分")
+        mView.setCntText("0", "门")
+        mView.setGPAText("无信息")
+    }
+
+    override fun checkIESDetail() {
+        val totalScore =  mModel.getScoresFromDB(mCurrentYear, mCurrentTerm)
+        val calcJGList = ArrayList<Score>()
+        val calcNoJGList = ArrayList<Score>()
+        val filterList = ArrayList<Score>()
+        totalScore.forEach {
+            if (it.isIESItem) {
+                if (it.realScore >= 60) {
+                    calcJGList.add(it)
+                } else {
+                    calcNoJGList.add(it)
+                }
+            } else {
+                filterList.add(it)
+            }
+        }
+        var first = true
+        val sb = StringBuilder("总共${totalScore.size}门成绩，")
+        sb.append("排除任意选修课，体育课，缓考，免修，补修的课程：[")
+        filterList.forEach {
+            if (first) {
+                first = false
+            } else {
+                sb.append("、")
+            }
+            sb.append(it.name).append(when {
+                it.nature.contains("任意选修") -> "(任意选修课)"
+                it.name.contains("体育") -> "(体育课)"
+                else -> "(自定义)"
+            })
+        }
+        sb.append("]之外，还有${calcJGList.size + calcNoJGList.size}门纳入计算范围，")
+        sb.append("其中共有${calcNoJGList.size}门课程不及格。加权总分为")
+        var totalCalcScore = 0F
+        first = true
+        (calcJGList + calcNoJGList).forEach {
+            if (first) {
+                first = false
+            } else {
+                sb.append(" + ")
+            }
+            sb.append(String.format("%.2f × %.2f", it.realScore, it.credit))
+            totalCalcScore += (it.realScore * it.credit)
+        }
+        sb.append(String.format(" = %.2f，总学分为", totalCalcScore))
+        first = true;
+        var totalCredit = 0F
+        (calcJGList + calcNoJGList).forEach {
+            if (first) {
+                first = false
+            } else {
+                sb.append(" + ")
+            }
+            sb.append(String.format("%.2f", it.credit))
+            totalCredit += it.credit
+        }
+        val ies = totalCalcScore / totalCredit
+        sb.append(String.format(" = %.2f，则%.2f / %.2f = %.2f分", totalCredit, totalCalcScore, totalCredit, ies))
+        var totalMinus = 0F
+        calcNoJGList.forEach {
+            totalMinus += it.credit
+        }
+        sb.append(String.format("，减去不及格的学分共%.2f分，最终为%.2f分。", totalMinus, ies))
+        mView.showIESDetail(sb.toString())
     }
 
 }

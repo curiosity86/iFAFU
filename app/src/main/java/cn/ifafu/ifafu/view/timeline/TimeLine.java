@@ -14,6 +14,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.TintTypedArray;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,8 @@ public class TimeLine extends View {
     private Paint mPointPaint;
     private TextPaint mTextPaint;
 
-    private boolean isNeedDraw = true;
+    private Rect mDateRect;
+
     private List<TimeAxis> mTimeAxisList = new ArrayList<>();
 
     private float mTextSize;
@@ -46,6 +48,8 @@ public class TimeLine extends View {
         super(context, attrs, defStyleAttr);
         TintTypedArray a = TintTypedArray.obtainStyledAttributes(context, attrs, R.styleable.TimeLine,
                 defStyleAttr, 0);
+
+        mDateRect = new Rect();
 
         mMaxPointCount = a.getInt(R.styleable.TimeLine_max_count, 4);
         mLineColor = a.getColor(R.styleable.TimeLine_line_color, 0xFF000000);
@@ -75,7 +79,6 @@ public class TimeLine extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (isNeedDraw) {
             int width = getWidth();
             float centerHeight = getHeight() / 2F;
 
@@ -93,23 +96,25 @@ public class TimeLine extends View {
                 return;
             }
 
-            Rect rect = new Rect();
             mTextPaint.getTextBounds(mTimeAxisList.get(0).getDate(), 0,
-                    mTimeAxisList.get(0).getDate().length(), rect);
-            float dateTextWidth = rect.width() >> 1;
-            float dateTextHeight = rect.height();
+                    mTimeAxisList.get(0).getDate().length(), mDateRect);
+            float dateTextWidth = mDateRect.width() >> 1;
+            float dateTextHeight = mDateRect.height();
             float perPointInterval = 1F * width / mMaxPointCount;
             float pointX = ((int) perPointInterval) >> 1;
             float dp7 = DensityUtils.dp2px(getContext(), 7);
 
             for (int i = 0; i < mMaxPointCount; i++) {
                 TimeAxis timeAxis = mTimeAxisList.get(i);
+                if (timeAxis.getDay() < 0) {
+                    return;
+                }
                 //绘制时间文本
                 @SuppressLint("DefaultLocale")
-                String name = String.format("%s %d天", timeAxis.getName(), timeAxis.getDay());
-                Rect dateRect = new Rect();
-                mTextPaint.getTextBounds(name, 0, name.length(), dateRect);
-                int nameTextWidth = dateRect.width();
+                String name = MessageFormat.format("{0} {1}天",
+                        timeAxis.getName(), timeAxis.getDay() > 0? timeAxis.getDay() : "今");
+                mTextPaint.getTextBounds(name, 0, name.length(), mDateRect);
+                int nameTextWidth = mDateRect.width();
                 canvas.drawText(name, pointX - (nameTextWidth >> 1), centerHeight + dp7 + dateTextHeight, mTextPaint);
                 //绘制日期文本
                 canvas.drawText(timeAxis.getDate(), pointX - dateTextWidth, centerHeight - dp7, mTextPaint);
@@ -117,9 +122,6 @@ public class TimeLine extends View {
                 canvas.drawCircle(pointX, centerHeight, 10, mPointPaint);
                 pointX += perPointInterval;
             }
-
-            isNeedDraw = false;
-        }
     }
 
     public TimeLine setLineColor(@ColorInt int color) {
@@ -147,9 +149,4 @@ public class TimeLine extends View {
         return this;
     }
 
-    @Override
-    public void invalidate() {
-        isNeedDraw = true;
-        super.invalidate();
-    }
 }

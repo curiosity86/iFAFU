@@ -13,32 +13,39 @@ android {
         applicationId "cn.ifafu.ifafu"
         minSdkVersion 22
         targetSdkVersion 29
-        versionCode 15
-        versionName "1.0.8"
+        versionCode 20
+        versionName "1.0.9"
         resConfigs "zh"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
+        debug {
+            //为debug版本的包名添加.debug后缀
+            applicationIdSuffix ".debug"
+            manifestPlaceholders = [
+                    app_name: "@string/app_name_test",
+                    app_icon: "@mipmap/ic_launcher_debug",
+                    app_icon_round: "@mipmap/ic_launcher_round_debug"
+            ]
+        }
+
         release {
             minifyEnabled true
-            shrinkResources false
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [
+                    app_name: "@string/app_name",
+                    app_icon: "@mipmap/ic_launcher",
+                    app_icon_round: "@mipmap/ic_launcher_round"
+            ]
         }
     }
 
     flavorDimensions "default"
     productFlavors {
 
-        defaulut {
-
-        }
-
         qq {
-
-        }
-
-        web {
 
         }
 
@@ -55,7 +62,7 @@ android {
 
     greendao {
         //版本号，升级时可配置
-        schemaVersion 22
+        schemaVersion 25
         daoPackage 'cn.ifafu.ifafu.dao'
     }
 
@@ -68,14 +75,14 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation "androidx.viewpager2:viewpager2:1.0.0-beta03"
-    implementation 'androidx.core:core:1.2.0-alpha03'
-    implementation 'com.google.android.material:material:1.1.0-alpha09'
+    implementation "androidx.viewpager2:viewpager2:1.0.0-beta04"
+    implementation 'androidx.core:core:1.2.0-alpha04'
+    implementation 'com.google.android.material:material:1.1.0-alpha10'
     //Kotlin
-    implementation "androidx.core:core-ktx:1.0.2"
+    implementation "androidx.core:core-ktx:1.1.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     //选择器
     implementation 'com.contrarywind:Android-PickerView:4.1.7'
@@ -110,12 +117,22 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
     //动画低版本支持
     implementation 'com.nineoldandroids:library:2.4.0'
-
+    //Dialog
+    implementation 'com.afollestad.material-dialogs:core:3.1.1'
+    implementation 'com.afollestad.material-dialogs:color:3.1.1'
+    //ViewAdapter
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50'
     implementation 'me.drakeet.multitype:multitype:4.0.0-alpha3'
+    //权限管理
     implementation "org.permissionsdispatcher:permissionsdispatcher:4.5.0"
     annotationProcessor "org.permissionsdispatcher:permissionsdispatcher-processor:4.5.0"
     
+    // 本地异常捕捉框架：https://github.com/Ereza/CustomActivityOnCrash
+    implementation 'cat.ereza:customactivityoncrash:2.2.0'
+
+    // DialogPlus: https://github.com/orhanobut/dialogplus
+    implementation 'com.orhanobut:dialogplus:1.11@aar'
+
     testImplementation 'junit:junit:4.13-beta-3'
     androidTestImplementation 'androidx.test:runner:1.3.0-alpha02'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha02'
