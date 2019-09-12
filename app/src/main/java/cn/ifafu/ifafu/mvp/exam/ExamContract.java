@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import cn.ifafu.ifafu.data.entity.Exam;
-import cn.ifafu.ifafu.data.entity.Response;
 import cn.ifafu.ifafu.mvp.base.i.IPresenter;
 import cn.ifafu.ifafu.mvp.base.i.IView;
 import cn.ifafu.ifafu.mvp.base.i.IZFModel;
@@ -32,20 +31,15 @@ class ExamContract {
 
     interface Model extends IZFModel {
 
-        Observable<Response<List<Exam>>> getExamsFromNet(String year, String term);
+        Observable<List<Exam>> getExamsFromNet(String year, String term);
 
         Observable<List<Exam>> getExamsFromDB(String year, String term);
 
-        Observable<Map<String, List<String>>> getYearTermList();
+        Map<String, List<String>> getYearTermList();
 
         Map<String, String> getYearTerm();
 
         void save(List<Exam> list);
 
-        void save(Exam exam);
-
-        void delete(Exam exam);
-
-        void delete(long id);
     }
 }

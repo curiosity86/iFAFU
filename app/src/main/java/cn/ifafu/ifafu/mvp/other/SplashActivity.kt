@@ -85,7 +85,7 @@ class SplashActivity : BaseActivity<IPresenter>() {
         if (IFAFU.FIRST_START_APP) {
             val strategy = CrashReport.UserStrategy(applicationContext)
             strategy.setCrashHandleCallback(MyCrashHandleCallback())
-            Bugly.init(applicationContext, "46836c4eaa", BuildConfig.DEBUG)
+            Bugly.init(applicationContext, "46836c4eaa", BuildConfig.DEBUG, strategy)
             Beta.enableHotfix = false
             IFAFU.FIRST_START_APP = false
         }

@@ -3,7 +3,6 @@ package cn.ifafu.ifafu.mvp.exam;
 import java.util.List;
 import java.util.Map;
 
-import cn.ifafu.ifafu.data.entity.Response;
 import cn.ifafu.ifafu.mvp.base.BaseZFPresenter;
 import cn.ifafu.ifafu.util.RxUtils;
 import io.reactivex.Observable;
@@ -23,8 +22,8 @@ class ExamPresenter extends BaseZFPresenter<ExamContract.View, ExamContract.Mode
 
     @Override
     public void onCreate() {
-        mCompDisposable.add(mModel
-                .getYearTermList()
+        mCompDisposable.add(Observable.fromCallable(() -> mModel
+                .getYearTermList())
                 .doOnNext(map -> {
                     years = map.get("xnd");
                     terms = map.get("xqd");
@@ -37,9 +36,7 @@ class ExamPresenter extends BaseZFPresenter<ExamContract.View, ExamContract.Mode
                 })
                 .flatMap(exams -> {
                     if (exams.isEmpty()) {
-                        return mModel.getExamsFromNet(mCurrentYear, mCurrentTerm)
-                                .map(Response::getBody)
-                                .doOnNext(list -> mModel.save(list));
+                        return mModel.getExamsFromNet(mCurrentYear, mCurrentTerm);
                     } else {
                         return Observable.just(exams);
                     }
@@ -51,15 +48,17 @@ class ExamPresenter extends BaseZFPresenter<ExamContract.View, ExamContract.Mode
                     mView.setYearTermData(years, terms);
                     mView.setYearTermOptions(years.indexOf(mCurrentYear), terms.indexOf(mCurrentTerm));
                     mView.setExamAdapterData(list);
-                }, this::onError)
+                }, throwable -> {
+                    mView.setYearTermData(years, terms);
+                    mView.setYearTermOptions(years.indexOf(mCurrentYear), terms.indexOf(mCurrentTerm));
+                    onError(throwable);
+                })
         );
     }
 
     @Override
     public void update() {
         mCompDisposable.add(mModel.getExamsFromNet(mCurrentYear, mCurrentTerm)
-                .map(Response::getBody)
-                .doOnNext(list -> mModel.save(list))
                 .compose(RxUtils.ioToMain())
                 .doOnSubscribe(disposable -> mView.showLoading())
                 .doFinally(() -> mView.hideLoading())
@@ -77,9 +76,7 @@ class ExamPresenter extends BaseZFPresenter<ExamContract.View, ExamContract.Mode
                 .getExamsFromDB(mCurrentYear, mCurrentTerm)
                 .flatMap(exams -> {
                     if (exams.isEmpty()) {
-                        return mModel.getExamsFromNet(mCurrentYear, mCurrentTerm)
-                                .map(Response::getBody)
-                                .doOnNext(list -> mModel.save(list));
+                        return mModel.getExamsFromNet(mCurrentYear, mCurrentTerm);
                     } else {
                         return Observable.just(exams);
                     }
