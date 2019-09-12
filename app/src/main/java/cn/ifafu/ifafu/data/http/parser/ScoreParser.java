@@ -80,6 +80,7 @@ public class ScoreParser extends BaseParser<List<Score>> {
         }
         score.setIsIESItem(score.getScore() != Score.FREE_COURSE
                 && !score.getNature().contains("任意选修")
+                && !score.getNature().contains("公共选修")
                 && !score.getName().contains("体育"));
         return score;
     }

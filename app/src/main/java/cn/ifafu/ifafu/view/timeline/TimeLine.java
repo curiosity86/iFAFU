@@ -104,7 +104,7 @@ public class TimeLine extends View {
             float pointX = ((int) perPointInterval) >> 1;
             float dp7 = DensityUtils.dp2px(getContext(), 7);
 
-            for (int i = 0; i < mMaxPointCount; i++) {
+            for (int i = 0; i < mMaxPointCount && i < mTimeAxisList.size(); i++) {
                 TimeAxis timeAxis = mTimeAxisList.get(i);
                 if (timeAxis.getDay() < 0) {
                     return;

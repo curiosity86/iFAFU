@@ -25,13 +25,13 @@ import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import kotlinx.android.synthetic.main.activity_syllabus_setting.*
 import me.drakeet.multitype.MultiTypeAdapter
-import java.util.*
 
 class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(), SyllabusSettingContract.View {
 
     private lateinit var setting: SyllabusSetting
 
-    private val REQUEST_CODE_CHOOSE = 23
+    private val REQUEST_CODE_CHOOSE_ACTIVITY = 23
+    private val REQUEST_CODE_PERMISSION = 23
 
     private val colors = intArrayOf(
             Color.BLACK, Color.DKGRAY, Color.GRAY, Color.LTGRAY,
@@ -82,13 +82,13 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(
                 SeekBarItem("课程字体大小", setting.textSize, "sp", 8, 18) {
                     setting.textSize = it
                 },
-                CheckBoxItem("周日为每周第一天", "请根据学校情况设置", setting.firstDayOfWeek == Calendar.SUNDAY) {
-                    if (it) {
-                        setting.firstDayOfWeek = Calendar.SUNDAY
-                    } else {
-                        setting.firstDayOfWeek = Calendar.MONDAY
-                    }
-                },
+//                CheckBoxItem("周日为每周第一天", "请根据学校情况设置", setting.firstDayOfWeek == Calendar.SUNDAY) {
+//                    if (it) {
+//                        setting.firstDayOfWeek = Calendar.SUNDAY
+//                    } else {
+//                        setting.firstDayOfWeek = Calendar.MONDAY
+//                    }
+//                },
                 CheckBoxItem("显示水平分割线", "", setting.showHorizontalLine) {
                     setting.showHorizontalLine = it
                 },
@@ -103,9 +103,9 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(
                 },
                 TextViewItem("课表背景", "长按重置为默认背景", {
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+                        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_CODE_PERMISSION)
                     } else {
-                        mPicturePicker.forResult(REQUEST_CODE_CHOOSE)
+                        mPicturePicker.forResult(REQUEST_CODE_CHOOSE_ACTIVITY)
                     }
                 }, {
                     setting.background = null
@@ -143,7 +143,7 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_CODE_CHOOSE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_CODE_PERMISSION && resultCode == Activity.RESULT_OK) {
             setting.background = Matisse.obtainResult(data)[0].toString()
             return
         }
@@ -152,7 +152,7 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (requestCode == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            mPicturePicker.forResult(REQUEST_CODE_CHOOSE)
+            mPicturePicker.forResult(REQUEST_CODE_CHOOSE_ACTIVITY)
             return
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)

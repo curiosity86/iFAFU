@@ -26,6 +26,22 @@ public class DateUtils {
         return weekdays[weekday - 1];
     }
 
+    public static int calcLastDays(Date fromDate, Date toDate) {
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.setTime(fromDate);
+        long fromDay = calendar.getTimeInMillis() / 1000 / 60 / 60 / 24;
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.setTime(toDate);
+        long toDay = calendar.getTimeInMillis() / 1000 / 60 / 60 / 24;
+        return (int) (toDay - fromDay);
+    }
+
     /**
      * 获取星期文本
      *
@@ -167,6 +183,7 @@ public class DateUtils {
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTime();
     }
 

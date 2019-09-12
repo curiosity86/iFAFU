@@ -11,7 +11,7 @@ import cn.ifafu.ifafu.electricity.data.QueryData;
 import cn.ifafu.ifafu.electricity.data.Selection;
 import io.reactivex.Observable;
 
-class ElecMainContract {
+public class ElecMainContract {
 
     interface View extends IView {
 
@@ -76,7 +76,7 @@ class ElecMainContract {
         String getCheckedDKName();
     }
 
-    interface Presenter extends IPresenter {
+    public interface Presenter extends IPresenter {
 
         void quit();
 

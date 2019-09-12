@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import cn.ifafu.ifafu.BuildConfig;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.app.IFAFU;
 import cn.ifafu.ifafu.data.entity.Exam;
@@ -24,6 +23,7 @@ import cn.ifafu.ifafu.mvp.base.BaseZFPresenter;
 import cn.ifafu.ifafu.mvp.exam.ExamModel;
 import cn.ifafu.ifafu.mvp.login.LoginActivity;
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusModel;
+import cn.ifafu.ifafu.util.DateUtils;
 import cn.ifafu.ifafu.util.GlobalLib;
 import cn.ifafu.ifafu.util.RxUtils;
 import cn.ifafu.ifafu.view.timeline.TimeAxis;
@@ -133,13 +133,13 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
         mCompDisposable.add(Observable
                 .fromCallable(() -> {
                     List<TimeAxis> list = new ArrayList<>();
-                    long now = System.currentTimeMillis();
+                    Date now = new Date();
 
                     List<Holiday> holidays = mModel.getHoliday();
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
                     for (Holiday holiday : holidays) {
                         Date date = format.parse(holiday.getDate());
-                        int day = (int) ((date.getTime() - now) / 1000 / 60 / 60 / 24);
+                        int day = DateUtils.calcLastDays(now, date);
                         if (day >= 0) {
                             TimeAxis axis = new TimeAxis(
                                     holiday.getName(), holiday.getDate(), day);
@@ -149,7 +149,8 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
 
                     List<Exam> exams = new ExamModel(mView.getContext()).getThisTermExams();
                     for (Exam exam : exams) {
-                        int day = (int) ((exam.getStartTime() - now) / 1000 / 60 / 60 / 24);
+                        Date date = new Date(exam.getStartTime());
+                        int day = DateUtils.calcLastDays(now, date);
                         if (day >= 0) {
                             TimeAxis axis = new TimeAxis(
                                     exam.getName(), format.format(new Date(exam.getStartTime())), day);
@@ -166,11 +167,9 @@ public class MainPresenter extends BaseZFPresenter<MainContract.View, MainContra
 
     @Override
     public void quitAccount() {
-        if (BuildConfig.DEBUG) {
-            mModel.clearAllDate();
-        }
         CookieManager.getInstance().removeAllCookies(null);
         Intent intent = new Intent(mView.getContext(), LoginActivity.class);
+        mModel.clearAllDate();
         mView.openActivity(intent);
         mView.killSelf();
     }

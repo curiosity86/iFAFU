@@ -13,7 +13,7 @@ android {
         applicationId "cn.ifafu.ifafu"
         minSdkVersion 22
         targetSdkVersion 29
-        versionCode 21
+        versionCode 22
         versionName "1.0.9"
         resConfigs "zh"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -45,7 +45,11 @@ android {
     flavorDimensions "default"
     productFlavors {
 
-        qq {
+        web {
+
+        }
+
+        coolapk {
 
         }
 
@@ -102,7 +106,7 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.10'
     implementation 'com.github.ReactiveX:RxKotlin:2.4.0'
     //Http框架
-    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.1'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.1'
     implementation 'org.jsoup:jsoup:1.12.1'
     implementation 'com.alibaba:fastjson:1.2.58'

@@ -1,21 +1,20 @@
 package cn.ifafu.ifafu.electricity.login;
 
 import android.graphics.Bitmap;
-import android.text.Editable;
 
+import cn.ifafu.ifafu.electricity.data.UserMe;
 import cn.ifafu.ifafu.mvp.base.i.IModel;
 import cn.ifafu.ifafu.mvp.base.i.IPresenter;
 import cn.ifafu.ifafu.mvp.base.i.IView;
-import cn.ifafu.ifafu.electricity.data.UserMe;
 import io.reactivex.Observable;
 
-class ElecLoginContract {
+public class ElecLoginContract {
 
     interface View extends IView {
 
-        Editable getSNoEditable();
-        Editable getPasswordEditable();
-        Editable getVerifyEditable();
+        String getSNoEditable();
+        String getPasswordEditable();
+        String getVerifyEditable();
 
         void setSnoEtText(String sno);
         void setPasswordText(String password);
@@ -46,7 +45,7 @@ class ElecLoginContract {
         void save(UserMe user, String rescouseType);
     }
 
-    interface Presenter extends IPresenter {
+    public interface Presenter extends IPresenter {
         /**
          * 刷新验证码
          */

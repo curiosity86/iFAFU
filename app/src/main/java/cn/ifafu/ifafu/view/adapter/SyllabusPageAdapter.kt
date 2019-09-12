@@ -12,6 +12,8 @@ import cn.ifafu.ifafu.data.entity.SyllabusSetting
 import cn.ifafu.ifafu.util.DateUtils
 import cn.ifafu.ifafu.view.syllabus.*
 import cn.ifafu.ifafu.view.syllabus.CourseView.OnCourseClickListener
+import java.util.*
+import kotlin.collections.ArrayList
 
 class SyllabusPageAdapter : RecyclerView.Adapter<SyllabusPageAdapter.SyllabusViewHolder> {
 
@@ -59,7 +61,8 @@ class SyllabusPageAdapter : RecyclerView.Adapter<SyllabusPageAdapter.SyllabusVie
                 .setShowHorizontalDivider(setting.showHorizontalLine)
                 .setShowVerticalDivider(setting.showVerticalLine)
                 .setRowCount(setting.nodeCnt)
-                .setFirstDayOfWeek(setting.firstDayOfWeek)
+//                .setFirstDayOfWeek(setting.firstDayOfWeek)
+                .setFirstDayOfWeek(Calendar.SUNDAY)
                 .setOnCourseClickListener(onCourseClickListener)
                 .setCourseData(courses.getOrNull(position))
                 .setThemeColor(setting.themeColor)

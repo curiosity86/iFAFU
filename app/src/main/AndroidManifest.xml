@@ -60,7 +60,8 @@
         <meta-data
             android:name="notch.config"
             android:value="portrait|landscape" />
-        <receiver android:name=".widget.SyllabusWidget">
+        <receiver android:name=".widget.SyllabusWidget"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="ifafu.widget.syllabus.REFRESH" />

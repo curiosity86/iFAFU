@@ -110,6 +110,12 @@ public abstract class BaseZFModel extends BaseModel implements IZFModel {
                             default:
                                 return response;
                         }
+                    })
+                    .doOnNext(resp -> {
+                        if (resp.isSuccess()) {
+                            user.setName(resp.getBody());
+                            repository.saveUser(user);
+                        }
                     });
         });
     }

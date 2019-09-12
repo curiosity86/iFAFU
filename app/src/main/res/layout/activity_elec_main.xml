@@ -17,23 +17,32 @@
         app:elevation="3dp"
         app:title="@string/fafu_elec_title"/>
 
-    <include layout="@layout/include_elec_main_ac" />
-
-    <include layout="@layout/include_elec_main_balance" />
-
-    <include layout="@layout/include_elec_main_elec" />
-
-    <View
-        android:layout_width="0dp"
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/include_elec_main_ac" />
+
+            <include layout="@layout/include_elec_main_balance" />
+
+            <include layout="@layout/include_elec_main_elec" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/fafu_elec_tip"
+        android:text="@string/fafu_elec_tos"
         android:layout_marginBottom="8dp"
-        android:gravity="center"
+        android:gravity="start"
         android:autoLink="web"/>
 
 </LinearLayout>

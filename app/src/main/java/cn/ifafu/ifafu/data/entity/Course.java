@@ -17,7 +17,7 @@ import cn.ifafu.ifafu.view.syllabus.ToCourseBase;
 @Entity
 public class Course implements ToCourseBase {
 
-    @Id
+    @Id(autoincrement = true)
     private Long id;
     private String name; // 课程名
     private String address; // 上课地点

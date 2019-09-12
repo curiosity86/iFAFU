@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.view.Window
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import butterknife.OnClick
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.data.entity.Menu
@@ -31,7 +30,7 @@ import kotlinx.android.synthetic.main.include_main.*
 import kotlinx.android.synthetic.main.include_main_next_course.*
 import kotlinx.android.synthetic.main.include_main_weather.*
 
-class MainActivity : BaseActivity<MainContract.Presenter>(), MainContract.View {
+class MainActivity : BaseActivity<MainContract.Presenter>(), MainContract.View, View.OnClickListener {
 
     private var mMenuAdapter: MenuAdapter? = null
 
@@ -41,20 +40,29 @@ class MainActivity : BaseActivity<MainContract.Presenter>(), MainContract.View {
 
     override fun initData(savedInstanceState: Bundle?) {
         StatusBarUtil.setTransparent(this)
+
         val contentView = window.decorView.findViewById<ViewGroup>(Window.ID_ANDROID_CONTENT)
         contentView.getChildAt(0).fitsSystemWindows = false
         mPresenter = MainPresenter(this)
+
+        btn_menu.setOnClickListener(this)
+        tv_nav_about.setOnClickListener(this)
+        tv_nav_share.setOnClickListener(this)
+        tv_nav_fback.setOnClickListener(this)
+        tv_nav_update.setOnClickListener(this)
+        tv_nav_logout.setOnClickListener(this)
 
         if (!SPUtils.get(Constant.SP_USER_INFO).getBoolean("FIRST_START2")) {
             MaterialDialog(this).show {
                 cancelable(false)
                 title(text = "通知（Show only once）")
-                message(text = "\t\t这个版本支持节假日调课，调课的课程末尾会有[补课]提示，但是没有明显的UI区别，暂时没啥好的想法，所以就等下个版本再说啦。\n" +
+                message(text = "\t\t已支持节假日调课，调课的课程末尾会有[补课]提示，但是没有明显的UI区别，暂时没啥好的想法，所以就等下个版本再说啦。\n" +
                         "\t\t对于放假与调课UI有什么好的建议，可以直接滴滴我(27907670(雾深水浅))，或者在反馈群提建议，群号：663114635(关于那也有群号)")
                 positiveButton(text = "收到")
             }
             SPUtils.get(Constant.SP_USER_INFO).putBoolean("FIRST_START2", true)
         }
+//        CrashReport.testJavaCrash()
     }
 
     override fun onStart() {
@@ -102,15 +110,26 @@ class MainActivity : BaseActivity<MainContract.Presenter>(), MainContract.View {
         return super.onKeyDown(keyCode, event)
     }
 
-    @OnClick(R.id.btn_menu, R.id.tv_nav_about, R.id.tv_nav_share, R.id.tv_nav_fback, R.id.tv_nav_update, R.id.tv_nav_logout)
-    fun onViewClicked(v: View) {
-        when (v.id) {
+    override fun onClick(v: View?) {
+        when (v?.id) {
             R.id.btn_menu -> drawer_main.open()
             R.id.tv_nav_update -> mPresenter.updateApp()
             R.id.tv_nav_about -> startActivity(Intent(this, AboutActivity::class.java))
             R.id.tv_nav_share -> mPresenter.shareApp()
-            R.id.tv_nav_fback -> showMessage("反馈问题")
-            R.id.tv_nav_logout -> mPresenter.quitAccount()
+            R.id.tv_nav_fback -> showMessage("反馈问题（还没写）")
+            R.id.tv_nav_logout -> {
+                MaterialDialog(this).show {
+                    title(text = "Are you sure?")
+                    message(text = "退出账号将会清除所有数据，确定要退出账号吗？")
+                    positiveButton(text = "退出账号") {
+                        mPresenter.quitAccount()
+                    }
+                    negativeButton(text = "我后悔了")
+                }
+            }
+        }
+        if (drawer_main.status == DragLayout.Status.Open) {
+            drawer_main.close(true)
         }
     }
 

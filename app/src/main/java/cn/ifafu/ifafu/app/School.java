@@ -23,7 +23,7 @@ public class School {
                 "xs_main.aspx",
                 new HashMap<String, QueryApi>() {{
                     put(ZhengFang.SYLLABUS, new QueryApi("xskbcx.aspx", "N121602"));
-                    put(ZhengFang.EXAM, new QueryApi("xskscx.aspx", "N121605"));
+                    put(ZhengFang.EXAM, new QueryApi("xskscx.aspx", "N121604"));
                     put(ZhengFang.SCORE, new QueryApi("xscjcx_dq_fafu.aspx", "N121605"));
                 }}));
         URL_MAP.put(FAFU_JS, new ZhengFang(FAFU_JS, "http://js.ifafu.cn/",

@@ -67,6 +67,9 @@
     <string name="menu_about">关于应用</string>
     <string name="menu_fback">反馈问题</string>
 
+    <!--WebActivity-->
+    <string name="title_web_mode">网页模式</string>
+
     <!--SyllabusItemActivity-->
     <string name="course_detail">课程详情</string>
     <string name="loading">加载中…</string>
@@ -111,12 +114,26 @@
     <string name="hint_password">请输入密码（身份证后六位）</string>
     <string name="hint_verify">验证码</string>
     <string name="quick_elec">一键查询电费</string>
-    <string name="announce">技术支持：FAFU电宝App（实验性功能）\nBy: Woolsen</string>
-    <string name="fafu_elec_tip">Tip1：部分宿舍电费查询显示的宿舍信息与输入宿舍号不同，\n此为学付宝问题，可用学付宝查询验证\nTip2：电费充值到账有延迟，到账后电费信息更新还有延迟\n若太久没到账请联系宿管科\nhttps://github.com/woolsen/FAFUElec</string>
+    <string name="announce">电费充值为实验性功能！！\n服务提供：学付宝</string>
+    <string name="fafu_elec_tos">
+1、部分宿舍电费查询显示的宿舍信息与输入宿舍号不同，此为学付宝问题，可用学付宝查询验证\n
+2、电费充值服务由学付宝提供，充值金直接流向学付宝，学付宝App内可查到消费账单\n
+3、电费充值到账有延迟，到账后电费信息更新还有延迟，若太久没到账请联系宿管科（问学付宝充电费为什么还没到账）。
+    </string>
     
     <!--Widget-->
     <string name="refresh_time_format">上次刷新时间：%s</string>
     <string name="next_course_format">下一节课：%s</string>
     <string name="next_node_format">第%d节 %s</string>
     <string name="click_to_refresh">点击此处刷新</string>
+
+    <string name="customactivityoncrash_error_activity_error_occurred_explanation">iFAFU出错了，抱歉给您带来不便。\n错误信息已上传，我们会尽快处理这个问题~</string>
+    <string name="customactivityoncrash_error_activity_restart_app">重启app</string>
+    <string name="customactivityoncrash_error_activity_close_app">关闭app</string>
+    <string name="customactivityoncrash_error_activity_error_details">错误详细信息</string>
+    <string name="customactivityoncrash_error_activity_error_details_title">错误详细信息</string>
+    <string name="customactivityoncrash_error_activity_error_details_close">关闭</string>
+    <string name="customactivityoncrash_error_activity_error_details_copy">复制到剪贴板</string>
+    <string name="customactivityoncrash_error_activity_error_details_copied">复制到剪贴板</string>
+    <string name="customactivityoncrash_error_activity_error_details_clipboard_label">错误信息</string>
 </resources>
