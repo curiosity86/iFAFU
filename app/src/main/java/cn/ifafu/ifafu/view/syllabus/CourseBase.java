@@ -27,7 +27,7 @@ public class CourseBase implements ToCourseBase {
         color = -1;
     }
 
-    public CourseBase(String text, @DayOfWeek int weekday, int beginNode, int nodeNum) {
+    public CourseBase(String text, @Weekday int weekday, int beginNode, int nodeNum) {
         this.text = text;
         this.weekday = weekday;
         this.beginNode = beginNode;
@@ -35,7 +35,7 @@ public class CourseBase implements ToCourseBase {
         this.color = ColorUtils.getRandomColor();
     }
 
-    public CourseBase(String text, @DayOfWeek int weekday, int beginNode, int nodeNum, int color) {
+    public CourseBase(String text, @Weekday int weekday, int beginNode, int nodeNum, int color) {
         this.text = text;
         this.weekday = weekday;
         this.beginNode = beginNode;
@@ -55,7 +55,7 @@ public class CourseBase implements ToCourseBase {
         return weekday;
     }
 
-    public void setWeekday(@DayOfWeek int weekday) {
+    public void setWeekday(@Weekday int weekday) {
         this.weekday = weekday;
     }
 

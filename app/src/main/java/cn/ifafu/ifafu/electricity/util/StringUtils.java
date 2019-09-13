@@ -19,14 +19,14 @@ public class StringUtils {
     public static String imei() {
         String str;
         try {
-            TelephonyManager telephonyManager = (TelephonyManager) BaseApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+            TelephonyManager telephonyManager = (TelephonyManager) BaseApplication.getAppContext().getSystemService(Context.TELEPHONY_SERVICE);
             if (telephonyManager.getDeviceId() != null) {
                 str = telephonyManager.getDeviceId();
             } else {
-                str = Settings.Secure.getString(BaseApplication.getContext().getApplicationContext().getContentResolver(), "android_id");
+                str = Settings.Secure.getString(BaseApplication.getAppContext().getApplicationContext().getContentResolver(), "android_id");
             }
         } catch(Exception e) {
-            str = Settings.Secure.getString(BaseApplication.getContext().getApplicationContext().getContentResolver(), "android_id");
+            str = Settings.Secure.getString(BaseApplication.getAppContext().getApplicationContext().getContentResolver(), "android_id");
         }
         return md5(str);
     }
@@ -36,7 +36,7 @@ public class StringUtils {
         String userAgent;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             try {
-                userAgent = WebSettings.getDefaultUserAgent(BaseApplication.getContext());
+                userAgent = WebSettings.getDefaultUserAgent(BaseApplication.getAppContext());
             } catch (Exception e) {
                 userAgent = System.getProperty("http.agent");
             }

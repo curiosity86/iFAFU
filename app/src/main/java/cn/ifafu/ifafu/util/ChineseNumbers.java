@@ -188,7 +188,7 @@ public class ChineseNumbers {
      */
     public static double chineseNumberToEnglish(String text) {
         if (text.isEmpty()) {
-            throw new IllegalArgumentException("drawable_empty input");
+            throw new IllegalArgumentException("empty input");
         }
         double result;
 //        boolean ordinal = false;

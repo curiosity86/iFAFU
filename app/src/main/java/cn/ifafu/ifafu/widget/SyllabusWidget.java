@@ -117,7 +117,7 @@ public class SyllabusWidget extends AppWidgetProvider {
                     break;
                 case R.id.btn_jump:
                     Intent jumpIntent;
-                    if (IFAFU.FIRST_START_APP) {
+                    if (IFAFU.Companion.getFIRST_START_APP()) {
                         jumpIntent = new Intent(context, SplashActivity.class);
                         jumpIntent.putExtra("jump", Constant.SYLLABUS_ACTIVITY);
                     } else {

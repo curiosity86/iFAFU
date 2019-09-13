@@ -24,7 +24,7 @@ class LoginPresenter extends BaseZFPresenter<LoginContract.View, LoginContract.M
     public void onCreate() {
         Intent intent = mView.getActivity().getIntent();
         comeFromWhere = intent.getIntExtra("come_from", 0);
-        mView.setBackgroundLogo(R.drawable.drawable_fafu_b);
+        mView.setBackgroundLogo(R.drawable.icon_fafu_b);
     }
 
     @Override
@@ -85,10 +85,10 @@ class LoginPresenter extends BaseZFPresenter<LoginContract.View, LoginContract.M
         if (account.isEmpty() || account.length() < 9) return;
         if (schoolCode != School.FAFU_JS && account.charAt(0) == '0' || account.length() == 9) {
             schoolCode = School.FAFU_JS;
-            mView.setBackgroundLogo(R.drawable.drawable_fafu_js);
+            mView.setBackgroundLogo(R.drawable.icon_fafu_js);
         } else if (schoolCode != School.FAFU) {
             schoolCode = School.FAFU;
-            mView.setBackgroundLogo(R.drawable.drawable_fafu_b);
+            mView.setBackgroundLogo(R.drawable.icon_fafu_b);
         }
     }
 

@@ -1,6 +1,5 @@
 package cn.ifafu.ifafu.view.adapter.syllabus_setting
 
-import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,8 +32,9 @@ class ColorBinder : ItemViewBinder<ColorItem, ColorBinder.VH>() {
         private val ivColor: ImageView = itemView.findViewById(R.id.iv_color)
 
         fun setColor(@ColorInt color: Int): VH {
-            val grad = ivColor.background as GradientDrawable
-            grad.setColor(color)
+//            val grad = ivColor.background as GradientDrawable
+//            grad.setColor(color)
+            ivColor.setColorFilter(color)
             return this
         }
 

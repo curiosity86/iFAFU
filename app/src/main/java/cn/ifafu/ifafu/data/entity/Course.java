@@ -28,7 +28,7 @@ public class Course implements ToCourseBase {
     private int nodeCnt = 0; // 上课节数
 
     @Convert(converter = IntTreeSetConverter.class, columnType = String.class)
-    private TreeSet<Integer> weekSet = new TreeSet<>();
+    private TreeSet<Integer> weekSet = new TreeSet<>(); //第几周需要上课
 
     private int color; // 课程颜色
     private String account; // 课程归属账号

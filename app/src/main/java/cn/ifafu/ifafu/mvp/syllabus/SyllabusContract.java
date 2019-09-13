@@ -2,6 +2,7 @@ package cn.ifafu.ifafu.mvp.syllabus;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.data.entity.Holiday;
@@ -12,6 +13,7 @@ import cn.ifafu.ifafu.mvp.base.i.IZFModel;
 import cn.ifafu.ifafu.mvp.base.i.IZFPresenter;
 import cn.ifafu.ifafu.view.syllabus.CourseBase;
 import io.reactivex.Observable;
+import kotlin.Pair;
 
 public class SyllabusContract {
 
@@ -46,6 +48,12 @@ public class SyllabusContract {
         List<Course> getAllCoursesFromDB();
 
         List<Holiday> getHolidays();
+
+        /**
+         * 获取调课方式
+         * @return MutableMap<fromWeek, MutableMap<fromWeekday, Pair<toWeek, toWeekday>>>
+         */
+        Map<Integer, Map<Integer, Pair<Integer, Integer>>> getHolidayFromToMap();
 
         /**
          * 获取指定周指定星期的课程

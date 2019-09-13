@@ -14,9 +14,9 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/iv_app_icon"
             android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:src="@drawable/drawable_ifafu_round" />
+            android:layout_height="96dp"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -26,10 +26,10 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_app_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
-                android:text="@string/app_name"
                 android:textColor="@color/ifafu_blue"
                 android:textSize="38sp" />
 

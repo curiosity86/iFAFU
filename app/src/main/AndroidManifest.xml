@@ -50,6 +50,11 @@
         <activity android:name=".mvp.exam.ExamActivity" />
         <activity android:name=".mvp.web.WebActivity" />
         <activity android:name=".mvp.other.AboutActivity" />
+
+        <meta-data
+            android:name="APP_ICON_HD"
+            android:resource="${app_icon_hd}" />
+
         <meta-data
             android:name="BUGLY_APP_CHANNEL"
             android:value="${channel}" />

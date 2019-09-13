@@ -6,15 +6,10 @@ import cn.ifafu.ifafu.R.string
 import cn.ifafu.ifafu.data.entity.Course
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
 import cn.ifafu.ifafu.mvp.base.BaseZFPresenter
-import cn.ifafu.ifafu.util.DateUtils
 import cn.ifafu.ifafu.util.RxUtils
 import cn.ifafu.ifafu.view.syllabus.CourseBase
 import io.reactivex.Observable
 import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class SyllabusPresenter(view: SyllabusContract.View)
     : BaseZFPresenter<SyllabusContract.View, SyllabusContract.Model>(view, SyllabusModel(view.context)),
@@ -78,56 +73,12 @@ class SyllabusPresenter(view: SyllabusContract.View)
 
         //MutableMap<fromWeek, MutableMap<fromWeekday, Pair<toWeek, toWeekday>>>
         @SuppressLint("UseSparseArrays")
-        val fromTo: MutableMap<Int, MutableMap<Int, Pair<Int, Int>?>> = HashMap()
-        val setting: SyllabusSetting = mModel.syllabusSetting
-        val format = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
-        val openingDate: Date = format.parse(mModel.syllabusSetting.openingDay)
-        val calendar: Calendar = Calendar.getInstance()
-        calendar.firstDayOfWeek = setting.firstDayOfWeek
-        for (holiday in  mModel.holidays) {
-            if (holiday.fromTo != null) { //节假日需要调课
-                for ((key, value) in holiday.fromTo) {
-
-                    val fromDate: Date = format.parse(key)
-                    val fromWeek = DateUtils.getCurrentWeek(openingDate, fromDate, setting.firstDayOfWeek)
-                    calendar.time = fromDate
-                    val fromWeekday = calendar.get(Calendar.DAY_OF_WEEK)
-                    Log.d("Holiday Calc", "from week: $fromWeek, fromWeekday: $fromWeekday")
-
-                    val toDate: Date = format.parse(value)
-                    val toWeek = DateUtils.getCurrentWeek(openingDate, toDate, setting.firstDayOfWeek)
-                    calendar.time = toDate
-                    val toWeekday = calendar.get(Calendar.DAY_OF_WEEK)
-                    val toPair = Pair(toWeek, toWeekday)
-
-                    fromTo.getOrPut(fromWeek, { HashMap() })[fromWeekday] = toPair
-                }
-            }
-            //添加放假日期
-            if (holiday.day != 0) {
-                val holidayDate: Date = format.parse(holiday.date)
-                calendar.time = holidayDate
-//                Log.d("Holiday Calc", "holiday date: ${holiday.date}    day: ${holiday.day}天")
-                for (i in 0 until holiday.day) {
-                    val holidayWeek = DateUtils.getCurrentWeek(openingDate, calendar.time, setting.firstDayOfWeek)
-//                    Log.d("Holiday Calc", "holiday week = $holidayWeek    $i")
-                    if (holidayWeek <= setting.weekCnt) {
-                        fromTo.getOrPut(holidayWeek, { HashMap() }).run {
-                            val weekday = calendar.get(Calendar.DAY_OF_WEEK)
-                            if (!this.containsKey(weekday)) {
-                                this[weekday] = null
-                            }
-                        }
-
-                        calendar.add(Calendar.DAY_OF_YEAR, 1)
-                    }
-                }
-            }
-        }
+        val fromTo: MutableMap<Int, MutableMap<Int, Pair<Int, Int>?>> = mModel.holidayFromToMap
 
         Log.d("Holiday Calc", "fromTo: $fromTo")
+        //按周排列课程
         val courseArray: MutableList<MutableList<CourseBase>?> = ArrayList()
-        for (i in 0 until setting.weekCnt) {
+        for (i in 0 until 24) {
             courseArray.add(null)
         }
 //        Log.d("Holiday Calc", "holiday: $fromTo")

@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 
 import java.util.List;
 
+import cn.ifafu.ifafu.data.entity.Exam;
 import cn.ifafu.ifafu.data.entity.Holiday;
 import cn.ifafu.ifafu.data.entity.Menu;
 import cn.ifafu.ifafu.data.entity.Weather;
@@ -15,7 +16,7 @@ import io.reactivex.Observable;
 
 public class MainContract {
 
-    interface View extends IView {
+    public interface View extends IView {
 
         void setMenuAdapterData(List<Menu> menus);
 
@@ -50,7 +51,9 @@ public class MainContract {
         void quitAccount();
     }
 
-    interface Model extends IZFModel {
+    public interface Model extends IZFModel {
+
+        List<Exam> getThisTermExams();
 
         /**
          * 获取主页菜单信息

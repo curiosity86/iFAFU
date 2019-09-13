@@ -12,7 +12,7 @@
         android:layout_height="360dp"
         android:layout_centerInParent="true"
         android:alpha="0.05"
-        android:src="@drawable/drawable_fafu_b" />
+        android:src="@drawable/icon_fafu_b" />
 
     <ImageView
         android:id="@+id/btn_finish"
@@ -48,7 +48,7 @@
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/drawable_ifafu_round" />
+            android:src="@drawable/icon_ifafu_round" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -71,8 +71,7 @@
                 android:layout_height="match_parent"
                 android:hint="@string/account"
                 android:inputType="number"
-                android:textColorLink="@color/little_blue"
-                android:layoutAnimation="@anim/layout_fall_down" />
+                android:textColorLink="@color/little_blue" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

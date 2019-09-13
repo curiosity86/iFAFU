@@ -23,7 +23,7 @@ public class DaoManager {
 
     public static DaoManager getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new DaoManager(BaseApplication.getContext());
+            INSTANCE = new DaoManager(BaseApplication.getAppContext());
         }
         return INSTANCE;
     }

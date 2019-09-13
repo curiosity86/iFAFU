@@ -42,9 +42,9 @@ public abstract class BaseZFModel extends BaseModel implements IZFModel {
                 .retryWhen(throwableObservable ->
                         throwableObservable.flatMap(throwable -> {
                             if (throwable instanceof NoAuthException || throwable.getMessage().contains("302")) {
-                                System.out.println(IFAFU.loginDisposable);
-                                if (IFAFU.loginDisposable != null && !IFAFU.loginDisposable.isDisposed()) {
-                                    while (!IFAFU.loginDisposable.isDisposed()) {
+                                System.out.println(IFAFU.Companion.getLoginDisposable());
+                                if (IFAFU.Companion.getLoginDisposable() != null && !IFAFU.Companion.getLoginDisposable().isDisposed()) {
+                                    while (!IFAFU.Companion.getLoginDisposable().isDisposed()) {
                                         Thread.sleep(100);
                                     }
                                     return Observable.just(true);

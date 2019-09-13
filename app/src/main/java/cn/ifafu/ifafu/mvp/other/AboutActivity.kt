@@ -7,13 +7,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.mvp.base.BaseActivity
 import cn.ifafu.ifafu.mvp.base.i.IPresenter
+import cn.ifafu.ifafu.util.AppUtils
 import cn.ifafu.ifafu.util.GlobalLib
-import cn.ifafu.ifafu.view.custom.WToolbar
 import com.afollestad.materialdialogs.MaterialDialog
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.activity_about.*
@@ -26,17 +25,18 @@ class AboutActivity : BaseActivity<IPresenter>(), View.OnClickListener {
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        val tbAbout = findViewById<WToolbar>(R.id.tb_about)
-        tbAbout.setNavigationOnClickListener { v -> finish() }
 
         ImmersionBar.with(this)
-                .titleBarMarginTop(tbAbout)
+                .titleBarMarginTop(tb_about)
                 .statusBarColor("#FFFFFF")
                 .statusBarDarkFont(true)
                 .init()
 
-        val aboutAppSubName = findViewById<TextView>(R.id.aboutAppSubName)
+        tb_about.setNavigationOnClickListener { finish() }
 
+        AppUtils.getMetaValue(context, "APP_ICON_HD")?.run {
+            iv_app_icon.setImageDrawable(getDrawable(this as Int))
+        }
         aboutAppSubName.text = String.format(
                 Locale.getDefault(), getString(R.string.app_sub_name),
                 GlobalLib.getLocalVersionName(this))

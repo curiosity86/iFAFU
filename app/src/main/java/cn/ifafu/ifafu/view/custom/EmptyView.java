@@ -42,7 +42,7 @@ public class EmptyView extends LinearLayout {
         setGravity(Gravity.CENTER);
 
         mLogoImageView = new AppCompatImageView(context);
-        mLogoImageView.setImageResource(R.drawable.drawable_empty);
+        mLogoImageView.setImageResource(R.drawable.icon_empty);
         int dp200 = (int) DensityUtils.dp2px(context, 128);
         LayoutParams lp = new LayoutParams(dp200, dp200);
         mLogoImageView.setLayoutParams(lp);

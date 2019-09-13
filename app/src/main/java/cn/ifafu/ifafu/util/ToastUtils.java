@@ -11,19 +11,19 @@ import cn.ifafu.ifafu.mvp.base.BaseApplication;
 public class ToastUtils {
 
     public static void showToastLong(String msg) {
-        showToast(BaseApplication.getContext(), msg, Toast.LENGTH_LONG);
+        showToast(BaseApplication.getAppContext(), msg, Toast.LENGTH_LONG);
     }
 
     public static void showToastLong(int msg) {
-        showToast(BaseApplication.getContext(), "" + msg, Toast.LENGTH_LONG);
+        showToast(BaseApplication.getAppContext(), "" + msg, Toast.LENGTH_LONG);
     }
 
     public static void showToastShort(String msg) {
-        showToast(BaseApplication.getContext(), msg, Toast.LENGTH_SHORT);
+        showToast(BaseApplication.getAppContext(), msg, Toast.LENGTH_SHORT);
     }
 
     public static void showToastShort(int msg) {
-        showToast(BaseApplication.getContext(), "" + msg, Toast.LENGTH_SHORT);
+        showToast(BaseApplication.getAppContext(), "" + msg, Toast.LENGTH_SHORT);
     }
 
     public static void showToast(Context context, String msg, int duration) {

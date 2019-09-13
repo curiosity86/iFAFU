@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp"
     android:background="@color/white">
 
@@ -26,13 +27,14 @@
 
     </LinearLayout>
 
-    <ImageView
+    <com.afollestad.materialdialogs.color.view.ColorCircleView
         android:id="@+id/iv_color"
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/shape_circle"/>
+        app:civ_border_width="1dp"
+        app:civ_border_color="#FF000000" />
 
 </RelativeLayout>

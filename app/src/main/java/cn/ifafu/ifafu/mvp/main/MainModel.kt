@@ -7,6 +7,7 @@ import androidx.annotation.DrawableRes
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.School
+import cn.ifafu.ifafu.data.entity.Exam
 import cn.ifafu.ifafu.data.entity.Holiday
 import cn.ifafu.ifafu.data.entity.Menu
 import cn.ifafu.ifafu.data.entity.Weather
@@ -15,6 +16,7 @@ import cn.ifafu.ifafu.data.http.service.WeatherService
 import cn.ifafu.ifafu.electricity.splash.ElecSplashActivity
 import cn.ifafu.ifafu.mvp.base.BaseZFModel
 import cn.ifafu.ifafu.mvp.exam.ExamActivity
+import cn.ifafu.ifafu.mvp.exam.ExamModel
 import cn.ifafu.ifafu.mvp.main.MainContract.Model
 import cn.ifafu.ifafu.mvp.score.ScoreActivity
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusActivity
@@ -44,10 +46,14 @@ class MainModel(context: Context?) : BaseZFModel(context), Model {
     private fun drawable(@DrawableRes id: Int): Drawable? = mContext.getDrawable(id)
     private fun intent(cls: Class<*>): Intent = Intent(mContext, cls)
 
+    override fun getThisTermExams(): List<Exam> {
+        return ExamModel(mContext).getThisTermExams()
+    }
+
     override fun getSchoolIcon(): Drawable? {
         return when (repository.user.schoolCode) {
-            School.FAFU -> drawable(R.drawable.drawable_fafu_b_white)
-            School.FAFU_JS -> drawable(R.drawable.drawable_fafu_js_white)
+            School.FAFU -> drawable(R.drawable.icon_fafu_b_white)
+            School.FAFU_JS -> drawable(R.drawable.icon_fafu_js_white)
             else -> drawable(R.mipmap.ic_launcher_round)
         }
     }

@@ -34,7 +34,7 @@ public class BitmapUtil {
      * @return 对应的Drawable对象
      */
     public static BitmapDrawable bitmapToDrawable(Bitmap bitmap) {
-        return new BitmapDrawable(BaseApplication.getContext().getResources(), bitmap);
+        return new BitmapDrawable(BaseApplication.getAppContext().getResources(), bitmap);
     }
 
     public static Bitmap bytesToBitmap(byte[] bytes) {

@@ -21,7 +21,7 @@ public class SPUtils {
 
     public static SPUtils get(String fileName) {
         if (!map.containsKey(fileName)) {
-            map.put(fileName, new SPUtils(BaseApplication.getContext(), fileName));
+            map.put(fileName, new SPUtils(BaseApplication.getAppContext(), fileName));
         }
         return map.get(fileName);
     }
