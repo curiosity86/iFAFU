@@ -45,6 +45,8 @@ public class DragLayout extends FrameLayout {
 
     private View view;
 
+    private int dp200;
+
     private ViewDragHelper mDragHelper;
     private ViewDragHelper.Callback mDragCallback = new DragCallback();
     private GestureDetectorCompat mGestureDetector;
@@ -79,6 +81,7 @@ public class DragLayout extends FrameLayout {
         mGestureDetector = new GestureDetectorCompat(context,
                 new YScrollDetector());
         mDragHelper = ViewDragHelper.create(this, mDragCallback);
+        dp200 = (int) DensityUtils.dp2px(context, 200);
     }
 
     public void setDragListener(DragListener mDragListener) {
@@ -117,8 +120,7 @@ public class DragLayout extends FrameLayout {
         height = mLeftLayout.getMeasuredHeight();
         //range = (int) (width * 0.6f);
         //改良贴近美工图  最大滑动范围为宽度减200 但是主页面会进行缩小0.7倍所以最终左侧显示大小为宽度-140（200*0.7） 在layout文件中右边距为140dp
-        int temp = (int) DensityUtils.dp2px(context, 200);
-        range = width - temp;
+        range = width - dp200;
     }
 
     @Override
@@ -254,10 +256,6 @@ public class DragLayout extends FrameLayout {
 
         return rect.contains((int) ev.getX(), (int) ev.getY());
 
-    }
-
-    public void setIgnoreView(View view) {
-        this.view = view;
     }
 
     public enum Status {

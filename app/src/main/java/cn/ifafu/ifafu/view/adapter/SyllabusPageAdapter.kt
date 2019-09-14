@@ -102,6 +102,7 @@ class SyllabusPageAdapter : RecyclerView.Adapter<SyllabusPageAdapter.SyllabusVie
                 dateView.textColor = color
                 dateViewChange = true
             }
+            cornerView.setTextColor(color)
             return this
         }
 

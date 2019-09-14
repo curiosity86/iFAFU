@@ -1,7 +1,6 @@
 package cn.ifafu.ifafu.mvp.base;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.Map;
 
@@ -59,25 +58,14 @@ public abstract class BaseZFModel extends BaseModel implements IZFModel {
     }
 
     @Override
-    public Observable<Response<String>> login(User user) {
-        return Observable.just(true).flatMap(T ->
-                innerLogin(
-                        School.getUrl(ZhengFang.LOGIN, user),
-                        School.getUrl(ZhengFang.VERIFY, user),
-                        user.getAccount(),
-                        user.getPassword(),
-                        new LoginParamParser(),
-                        new LoginParser(),
-                        new VerifyParser(mContext)
-                ));
-    }
-
-    @Override
     public Observable<Response<String>> reLogin() {
-        Log.d("ReLogin", "enter");
+//        Log.d("ReLogin", "enter");
         return Observable.just(true).flatMap(T -> {
-            Log.d("ReLogin", "reLogining");
+//            Log.d("ReLogin", "reLogining");
             User user = repository.getUser();
+            if (user == null) {
+                return Observable.empty();
+            }
             String loginUrl = School.getUrl(ZhengFang.LOGIN, user);
             String verifyUrl = School.getUrl(ZhengFang.VERIFY, user);
             String mainUrl = School.getUrl(ZhengFang.MAIN, user);

@@ -114,7 +114,7 @@
     <string name="hint_password">请输入密码（身份证后六位）</string>
     <string name="hint_verify">验证码</string>
     <string name="quick_elec">一键查询电费</string>
-    <string name="announce">电费充值为实验性功能！！\n服务提供：学付宝</string>
+    <string name="announce">电费充值为实验性功能！！\n只保证电费查询和校园卡查询功能有效性！！\n服务提供：学付宝</string>
     <string name="fafu_elec_tos">
 1、部分宿舍电费查询显示的宿舍信息与输入宿舍号不同，此为学付宝问题，可用学付宝查询验证\n
 2、电费充值服务由学付宝提供，充值金直接流向学付宝，学付宝App内可查到消费账单\n

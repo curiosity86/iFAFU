@@ -120,8 +120,8 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(
                             selectColor = color
                         }
                         positiveButton(text = "确认") {
-                            val grad = ivColor.background as GradientDrawable
-                            grad.setColor(selectColor)
+                            val grad = ivColor.background as GradientDrawable?
+                            grad?.setColor(selectColor)
                             setting.themeColor = selectColor
                         }
                         negativeButton(text = "取消")

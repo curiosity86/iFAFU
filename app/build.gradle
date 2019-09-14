@@ -11,7 +11,7 @@ android {
     buildToolsVersion "28.0.3"
     defaultConfig {
         applicationId "cn.ifafu.ifafu"
-        minSdkVersion 22
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 24
         versionName "1.0.11"
@@ -61,7 +61,9 @@ android {
     }
 
     applicationVariants.all { variant ->
-        variant.getPackageApplication().outputDirectory = new File("${project.rootDir.absolutePath}/app/apk/${variant.name}")
+        if (variant.buildType.name != "debug") {
+            variant.getPackageApplication().outputDirectory = new File("${project.rootDir.absolutePath}/app/apk/${variant.name}")
+        }
         variant.outputs.all {
             outputFileName = "${appName}${defaultConfig.versionName}_${defaultConfig.versionCode}.apk"
         }
@@ -113,7 +115,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.6.1'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.1'
     implementation 'org.jsoup:jsoup:1.12.1'
-    implementation 'com.alibaba:fastjson:1.2.58'
+    implementation 'com.alibaba:fastjson:1.2.60'
     // 数据库框架
     implementation 'org.greenrobot:greendao:3.2.2'
     implementation 'io.github.yuweiguocn:GreenDaoUpgradeHelper:v2.2.1'
@@ -121,8 +123,8 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     //ButterKnife
-    implementation 'com.jakewharton:butterknife:10.1.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+    implementation 'com.jakewharton:butterknife:10.2.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
     //动画低版本支持
     implementation 'com.nineoldandroids:library:2.4.0'
     //Dialog

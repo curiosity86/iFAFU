@@ -27,14 +27,13 @@
 
     </LinearLayout>
 
-    <com.afollestad.materialdialogs.color.view.ColorCircleView
+    <ImageView
         android:id="@+id/iv_color"
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="8dp"
-        app:civ_border_width="1dp"
-        app:civ_border_color="#FF000000" />
+        android:background="@drawable/shape_circle"/>
 
 </RelativeLayout>
