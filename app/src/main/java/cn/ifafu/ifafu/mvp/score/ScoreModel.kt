@@ -28,7 +28,7 @@ class ScoreModel(context: Context?) : BaseZFModel(context), Model {
     }
 
     override fun getScoresFromNet(): Observable<MutableList<Score>> {
-        val user: User = repository.user
+        val user: User = repository.loginUser
         val scoreUrl: String = School.getUrl(ZhengFang.SCORE, user)
         val mainUrl = School.getUrl(ZhengFang.MAIN, user)
         return initParams(scoreUrl, mainUrl)

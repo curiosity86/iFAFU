@@ -62,7 +62,7 @@ public abstract class BaseZFModel extends BaseModel implements IZFModel {
 //        Log.d("ReLogin", "enter");
         return Observable.just(true).flatMap(T -> {
 //            Log.d("ReLogin", "reLogining");
-            User user = repository.getUser();
+            User user = repository.getLoginUser();
             if (user == null) {
                 return Observable.empty();
             }

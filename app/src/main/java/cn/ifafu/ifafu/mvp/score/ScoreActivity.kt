@@ -79,7 +79,7 @@ class ScoreActivity : BaseActivity<ScoreContract.Presenter>(), ScoreContract.Vie
     override fun setYearTermData(years: List<String>, terms: List<String>) {
         if (yearTermOPV == null) {
             yearTermOPV = OptionsPickerBuilder(this,
-                    OnOptionsSelectListener { options1: Int, options2: Int, options3: Int, v: View? ->
+                    OnOptionsSelectListener { options1: Int, options2: Int, _: Int, _: View? ->
                         setYearTermTitle(years[options1], terms[options2])
                         mPresenter!!.switchYearTerm(options1, options2)
                     })
@@ -148,7 +148,7 @@ class ScoreActivity : BaseActivity<ScoreContract.Presenter>(), ScoreContract.Vie
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == Constant.SCORE_FILTER_ACTIVITY) {
+        if (requestCode == Constant.ACTIVITY_SCORE_FILTER) {
             mPresenter.updateIES()
             return
         }

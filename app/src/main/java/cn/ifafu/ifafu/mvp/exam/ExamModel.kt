@@ -22,7 +22,7 @@ class ExamModel(context: Context) : BaseZFModel(context), ExamContract.Model {
     }
 
     override fun getExamsFromNet(year: String, term: String): Observable<MutableList<Exam>> {
-        val user = repository.user
+        val user = repository.loginUser
         val examUrl = School.getUrl(ZhengFang.EXAM, user)
         val mainUrl = School.getUrl(ZhengFang.MAIN, user)
         return initParams(examUrl, mainUrl)

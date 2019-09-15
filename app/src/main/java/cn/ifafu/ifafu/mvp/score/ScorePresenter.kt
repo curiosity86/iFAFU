@@ -31,7 +31,7 @@ class ScorePresenter(view: ScoreContract.View)
                     mCurrentTerm = map["ddlxq"] ?: error("")
                 }
                 .compose(RxUtils.ioToMain())
-                .subscribe({ map: Map<String, String> ->
+                .subscribe({
                     update(false)
                     mView.setYearTermTitle(mCurrentYear, mCurrentTerm)
                     mView.setYearTermData(years, terms)
@@ -95,7 +95,7 @@ class ScorePresenter(view: ScoreContract.View)
         val intent = Intent(mView.activity, ScoreFilterActivity::class.java)
         intent.putExtra("year", mCurrentYear)
         intent.putExtra("term", mCurrentTerm)
-        mView.activity.startActivityForResult(intent, Constant.SCORE_FILTER_ACTIVITY)
+        mView.activity.startActivityForResult(intent, Constant.ACTIVITY_SCORE_FILTER)
     }
 
     override fun updateIES() {

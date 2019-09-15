@@ -2,10 +2,10 @@ package cn.ifafu.ifafu.mvp.main
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.webkit.CookieManager
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.IFAFU
 import cn.ifafu.ifafu.data.entity.NextCourse
+import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.mvp.base.BaseZFPresenter
 import cn.ifafu.ifafu.mvp.login.LoginActivity
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusModel
@@ -24,16 +24,24 @@ import kotlin.Comparator
 class MainPresenter internal constructor(view: MainContract.View) : BaseZFPresenter<MainContract.View, MainContract.Model>(view, MainModel(view.context)), MainContract.Presenter {
 
     override fun onCreate() {
-        mView.setLeftMenuHeadName(mModel.userName)
-        mView.setLeftMenuHeadIcon(mModel.schoolIcon)
+        mView.setLeftMenuHeadName(mModel.getUserName())
+        mView.setLeftMenuHeadIcon(mModel.getSchoolIcon())
         // 获取主页菜单
-        mCompDisposable.add(mModel.menus
+        mCompDisposable.add(mModel.getMenus()
                 .compose(RxUtils.ioToMain())
-                .subscribe({ menus -> mView.setMenuAdapterData(menus) }, { this.onError(it) })
+                .subscribe({ menus -> mView.setMenuAdapterData(menus) }, this::onError)
         )
         updateWeather()
         updateTimeLine()
         updateNextCourseView()
+        // 多账号管理数据
+        mCompDisposable.add(Observable
+                .just(mModel.getAllUser())
+                .compose(RxUtils.computationToMain())
+                .subscribe({
+                    mView.setCheckoutDialogData(it)
+                }, this::onError)
+        )
     }
 
     override fun updateApp() {
@@ -49,7 +57,7 @@ class MainPresenter internal constructor(view: MainContract.View) : BaseZFPresen
                     } else {
                         mView.showMessage(R.string.is_last_version)
                     }
-                }, { this.onError(it) })
+                }, this::onError)
         )
     }
 
@@ -63,11 +71,9 @@ class MainPresenter internal constructor(view: MainContract.View) : BaseZFPresen
     }
 
     override fun onRefresh() {
-        if (mView.activity.intent.getIntExtra("come_from", -1) != 0) {
-            IFAFU.loginDisposable = mModel.reLogin()
-                    .compose(RxUtils.ioToMain())
-                    .subscribe({ _ -> }, { this.onError(it) })
-        }
+        IFAFU.loginDisposable = mModel.reLogin()
+                .compose(RxUtils.ioToMain())
+                .subscribe({ }, this::onError)
         updateWeather()
         updateTimeLine()
         updateNextCourseView()
@@ -76,23 +82,28 @@ class MainPresenter internal constructor(view: MainContract.View) : BaseZFPresen
     override fun updateWeather() {
         // 获取天气
         mCompDisposable.add(mModel.getWeather("101230101")
+                .map { Pair("${it.nowTemp}℃" + "", "${it.cityName} | ${it.weather}") }
                 .compose(RxUtils.ioToMain())
-                .subscribe({ weather -> mView.setWeatherText(weather) }, { this.onError(it) })
+                .subscribe({ mView.setWeatherText(it) }, this::onError)
         )
     }
 
     @SuppressLint("DefaultLocale")
     override fun updateNextCourseView() {
         mCompDisposable.add(Observable
-                .fromCallable {
-                    val model = SyllabusModel(mView.context)
-                    model.nextCourse
-                }
+                .fromCallable { SyllabusModel(mView.context).nextCourse }
                 .compose(RxUtils.computationToMain())
                 .subscribe({ next ->
                     when (next.result) {
-                        NextCourse.IN_HOLIDAY, NextCourse.EMPTY_DATA, NextCourse.NO_TODAY_COURSE, NextCourse.NO_NEXT_COURSE -> mView.setCourseText(next.title, "", "", "")
-                        NextCourse.HAS_NEXT_COURSE -> mView.setCourseText(next.title, next.name, next.address, next.timeText)
+                        NextCourse.IN_HOLIDAY,
+                        NextCourse.EMPTY_DATA,
+                        NextCourse.NO_TODAY_COURSE,
+                        NextCourse.NO_NEXT_COURSE -> {
+                            mView.setCourseText(next.title, "", "", "")
+                        }
+                        NextCourse.HAS_NEXT_COURSE -> {
+                            mView.setCourseText(next.title, next.name, next.address, next.timeText)
+                        }
                     }
                 }, { throwable ->
                     onError(throwable)
@@ -107,7 +118,7 @@ class MainPresenter internal constructor(view: MainContract.View) : BaseZFPresen
                     val list = ArrayList<TimeAxis>()
                     val now = Date()
 
-                    val holidays = mModel.holiday
+                    val holidays = mModel.getHoliday()
                     val format = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
                     for (holiday in holidays) {
                         val date = format.parse(holiday.date)
@@ -119,7 +130,7 @@ class MainPresenter internal constructor(view: MainContract.View) : BaseZFPresen
                         }
                     }
 
-                    val exams = mModel.thisTermExams
+                    val exams = mModel.getThisTermExams()
                     for (exam in exams) {
                         val date = Date(exam.startTime)
                         val day = DateUtils.calcLastDays(now, date)
@@ -129,19 +140,46 @@ class MainPresenter internal constructor(view: MainContract.View) : BaseZFPresen
                             list.add(axis)
                         }
                     }
-                    list.sortWith(Comparator { o1, o2 -> Integer.compare(o1.day, o2.day) })
-                    list.subList(0, if (list.size < 4) list.size else 4)
+                    list.sortWith(Comparator { o1, o2 -> o1.day.compareTo(o2.day) })
+                    list
                 }
                 .compose(RxUtils.ioToMain())
-                .subscribe({ list -> mView.setTimeLineData(list) }, { this.onError(it) })
+                .subscribe({ list -> mView.setTimeLineData(list) }, this::onError)
         )
     }
 
-    override fun quitAccount() {
-        CookieManager.getInstance().removeAllCookies(null)
-        val intent = Intent(mView.context, LoginActivity::class.java)
-        mModel.clearAllDate()
-        mView.openActivity(intent)
-        mView.killSelf()
+    override fun addAccountSuccess() {
+        mView.showMessage("已切换到${mModel.getLoginUser()?.account}")
+        onCreate()
     }
+
+    override fun checkout() {
+        mView.showCheckoutDialog()
+    }
+
+    override fun deleteUser(user: User) {
+        mModel.deleteAccount(user)
+        mModel.getLoginUser().run {
+            if (this == null) {
+                mView.openActivity(Intent(mView.activity, LoginActivity::class.java))
+                mView.killSelf()
+            } else {
+                mView.showMessage("已切换到${this.account}")
+                mView.hideCheckoutDialog()
+                onCreate()
+            }
+        }
+    }
+
+    override fun checkoutTo(user: User) {
+        if (user.account == mModel.getLoginUser()?.account) {
+            return
+        } else {
+            mModel.saveLoginUser(user)
+            mView.showMessage("已切换到${user.account}")
+            mView.hideCheckoutDialog()
+            this.onCreate()
+        }
+    }
+
 }

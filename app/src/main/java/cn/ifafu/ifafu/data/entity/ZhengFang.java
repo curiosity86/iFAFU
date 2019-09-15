@@ -26,11 +26,11 @@ public class ZhengFang {
     private String login;
     private String verify;
     private String main;
-    private Map<String, QueryApi> apiMap;
+    private Map<String, ZFApi> apiMap;
 
     private String baseUrlTemp;
 
-    public ZhengFang(int schoolCode, String baseUrl, String login, String verify, String main, Map<String, QueryApi> apiMap) {
+    public ZhengFang(int schoolCode, String baseUrl, String login, String verify, String main, Map<String, ZFApi> apiMap) {
         this.schoolCode = schoolCode;
         this.baseUrl = baseUrl;
         this.login = login;
@@ -72,7 +72,7 @@ public class ZhengFang {
                 return String.format("%s%s?xh=%s", getBaseUrl(xh), main, xh);
             default:
                 try {
-                    QueryApi api = apiMap.get(filed);
+                    ZFApi api = apiMap.get(filed);
                     if (api != null) {
                         return String.format("%s%s?xh=%s&xm=%s&gnmkdm=%s",
                                 getBaseUrl(xh), api.getApi(), xh, URLEncoder.encode(xm, "GBK"), api.getGnmkdm());

@@ -17,7 +17,7 @@ public class WebModel extends BaseZFModel implements WebContract.Model {
 
     @Override
     public String getMainUrl() {
-        return School.getUrl(ZhengFang.MAIN, repository.getUser());
+        return School.getUrl(ZhengFang.MAIN, repository.getLoginUser());
     }
 
     @Override

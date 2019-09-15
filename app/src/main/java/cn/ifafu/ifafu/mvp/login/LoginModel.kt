@@ -27,8 +27,7 @@ class LoginModel(context: Context?) : BaseZFModel(context), Model {
     }
 
     override fun login(user: User): Observable<Response<String>> {
-        return Observable.just(true).flatMap { T: Boolean ->
-            innerLogin(
+        return innerLogin(
                     School.getUrl(ZhengFang.LOGIN, user),
                     School.getUrl(ZhengFang.VERIFY, user),
                     user.account,
@@ -37,6 +36,11 @@ class LoginModel(context: Context?) : BaseZFModel(context), Model {
                     LoginParser(),
                     verifyParser
             )
-        }
+                .doOnNext {
+                    if (it.isSuccess) {
+                        user.name = it.body
+                        repository.saveUser(user)
+                    }
+                }
     }
 }

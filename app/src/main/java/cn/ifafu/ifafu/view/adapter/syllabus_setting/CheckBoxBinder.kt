@@ -30,7 +30,7 @@ class CheckBoxBinder
             holder.checkBox.setChecked(holder.checkBox.isChecked, true)
             item.listener.invoke(holder.checkBox.isChecked)
         }
-        holder.checkBox.setOnCheckedChangeListener { checkBox, isChecked ->
+        holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
             item.listener.invoke(isChecked)
         }
     }

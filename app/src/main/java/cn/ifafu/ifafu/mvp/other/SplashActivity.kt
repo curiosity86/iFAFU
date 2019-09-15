@@ -8,6 +8,7 @@ import android.view.Window
 import android.view.WindowManager.LayoutParams
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
+import cn.ifafu.ifafu.app.IFAFU
 import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.data.local.RepositoryImpl
 import cn.ifafu.ifafu.mvp.base.BaseActivity
@@ -39,13 +40,21 @@ class SplashActivity : BaseActivity<IPresenter>() {
         tv_app_name.text = AppUtils.getAppName(context)
         Observable
                 .fromCallable {
+                    val repository = RepositoryImpl.getInstance()
+                    IFAFU.initConfig(context)
                     when (intent.getIntExtra("jump", -1)) {
-                        Constant.SYLLABUS_ACTIVITY -> SyllabusActivity::class.java
-                        Constant.EXAM_ACTIVITY -> ExamActivity::class.java
+                        Constant.ACTIVITY_SYLLABUS -> SyllabusActivity::class.java
+                        Constant.ACTIVITY_EXAM -> ExamActivity::class.java
                         else -> {
-                            val user: User? = RepositoryImpl.getInstance().user
+                            var user: User? = repository.loginUser
                             if (user == null) {
-                                LoginActivity::class.java
+                                user = repository.allUser.getOrNull(0)
+                                if (user != null) {
+                                    repository.saveLoginUser(user)
+                                    MainActivity::class.java
+                                } else {
+                                    LoginActivity::class.java
+                                }
                             } else {
                                 MainActivity::class.java
                             }
@@ -59,7 +68,7 @@ class SplashActivity : BaseActivity<IPresenter>() {
                 }
                 .subscribe({ clazz ->
                     val intent = Intent(this, clazz)
-                    intent.putExtra("from", Constant.SCORE_ACTIVITY)
+                    intent.putExtra("from", Constant.ACTIVITY_SCORE)
                     startActivity(intent)
                 }, { throwable: Throwable ->
                     throwable.printStackTrace()
@@ -73,7 +82,7 @@ class SplashActivity : BaseActivity<IPresenter>() {
                                         errorMessage: String?,
                                         errorStack: String?
         ): MutableMap<String, String> {
-            return mutableMapOf("account" to RepositoryImpl.getInstance().user.account)
+            return mutableMapOf("account" to RepositoryImpl.getInstance().loginUser.account)
         }
     }
 }

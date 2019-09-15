@@ -19,7 +19,7 @@ class SyllabusItemModel extends BaseModel implements SyllabusItemContract.Model 
 
     @Override
     public void save(Course course) {
-        course.setAccount(repository.getUser().getAccount());
+        course.setAccount(repository.getLoginUser().getAccount());
         repository.saveCourse(course);
     }
 

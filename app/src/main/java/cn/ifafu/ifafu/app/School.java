@@ -4,7 +4,7 @@ import android.util.SparseArray;
 
 import java.util.HashMap;
 
-import cn.ifafu.ifafu.data.entity.QueryApi;
+import cn.ifafu.ifafu.data.entity.ZFApi;
 import cn.ifafu.ifafu.data.entity.ZhengFang;
 import cn.ifafu.ifafu.data.entity.User;
 
@@ -21,19 +21,19 @@ public class School {
                 "default2.aspx",
                 "CheckCode.aspx",
                 "xs_main.aspx",
-                new HashMap<String, QueryApi>() {{
-                    put(ZhengFang.SYLLABUS, new QueryApi("xskbcx.aspx", "N121602"));
-                    put(ZhengFang.EXAM, new QueryApi("xskscx.aspx", "N121604"));
-                    put(ZhengFang.SCORE, new QueryApi("xscjcx_dq_fafu.aspx", "N121605"));
+                new HashMap<String, ZFApi>() {{
+                    put(ZhengFang.SYLLABUS, new ZFApi("xskbcx.aspx", "N121602"));
+                    put(ZhengFang.EXAM, new ZFApi("xskscx.aspx", "N121604"));
+                    put(ZhengFang.SCORE, new ZFApi("xscjcx_dq_fafu.aspx", "N121605"));
                 }}));
         URL_MAP.put(FAFU_JS, new ZhengFang(FAFU_JS, "http://js.ifafu.cn/",
                 "default.aspx",
                 "CheckCode.aspx",
                 "xs_main.aspx",
-                new HashMap<String, QueryApi>() {{
-                    put(ZhengFang.SYLLABUS, new QueryApi("xskbcx.aspx", "N121602"));
-                    put(ZhengFang.EXAM, new QueryApi("xskscx.aspx", "N121603"));
-                    put(ZhengFang.SCORE, new QueryApi("Xscjcx.aspx", "N121613"));
+                new HashMap<String, ZFApi>() {{
+                    put(ZhengFang.SYLLABUS, new ZFApi("xskbcx.aspx", "N121602"));
+                    put(ZhengFang.EXAM, new ZFApi("xskscx.aspx", "N121603"));
+                    put(ZhengFang.SCORE, new ZFApi("Xscjcx.aspx", "N121613"));
                 }}));
     }
 

@@ -7,14 +7,11 @@ import androidx.annotation.DrawableRes
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.School
-import cn.ifafu.ifafu.data.entity.Exam
-import cn.ifafu.ifafu.data.entity.Holiday
-import cn.ifafu.ifafu.data.entity.Menu
-import cn.ifafu.ifafu.data.entity.Weather
+import cn.ifafu.ifafu.data.entity.*
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.data.http.service.WeatherService
-import cn.ifafu.ifafu.electricity.splash.ElecSplashActivity
 import cn.ifafu.ifafu.mvp.base.BaseZFModel
+import cn.ifafu.ifafu.mvp.elec_splash.ElecSplashActivity
 import cn.ifafu.ifafu.mvp.exam.ExamActivity
 import cn.ifafu.ifafu.mvp.exam.ExamModel
 import cn.ifafu.ifafu.mvp.main.MainContract.Model
@@ -43,23 +40,48 @@ class MainModel(context: Context?) : BaseZFModel(context), Model {
         }
     }
 
-    private fun drawable(@DrawableRes id: Int): Drawable? = mContext.getDrawable(id)
+    private fun drawable(@DrawableRes id: Int): Drawable = mContext.getDrawable(id)!!
+
     private fun intent(cls: Class<*>): Intent = Intent(mContext, cls)
+
+    override fun getAllUser(): MutableList<User> {
+        return repository.allUser
+    }
 
     override fun getThisTermExams(): List<Exam> {
         return ExamModel(mContext).getThisTermExams()
     }
 
-    override fun getSchoolIcon(): Drawable? {
-        return when (repository.user.schoolCode) {
+    override fun getSchoolIcon(): Drawable {
+        return when (repository.loginUser.schoolCode) {
             School.FAFU -> drawable(R.drawable.icon_fafu_b_white)
             School.FAFU_JS -> drawable(R.drawable.icon_fafu_js_white)
             else -> drawable(R.mipmap.ic_launcher_round)
         }
     }
 
+    override fun saveLoginUser(user: User) {
+        repository.saveLoginUser(user)
+    }
+
+    override fun getLoginUser(): User? {
+        var user = repository.loginUser
+        if (user == null) {
+            user = repository.allUser.getOrNull(0)
+            if (user != null) {
+                saveLoginUser(user)
+            }
+            return user
+        }
+        return user
+    }
+
+    override fun deleteAccount(user: User) {
+        repository.deleteUser(user)
+    }
+
     override fun getUserName(): String {
-        return repository.user.name
+        return repository.loginUser.name
     }
 
     override fun getWeather(cityCode: String): Observable<Weather> {

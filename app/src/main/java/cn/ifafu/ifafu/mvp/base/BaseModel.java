@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.mvp.base;
 import android.content.Context;
 
 import cn.ifafu.ifafu.data.local.RepositoryImpl;
-import cn.ifafu.ifafu.data.local.i.Repository;
+import cn.ifafu.ifafu.data.local.Repository;
 import cn.ifafu.ifafu.mvp.base.i.IModel;
 
 public abstract class BaseModel implements IModel {

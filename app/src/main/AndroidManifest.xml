@@ -44,12 +44,12 @@
         <activity android:name=".mvp.score.ScoreActivity" />
         <activity android:name=".mvp.score_item.ScoreItemActivity" />
         <activity android:name=".mvp.score_filter.ScoreFilterActivity" />
-        <activity android:name=".electricity.splash.ElecSplashActivity" />
-        <activity android:name=".electricity.login.ElecLoginActivity" />
-        <activity android:name=".electricity.main.ElecMainActivity" />
         <activity android:name=".mvp.exam.ExamActivity" />
         <activity android:name=".mvp.web.WebActivity" />
         <activity android:name=".mvp.other.AboutActivity" />
+        <activity android:name=".mvp.elec_splash.ElecSplashActivity" />
+        <activity android:name=".mvp.elec_login.ElecLoginActivity" />
+        <activity android:name=".mvp.elec_main.ElecMainActivity" />
 
         <meta-data
             android:name="APP_ICON_HD"

@@ -17,7 +17,7 @@ import java.util.*
 
 class SyllabusModel(context: Context?) : BaseZFModel(context), Model {
 
-    private val user: User? = repository.user
+    private val user: User? = repository.loginUser
 
     private val beginTimes = arrayOf(
             intArrayOf(800, 850, 955, 1045, 1135, 1400, 1450, 1550, 1640, 1825, 1915, 2005),
@@ -27,7 +27,7 @@ class SyllabusModel(context: Context?) : BaseZFModel(context), Model {
     override fun getSyllabusSetting(): SyllabusSetting {
         var setting: SyllabusSetting? = repository.syllabusSetting
         if (setting == null) {
-            setting = SyllabusSetting(repository.user.account)
+            setting = SyllabusSetting(repository.loginUser.account)
             repository.saveSyllabusSetting(setting)
         }
         var qs = false
@@ -184,14 +184,9 @@ class SyllabusModel(context: Context?) : BaseZFModel(context), Model {
         var currentWeekday: Int = DateUtils.getCurrentWeekday()
         //计算节假日
         holidayFromToMap[currentWeek]?.run {
-            this[currentWeekday].run {
-                if (this == null) {
-                    currentWeek = -1
-                    currentWeekday = -1
-                } else {
-                    currentWeek = this.first
-                    currentWeekday = this.second
-                }
+            this[currentWeekday]?.run {
+                currentWeek = this.first
+                currentWeekday = this.second
             }
         }
         //获取当天课程

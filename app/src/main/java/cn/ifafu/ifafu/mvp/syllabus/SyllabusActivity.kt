@@ -19,8 +19,6 @@ import cn.ifafu.ifafu.view.adapter.SyllabusPageAdapter
 import cn.ifafu.ifafu.view.dialog.ProgressDialog
 import cn.ifafu.ifafu.view.syllabus.CourseBase
 import cn.ifafu.ifafu.view.syllabus.CourseView.OnCourseClickListener
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.activity_syllabus.*
 import java.text.SimpleDateFormat
@@ -68,16 +66,24 @@ class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusCon
         ImmersionBar.with(this)
                 .statusBarDarkFont(setting.statusDartFont)
                 .init()
-        Glide.with(this)
-                .load(setting.background)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(iv_background)
         if (mPageAdapter == null) {
             initSyllabusData(null, setting)
         } else {
             mPageAdapter!!.setting = setting
             setCurrentWeek(setting.currentWeek)
         }
+//        if (setting.background != null) {
+            println("Load Custom Background ${setting.background}")
+//        Glide.with(this)
+//                .load(setting.background)
+//                .transition(DrawableTransitionOptions.withCrossFade())
+//                .into()
+//        rr_background.background =
+//            rr_background.background = BitmapDrawable
+//        } else {
+//            println("Load White Background")
+//            rr_background.setBackgroundColor(Color.WHITE)
+//        }
     }
 
     override fun setCurrentWeek(currentWeek: Int) {
@@ -121,10 +127,10 @@ class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusCon
         } else {
             mPageAdapter = SyllabusPageAdapter(courses, setting)
         }
-        mPageAdapter!!.onCourseClickListener = OnCourseClickListener { v: View?, course: CourseBase? ->
+        mPageAdapter!!.onCourseClickListener = OnCourseClickListener { _, course: CourseBase? ->
             val intent = Intent(this, SyllabusItemActivity::class.java)
             intent.putExtra("course_id", (course!!.getOther() as Course).id)
-            startActivityForResult(intent, Constant.SYLLABUS_ITEM_ACTIVITY)
+            startActivityForResult(intent, Constant.ACTIVITY_SYLLABUS_ITEM)
         }
         view_pager.adapter = mPageAdapter
         if (setting != null) {
@@ -145,18 +151,18 @@ class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusCon
             R.id.btn_add -> {
                 val intent = Intent(this, SyllabusItemActivity::class.java)
                 intent.putExtra("come_from", BUTTON_ADD)
-                startActivityForResult(intent, Constant.SYLLABUS_ITEM_ACTIVITY)
+                startActivityForResult(intent, Constant.ACTIVITY_SYLLABUS_ITEM)
             }
             R.id.btn_refresh -> mPresenter.updateSyllabusNet()
             R.id.btn_back -> onFinishActivity()
             R.id.btn_setting -> startActivityForResult(
                     Intent(this, SyllabusSettingActivity::class.java),
-                    Constant.SYLLABUS_SETTING_ACTIVITY)
+                    Constant.ACTIVITY_SYLLABUS_SETTING)
         }
     }
 
     override fun onLongClick(v: View?): Boolean {
-        return when(v?.id) {
+        return when (v?.id) {
             R.id.tv_subtitle -> {
                 view_pager.setCurrentItem(mCurrentWeek - 1, true)
                 true
@@ -175,7 +181,7 @@ class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusCon
 
     private fun onFinishActivity() {
         when (intent.getIntExtra("from", -1)) {
-            Constant.SYLLABUS_WIDGET, Constant.SPLASH_ACTIVITY -> {
+            Constant.SYLLABUS_WIDGET, Constant.ACTIVITY_SPLASH -> {
                 val intent = Intent(this, MainActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(intent)
@@ -185,15 +191,16 @@ class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusCon
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == Constant.SYLLABUS_ITEM_ACTIVITY && resultCode == Activity.RESULT_OK) {
+        if (requestCode == Constant.ACTIVITY_SYLLABUS_ITEM && resultCode == Activity.RESULT_OK) {
             mPresenter!!.updateSyllabusLocal()
             return
-        } else if (requestCode == Constant.SYLLABUS_SETTING_ACTIVITY) {
+        } else if (requestCode == Constant.ACTIVITY_SYLLABUS_SETTING) {
             mPresenter!!.updateSyllabusSetting()
             return
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
+
     companion object {
         const val BUTTON_ADD = 0
     }
