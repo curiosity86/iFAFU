@@ -30,23 +30,23 @@ class ElecLoginActivity : BaseActivity<ElecLoginContract.Presenter>(), ElecLogin
 
     }
 
-    override fun setSnoEtText(sno: String) {
+    override fun setSnoEtText(sno: String?) {
         accountET.setText(sno)
     }
 
-    override fun setPasswordText(password: String) {
+    override fun setPasswordText(password: String?) {
         passwordET.setText(password)
     }
 
-    override fun getSNoEditable(): String {
+    override fun getSnoText(): String {
         return accountET.text.toString()
     }
 
-    override fun getPasswordEditable(): String {
+    override fun getPasswordText(): String {
         return passwordET.text.toString()
     }
 
-    override fun getVerifyEditable(): String {
+    override fun getVerifyText(): String {
         return verifyET.text.toString()
     }
 

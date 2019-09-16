@@ -1,6 +1,7 @@
 package cn.ifafu.ifafu.mvp.elec_main
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.SparseArray
@@ -12,6 +13,7 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.mvp.base.BaseActivity
+import cn.ifafu.ifafu.mvp.elec_login.ElecLoginActivity
 import cn.ifafu.ifafu.view.dialog.ProgressDialog
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.checkbox.checkBoxPrompt
@@ -26,7 +28,7 @@ import kotlinx.android.synthetic.main.include_elec_main_elec.*
 class ElecMainActivity : BaseActivity<ElecMainContract.Presenter>(), ElecMainContract.View, RadioGroup.OnCheckedChangeListener, View.OnClickListener {
     private var progress: ProgressDialog? = null
 
-    private var viewIdToNameMap: SparseArray<String>? = null  //记录RadioButtonId对应的电控名字
+    private var viewIdToNameMap: SparseArray<String> = SparseArray()  //记录RadioButtonId对应的电控名字
 
     private var xqOpv: OptionsPickerView<String>? = null
     private var ldOpv: OptionsPickerView<String>? = null
@@ -151,25 +153,25 @@ class ElecMainActivity : BaseActivity<ElecMainContract.Presenter>(), ElecMainCon
         }
     }
 
-    override fun setSelections(dkName: String?, area: String?, building: String?, floor: String?) {
-        radioGroup!!.check(viewIdToNameMap!!.keyAt(viewIdToNameMap!!.indexOfValue(dkName)))
-        if (area != null && area.isNotEmpty()) {
+    override fun setSelections(dkName: String, area: String, building: String, floor: String) {
+        radioGroup!!.check(viewIdToNameMap.keyAt(viewIdToNameMap.indexOfValue(dkName)))
+        if (area.isNotEmpty()) {
             tv_area.text = area
             tv_area.visibility = View.VISIBLE
         }
-        if (building != null && building.isNotEmpty()) {
+        if (building.isNotEmpty()) {
             tv_building.text = building
             tv_building.visibility = View.VISIBLE
         }
-        if (floor != null && floor.isNotEmpty()) {
+        if (floor.isNotEmpty()) {
             tv_floor.text = floor
             tv_floor.visibility = View.VISIBLE
         }
     }
 
     override fun onCheckedChanged(group: RadioGroup, checkedId: Int) {
-        if (viewIdToNameMap!!.get(checkedId) != null) {
-            mPresenter.onDKSelect(viewIdToNameMap!!.get(checkedId))
+        if (viewIdToNameMap.get(checkedId) != null) {
+            mPresenter.onDKSelect(viewIdToNameMap.get(checkedId))
         }
     }
 
@@ -200,7 +202,16 @@ class ElecMainActivity : BaseActivity<ElecMainContract.Presenter>(), ElecMainCon
             R.id.tv_building -> ldOpv!!.show()
             R.id.tv_floor -> lcOpv!!.show()
             R.id.tv_elec -> mPresenter.queryElecBalance()
-            R.id.btn_pay -> mPresenter.whetherPay()
+            R.id.btn_pay -> {
+                MaterialDialog(this).show {
+                    title(text = "致歉")
+                    message(text = "非常抱歉，由于学付宝返回数据不统一，导致充值电费功能存在问题，所以" +
+                            "iFAFU充值电费功能暂时下架。需要充值电费的同学自行下载学付宝充值。对此表示非常抱歉。")
+                    positiveButton(text = "嗯")
+                }
+//                mPresenter.whetherPay()
+            }
+
         }
     }
 
@@ -238,7 +249,7 @@ class ElecMainActivity : BaseActivity<ElecMainContract.Presenter>(), ElecMainCon
             rb1.append(s)
             val id = View.generateViewId()
             rb1.id = id
-            viewIdToNameMap!!.append(id, s)
+            viewIdToNameMap.append(id, s)
             radioGroup!!.addView(rb1)
         }
     }
@@ -249,7 +260,7 @@ class ElecMainActivity : BaseActivity<ElecMainContract.Presenter>(), ElecMainCon
     }
 
     override fun getCheckedDKName(): String {
-        return viewIdToNameMap!!.get(radioGroup!!.checkedRadioButtonId)
+        return viewIdToNameMap.get(radioGroup!!.checkedRadioButtonId)
     }
 
     override fun getAreaText(): String {
@@ -300,6 +311,11 @@ class ElecMainActivity : BaseActivity<ElecMainContract.Presenter>(), ElecMainCon
                     && event.y > top && event.y < bottom)
         }
         return false
+    }
+
+    override fun openLoginActivity() {
+        startActivity(Intent(this, ElecLoginActivity::class.java))
+        finish()
     }
 
 }

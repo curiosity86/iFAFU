@@ -53,11 +53,6 @@ public class ElecMainModel extends BaseModel implements ElecMainContract.Model {
     }
 
     @Override
-    public String getAccount() {
-        return elecUser.getAccount();
-    }
-
-    @Override
     public String getXfbAccount() {
         return elecUser.getXfbAccount();
     }
@@ -80,7 +75,7 @@ public class ElecMainModel extends BaseModel implements ElecMainContract.Model {
             ResponseBody responseBody = service.elecPay(
                     "http://cardapp.fafu.edu.cn:8088/PPage/ComePage",
                     "###", "1", data.getAid(),
-                    data.getXfbAccount(), price, data.getRoom(), data.getRoom(),
+                    data.getXfbId(), price, data.getRoom(), data.getRoom(),
                     data.getFloorId(), data.getFloor(),
                     data.getBuildingId(), data.getBuilding(),
                     data.getAreaId(), data.getArea(), "true"

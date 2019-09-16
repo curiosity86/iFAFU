@@ -10,18 +10,18 @@ public class ElecUser {
     @Id
     private String account;
 
-    private String password;
-
     private String xfbAccount;
+
+    private String password;
 
     private String name;
 
-    @Generated(hash = 1178176304)
-    public ElecUser(String account, String password, String xfbAccount,
+    @Generated(hash = 779410927)
+    public ElecUser(String account, String xfbAccount, String password,
             String name) {
         this.account = account;
-        this.password = password;
         this.xfbAccount = xfbAccount;
+        this.password = password;
         this.name = name;
     }
 

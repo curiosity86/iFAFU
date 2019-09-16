@@ -14,7 +14,7 @@ public class ElecQuery {
     @Id
     private String account;
 
-    private String xfbAccount;
+    private String xfbId;
     private String aid = "";
     private String room = "";
     private String floorId = "";
@@ -24,11 +24,11 @@ public class ElecQuery {
     private String buildingId = "";
     private String building = "";
 
-    @Generated(hash = 496642689)
-    public ElecQuery(String account, String xfbAccount, String aid, String room, String floorId, String floor,
+    @Generated(hash = 1013732981)
+    public ElecQuery(String account, String xfbId, String aid, String room, String floorId, String floor,
             String areaId, String area, String buildingId, String building) {
         this.account = account;
-        this.xfbAccount = xfbAccount;
+        this.xfbId = xfbId;
         this.aid = aid;
         this.room = room;
         this.floorId = floorId;
@@ -49,14 +49,6 @@ public class ElecQuery {
 
     public void setAid(String aid) {
         this.aid = aid;
-    }
-
-    public String getAccount() {
-        return account;
-    }
-
-    public void setAccount(String account) {
-        this.account = account;
     }
 
     public String getRoom() {
@@ -118,7 +110,7 @@ public class ElecQuery {
     @NonNull
     private String toJsonString() {
         return "{\"aid\":\"" + aid + "\"," +
-                "\"account\":\"" + xfbAccount + "\"," +
+                "\"account\":\"" + xfbId + "\"," +
                 "\"room\":{\"roomid\":\"" + room + "\",\"room\":\"" + room + "\"}," +
                 "\"floor\":{\"floorid\":\"" + floorId + "\",\"floor\":\"" + floor + "\"}," +
                 "\"area\":{\"area\":\"" + areaId + "\",\"areaname\":\"" + area + "\"}," +
@@ -170,12 +162,20 @@ public class ElecQuery {
         return filedMap;
     }
 
-    public String getXfbAccount() {
-        return this.xfbAccount;
+    public String getXfbId() {
+        return this.xfbId;
     }
 
-    public void setXfbAccount(String xfbAccount) {
-        this.xfbAccount = xfbAccount;
+    public void setXfbId(String xfbId) {
+        this.xfbId = xfbId;
+    }
+
+    public String getAccount() {
+        return this.account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     public enum Query {

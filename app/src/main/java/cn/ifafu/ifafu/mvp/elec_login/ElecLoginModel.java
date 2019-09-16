@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.data.entity.ElecCookie;
+import cn.ifafu.ifafu.data.entity.ElecQuery;
 import cn.ifafu.ifafu.data.entity.ElecUser;
 import cn.ifafu.ifafu.data.http.elec.LoginService;
 import cn.ifafu.ifafu.data.http.elec.RetrofitFactory;
@@ -69,15 +70,17 @@ public class ElecLoginModel extends BaseModel implements ElecLoginContract.Model
     }
 
     @Override
-    public void save(ElecUser user, String rescouseType) {
-        ElecCookie cookie = repository.getElecCookie();
-        if (cookie == null) {
-            cookie = new ElecCookie();
-            cookie.setAccount(user.getAccount());
-        }
-        cookie.setRescouseType(rescouseType);
-        repository.saveElecCookie(cookie);
+    public void save(ElecUser user) {
         repository.saveElecUser(user);
     }
 
+    @Override
+    public void save(ElecQuery elecQuery) {
+        repository.saveElecQuery(elecQuery);
+    }
+
+    @Override
+    public void save(ElecCookie elecCookie) {
+        repository.saveElecCookie(elecCookie);
+    }
 }
