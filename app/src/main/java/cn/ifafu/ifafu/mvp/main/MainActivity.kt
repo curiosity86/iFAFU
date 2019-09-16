@@ -45,15 +45,12 @@ class MainActivity : BaseActivity<MainContract.Presenter>(), MainContract.View, 
 
     private var checkoutDialog: MaterialDialog? = null
 
-    private var accountDetailDialog: MaterialDialog ?= null
-
     override fun initLayout(savedInstanceState: Bundle?): Int {
         return R.layout.activity_main
     }
 
     override fun initData(savedInstanceState: Bundle?) {
         StatusBarUtil.setTransparent(this)
-
         val contentView = window.decorView.findViewById<ViewGroup>(Window.ID_ANDROID_CONTENT)
         contentView.getChildAt(0).fitsSystemWindows = false
         mPresenter = MainPresenter(this)
@@ -164,14 +161,13 @@ class MainActivity : BaseActivity<MainContract.Presenter>(), MainContract.View, 
             checkoutDialog = MaterialDialog(this).apply {
                 customView(viewRes = R.layout.dialog_account)
                 title(text = "多账号管理")
-//                positiveButton(text = "修改密码") {
-//                    showMessage("修改密码")
-//                }
                 negativeButton(text = "添加账号") {
                     openLoginActivity()
                 }
             }
-            mAccountAdapter = AccountAdapter(users, this::showAccountDetail)
+            mAccountAdapter = AccountAdapter(users) {
+                showAccountDetail(it)
+            }
             val rvAccount = checkoutDialog!!.getCustomView().rv_account
             rvAccount.adapter = mAccountAdapter
             rvAccount.layoutManager = LinearLayoutManager(this)
@@ -195,20 +191,17 @@ class MainActivity : BaseActivity<MainContract.Presenter>(), MainContract.View, 
     }
 
     private fun showAccountDetail(user: User) {
-        if (accountDetailDialog == null) {
-            accountDetailDialog = MaterialDialog(this).apply {
-                customView(viewRes = R.layout.dialog_account_detail)
-                negativeButton(text = "删除账号") {
-                    mPresenter.deleteUser(user)
-                }
-                positiveButton(text = "切换账号") {
-                    mPresenter.checkoutTo(user)
-                }
+        MaterialDialog(this).show {
+            title(text = user.name)
+            customView(viewRes = R.layout.dialog_account_detail)
+            getCustomView().findViewById<EditText>(R.id.et_password).setText(user.account)
+            negativeButton(text = "删除账号") {
+                mPresenter.deleteUser(user)
+            }
+            positiveButton(text = "切换账号") {
+                mPresenter.checkoutTo(user)
             }
         }
-        accountDetailDialog!!.title(text = user.name)
-        accountDetailDialog!!.getCustomView().findViewById<EditText>(R.id.et_password).setText(user.account)
-        accountDetailDialog!!.show()
     }
 
 }

@@ -60,6 +60,14 @@
             android:value="${channel}" />
 
         <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="${channel}" />
+
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="5d4082673fc1955041000408" />
+
+        <meta-data
             android:name="android.notch_support"
             android:value="true" />
         <meta-data

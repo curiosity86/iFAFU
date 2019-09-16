@@ -14,6 +14,8 @@ import cn.ifafu.ifafu.util.RxUtils
 import com.tencent.bugly.Bugly
 import com.tencent.bugly.beta.Beta
 import com.tencent.bugly.crashreport.CrashReport
+import com.umeng.analytics.MobclickAgent
+import com.umeng.commonsdk.UMConfigure
 import io.reactivex.disposables.Disposable
 import io.reactivex.plugins.RxJavaPlugins
 
@@ -27,6 +29,9 @@ class IFAFU : BaseApplication() {
                     else throwable.message
             )
         }
+        UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, null)
+        UMConfigure.setLogEnabled(BuildConfig.DEBUG)
+        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
     }
 
     companion object {

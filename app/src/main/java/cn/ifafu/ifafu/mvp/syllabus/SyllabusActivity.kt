@@ -19,6 +19,8 @@ import cn.ifafu.ifafu.view.adapter.SyllabusPageAdapter
 import cn.ifafu.ifafu.view.dialog.ProgressDialog
 import cn.ifafu.ifafu.view.syllabus.CourseBase
 import cn.ifafu.ifafu.view.syllabus.CourseView.OnCourseClickListener
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.activity_syllabus.*
 import java.text.SimpleDateFormat
@@ -72,17 +74,18 @@ class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusCon
             mPageAdapter!!.setting = setting
             setCurrentWeek(setting.currentWeek)
         }
-//        if (setting.background != null) {
+        if (setting.background != null) {
             println("Load Custom Background ${setting.background}")
-//        Glide.with(this)
-//                .load(setting.background)
-//                .transition(DrawableTransitionOptions.withCrossFade())
-//                .into()
-//        rr_background.background =
-//            rr_background.background = BitmapDrawable
-//        } else {
+            Glide.with(this)
+                    .load(setting.background)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(iv_background)
+        } else {
+            iv_background.setImageDrawable(null)
+        }
+//        else {
 //            println("Load White Background")
-//            rr_background.setBackgroundColor(Color.WHITE)
+//            iv_background.setI(Color.WHITE)
 //        }
     }
 

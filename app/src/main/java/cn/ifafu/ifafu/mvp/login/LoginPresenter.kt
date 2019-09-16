@@ -2,7 +2,6 @@ package cn.ifafu.ifafu.mvp.login
 
 import android.app.Activity
 import android.content.Intent
-
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.School

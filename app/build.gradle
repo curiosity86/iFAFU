@@ -13,8 +13,8 @@ android {
         applicationId "cn.ifafu.ifafu"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 24
-        versionName "1.0.11"
+        versionCode 26
+        versionName "1.0.12"
         resConfigs "zh"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -55,6 +55,10 @@ android {
 
         }
 
+        huawei {
+            
+        }
+
         productFlavors.all { flavor ->
             flavor.manifestPlaceholders = [channel: name]
         }
@@ -72,7 +76,7 @@ android {
 
     greendao {
         //版本号，升级时可配置
-        schemaVersion 27
+        schemaVersion 29
         daoPackage 'cn.ifafu.ifafu.dao'
     }
 

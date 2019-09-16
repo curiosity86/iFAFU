@@ -18,14 +18,14 @@ import cn.ifafu.ifafu.dao.SyllabusSettingDao;
 import cn.ifafu.ifafu.dao.TokenDao;
 import cn.ifafu.ifafu.dao.UserDao;
 import cn.ifafu.ifafu.data.entity.Course;
+import cn.ifafu.ifafu.data.entity.ElecCookie;
+import cn.ifafu.ifafu.data.entity.ElecQuery;
+import cn.ifafu.ifafu.data.entity.ElecUser;
 import cn.ifafu.ifafu.data.entity.Exam;
 import cn.ifafu.ifafu.data.entity.Score;
 import cn.ifafu.ifafu.data.entity.SyllabusSetting;
 import cn.ifafu.ifafu.data.entity.Token;
 import cn.ifafu.ifafu.data.entity.User;
-import cn.ifafu.ifafu.data.entity.ElecCookie;
-import cn.ifafu.ifafu.data.entity.ElecQuery;
-import cn.ifafu.ifafu.data.entity.ElecUser;
 import cn.ifafu.ifafu.util.SPUtils;
 
 public class RepositoryImpl implements Repository {
@@ -73,8 +73,12 @@ public class RepositoryImpl implements Repository {
     @Override
     public User getLoginUser() {
         if (user == null) {
-            String account = SPUtils.get(Constant.SP_USER_INFO).getString("account");
-            user = userDao.load(account);
+            synchronized (RepositoryImpl.class) {
+                if (user == null) {
+                    String account = SPUtils.get(Constant.SP_USER_INFO).getString("account");
+                    user = userDao.load(account);
+                }
+            }
         }
         return user;
     }

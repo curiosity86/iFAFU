@@ -40,8 +40,8 @@ class SplashActivity : BaseActivity<IPresenter>() {
         tv_app_name.text = AppUtils.getAppName(context)
         Observable
                 .fromCallable {
+                    IFAFU.initConfig(applicationContext)
                     val repository = RepositoryImpl.getInstance()
-                    IFAFU.initConfig(context)
                     when (intent.getIntExtra("jump", -1)) {
                         Constant.ACTIVITY_SYLLABUS -> SyllabusActivity::class.java
                         Constant.ACTIVITY_EXAM -> ExamActivity::class.java
