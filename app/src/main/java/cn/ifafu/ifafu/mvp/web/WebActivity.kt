@@ -1,20 +1,26 @@
 package cn.ifafu.ifafu.mvp.web
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.ViewGroup
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.LinearLayout
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.mvp.base.BaseActivity
+import cn.ifafu.ifafu.util.DensityUtils
+import cn.ifafu.ifafu.util.Glide4Engine
 import cn.ifafu.ifafu.view.dialog.ProgressDialog
 import com.gyf.immersionbar.ImmersionBar
+import com.zhihu.matisse.Matisse
+import com.zhihu.matisse.MimeType
 import kotlinx.android.synthetic.main.activity_web.*
 
 class WebActivity : BaseActivity<WebContract.Presenter>(), WebContract.View {
@@ -22,6 +28,9 @@ class WebActivity : BaseActivity<WebContract.Presenter>(), WebContract.View {
     private lateinit var progressDialog: ProgressDialog
 
     private lateinit var webView: WebView
+
+    private var mFilePathCallback: ValueCallback<Array<Uri>>? = null
+    private val REQUEST_CODE_CHOOSE_ACTIVITY = 1023
 
     override fun initLayout(savedInstanceState: Bundle?): Int {
         return R.layout.activity_web
@@ -35,14 +44,10 @@ class WebActivity : BaseActivity<WebContract.Presenter>(), WebContract.View {
                 .init()
 
         tb_web.setOnClickListener { finish() }
-
         mPresenter = WebPresenter(this)
-
         progressDialog = ProgressDialog(this)
         progressDialog.setText("加载中")
-
         initWebView()
-
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -68,6 +73,23 @@ class WebActivity : BaseActivity<WebContract.Presenter>(), WebContract.View {
                 return super.shouldOverrideUrlLoading(view, request)
             }
         }
+
+        webView.webChromeClient = object : WebChromeClient() {
+            override fun onShowFileChooser(webView: WebView?, filePathCallback: ValueCallback<Array<Uri>>?, fileChooserParams: FileChooserParams?): Boolean {
+                Log.d("WebChromeClient", "onShowFileChooser")
+                mFilePathCallback = filePathCallback
+                Matisse.from(this@WebActivity)
+                        .choose(MimeType.ofImage())
+                        .countable(true)
+                        .maxSelectable(3)
+                        .gridExpectedSize(DensityUtils.dp2px(context, 120F).toInt())
+                        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                        .thumbnailScale(0.85f)
+                        .imageEngine(Glide4Engine())
+                        .forResult(REQUEST_CODE_CHOOSE_ACTIVITY)
+                return true
+            }
+        }
         val webSettings = webView.settings
         webSettings.useWideViewPort = true
         webSettings.javaScriptEnabled = true
@@ -81,6 +103,13 @@ class WebActivity : BaseActivity<WebContract.Presenter>(), WebContract.View {
         webSettings.setAppCachePath(cachePath)
 
         btn_refresh.setOnClickListener { webView.reload() }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_CODE_CHOOSE_ACTIVITY && resultCode == Activity.RESULT_OK) {
+            mFilePathCallback?.onReceiveValue(Matisse.obtainResult(data).toTypedArray())
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun loadUrl(url: String) {
