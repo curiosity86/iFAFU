@@ -17,8 +17,8 @@ class SyllabusPresenter(view: SyllabusContract.View)
 
     @SuppressLint("DefaultLocale")
     override fun onCreate() {
+        mView.setSyllabusSetting(mModel.syllabusSetting)
         updateSyllabusLocal()
-        updateSyllabusSetting()
     }
 
     override fun updateSyllabusNet() {

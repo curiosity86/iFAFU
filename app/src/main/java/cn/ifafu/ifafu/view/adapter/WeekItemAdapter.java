@@ -30,11 +30,6 @@ public class WeekItemAdapter extends RecyclerView.Adapter<WeekItemAdapter.VH> {
         weekList = new TreeSet<>();
     }
 
-    public WeekItemAdapter(Context context, TreeSet<Integer> weekList) {
-        this.context = context;
-        this.weekList = weekList;
-    }
-
     @NonNull
     @Override
     public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -42,7 +37,7 @@ public class WeekItemAdapter extends RecyclerView.Adapter<WeekItemAdapter.VH> {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, (int) DensityUtils.dp2px(context, 64));
         int px1 = (int) DensityUtils.dp2px(context, 1);
-        params.setMargins(px1, px1, px1, 0);
+        params.setMargins(px1 >> 1, px1, px1 >> 1, 0);
         tv.setLayoutParams(params);
         tv.setGravity(Gravity.CENTER);
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
@@ -54,7 +49,7 @@ public class WeekItemAdapter extends RecyclerView.Adapter<WeekItemAdapter.VH> {
     public void onBindViewHolder(@NonNull VH holder, int position) {
         holder.textView.setText(String.valueOf(position + 1));
         if (weekList.contains(position + 1)) {
-            holder.textView.setBackgroundResource(R.color.colorPrimary);
+            holder.textView.setBackgroundResource(R.color.cyan);
         } else {
             holder.textView.setBackgroundResource(R.color.light_gray);
         }
@@ -68,7 +63,7 @@ public class WeekItemAdapter extends RecyclerView.Adapter<WeekItemAdapter.VH> {
                 holder.textView.setBackgroundResource(R.color.light_gray);
             } else {
                 weekList.add(position + 1);
-                holder.textView.setBackgroundResource(R.color.colorPrimary);
+                holder.textView.setBackgroundResource(R.color.cyan);
             }
         });
     }

@@ -9,9 +9,11 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Transient;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 @Entity
 public class SyllabusSetting {
@@ -254,5 +256,36 @@ public class SyllabusSetting {
 
     public void setStatusDartFont(boolean statusDartFont) {
         this.statusDartFont = statusDartFont;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SyllabusSetting that = (SyllabusSetting) o;
+        return weekCnt == that.weekCnt &&
+                nodeCnt == that.nodeCnt &&
+                showSaturday == that.showSaturday &&
+                showSunday == that.showSunday &&
+                showBeginTimeText == that.showBeginTimeText &&
+                showHorizontalLine == that.showHorizontalLine &&
+                showVerticalLine == that.showVerticalLine &&
+                nodeLength == that.nodeLength &&
+                firstDayOfWeek == that.firstDayOfWeek &&
+                textSize == that.textSize &&
+                themeColor == that.themeColor &&
+                statusDartFont == that.statusDartFont &&
+                isForceRefresh == that.isForceRefresh &&
+                Objects.equals(account, that.account) &&
+                Objects.equals(openingDay, that.openingDay) &&
+                Objects.equals(background, that.background) &&
+                Arrays.equals(beginTime, that.beginTime);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(account, weekCnt, nodeCnt, showSaturday, showSunday, showBeginTimeText, showHorizontalLine, showVerticalLine, openingDay, nodeLength, firstDayOfWeek, background, textSize, themeColor, statusDartFont, isForceRefresh);
+        result = 31 * result + Arrays.hashCode(beginTime);
+        return result;
     }
 }

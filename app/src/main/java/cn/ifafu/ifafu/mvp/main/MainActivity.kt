@@ -12,6 +12,7 @@ import android.widget.EditText
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import cn.ifafu.ifafu.BuildConfig
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.data.entity.Menu
@@ -19,6 +20,7 @@ import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.mvp.base.BaseActivity
 import cn.ifafu.ifafu.mvp.login.LoginActivity
 import cn.ifafu.ifafu.mvp.other.AboutActivity
+import cn.ifafu.ifafu.mvp.syllabus.SyllabusActivity
 import cn.ifafu.ifafu.util.ButtonUtils
 import cn.ifafu.ifafu.util.SPUtils
 import cn.ifafu.ifafu.view.adapter.AccountAdapter
@@ -54,6 +56,10 @@ class MainActivity : BaseActivity<MainContract.Presenter>(), MainContract.View, 
         val contentView = window.decorView.findViewById<ViewGroup>(Window.ID_ANDROID_CONTENT)
         contentView.getChildAt(0).fitsSystemWindows = false
         mPresenter = MainPresenter(this)
+
+        if (BuildConfig.DEBUG) {
+            startActivity(Intent(this, SyllabusActivity::class.java))
+        }
 
         btn_menu.setOnClickListener(this)
         tv_nav_about.setOnClickListener(this)

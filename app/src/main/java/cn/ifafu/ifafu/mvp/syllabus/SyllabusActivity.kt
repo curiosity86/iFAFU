@@ -18,20 +18,20 @@ import cn.ifafu.ifafu.util.ChineseNumbers
 import cn.ifafu.ifafu.view.adapter.SyllabusPageAdapter
 import cn.ifafu.ifafu.view.dialog.ProgressDialog
 import cn.ifafu.ifafu.view.syllabus.CourseBase
-import cn.ifafu.ifafu.view.syllabus.CourseView.OnCourseClickListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.activity_syllabus.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusContract.View,
         View.OnClickListener, View.OnLongClickListener {
 
-    private var mPageAdapter: SyllabusPageAdapter? = null
+    private lateinit var mPageAdapter: SyllabusPageAdapter
     private var mCurrentWeek = 1
-    private var progressDialog: ProgressDialog? = null
+    private lateinit var progressDialog: ProgressDialog
 
     override fun initLayout(savedInstanceState: Bundle?): Int {
         return R.layout.activity_syllabus
@@ -46,7 +46,7 @@ class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusCon
         mPresenter = SyllabusPresenter(this)
 
         progressDialog = ProgressDialog(this)
-        progressDialog!!.setText("加载中")
+        progressDialog.setText("加载中")
 
         btn_back.setOnClickListener(this)
         btn_add.setOnClickListener(this)
@@ -68,14 +68,16 @@ class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusCon
         ImmersionBar.with(this)
                 .statusBarDarkFont(setting.statusDartFont)
                 .init()
-        if (mPageAdapter == null) {
-            initSyllabusData(null, setting)
-        } else {
-            mPageAdapter!!.setting = setting
-            setCurrentWeek(setting.currentWeek)
+
+        mPageAdapter = SyllabusPageAdapter(setting, ArrayList()) {
+            val intent = Intent(this, SyllabusItemActivity::class.java)
+            intent.putExtra("course_id", (it.getOther() as Course).id)
+            startActivityForResult(intent, Constant.ACTIVITY_SYLLABUS_ITEM)
         }
+        view_pager.adapter = mPageAdapter
+        setCurrentWeek(setting.currentWeek)
+
         if (setting.background != null) {
-            println("Load Custom Background ${setting.background}")
             Glide.with(this)
                     .load(setting.background)
                     .transition(DrawableTransitionOptions.withCrossFade())
@@ -83,10 +85,6 @@ class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusCon
         } else {
             iv_background.setImageDrawable(null)
         }
-//        else {
-//            println("Load White Background")
-//            iv_background.setI(Color.WHITE)
-//        }
     }
 
     override fun setCurrentWeek(currentWeek: Int) {
@@ -115,38 +113,15 @@ class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusCon
     }
 
     override fun setSyllabusDate(courses: MutableList<MutableList<CourseBase>?>) {
-        if (mPageAdapter == null) {
-            initSyllabusData(courses, null)
-        } else {
-            mPageAdapter!!.courses = courses
-        }
-    }
-
-    private fun initSyllabusData(courses: MutableList<MutableList<CourseBase>?>?, setting: SyllabusSetting?) {
-        if (courses == null) {
-            mPageAdapter = SyllabusPageAdapter(setting!!)
-        } else if (setting == null) {
-            mPageAdapter = SyllabusPageAdapter(courses)
-        } else {
-            mPageAdapter = SyllabusPageAdapter(courses, setting)
-        }
-        mPageAdapter!!.onCourseClickListener = OnCourseClickListener { _, course: CourseBase? ->
-            val intent = Intent(this, SyllabusItemActivity::class.java)
-            intent.putExtra("course_id", (course!!.getOther() as Course).id)
-            startActivityForResult(intent, Constant.ACTIVITY_SYLLABUS_ITEM)
-        }
-        view_pager.adapter = mPageAdapter
-        if (setting != null) {
-            setCurrentWeek(setting.currentWeek)
-        }
+        mPageAdapter.courses = courses
     }
 
     override fun showLoading() {
-        progressDialog!!.show()
+        progressDialog.show()
     }
 
     override fun hideLoading() {
-        progressDialog!!.cancel()
+        progressDialog.cancel()
     }
 
     override fun onClick(v: View?) {
@@ -195,10 +170,11 @@ class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusCon
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == Constant.ACTIVITY_SYLLABUS_ITEM && resultCode == Activity.RESULT_OK) {
-            mPresenter!!.updateSyllabusLocal()
+            mPresenter.updateSyllabusLocal()
             return
-        } else if (requestCode == Constant.ACTIVITY_SYLLABUS_SETTING) {
-            mPresenter!!.updateSyllabusSetting()
+        } else if (requestCode == Constant.ACTIVITY_SYLLABUS_SETTING && resultCode == Activity.RESULT_OK) {
+            mPresenter.updateSyllabusSetting()
+            mPresenter.updateSyllabusLocal()
             return
         }
         super.onActivityResult(requestCode, resultCode, data)

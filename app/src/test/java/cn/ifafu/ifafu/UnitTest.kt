@@ -11,12 +11,11 @@ class UnitTest {
     @Throws(ParseException::class)
     fun test() {
 
-        val format = SimpleDateFormat("yyyy-MM-dd");
-
-        val first = format.parse("2019-")
-
-        val array = ArrayList<Int>()
-
-
+        val i = 24;
+        println("i shl 2 => " + (i shl 2))
+        println("i shr 2 => " + (i shr 2))
+        println("i and 7 => " + (i and 7))
+        println("i or 2 => " + (i or 2))
+        println("${0x100}")
     }
 }

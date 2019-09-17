@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -28,15 +29,8 @@ import me.drakeet.multitype.MultiTypeAdapter
 
 class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(), SyllabusSettingContract.View {
 
-    private lateinit var setting: SyllabusSetting
-
     private val REQUEST_CODE_CHOOSE_ACTIVITY = 23
     private val REQUEST_CODE_PERMISSION = 23
-
-    private val colors = intArrayOf(
-            Color.BLACK, Color.DKGRAY, Color.GRAY, Color.LTGRAY,
-            Color.WHITE, Color.RED, Color.GREEN, Color.BLUE,
-            Color.YELLOW, Color.CYAN)
 
     private val mPicturePicker by lazy {
         Matisse.from(this)
@@ -65,69 +59,13 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(
         tb_syllabus_setting.setNavigationOnClickListener { finish() }
     }
 
-    override fun initRecycleView(setting: SyllabusSetting) {
-        this.setting = setting
+    override fun initRecycleView(items: List<Any>) {
         val adapter = MultiTypeAdapter()
         adapter.register(SeekBarItem::class, SeekBarBinder())
         adapter.register(CheckBoxItem::class, CheckBoxBinder())
         adapter.register(TextViewItem::class, TextViewBinder())
         adapter.register(ColorItem::class, ColorBinder())
-        adapter.items = listOf(
-                SeekBarItem("一天课程的节数", setting.totalNode, "节", 8, 12) {
-                    setting.totalNode = it
-                },
-                SeekBarItem("总共周数", setting.weekCnt, "周", 18, 24) {
-                    setting.weekCnt = it
-                },
-                SeekBarItem("课程字体大小", setting.textSize, "sp", 8, 18) {
-                    setting.textSize = it
-                },
-//                CheckBoxItem("周日为每周第一天", "请根据学校情况设置", setting.firstDayOfWeek == Calendar.SUNDAY) {
-//                    if (it) {
-//                        setting.firstDayOfWeek = Calendar.SUNDAY
-//                    } else {
-//                        setting.firstDayOfWeek = Calendar.MONDAY
-//                    }
-//                },
-                CheckBoxItem("显示水平分割线", "", setting.showHorizontalLine) {
-                    setting.showHorizontalLine = it
-                },
-                CheckBoxItem("显示垂直分割线", "", setting.showVerticalLine) {
-                    setting.showVerticalLine = it
-                },
-                CheckBoxItem("显示上课时间", "", setting.showBeginTimeText) {
-                    setting.showBeginTimeText = it
-                },
-                CheckBoxItem("标题栏深色字体", "", setting.statusDartFont) {
-                    setting.statusDartFont = it
-                },
-                TextViewItem("课表背景", "长按重置为默认背景", {
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_CODE_PERMISSION)
-                    } else {
-                        mPicturePicker.forResult(REQUEST_CODE_CHOOSE_ACTIVITY)
-                    }
-                }, {
-                    setting.background = null
-                    showMessage("课表背景已重置")
-                }),
-                ColorItem("主题颜色", "按钮颜色，文本颜色（除课程文本）", setting.themeColor) { ivColor ->
-                    MaterialDialog(this).show {
-                        var selectColor = 0
-                        title(text = "请选择颜色")
-                        colorChooser(colors = colors, initialSelection = setting.themeColor)
-                        { _, color ->
-                            selectColor = color
-                        }
-                        positiveButton(text = "确认") {
-                            val grad = ivColor.background as GradientDrawable?
-                            grad?.setColor(selectColor)
-                            setting.themeColor = selectColor
-                        }
-                        negativeButton(text = "取消")
-                    }
-                }
-        )
+        adapter.items = items
         val dividerItemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         context.getDrawable(R.drawable.shape_divider)?.let {
             dividerItemDecoration.setDrawable(it)
@@ -137,14 +75,42 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(
         rv_syllabus_setting.adapter = adapter
     }
 
+    override fun showPicturePicker() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_CODE_PERMISSION)
+        } else {
+            mPicturePicker.forResult(REQUEST_CODE_CHOOSE_ACTIVITY)
+        }
+    }
+
+    override fun showColorPicker(setting: SyllabusSetting, ivColor: ImageView) {
+        MaterialDialog(this).show {
+            var selectColor = 0
+            title(text = "请选择颜色")
+            colorChooser(colors = intArrayOf(
+                    Color.BLACK, Color.DKGRAY, Color.GRAY, Color.LTGRAY,
+                    Color.WHITE, Color.RED, Color.GREEN, Color.BLUE,
+                    Color.YELLOW, Color.CYAN), initialSelection = setting.themeColor)
+            { _, color ->
+                selectColor = color
+            }
+            positiveButton(text = "确认") {
+                val grad = ivColor.background as GradientDrawable?
+                grad?.setColor(selectColor)
+                setting.themeColor = selectColor
+            }
+            negativeButton(text = "取消")
+        }
+    }
+
     override fun finish() {
-        mPresenter.save(setting)
+        mPresenter.onFinish()
         super.finish()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_CODE_PERMISSION && resultCode == Activity.RESULT_OK) {
-            setting.background = Matisse.obtainResult(data)[0].toString()
+            mPresenter.onPictureSelect(Matisse.obtainResult(data)[0].toString())
             return
         }
         super.onActivityResult(requestCode, resultCode, data)
