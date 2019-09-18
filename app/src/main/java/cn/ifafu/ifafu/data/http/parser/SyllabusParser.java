@@ -1,7 +1,5 @@
 package cn.ifafu.ifafu.data.http.parser;
 
-import android.util.Log;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -18,11 +16,7 @@ import java.util.regex.Pattern;
 
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.data.entity.User;
-import cn.ifafu.ifafu.data.exception.NoAuthException;
 import cn.ifafu.ifafu.util.RegexUtils;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import okhttp3.ResponseBody;
 
 /**
  * Created by woolsen on 19/8/1
@@ -77,8 +71,10 @@ public class SyllabusParser extends BaseParser<List<Course>> {
                 if (td.hasAttr("rowspan")) {
                     help.nodeNum = Integer.parseInt(td.attr("rowspan"));
                 }
-                List<Course> clist = parseTdElement(td, help);
-                courses.addAll(clist);
+                List<Course> clist = parseTdElement2(td, help);
+                if (clist != null) {
+                    courses.addAll(clist);
+                }
             }
             for (Course c : courses) {
                 mark(c);
@@ -87,31 +83,36 @@ public class SyllabusParser extends BaseParser<List<Course>> {
         return merge(courses);
     }
 
-    private List<Course> merge(List<Course> courses) {
-        List<Course> newList = new ArrayList<>();
-        Map<String, List<Course>> map = new HashMap<>();
-        for (Course course : courses) {
-            String key = course.getName() + course.getTeacher() + course.getAddress() + course.getWeekday()
-                    + course.getWeekSet().first() + course.getWeekSet().last();
-            if (map.get(key) == null) {
-                map.put(key, new ArrayList<>());
-            }
-            map.get(key).add(course);
+    private List<Course> parseTdElement2(Element td, Help help) {
+        String text = td.text();
+        if (text.isEmpty()) {
+            return null;
         }
-        for (List<Course> cl : map.values()) {
-            Collections.sort(cl, (o1, o2) -> Integer.compare(o1.getBeginNode(), o2.getBeginNode()));
-            if (cl.size() == 2 && cl.get(0).getBeginNode() + cl.get(0).getNodeCnt() == cl.get(1).getBeginNode()) {
-                cl.get(0).setNodeCnt(cl.get(0).getNodeCnt() + cl.get(1).getNodeCnt());
-                cl.remove(1);
+        List<Course> list = new ArrayList<>();
+
+        for (String s1 : td.html().split("<br><br>")) {
+            String[] info = s1.split("<br>");
+            Course course = new Course();
+            course.setName(info[0]);
+            parseTime(course, info[1], help);
+            course.setTeacher(info[2]);
+            if (info.length > 3) {
+                course.setAddress(info[3]);
             }
-            newList.addAll(cl);
+            course.setAccount(account);
+            course.setId((long) course.hashCode());
+            list.add(course);
         }
-        return newList;
+        return list;
     }
 
     private List<Course> parseTdElement(Element td, Help help) {
+        String text = td.text();
+        if (text.isEmpty()) {
+            return null;
+        }
+        String[] s = text.trim().split(" ");
         List<Course> list = new ArrayList<>();
-        String[] s = td.text().trim().split(" ");
         for (int i = 0; i < s.length; i++) {
             try {
                 if (s[i].contains("{") && s[i].contains("}")) {
@@ -240,16 +241,26 @@ public class SyllabusParser extends BaseParser<List<Course>> {
         }
     }
 
-    @Override
-    public ObservableSource<List<Course>> apply(Observable<ResponseBody> upstream) {
-        return upstream.map(responseBody -> {
-            String html = responseBody.string();
-            if (html.contains("请登录")) {
-                Log.d("Syllabus", "需要重新登录");
-                throw new NoAuthException();
+    private List<Course> merge(List<Course> courses) {
+        List<Course> newList = new ArrayList<>();
+        Map<String, List<Course>> map = new HashMap<>();
+        for (Course course : courses) {
+            String key = course.getName() + course.getTeacher() + course.getAddress() + course.getWeekday()
+                    + course.getWeekSet().first() + course.getWeekSet().last();
+            if (map.get(key) == null) {
+                map.put(key, new ArrayList<>());
             }
-            return parse(html);
-        });
+            map.get(key).add(course);
+        }
+        for (List<Course> cl : map.values()) {
+            Collections.sort(cl, (o1, o2) -> Integer.compare(o1.getBeginNode(), o2.getBeginNode()));
+            if (cl.size() == 2 && cl.get(0).getBeginNode() + cl.get(0).getNodeCnt() == cl.get(1).getBeginNode()) {
+                cl.get(0).setNodeCnt(cl.get(0).getNodeCnt() + cl.get(1).getNodeCnt());
+                cl.remove(1);
+            }
+            newList.addAll(cl);
+        }
+        return newList;
     }
 
     private class Help {

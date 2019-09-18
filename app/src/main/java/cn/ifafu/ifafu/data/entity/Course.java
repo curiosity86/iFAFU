@@ -7,6 +7,7 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 
+import java.util.Objects;
 import java.util.TreeSet;
 
 import cn.ifafu.ifafu.data.local.IntTreeSetConverter;
@@ -168,8 +169,8 @@ public class Course implements ToCourseBase {
         return "Course{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-//                ", address='" + address + '\'' +
-//                ", teacher='" + teacher + '\'' +
+                ", address='" + address + '\'' +
+                ", teacher='" + teacher + '\'' +
                 ", weekday=" + DateUtils.getWeekdayCN(weekday) +
                 ", beginNode=" + beginNode +
                 ", nodeCnt=" + nodeCnt +
@@ -178,5 +179,26 @@ public class Course implements ToCourseBase {
                 ", account='" + account + '\'' +
                 ", local=" + local +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Course course = (Course) o;
+        return weekday == course.weekday &&
+                beginNode == course.beginNode &&
+                nodeCnt == course.nodeCnt &&
+                local == course.local &&
+                Objects.equals(name, course.name) &&
+                Objects.equals(address, course.address) &&
+                Objects.equals(teacher, course.teacher) &&
+                Objects.equals(weekSet, course.weekSet) &&
+                Objects.equals(account, course.account);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, address, teacher, weekday, beginNode, nodeCnt, weekSet, account, local);
     }
 }
