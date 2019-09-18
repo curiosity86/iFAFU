@@ -3,7 +3,6 @@ package cn.ifafu.ifafu.mvp.web
 import android.webkit.CookieManager
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
-import cn.ifafu.ifafu.data.exception.NoAuthException
 import cn.ifafu.ifafu.mvp.base.BaseZFPresenter
 import cn.ifafu.ifafu.mvp.web.WebContract.Presenter
 import cn.ifafu.ifafu.mvp.web.WebContract.View
@@ -27,11 +26,8 @@ internal class WebPresenter(view: View) : BaseZFPresenter<View, WebContract.Mode
     }
 
     private fun loadZF() {
-        mCompDisposable.add(mModel.getMainHtml()
-                .map { s: String ->
-                    if (s.contains("请登录")) {
-                        throw NoAuthException()
-                    }
+        mCompDisposable.add(mModel.loadMainHtml()
+                .map {
                     mModel.getMainUrl().apply {
                         setCookie(this, SPUtils.get(Constant.SP_COOKIE).getString("ASP.NET_SessionId"))
                     }

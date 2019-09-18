@@ -22,7 +22,7 @@ class WebContract {
          */
         fun getMainUrl(): String
 
-        fun getMainHtml(): Observable<String>
+        fun loadMainHtml(): Observable<MutableMap<String, String>>
     }
 
 }

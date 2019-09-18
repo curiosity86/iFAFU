@@ -13,7 +13,7 @@ import cn.ifafu.ifafu.mvp.score.ScoreContract.Model
 import io.reactivex.Observable
 import java.util.*
 
-class ScoreModel(context: Context?) : BaseZFModel(context), Model {
+class ScoreModel(context: Context) : BaseZFModel(context), Model {
 
     override fun getScoresFromNet(year: String, term: String): Observable<List<Score>> {
         return getScoresFromNet()

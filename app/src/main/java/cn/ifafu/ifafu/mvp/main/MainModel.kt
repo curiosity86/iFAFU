@@ -23,7 +23,7 @@ import com.alibaba.fastjson.JSONObject
 import io.reactivex.Observable
 import java.util.*
 
-class MainModel(context: Context?) : BaseZFModel(context), Model {
+class MainModel(context: Context) : BaseZFModel(context), Model {
 
     override fun getMenus(): Observable<List<Menu>> {
         return Observable.fromCallable {

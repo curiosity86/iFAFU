@@ -15,7 +15,7 @@ import java.text.MessageFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class SyllabusModel(context: Context?) : BaseZFModel(context), Model {
+class SyllabusModel(context: Context) : BaseZFModel(context), Model {
 
     private val user: User? = repository.loginUser
 
@@ -136,8 +136,8 @@ class SyllabusModel(context: Context?) : BaseZFModel(context), Model {
     }
 
     override fun getCoursesFromNet(): Observable<List<Course>> {
-        val url: String? = School.getUrl(ZhengFang.SYLLABUS, user)
-        val referer: String? = School.getUrl(ZhengFang.MAIN, user)
+        val url: String = School.getUrl(ZhengFang.SYLLABUS, user) ?: ""
+        val referer: String = School.getUrl(ZhengFang.MAIN, user) ?: ""
         return initParams(url, referer).flatMap {
             APIManager.getZhengFangAPI()
                     .getInfo(url, referer)

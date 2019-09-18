@@ -30,7 +30,7 @@ import me.drakeet.multitype.MultiTypeAdapter
 class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(), SyllabusSettingContract.View {
 
     private val REQUEST_CODE_CHOOSE_ACTIVITY = 23
-    private val REQUEST_CODE_PERMISSION = 23
+    private val REQUEST_CODE_PERMISSION = 24
 
     private val mPicturePicker by lazy {
         Matisse.from(this)
@@ -109,7 +109,7 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_CODE_PERMISSION && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_CODE_CHOOSE_ACTIVITY && resultCode == Activity.RESULT_OK) {
             mPresenter.onPictureSelect(Matisse.obtainResult(data)[0].toString())
             return
         }

@@ -12,7 +12,7 @@ import cn.ifafu.ifafu.mvp.base.BaseZFModel
 import cn.ifafu.ifafu.mvp.login.LoginContract.Model
 import io.reactivex.Observable
 
-class LoginModel(context: Context?) : BaseZFModel(context), Model {
+class LoginModel(context: Context) : BaseZFModel(context), Model {
 
     private val verifyParser: VerifyParser by lazy { VerifyParser(context) }
 
