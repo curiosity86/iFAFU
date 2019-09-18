@@ -6,6 +6,7 @@ import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.data.entity.Exam;
 import cn.ifafu.ifafu.data.entity.Score;
 import cn.ifafu.ifafu.data.entity.SyllabusSetting;
+import cn.ifafu.ifafu.data.entity.YearTerm;
 import cn.ifafu.ifafu.data.entity.Token;
 import cn.ifafu.ifafu.data.entity.User;
 import cn.ifafu.ifafu.data.entity.ElecCookie;
@@ -74,6 +75,9 @@ public interface Repository {
 
     void clearAllData();
 
+    YearTerm getYearTerm();
+
+    //电费查询
     ElecQuery getElecQuery();
 
     void saveElecQuery(ElecQuery elecQuery);

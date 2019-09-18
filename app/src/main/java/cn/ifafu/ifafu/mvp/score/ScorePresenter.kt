@@ -4,6 +4,7 @@ import android.content.Intent
 import cn.ifafu.ifafu.R.string
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.data.entity.Score
+import cn.ifafu.ifafu.data.entity.YearTerm
 import cn.ifafu.ifafu.mvp.base.BaseZFPresenter
 import cn.ifafu.ifafu.mvp.score_filter.ScoreFilterActivity
 import cn.ifafu.ifafu.util.GlobalLib
@@ -13,31 +14,27 @@ import io.reactivex.Observable
 class ScorePresenter(view: ScoreContract.View)
     : BaseZFPresenter<ScoreContract.View, ScoreContract.Model>(view, ScoreModel(view.context)), ScoreContract.Presenter {
 
-    private lateinit var years: List<String>
-    private lateinit var terms: List<String>
+    private lateinit var yearTerm: YearTerm
     private lateinit var mCurrentYear: String
     private lateinit var mCurrentTerm: String
 
     override fun onCreate() {
         mCompDisposable.add(mModel
                 .getYearTermList()
-                .doOnNext { map: Map<String, List<String>> ->
-                    years = map["ddlxn"] ?: error("")
-                    terms = map["ddlxq"] ?: error("")
-                }
+                .doOnNext { yearTerm = it }
                 .flatMap { mModel.getYearTerm() }
                 .doOnNext { map: Map<String, String> ->
                     mCurrentYear = map["ddlxn"] ?: error("")
                     mCurrentTerm = map["ddlxq"] ?: error("")
                 }
-                .compose(RxUtils.ioToMain())
+                .compose(RxUtils.computationToMain())
                 .subscribe({
                     update(false)
                     mView.setYearTermTitle(mCurrentYear, mCurrentTerm)
-                    mView.setYearTermData(years, terms)
+                    mView.setYearTermData(yearTerm.yearList, yearTerm.termList)
                     mView.setYearTermOptions(
-                            years.indexOf(mCurrentYear),
-                            terms.indexOf(mCurrentTerm)
+                            yearTerm.yearList.indexOf(mCurrentYear),
+                            yearTerm.termList.indexOf(mCurrentTerm)
                     )
                 }, this::onError)
         )
@@ -68,8 +65,8 @@ class ScorePresenter(view: ScoreContract.View)
     }
 
     override fun switchYearTerm(op1: Int, op2: Int) {
-        mCurrentYear = years[op1]
-        mCurrentTerm = terms[op2]
+        mCurrentYear = yearTerm.yearList[op1]
+        mCurrentTerm = yearTerm.termList[op2]
         mCompDisposable.add(Observable
                 .fromCallable { mModel.getScoresFromDB(mCurrentYear, mCurrentTerm) }
                 .flatMap { scores: List<Score> ->
@@ -113,7 +110,7 @@ class ScorePresenter(view: ScoreContract.View)
                         val result = GlobalLib.formatFloat(ies, 2)
                         val index = result.indexOf('.')
                         if (index == -1) {
-                            Pair("result", "分")
+                            Pair(result, "分")
                         } else {
                             Pair(result.substring(0, index), result.substring(index) + "分")
                         }

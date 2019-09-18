@@ -28,19 +28,18 @@ class LoginModel(context: Context) : BaseZFModel(context), Model {
 
     override fun login(user: User): Observable<Response<String>> {
         return innerLogin(
-                    School.getUrl(ZhengFang.LOGIN, user),
-                    School.getUrl(ZhengFang.VERIFY, user),
-                    user.account,
-                    user.password,
-                    LoginParamParser(),
-                    LoginParser(),
-                    verifyParser
-            )
-                .doOnNext {
-                    if (it.isSuccess) {
-                        user.name = it.body
-                        repository.saveUser(user)
-                    }
-                }
+                School.getUrl(ZhengFang.LOGIN, user),
+                School.getUrl(ZhengFang.VERIFY, user),
+                user.account,
+                user.password,
+                LoginParamParser(),
+                LoginParser(),
+                verifyParser
+        ).doOnNext {
+            if (it.isSuccess) {
+                user.name = it.body
+                repository.saveUser(user)
+            }
+        }
     }
 }

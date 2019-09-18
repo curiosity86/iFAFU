@@ -1,6 +1,7 @@
 package cn.ifafu.ifafu.mvp.score
 
 import cn.ifafu.ifafu.data.entity.Score
+import cn.ifafu.ifafu.data.entity.YearTerm
 import cn.ifafu.ifafu.mvp.base.i.IView
 import cn.ifafu.ifafu.mvp.base.i.IZFModel
 import cn.ifafu.ifafu.mvp.base.i.IZFPresenter
@@ -39,7 +40,7 @@ class ScoreContract {
 
         fun getScoresFromDB(year: String, term: String): List<Score>
 
-        fun getYearTermList(): Observable<Map<String, List<String>>>
+        fun getYearTermList(): Observable<YearTerm>
 
         fun getYearTerm(): Observable<Map<String, String>>
     }

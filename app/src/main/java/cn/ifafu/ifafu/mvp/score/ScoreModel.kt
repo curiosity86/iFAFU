@@ -5,6 +5,7 @@ import android.content.Context
 import cn.ifafu.ifafu.app.School
 import cn.ifafu.ifafu.data.entity.Score
 import cn.ifafu.ifafu.data.entity.User
+import cn.ifafu.ifafu.data.entity.YearTerm
 import cn.ifafu.ifafu.data.entity.ZhengFang
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.data.http.parser.ScoreParser
@@ -71,21 +72,12 @@ class ScoreModel(context: Context) : BaseZFModel(context), Model {
     }
 
     @SuppressLint("DefaultLocale")
-    override fun getYearTermList(): Observable<Map<String, List<String>>> {
+    override fun getYearTermList(): Observable<YearTerm> {
         return Observable.fromCallable {
-            val yearList: MutableList<String> = ArrayList()
-            val c: Calendar = Calendar.getInstance()
-            c.add(Calendar.MONTH, 6)
-            val year = c.get(Calendar.YEAR)
-            for (i in 0..3) {
-                yearList.add(String.format("%d-%d", year - i - 1, year - i))
+            repository.yearTerm.apply {
+                addTerm("全部")
+                addYear("全部")
             }
-            yearList.add("全部")
-            val termList: List<String> = listOf("1", "2", "全部")
-            val map: MutableMap<String, List<String>> = HashMap()
-            map["ddlxn"] = yearList
-            map["ddlxq"] = termList
-            map
         }
     }
 

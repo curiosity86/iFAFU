@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import cn.ifafu.ifafu.app.School
 import cn.ifafu.ifafu.data.entity.Exam
+import cn.ifafu.ifafu.data.entity.YearTerm
 import cn.ifafu.ifafu.data.entity.ZhengFang
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.data.http.parser.ExamParser
@@ -28,7 +29,7 @@ class ExamModel(context: Context) : BaseZFModel(context), ExamContract.Model {
         return initParams(examUrl, mainUrl)
                 .flatMap { params ->
                     //考试查询特例，查询本学期考试只能通过GET
-                    if (year == toYear && term == toTerm) {
+                    val observable = if (year == toYear && term == toTerm) {
                         APIManager.getZhengFangAPI()
                                 .initParams(examUrl, mainUrl)
                     } else {
@@ -37,7 +38,7 @@ class ExamModel(context: Context) : BaseZFModel(context), ExamContract.Model {
                         APIManager.getZhengFangAPI()
                                 .getInfo(examUrl, examUrl, params)
                     }
-                            .map { it.string() }
+                    observable.map { it.string() }
                             .compose(ExamParser(user))
                             .map { it.body }
                             .doOnNext { save(it) }
@@ -49,16 +50,8 @@ class ExamModel(context: Context) : BaseZFModel(context), ExamContract.Model {
     }
 
     @SuppressLint("DefaultLocale")
-    override fun getYearTermList(): Map<String, List<String>> {
-        val yearList = ArrayList<String>()
-        val c = Calendar.getInstance()
-        c.add(Calendar.MONTH, 6)
-        val year = c.get(Calendar.YEAR)
-        for (i in 0..3) {
-            yearList.add(String.format("%d-%d", year - i - 1, year - i))
-        }
-        val termList = listOf("1", "2", "3")
-        return mapOf("xnd" to yearList, "xqd" to termList)
+    override fun getYearTermList(): Observable<YearTerm>? {
+        return Observable.fromCallable { repository.yearTerm }
     }
 
     @SuppressLint("DefaultLocale")

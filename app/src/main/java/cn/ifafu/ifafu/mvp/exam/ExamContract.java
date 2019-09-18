@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.ifafu.ifafu.data.entity.Exam;
+import cn.ifafu.ifafu.data.entity.YearTerm;
 import cn.ifafu.ifafu.mvp.base.i.IPresenter;
 import cn.ifafu.ifafu.mvp.base.i.IView;
 import cn.ifafu.ifafu.mvp.base.i.IZFModel;
@@ -35,7 +36,7 @@ class ExamContract {
 
         Observable<List<Exam>> getExamsFromDB(String year, String term);
 
-        Map<String, List<String>> getYearTermList();
+        Observable<YearTerm> getYearTermList();
 
         Map<String, String> getYearTerm();
 

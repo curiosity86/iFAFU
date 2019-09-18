@@ -4,7 +4,10 @@ import androidx.annotation.Nullable;
 
 import org.greenrobot.greendao.AbstractDao;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.dao.CourseDao;
@@ -24,6 +27,7 @@ import cn.ifafu.ifafu.data.entity.ElecUser;
 import cn.ifafu.ifafu.data.entity.Exam;
 import cn.ifafu.ifafu.data.entity.Score;
 import cn.ifafu.ifafu.data.entity.SyllabusSetting;
+import cn.ifafu.ifafu.data.entity.YearTerm;
 import cn.ifafu.ifafu.data.entity.Token;
 import cn.ifafu.ifafu.data.entity.User;
 import cn.ifafu.ifafu.util.SPUtils;
@@ -258,6 +262,30 @@ public class RepositoryImpl implements Repository {
         for (AbstractDao<?, ?> allDao : DaoManager.getInstance().getDaoSession().getAllDaos()) {
             allDao.deleteAll();
         }
+    }
+
+    @Override
+    public YearTerm getYearTerm() {
+        List<String> yearList = new ArrayList<>();
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.MONTH, 8);
+        int year = c.get(Calendar.YEAR);
+        int acYear; //几几届学生
+        String account = getLoginUser().getAccount();
+        if (account.length() == 10) {
+            acYear = Integer.parseInt(account.substring(1, 3)) + 2000;
+        } else {
+            acYear = Integer.parseInt(account.substring(0, 2)) + 2000;
+        }
+
+        for (int i = 0; i < year - acYear; i++) {
+            yearList.add(String.format(Locale.CHINA, "%d-%d", year - i - 1, year - i));
+        }
+        List<String> termList = new ArrayList<>();
+        for (int i = 1; i <= 3; i++) {
+            termList.add(String.valueOf(i));
+        }
+        return new YearTerm(yearList, termList);
     }
 
     @Override

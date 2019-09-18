@@ -7,7 +7,7 @@ import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 
 @Entity
-public class Score extends YearTerm {
+public class Score {
     @Id
     private Long id;
     private String name; //课程名称
