@@ -7,7 +7,7 @@ import android.text.TextWatcher
 import android.view.View
 import androidx.annotation.DrawableRes
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.mvp.base.BaseActivity
+import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.view.dialog.ProgressDialog
 import com.bumptech.glide.Glide
 import com.jaeger.library.StatusBarUtil
@@ -17,7 +17,7 @@ class LoginActivity : BaseActivity<LoginContract.Presenter>(), LoginContract.Vie
 
     private var progressDialog: ProgressDialog? = null
 
-    override fun initLayout(savedInstanceState: Bundle?): Int {
+    override fun getLayoutId(savedInstanceState: Bundle?): Int {
         return R.layout.activity_login
     }
 
@@ -80,12 +80,11 @@ class LoginActivity : BaseActivity<LoginContract.Presenter>(), LoginContract.Vie
     }
 
     override fun setBackgroundLogo(@DrawableRes resId: Int) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Glide.with(this)
+                    .load(resId)
+                    .into(bg_logo)
         }
-        Glide.with(this)
-                .load(resId)
-                .into(bg_logo)
     }
 
 }

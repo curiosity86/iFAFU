@@ -8,7 +8,7 @@ import cn.ifafu.ifafu.data.entity.ZhengFang
 import cn.ifafu.ifafu.data.http.parser.LoginParamParser
 import cn.ifafu.ifafu.data.http.parser.LoginParser
 import cn.ifafu.ifafu.data.http.parser.VerifyParser
-import cn.ifafu.ifafu.mvp.base.BaseZFModel
+import cn.ifafu.ifafu.base.ifafu.BaseZFModel
 import cn.ifafu.ifafu.mvp.login.LoginContract.Model
 import io.reactivex.Observable
 

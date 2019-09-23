@@ -10,7 +10,7 @@ import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.webkit.WebSettings;
 
-import cn.ifafu.ifafu.mvp.base.BaseApplication;
+import cn.ifafu.ifafu.base.BaseApplication;
 
 //跟App相关的辅助类
 public class AppUtils {

@@ -1,11 +1,11 @@
 package cn.ifafu.ifafu.data.entity
 
-class NextCourse (
+open class NextCourse (
         var result: Int = 1,
         var title: String = "",
         var name: String = "",
         var address: String = "",
-        var nodeText: String = "", //eg: 第1节
+        var node: Int = 0, //eg: 1
         var timeText: String = "", //eg: 10:00-17:00
         var weekText: String = "" //eg: 第1周
 ) {

@@ -3,12 +3,12 @@ package cn.ifafu.ifafu.mvp.exam
 import android.annotation.SuppressLint
 import android.content.Context
 import cn.ifafu.ifafu.app.School
+import cn.ifafu.ifafu.base.ifafu.BaseZFModel
 import cn.ifafu.ifafu.data.entity.Exam
 import cn.ifafu.ifafu.data.entity.YearTerm
 import cn.ifafu.ifafu.data.entity.ZhengFang
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.data.http.parser.ExamParser
-import cn.ifafu.ifafu.mvp.base.BaseZFModel
 import io.reactivex.Observable
 import java.util.*
 

@@ -29,6 +29,7 @@ public class ZhengFang {
     private Map<String, ZFApi> apiMap;
 
     private String baseUrlTemp;
+    private String accountTemp;
 
     public ZhengFang(int schoolCode, String baseUrl, String login, String verify, String main, Map<String, ZFApi> apiMap) {
         this.schoolCode = schoolCode;
@@ -40,9 +41,10 @@ public class ZhengFang {
     }
 
     private String getBaseUrl(String account) {
-        if (baseUrlTemp == null) {
+        if (baseUrlTemp == null || !account.equals(accountTemp)) {
             baseUrlTemp = baseUrl
                     .replace("{token}", getToken(account));
+            accountTemp = account;
         }
         return baseUrlTemp;
     }

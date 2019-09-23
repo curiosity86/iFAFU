@@ -13,7 +13,7 @@ import cn.ifafu.ifafu.data.entity.ElecQuery;
 import cn.ifafu.ifafu.data.entity.ElecUser;
 import cn.ifafu.ifafu.data.http.elec.LoginService;
 import cn.ifafu.ifafu.data.http.elec.RetrofitFactory;
-import cn.ifafu.ifafu.mvp.base.BaseModel;
+import cn.ifafu.ifafu.base.BaseModel;
 import cn.ifafu.ifafu.util.SPUtils;
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;

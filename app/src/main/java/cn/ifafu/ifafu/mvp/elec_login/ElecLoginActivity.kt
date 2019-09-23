@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.mvp.elec_login
 import android.graphics.Bitmap
 import android.os.Bundle
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.mvp.base.BaseActivity
+import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.view.dialog.ProgressDialog
 import com.jaeger.library.StatusBarUtil
 import kotlinx.android.synthetic.main.activity_elec_login.*
@@ -12,7 +12,7 @@ class ElecLoginActivity : BaseActivity<ElecLoginContract.Presenter>(), ElecLogin
 
     private lateinit var progress: ProgressDialog
 
-    override fun initLayout(savedInstanceState: Bundle?): Int {
+    override fun getLayoutId(savedInstanceState: Bundle?): Int {
         return R.layout.activity_elec_login
     }
 

@@ -13,14 +13,14 @@ public class DensityUtils {
      * @param dpValue dp
      * @return px
      */
-    public static float dp2px(Context context, float dpValue) {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                dpValue, context.getResources().getDisplayMetrics());
+    public static int dp2px(Context context, float dpValue) {
+        return (int) (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                dpValue, context.getResources().getDisplayMetrics()) + 0.5);
     }
 
-    public static float sp2px(Context context, float spVal) {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
-                spVal, context.getResources().getDisplayMetrics());
+    public static int sp2px(Context context, float spVal) {
+        return (int) (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                spVal, context.getResources().getDisplayMetrics()) + 0.5);
     }
 
     /**

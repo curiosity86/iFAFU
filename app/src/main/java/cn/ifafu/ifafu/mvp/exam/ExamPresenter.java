@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.mvp.exam;
 import java.util.Map;
 
 import cn.ifafu.ifafu.data.entity.YearTerm;
-import cn.ifafu.ifafu.mvp.base.BaseZFPresenter;
+import cn.ifafu.ifafu.base.ifafu.BaseZFPresenter;
 import cn.ifafu.ifafu.util.RxUtils;
 import io.reactivex.Observable;
 

@@ -16,7 +16,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Score;
-import cn.ifafu.ifafu.mvp.base.BaseActivity;
+import cn.ifafu.ifafu.base.BaseActivity;
 import cn.ifafu.ifafu.view.adapter.ScoreFilterAdapter;
 import cn.ifafu.ifafu.view.custom.RecyclerViewDivider;
 import cn.ifafu.ifafu.view.custom.WToolbar;
@@ -32,8 +32,7 @@ public class ScoreFilterActivity extends BaseActivity<ScoreFilterConstant.Presen
 
     private ScoreFilterAdapter mAdapter;
 
-    @Override
-    public int initLayout(@Nullable Bundle savedInstanceState) {
+    public int getLayoutId(@Nullable Bundle savedInstanceState) {
         return R.layout.activity_score_filter;
     }
 

@@ -14,7 +14,7 @@ import android.view.ViewGroup
 import android.webkit.*
 import android.widget.LinearLayout
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.mvp.base.BaseActivity
+import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.util.DensityUtils
 import cn.ifafu.ifafu.util.Glide4Engine
 import cn.ifafu.ifafu.view.dialog.ProgressDialog
@@ -32,7 +32,7 @@ class WebActivity : BaseActivity<WebContract.Presenter>(), WebContract.View {
     private var mFilePathCallback: ValueCallback<Array<Uri>>? = null
     private val REQUEST_CODE_CHOOSE_ACTIVITY = 1023
 
-    override fun initLayout(savedInstanceState: Bundle?): Int {
+    override fun getLayoutId(savedInstanceState: Bundle?): Int {
         return R.layout.activity_web
     }
 

@@ -3,9 +3,9 @@ package cn.ifafu.ifafu.mvp.syllabus
 import android.annotation.SuppressLint
 import android.util.Log
 import cn.ifafu.ifafu.R.string
+import cn.ifafu.ifafu.base.ifafu.BaseZFPresenter
 import cn.ifafu.ifafu.data.entity.Course
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
-import cn.ifafu.ifafu.mvp.base.BaseZFPresenter
 import cn.ifafu.ifafu.util.RxUtils
 import cn.ifafu.ifafu.view.syllabus.CourseBase
 import io.reactivex.Observable
@@ -17,6 +17,7 @@ class SyllabusPresenter(view: SyllabusContract.View)
 
     @SuppressLint("DefaultLocale")
     override fun onCreate() {
+        mModel.syllabusSetting
         mView.setSyllabusSetting(mModel.syllabusSetting)
         updateSyllabusLocal()
     }

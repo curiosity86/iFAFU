@@ -4,7 +4,7 @@ import android.content.Context;
 
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.data.entity.SyllabusSetting;
-import cn.ifafu.ifafu.mvp.base.BaseModel;
+import cn.ifafu.ifafu.base.BaseModel;
 
 class SyllabusItemModel extends BaseModel implements SyllabusItemContract.Model {
 

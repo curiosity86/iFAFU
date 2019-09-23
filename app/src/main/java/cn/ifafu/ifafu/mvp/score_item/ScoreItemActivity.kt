@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.mvp.score_item
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
 import cn.ifafu.ifafu.R.layout
-import cn.ifafu.ifafu.mvp.base.BaseActivity
+import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.view.adapter.ScoreItemAdapter
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.activity_score_item.*
@@ -12,7 +12,7 @@ class ScoreItemActivity : BaseActivity<ScoreItemConstant.Presenter>(), ScoreItem
 
     private var mAdapter: ScoreItemAdapter? = null
 
-    override fun initLayout(savedInstanceState: Bundle?): Int {
+    override fun getLayoutId(savedInstanceState: Bundle?): Int {
         return layout.activity_score_item
     }
 

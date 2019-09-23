@@ -3,9 +3,9 @@ package cn.ifafu.ifafu.mvp.score
 import android.content.Intent
 import cn.ifafu.ifafu.R.string
 import cn.ifafu.ifafu.app.Constant
+import cn.ifafu.ifafu.base.ifafu.BaseZFPresenter
 import cn.ifafu.ifafu.data.entity.Score
 import cn.ifafu.ifafu.data.entity.YearTerm
-import cn.ifafu.ifafu.mvp.base.BaseZFPresenter
 import cn.ifafu.ifafu.mvp.score_filter.ScoreFilterActivity
 import cn.ifafu.ifafu.util.GlobalLib
 import cn.ifafu.ifafu.util.RxUtils

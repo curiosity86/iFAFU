@@ -10,7 +10,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -20,7 +19,6 @@ import androidx.customview.widget.ViewDragHelper;
 
 import com.nineoldandroids.view.ViewHelper;
 
-import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.util.DensityUtils;
 
 
@@ -31,19 +29,13 @@ import cn.ifafu.ifafu.util.DensityUtils;
  */
 public class DragLayout extends FrameLayout {
 
-    private boolean isShowShadow = true;
-
     private int range;//排除主页面的左侧页面宽度
     private int width;
     private int height;
     private int mainLeft;
-    private Context context;
-    private ImageView iv_shadow;
     private LinearLayout mLeftLayout;
     private MyLinearLayout mMainLayout;
     private Status status = Status.Close;
-
-    private View view;
 
     private int dp200;
 
@@ -73,7 +65,6 @@ public class DragLayout extends FrameLayout {
 
     public DragLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
-        this.context = context;
     }
 
     public DragLayout(Context context, AttributeSet attrs, int defStyle) {
@@ -91,15 +82,8 @@ public class DragLayout extends FrameLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        if (isShowShadow) {
-            iv_shadow = new ImageView(context);
-            iv_shadow.setImageResource(R.drawable.shadow);
-            LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT,
-                    LayoutParams.MATCH_PARENT);
-            addView(iv_shadow, 1, lp);
-        }
         mLeftLayout = (LinearLayout) getChildAt(0);
-        mMainLayout = (MyLinearLayout) getChildAt(isShowShadow ? 2 : 1);
+        mMainLayout = (MyLinearLayout) getChildAt(1);
         mMainLayout.setDragLayout(this);
         mLeftLayout.setClickable(true);
         mMainLayout.setClickable(true);
@@ -131,9 +115,6 @@ public class DragLayout extends FrameLayout {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (isInIgnoredView(ev, view)) {
-            return false;
-        }
         return mDragHelper.shouldInterceptTouchEvent(ev)
                 && mGestureDetector.onTouchEvent(ev);
     }
@@ -173,10 +154,6 @@ public class DragLayout extends FrameLayout {
         ViewHelper.setScaleX(mLeftLayout, 0.5f + 0.5f * percent);//左边的布局逐渐变小
         ViewHelper.setScaleY(mLeftLayout, 0.5f + 0.5f * percent);
         ViewHelper.setAlpha(mLeftLayout, percent);
-        if (isShowShadow) {
-            ViewHelper.setScaleX(iv_shadow, f1 * 1.4f * (1 - percent * 0.12f));
-            ViewHelper.setScaleY(iv_shadow, f1 * 1.85f * (1 - percent * 0.12f));
-        }
         getBackground().setColorFilter(
                 evaluate(percent, Color.BLACK, Color.TRANSPARENT),
                 Mode.SRC_OVER);
@@ -331,9 +308,6 @@ public class DragLayout extends FrameLayout {
                 mainLeft = range;
             }
 
-            if (isShowShadow) {
-                iv_shadow.layout(mainLeft, 0, mainLeft + width, height);
-            }
             if (changedView == mLeftLayout) {
                 mLeftLayout.layout(0, 0, width, height);
                 mMainLayout.layout(mainLeft, 0, mainLeft + width, height);

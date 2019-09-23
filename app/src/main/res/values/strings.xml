@@ -65,7 +65,11 @@
     <string name="menu_share">分享应用</string>
     <string name="menu_logout">切换用户</string>
     <string name="menu_about">关于应用</string>
-    <string name="menu_fback">反馈问题</string>
+    <string name="menu_setting">软件设置</string>
+
+    <!--SettingActivity-->
+    <string name="title_setting">软件设置</string>
+
 
     <!--WebActivity-->
     <string name="title_web_mode">网页模式</string>

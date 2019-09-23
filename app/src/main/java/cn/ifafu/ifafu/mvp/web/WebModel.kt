@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.mvp.web
 import android.content.Context
 import cn.ifafu.ifafu.app.School
 import cn.ifafu.ifafu.data.entity.ZhengFang
-import cn.ifafu.ifafu.mvp.base.BaseZFModel
+import cn.ifafu.ifafu.base.ifafu.BaseZFModel
 import io.reactivex.Observable
 
 class WebModel internal constructor(context: Context) : BaseZFModel(context), WebContract.Model {

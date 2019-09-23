@@ -17,6 +17,7 @@ import cn.ifafu.ifafu.dao.ElecQueryDao;
 import cn.ifafu.ifafu.dao.ElecUserDao;
 import cn.ifafu.ifafu.dao.ExamDao;
 import cn.ifafu.ifafu.dao.ScoreDao;
+import cn.ifafu.ifafu.dao.SettingDao;
 import cn.ifafu.ifafu.dao.SyllabusSettingDao;
 import cn.ifafu.ifafu.dao.TokenDao;
 import cn.ifafu.ifafu.dao.UserDao;
@@ -26,6 +27,7 @@ import cn.ifafu.ifafu.data.entity.ElecQuery;
 import cn.ifafu.ifafu.data.entity.ElecUser;
 import cn.ifafu.ifafu.data.entity.Exam;
 import cn.ifafu.ifafu.data.entity.Score;
+import cn.ifafu.ifafu.data.entity.Setting;
 import cn.ifafu.ifafu.data.entity.SyllabusSetting;
 import cn.ifafu.ifafu.data.entity.YearTerm;
 import cn.ifafu.ifafu.data.entity.Token;
@@ -43,6 +45,7 @@ public class RepositoryImpl implements Repository {
     private ElecQueryDao elecQueryDao;
     private ElecCookieDao elecCookieDao;
     private ElecUserDao elecUserDao;
+    private SettingDao settingDao;
 
     private User user;
 
@@ -59,6 +62,7 @@ public class RepositoryImpl implements Repository {
         elecQueryDao = daoSession.getElecQueryDao();
         elecCookieDao = daoSession.getElecCookieDao();
         elecUserDao = daoSession.getElecUserDao();
+        settingDao = daoSession.getSettingDao();
     }
 
     public static Repository getInstance() {
@@ -316,5 +320,21 @@ public class RepositoryImpl implements Repository {
     @Override
     public void saveElecUser(ElecUser elecUser) {
         elecUserDao.insertOrReplace(elecUser);
+    }
+
+    @Override
+    public Setting getSetting() {
+        Setting setting = settingDao.load(getLoginUser().getAccount());
+        if (setting == null) {
+            setting = new Setting();
+            setting.setAccount(getLoginUser().getAccount());
+            saveSetting(setting);
+        }
+        return setting;
+    }
+
+    @Override
+    public void saveSetting(Setting setting) {
+        settingDao.insertOrReplace(setting);
     }
 }

@@ -8,9 +8,9 @@ import android.view.View
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
+import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.data.entity.Course
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
-import cn.ifafu.ifafu.mvp.base.BaseActivity
 import cn.ifafu.ifafu.mvp.main.MainActivity
 import cn.ifafu.ifafu.mvp.syllabus_item.SyllabusItemActivity
 import cn.ifafu.ifafu.mvp.syllabus_setting.SyllabusSettingActivity
@@ -33,7 +33,7 @@ class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusCon
     private var mCurrentWeek = 1
     private lateinit var progressDialog: ProgressDialog
 
-    override fun initLayout(savedInstanceState: Bundle?): Int {
+    override fun getLayoutId(savedInstanceState: Bundle?): Int {
         return R.layout.activity_syllabus
     }
 

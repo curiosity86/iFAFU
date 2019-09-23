@@ -50,6 +50,7 @@
         <activity android:name=".mvp.elec_splash.ElecSplashActivity" />
         <activity android:name=".mvp.elec_login.ElecLoginActivity" />
         <activity android:name=".mvp.elec_main.ElecMainActivity" />
+        <activity android:name=".mvp.setting.SettingActivity" />
 
         <meta-data
             android:name="APP_ICON_HD"

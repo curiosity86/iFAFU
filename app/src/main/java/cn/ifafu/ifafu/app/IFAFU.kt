@@ -4,10 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import cn.ifafu.ifafu.BuildConfig
+import cn.ifafu.ifafu.base.BaseApplication
 import cn.ifafu.ifafu.data.exception.LoginInfoErrorException
-import cn.ifafu.ifafu.mvp.base.BaseApplication
 import cn.ifafu.ifafu.mvp.login.LoginActivity
-import cn.ifafu.ifafu.mvp.main.MainModel
+import cn.ifafu.ifafu.mvp.login.LoginModel
 import cn.ifafu.ifafu.mvp.other.SplashActivity
 import cn.ifafu.ifafu.util.AppUtils
 import cn.ifafu.ifafu.util.RxUtils
@@ -24,14 +24,21 @@ class IFAFU : BaseApplication() {
     override fun onCreate() {
         super.onCreate()
         RxJavaPlugins.setErrorHandler { throwable ->
-            Log.e("RxJavaError",
-                    if (throwable.message == null) "RxJavaNullMessageError"
-                    else throwable.message
-            )
+            Log.e("RxJavaError", throwable.message ?: "RxJavaEmptyMessageError")
         }
-        UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, null)
-        UMConfigure.setLogEnabled(BuildConfig.DEBUG)
+        UMConfigure.init(this, "5d4082673fc1955041000408", "web", UMConfigure.DEVICE_TYPE_PHONE, "1a446c1ae0455153aa502937a87e5634")
         MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
+////        UMConfigure.setLogEnabled(BuildConfig.DEBUG)
+//        val mPushAgent = PushAgent.getInstance(this)
+//        mPushAgent.register(object : IUmengRegisterCallback {
+//            override fun onSuccess(p0: String?) {
+//                Log.i("UMLog", "注册成功：deviceToken：-------->  $p0")
+//            }
+//
+//            override fun onFailure(p0: String?, p1: String?) {
+//                Log.i("UMLog", "注册失败：deviceToken：-------->  $p0, $p1")
+//            }
+//        })
     }
 
     companion object {
@@ -51,7 +58,7 @@ class IFAFU : BaseApplication() {
                 Beta.enableHotfix = false
                 FIRST_START_APP = false
 
-                loginDisposable = MainModel(context).reLogin()
+                loginDisposable = LoginModel(context).reLogin()
                         .compose(RxUtils.ioToMain())
                         .subscribe({ }, { throwable: Throwable ->
                             if (throwable is LoginInfoErrorException) {

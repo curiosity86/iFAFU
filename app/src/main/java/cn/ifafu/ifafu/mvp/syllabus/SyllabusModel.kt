@@ -4,10 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import cn.ifafu.ifafu.app.School
+import cn.ifafu.ifafu.base.ifafu.BaseZFModel
 import cn.ifafu.ifafu.data.entity.*
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.data.http.parser.SyllabusParser
-import cn.ifafu.ifafu.mvp.base.BaseZFModel
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusContract.Model
 import cn.ifafu.ifafu.util.DateUtils
 import io.reactivex.Observable
@@ -20,8 +20,8 @@ class SyllabusModel(context: Context) : BaseZFModel(context), Model {
     private val user: User? = repository.loginUser
 
     private val beginTimes = arrayOf(
-            intArrayOf(800, 850, 955, 1045, 1135, 1400, 1450, 1550, 1640, 1825, 1915, 2005),
-            intArrayOf(830, 920, 1025, 1115, 1205, 1400, 1450, 1545, 1635, 1825, 1915, 2005)
+            intArrayOf(0, 800, 850, 955, 1045, 1135, 1400, 1450, 1550, 1640, 1825, 1915, 2005),
+            intArrayOf(0, 830, 920, 1025, 1115, 1205, 1400, 1450, 1545, 1635, 1825, 1915, 2005)
     )
 
     override fun getSyllabusSetting(): SyllabusSetting {
@@ -32,7 +32,7 @@ class SyllabusModel(context: Context) : BaseZFModel(context), Model {
         }
         var qs = false
         for (course in repository.allCourses) {
-            if (course.address.contains("旗教")) {
+            if (course.address?.contains("旗教") == true) {
                 qs = true
                 break
             }
@@ -226,7 +226,7 @@ class SyllabusModel(context: Context) : BaseZFModel(context), Model {
         var nextCourse: Course? = null
         var courseNode = 0
         for ((key, value) in courseMap) {
-            if (key > nextNode) {
+            if (key >= nextNode) {
                 nextCourse = value
                 courseNode = key
                 break
@@ -235,7 +235,7 @@ class SyllabusModel(context: Context) : BaseZFModel(context), Model {
         if (nextCourse != null) {
             result.result = NextCourse.HAS_NEXT_COURSE
             result.title = "下一节课："
-            result.nodeText = MessageFormat.format("第{0}节", courseNode)
+            result.node = courseNode
             result.name = nextCourse.name
             result.address = nextCourse.address
             val length = setting.nodeLength

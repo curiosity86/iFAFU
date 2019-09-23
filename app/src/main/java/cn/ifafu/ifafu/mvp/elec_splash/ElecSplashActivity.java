@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 import com.jaeger.library.StatusBarUtil;
 
 import cn.ifafu.ifafu.R;
-import cn.ifafu.ifafu.mvp.base.BaseActivity;
+import cn.ifafu.ifafu.base.BaseActivity;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
@@ -16,8 +16,7 @@ import permissions.dispatcher.RuntimePermissions;
 public class ElecSplashActivity extends BaseActivity<ElecSplashContract.Presenter>
         implements ElecSplashContract.View {
 
-    @Override
-    public int initLayout(@Nullable Bundle savedInstanceState) {
+    public int getLayoutId(@Nullable Bundle savedInstanceState) {
         return R.layout.activity_elec_splash;
     }
 

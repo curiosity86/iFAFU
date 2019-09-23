@@ -12,7 +12,7 @@ import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.mvp.base.BaseActivity
+import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.mvp.elec_login.ElecLoginActivity
 import cn.ifafu.ifafu.view.dialog.ProgressDialog
 import com.afollestad.materialdialogs.MaterialDialog
@@ -42,7 +42,7 @@ class ElecMainActivity : BaseActivity<ElecMainContract.Presenter>(), ElecMainCon
 
     private var lastRoomText = ""
 
-    override fun initLayout(savedInstanceState: Bundle?): Int {
+    override fun getLayoutId(savedInstanceState: Bundle?): Int {
         return R.layout.activity_elec_main
     }
 

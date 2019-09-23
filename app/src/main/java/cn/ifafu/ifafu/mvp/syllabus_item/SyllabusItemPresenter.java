@@ -11,7 +11,7 @@ import java.util.List;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.data.entity.SyllabusSetting;
-import cn.ifafu.ifafu.mvp.base.BasePresenter;
+import cn.ifafu.ifafu.base.BasePresenter;
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusActivity;
 import cn.ifafu.ifafu.util.RxUtils;
 import io.reactivex.Observable;

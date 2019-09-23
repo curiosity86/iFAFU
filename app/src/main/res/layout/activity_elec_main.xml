@@ -14,7 +14,7 @@
         android:id="@+id/tb_elec"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        app:elevation="3dp"
+        app:elevation="4dp"
         app:title="@string/fafu_elec_title" />
 
     <include layout="@layout/include_elec_main_balance" />

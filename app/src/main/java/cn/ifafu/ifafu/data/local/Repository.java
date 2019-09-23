@@ -3,15 +3,16 @@ package cn.ifafu.ifafu.data.local;
 import java.util.List;
 
 import cn.ifafu.ifafu.data.entity.Course;
-import cn.ifafu.ifafu.data.entity.Exam;
-import cn.ifafu.ifafu.data.entity.Score;
-import cn.ifafu.ifafu.data.entity.SyllabusSetting;
-import cn.ifafu.ifafu.data.entity.YearTerm;
-import cn.ifafu.ifafu.data.entity.Token;
-import cn.ifafu.ifafu.data.entity.User;
 import cn.ifafu.ifafu.data.entity.ElecCookie;
 import cn.ifafu.ifafu.data.entity.ElecQuery;
 import cn.ifafu.ifafu.data.entity.ElecUser;
+import cn.ifafu.ifafu.data.entity.Exam;
+import cn.ifafu.ifafu.data.entity.Score;
+import cn.ifafu.ifafu.data.entity.Setting;
+import cn.ifafu.ifafu.data.entity.SyllabusSetting;
+import cn.ifafu.ifafu.data.entity.Token;
+import cn.ifafu.ifafu.data.entity.User;
+import cn.ifafu.ifafu.data.entity.YearTerm;
 
 public interface Repository {
 
@@ -89,4 +90,8 @@ public interface Repository {
     ElecUser getElecUser();
 
     void saveElecUser(ElecUser elecUser);
+
+    Setting getSetting();
+
+    void saveSetting(Setting setting);
 }

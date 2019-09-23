@@ -2,9 +2,9 @@ package cn.ifafu.ifafu.mvp.elec_main
 
 import cn.ifafu.ifafu.data.entity.ElecQuery
 import cn.ifafu.ifafu.data.entity.Selection
-import cn.ifafu.ifafu.mvp.base.i.IModel
-import cn.ifafu.ifafu.mvp.base.i.IPresenter
-import cn.ifafu.ifafu.mvp.base.i.IView
+import cn.ifafu.ifafu.base.i.IModel
+import cn.ifafu.ifafu.base.i.IPresenter
+import cn.ifafu.ifafu.base.i.IView
 import io.reactivex.Observable
 
 class ElecMainContract {

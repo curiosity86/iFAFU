@@ -26,4 +26,6 @@ public class Constant {
     public static final int ACTIVITY_SCORE_ITEM = 700;
     public static final int ACTIVITY_SCORE_FILTER = 800;
 
+    public static final int ACTIVITY_SETTING = 900;
+
 }

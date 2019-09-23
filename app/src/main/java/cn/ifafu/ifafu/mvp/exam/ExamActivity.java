@@ -20,7 +20,7 @@ import java.util.List;
 import butterknife.BindView;
 import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.data.entity.Exam;
-import cn.ifafu.ifafu.mvp.base.BaseActivity;
+import cn.ifafu.ifafu.base.BaseActivity;
 import cn.ifafu.ifafu.view.adapter.ExamAdapter;
 import cn.ifafu.ifafu.view.custom.EmptyView;
 import cn.ifafu.ifafu.view.custom.WToolbar;
@@ -46,8 +46,7 @@ public class ExamActivity extends BaseActivity<ExamContract.Presenter>
     private List<String> years;
     private List<String> terms;
 
-    @Override
-    public int initLayout(@Nullable Bundle savedInstanceState) {
+    public int getLayoutId(@Nullable Bundle savedInstanceState) {
         return R.layout.activity_exam;
     }
 

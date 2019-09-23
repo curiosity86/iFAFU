@@ -5,7 +5,7 @@ import android.content.Intent;
 import java.util.List;
 
 import cn.ifafu.ifafu.data.entity.Score;
-import cn.ifafu.ifafu.mvp.base.BasePresenter;
+import cn.ifafu.ifafu.base.BasePresenter;
 import cn.ifafu.ifafu.util.GlobalLib;
 import cn.ifafu.ifafu.util.RxUtils;
 import io.reactivex.Observable;

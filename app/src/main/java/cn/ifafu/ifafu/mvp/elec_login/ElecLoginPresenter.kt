@@ -6,7 +6,7 @@ import cn.ifafu.ifafu.data.entity.ElecCookie
 import cn.ifafu.ifafu.data.entity.ElecQuery
 import cn.ifafu.ifafu.data.entity.ElecUser
 import cn.ifafu.ifafu.data.local.RepositoryImpl
-import cn.ifafu.ifafu.mvp.base.BasePresenter
+import cn.ifafu.ifafu.base.BasePresenter
 import cn.ifafu.ifafu.mvp.elec_main.ElecMainActivity
 import cn.ifafu.ifafu.util.RxUtils
 import com.alibaba.fastjson.JSONObject

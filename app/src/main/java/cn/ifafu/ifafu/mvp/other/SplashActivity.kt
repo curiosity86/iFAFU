@@ -9,14 +9,14 @@ import android.view.WindowManager.LayoutParams
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.IFAFU
+import cn.ifafu.ifafu.base.BaseActivity
+import cn.ifafu.ifafu.base.i.IPresenter
 import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.data.local.RepositoryImpl
-import cn.ifafu.ifafu.mvp.base.BaseActivity
-import cn.ifafu.ifafu.mvp.base.i.IPresenter
 import cn.ifafu.ifafu.mvp.exam.ExamActivity
 import cn.ifafu.ifafu.mvp.login.LoginActivity
-import cn.ifafu.ifafu.mvp.main.MainActivity
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusActivity
+import cn.ifafu.ifafu.mvp.main.MainActivity
 import cn.ifafu.ifafu.util.AppUtils
 import cn.ifafu.ifafu.util.RxUtils
 import com.tencent.bugly.crashreport.CrashReport.CrashHandleCallback
@@ -24,7 +24,7 @@ import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : BaseActivity<IPresenter>() {
-    override fun initLayout(savedInstanceState: Bundle?): Int {
+    override fun getLayoutId(savedInstanceState: Bundle?): Int {
         //去掉窗口标题
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         //隐藏顶部状态栏

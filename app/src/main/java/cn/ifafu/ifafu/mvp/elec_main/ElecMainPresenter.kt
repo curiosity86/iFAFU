@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.mvp.elec_main
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.data.entity.ElecQuery
 import cn.ifafu.ifafu.data.entity.Selection
-import cn.ifafu.ifafu.mvp.base.BasePresenter
+import cn.ifafu.ifafu.base.BasePresenter
 import cn.ifafu.ifafu.util.RxUtils
 import io.reactivex.Observable
 import java.util.*

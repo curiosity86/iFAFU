@@ -2,7 +2,7 @@ package cn.ifafu.ifafu.mvp.syllabus_setting
 
 import android.app.Activity
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
-import cn.ifafu.ifafu.mvp.base.BasePresenter
+import cn.ifafu.ifafu.base.BasePresenter
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.CheckBoxItem
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.ColorItem
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.SeekBarItem

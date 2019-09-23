@@ -9,7 +9,7 @@ import cn.ifafu.ifafu.data.entity.YearTerm
 import cn.ifafu.ifafu.data.entity.ZhengFang
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.data.http.parser.ScoreParser
-import cn.ifafu.ifafu.mvp.base.BaseZFModel
+import cn.ifafu.ifafu.base.ifafu.BaseZFModel
 import cn.ifafu.ifafu.mvp.score.ScoreContract.Model
 import io.reactivex.Observable
 import java.util.*

@@ -72,7 +72,7 @@ public class SyllabusWidget extends AppWidgetProvider {
                 remoteViews.setTextViewText(R.id.tv_course_name, next.getTitle() + next.getName());
                 remoteViews.setTextViewText(R.id.tv_course_address, next.getAddress());
                 remoteViews.setTextViewText(R.id.tv_course_node,
-                        MessageFormat.format("{0} {1}", next.getNodeText(), next.getTimeText()));
+                        MessageFormat.format("第{0}节 {1}", next.getNode(), next.getTimeText()));
                 break;
         }
         remoteViews.setTextViewText(R.id.tv_time, String.format("%s %s", format1.format(date), next.getWeekText()));

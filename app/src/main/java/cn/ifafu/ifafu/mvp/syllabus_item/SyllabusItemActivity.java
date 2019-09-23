@@ -21,7 +21,7 @@ import java.util.TreeSet;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.ifafu.ifafu.R;
-import cn.ifafu.ifafu.mvp.base.BaseActivity;
+import cn.ifafu.ifafu.base.BaseActivity;
 import cn.ifafu.ifafu.view.adapter.WeekItemAdapter;
 import cn.ifafu.ifafu.view.custom.WToolbar;
 
@@ -59,8 +59,7 @@ public class SyllabusItemActivity extends BaseActivity<SyllabusItemContract.Pres
 
     private WeekItemAdapter weekAdapter;
 
-    @Override
-    public int initLayout(@Nullable Bundle savedInstanceState) {
+    public int getLayoutId(@Nullable Bundle savedInstanceState) {
         return R.layout.activity_syllabus_item;
     }
 

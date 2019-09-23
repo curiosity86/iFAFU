@@ -8,7 +8,7 @@ import androidx.collection.SimpleArrayMap;
 import java.util.Map;
 import java.util.Set;
 
-import cn.ifafu.ifafu.mvp.base.BaseApplication;
+import cn.ifafu.ifafu.base.BaseApplication;
 
 /**
  * create by woolsen on 19/7/12

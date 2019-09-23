@@ -14,8 +14,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
+import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
-import cn.ifafu.ifafu.mvp.base.BaseActivity
 import cn.ifafu.ifafu.util.DensityUtils
 import cn.ifafu.ifafu.util.Glide4Engine
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.*
@@ -43,7 +43,7 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(
                 .imageEngine(Glide4Engine())
     }
 
-    override fun initLayout(savedInstanceState: Bundle?): Int {
+    override fun getLayoutId(savedInstanceState: Bundle?): Int {
         return R.layout.activity_syllabus_setting
     }
 

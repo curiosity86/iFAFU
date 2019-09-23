@@ -151,7 +151,7 @@ public class Course implements ToCourseBase {
     @Override
     public CourseBase toCourseBase() {
         CourseBase courseBase = new CourseBase();
-        if (address.isEmpty()) {
+        if (address != null && address.isEmpty()) {
             courseBase.setText(name);
         } else {
             courseBase.setText(name + "\n@" + address);

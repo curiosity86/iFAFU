@@ -15,7 +15,7 @@ import android.renderscript.ScriptIntrinsicBlur;
 import android.util.Log;
 import android.widget.ImageView;
 
-import cn.ifafu.ifafu.mvp.base.BaseApplication;
+import cn.ifafu.ifafu.base.BaseApplication;
 
 /**
  * 图片工具类

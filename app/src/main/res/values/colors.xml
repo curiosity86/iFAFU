@@ -16,9 +16,14 @@
     <color name="black">#000</color>
     <color name="effective_black">#2a2a2a</color>
     <color name="blue">#0000FF</color>
-    <color name="red">#FF2222</color>
+    <color name="red">#FF0000</color>
+    <color name="red_2">#FF2222</color>
+    <color name="green">#52fb49</color>
     <color name="gray">#dbdbdb</color>
-    <color name="little_blue">#5697E5</color>
+
+    <color name="blue1">#5697E5</color>
+    <color name="blue2">#805697E5</color>
+
     <color name="global_blue">#157EFB</color>
     <color name="light_gray">#dbdbdb</color>
     <color name="transparent">#00000000</color>

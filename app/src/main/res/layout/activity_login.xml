@@ -21,7 +21,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:text="@string/login_welcome"
-        android:textColor="@color/little_blue"
+        android:textColor="@color/blue1"
         android:textSize="25sp"
         android:textStyle="normal" />
 
@@ -54,14 +54,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/base_on_fafu"
-            android:textColor="@color/little_blue"
+            android:textColor="@color/blue1"
             android:textSize="18sp" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="220dp"
             android:layout_height="48dp"
             android:layout_marginTop="8dp"
-            android:textColorHint="@color/little_blue"
+            android:textColorHint="@color/blue1"
             app:hintTextAppearance="@style/TextInput">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -71,7 +71,7 @@
                 android:layout_height="match_parent"
                 android:hint="@string/account"
                 android:inputType="number"
-                android:textColorLink="@color/little_blue" />
+                android:textColorLink="@color/blue1" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -79,7 +79,7 @@
             android:layout_width="220dp"
             android:layout_height="48dp"
             android:layout_marginTop="16dp"
-            android:textColorHint="@color/little_blue"
+            android:textColorHint="@color/blue1"
             app:hintTextAppearance="@style/TextInput"
             app:passwordToggleEnabled="true">
 

@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
-import cn.ifafu.ifafu.mvp.base.BaseZFModel
+import cn.ifafu.ifafu.base.ifafu.BaseZFModel
 import com.alibaba.fastjson.JSONObject
 
 class SyllabusSettingModel(context: Context) : BaseZFModel(context), SyllabusSettingContract.Model {

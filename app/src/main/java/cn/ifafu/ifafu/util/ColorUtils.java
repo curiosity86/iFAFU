@@ -3,7 +3,8 @@ package cn.ifafu.ifafu.util;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
-import android.os.Build;
+
+import androidx.annotation.ColorRes;
 
 import java.util.Random;
 
@@ -70,6 +71,10 @@ public class ColorUtils {
         return colorList[random.nextInt(20) % colorList.length];
     }
 
+    public static int getColor(Context context, @ColorRes int id) {
+        return context.getResources().getColor(id);
+    }
+
     public static int getAssignedColor(int randomId) {
         return colorList[randomId % colorList.length];
     }
@@ -78,7 +83,7 @@ public class ColorUtils {
         return darkColorList[random.nextInt(20) % colorList.length];
     }
 
-    public static int dip2px(Context context, float dpValue) {
+    private static int dip2px(Context context, float dpValue) {
         return (int) (0.5f + dpValue * context.getResources().getDisplayMetrics().density);
     }
 }

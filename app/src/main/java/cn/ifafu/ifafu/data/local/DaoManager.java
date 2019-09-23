@@ -13,7 +13,7 @@ import cn.ifafu.ifafu.dao.DaoSession;
 import cn.ifafu.ifafu.dao.ExamDao;
 import cn.ifafu.ifafu.dao.ScoreDao;
 import cn.ifafu.ifafu.dao.UserDao;
-import cn.ifafu.ifafu.mvp.base.BaseApplication;
+import cn.ifafu.ifafu.base.BaseApplication;
 
 public class DaoManager {
 

@@ -5,9 +5,9 @@ import java.util.TreeSet;
 
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.data.entity.SyllabusSetting;
-import cn.ifafu.ifafu.mvp.base.i.IModel;
-import cn.ifafu.ifafu.mvp.base.i.IPresenter;
-import cn.ifafu.ifafu.mvp.base.i.IView;
+import cn.ifafu.ifafu.base.i.IModel;
+import cn.ifafu.ifafu.base.i.IPresenter;
+import cn.ifafu.ifafu.base.i.IView;
 
 class SyllabusItemContract {
 

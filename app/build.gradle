@@ -76,7 +76,7 @@ android {
 
     greendao {
         //版本号，升级时可配置
-        schemaVersion 29
+        schemaVersion 30
         daoPackage 'cn.ifafu.ifafu.dao'
     }
 
@@ -149,8 +149,11 @@ dependencies {
     // CircleImageView: https://github.com/hdodenhof/CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.0.1'
     //U-App移动统计: https://developer.umeng.com/docs/119267/detail/118584
-    implementation  'com.umeng.umsdk:analytics:8.0.0'
-    implementation  'com.umeng.umsdk:common:2.0.0'
+    implementation 'com.umeng.umsdk:analytics:8.0.0'
+    implementation 'com.umeng.umsdk:common:2.0.0'
+//    //U-Push推送: https://developer.umeng.com/docs/66632/detail/98581
+//    implementation 'com.umeng.umsdk:utdid:1.1.5.3'
+//    implementation 'com.umeng.umsdk:push:6.0.1'
 
 //    debugImplementation 'com.didichuxing.doraemonkit:doraemonkit-weex:1.0.1'
 //    releaseImplementation 'com.didichuxing.doraemonkit:doraemonkit-weex-no-op:1.0.1'

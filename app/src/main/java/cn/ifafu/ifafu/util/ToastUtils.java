@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.util;
 import android.content.Context;
 import android.widget.Toast;
 
-import cn.ifafu.ifafu.mvp.base.BaseApplication;
+import cn.ifafu.ifafu.base.BaseApplication;
 
 /**
  * create by woolsen on 19/7/12

@@ -5,8 +5,8 @@ import android.content.Intent
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.School
+import cn.ifafu.ifafu.base.ifafu.BaseZFPresenter
 import cn.ifafu.ifafu.data.entity.User
-import cn.ifafu.ifafu.mvp.base.BaseZFPresenter
 import cn.ifafu.ifafu.mvp.main.MainActivity
 import cn.ifafu.ifafu.util.RxUtils
 

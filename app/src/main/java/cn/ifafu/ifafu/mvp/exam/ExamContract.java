@@ -5,9 +5,9 @@ import java.util.Map;
 
 import cn.ifafu.ifafu.data.entity.Exam;
 import cn.ifafu.ifafu.data.entity.YearTerm;
-import cn.ifafu.ifafu.mvp.base.i.IPresenter;
-import cn.ifafu.ifafu.mvp.base.i.IView;
-import cn.ifafu.ifafu.mvp.base.i.IZFModel;
+import cn.ifafu.ifafu.base.i.IPresenter;
+import cn.ifafu.ifafu.base.i.IView;
+import cn.ifafu.ifafu.base.ifafu.IZFModel;
 import io.reactivex.Observable;
 
 class ExamContract {

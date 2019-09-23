@@ -85,8 +85,8 @@
     native <methods>;
 }
 
-# 这个主要是在layout 中写的onclick方法android:onclick="onClick"，不进行混淆
-# 表示不混淆Activity中参数是View的方法，因为有这样一种用法，在XML中配置android:onClick=”buttonClick”属性，
+# 这个主要是在layout 中写的onclick方法android:onclick="onTabClick"，不进行混淆
+# 表示不混淆Activity中参数是View的方法，因为有这样一种用法，在XML中配置android:onTabClick=”buttonClick”属性，
 # 当用户点击该按钮时就会调用Activity中的buttonClick(View view)方法，如果这个方法被混淆的话就找不到了
 -keepclassmembers class * extends android.app.Activity{
     public void *(android.view.View);
@@ -286,4 +286,10 @@
 -keepclassmembers enum * {
     public static **[] values();
     public static ** valueOf(java.lang.String);
+}
+-keep public class cn.ifafu.ifafu.R$*{
+    public static final int *;
+}
+-keep public class cn.ifafu.ifafu.debug.R$*{
+    public static final int *;
 }

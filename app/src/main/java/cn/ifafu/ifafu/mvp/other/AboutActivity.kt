@@ -9,8 +9,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.mvp.base.BaseActivity
-import cn.ifafu.ifafu.mvp.base.i.IPresenter
+import cn.ifafu.ifafu.base.BaseActivity
+import cn.ifafu.ifafu.base.i.IPresenter
 import cn.ifafu.ifafu.util.AppUtils
 import cn.ifafu.ifafu.util.GlobalLib
 import com.afollestad.materialdialogs.MaterialDialog
@@ -20,7 +20,7 @@ import java.util.*
 
 class AboutActivity : BaseActivity<IPresenter>(), View.OnClickListener {
 
-    override fun initLayout(savedInstanceState: Bundle?): Int {
+    override fun getLayoutId(savedInstanceState: Bundle?): Int {
         return R.layout.activity_about
     }
 
