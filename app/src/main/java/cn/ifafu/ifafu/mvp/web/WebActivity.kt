@@ -10,9 +10,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
-import android.view.ViewGroup
 import android.webkit.*
-import android.widget.LinearLayout
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.util.DensityUtils
@@ -52,11 +50,7 @@ class WebActivity : BaseActivity<WebContract.Presenter>(), WebContract.View {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun initWebView() {
-        webView = WebView(applicationContext)
-        val rootLayout = (findViewById<ViewGroup>(android.R.id.content).getChildAt(0) as ViewGroup)
-        rootLayout.addView(webView, LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT))
+        webView = view_web
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
@@ -82,7 +76,7 @@ class WebActivity : BaseActivity<WebContract.Presenter>(), WebContract.View {
                         .choose(MimeType.ofImage())
                         .countable(true)
                         .maxSelectable(3)
-                        .gridExpectedSize(DensityUtils.dp2px(context, 120F).toInt())
+                        .gridExpectedSize(DensityUtils.dp2px(context, 120F))
                         .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
                         .thumbnailScale(0.85f)
                         .imageEngine(Glide4Engine())
@@ -91,8 +85,8 @@ class WebActivity : BaseActivity<WebContract.Presenter>(), WebContract.View {
             }
         }
         val webSettings = webView.settings
-        webSettings.useWideViewPort = true
         webSettings.javaScriptEnabled = true
+        webSettings.useWideViewPort = true
         webSettings.loadWithOverviewMode = true
         webSettings.setSupportZoom(true)
         webSettings.builtInZoomControls = true
