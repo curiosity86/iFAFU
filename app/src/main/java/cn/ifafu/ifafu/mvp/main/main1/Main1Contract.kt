@@ -41,6 +41,7 @@ class Main1Contract {
     }
 
     interface Model : BaseMainContract.Model {
+
         fun getThisTermExams(): List<Exam>
 
         /**

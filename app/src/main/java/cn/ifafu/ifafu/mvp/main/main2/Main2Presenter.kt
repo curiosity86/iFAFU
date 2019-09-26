@@ -3,17 +3,15 @@ package cn.ifafu.ifafu.mvp.main.main2
 import android.content.Intent
 import cn.ifafu.ifafu.mvp.login.LoginActivity
 import cn.ifafu.ifafu.mvp.main.BaseMainPresenter
-import cn.ifafu.ifafu.util.DateUtils
 import cn.ifafu.ifafu.util.RxUtils
 import io.reactivex.Observable
-import java.text.SimpleDateFormat
-import java.util.*
 
 class Main2Presenter(view: Main2Contract.View)
     : BaseMainPresenter<Main2Contract.View, Main2Contract.Model>(view, Main2Model(view.context)),
         Main2Contract.Presenter {
 
     override fun onCreate() {
+        super.onCreate()
         addDisposable {
             Observable
                     .fromCallable {
@@ -39,22 +37,6 @@ class Main2Presenter(view: Main2Contract.View)
                         mView.makeLeftMenu(it)
                     }, this::onError)
         }
-        addDisposable {
-            Observable
-                    .fromCallable {
-                        val setting = mModel.getSyllabusSetting()
-                        val week = DateUtils.getCurrentWeek(
-                                SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).parse(setting.openingDay),
-                                setting.firstDayOfWeek)
-                        val date = SimpleDateFormat("MM月dd日", Locale.CHINA).format(Date())
-                        val weekday = DateUtils.getWeekdayCN(DateUtils.getCurrentWeekday())
-                        "第${week}周 $date $weekday"
-                    }
-                    .compose(RxUtils.computationToMain())
-                    .subscribe({
-                        mView.setSyllabusTime(it)
-                    }, this::onError)
-        }
         updateWeather()
         mModel.getYearTerm().run {
             mView.setYearTermTitle("${first}学年第${second}学期")
@@ -72,7 +54,7 @@ class Main2Presenter(view: Main2Contract.View)
 
     override fun updateNextCourse() {
         addDisposable {
-            mModel.getNextCourse2()
+            mModel.getNextCourse()
                     .compose(RxUtils.ioToMain())
                     .subscribe({
                         mView.setNextCourse(it)

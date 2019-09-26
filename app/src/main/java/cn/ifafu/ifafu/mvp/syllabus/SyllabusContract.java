@@ -39,8 +39,6 @@ public class SyllabusContract {
 
     public interface Model extends IZFModel {
 
-        NextCourse getNextCourse();
-
         SyllabusSetting getSyllabusSetting();
 
         int getCurrentWeek() throws ParseException;

@@ -27,7 +27,8 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="ExportedService,GoogleAppIndexingWarning,UnusedAttribute">
+        tools:ignore="ExportedService,GoogleAppIndexingWarning,UnusedAttribute"
+        >
 
         <activity android:name=".mvp.other.SplashActivity">
             <intent-filter>
@@ -36,8 +37,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".mvp.main.MainActivity" />
-        <activity android:name=".mvp.login.LoginActivity" />
+        <activity android:name=".mvp.main.MainActivity"/>
+        <activity android:name=".mvp.login.LoginActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".mvp.syllabus.SyllabusActivity" />
         <activity android:name=".mvp.syllabus_item.SyllabusItemActivity"/>
         <activity android:name=".mvp.syllabus_setting.SyllabusSettingActivity" />

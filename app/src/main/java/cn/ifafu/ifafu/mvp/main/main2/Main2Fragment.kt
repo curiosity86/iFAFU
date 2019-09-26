@@ -1,5 +1,6 @@
 package cn.ifafu.ifafu.mvp.main.main2
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -10,7 +11,6 @@ import androidx.core.view.GravityCompat
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.data.entity.NextCourse
-import cn.ifafu.ifafu.data.entity.NextCourse2
 import cn.ifafu.ifafu.data.entity.NextExam
 import cn.ifafu.ifafu.mvp.elec_splash.ElecSplashActivity
 import cn.ifafu.ifafu.mvp.exam.ExamActivity
@@ -118,10 +118,6 @@ class Main2Fragment : BaseMainFragment<Main2Contract.Presenter>(),
         layout_syllabus.findViewById<TextView>(R.id.tv_weather).text = text
     }
 
-    override fun setSyllabusTime(text: String) {
-        layout_syllabus.findViewById<TextView>(R.id.tv_week_time).text = text
-    }
-
     override fun onStart() {
         super.onStart()
         mPresenter.updateNextCourse()
@@ -129,12 +125,14 @@ class Main2Fragment : BaseMainFragment<Main2Contract.Presenter>(),
         mPresenter.updateScoreInfo()
     }
 
-    override fun setNextCourse(nextCourse: NextCourse2) {
+    @SuppressLint("SetTextI18n")
+    override fun setNextCourse(nextCourse: NextCourse) {
+        layout_syllabus.findViewById<TextView>(R.id.tv_week_time).text = nextCourse.dateText
         when (nextCourse.result) {
-            NextCourse.HAS_NEXT_COURSE, NextCourse2.IN_COURSE -> {
+            NextCourse.HAS_NEXT_COURSE, NextCourse.IN_COURSE -> {
                 layout_syllabus.findViewById<TextView>(R.id.tv_null).visibility = View.GONE
-                layout_syllabus.findViewById<TextView>(R.id.tv_next).text = nextCourse.title
                 layout_syllabus.findViewById<LinearLayout>(R.id.layout_info).visibility = View.VISIBLE
+                layout_syllabus.findViewById<TextView>(R.id.tv_next).text = nextCourse.title + nextCourse.name
                 layout_syllabus.findViewById<TextView>(R.id.tv_location).text = nextCourse.address
                 layout_syllabus.findViewById<TextView>(R.id.tv_time).text =
                         "第${nextCourse.node}节 ${nextCourse.timeText}"
@@ -142,7 +140,7 @@ class Main2Fragment : BaseMainFragment<Main2Contract.Presenter>(),
                 layout_syllabus.findViewById<TextView>(R.id.tv_total).text =
                         "今日:第${nextCourse.node}/${nextCourse.totalNode}节"
                 layout_syllabus.findViewById<TextView>(R.id.tv_status).run {
-                    if (nextCourse.result == NextCourse2.IN_COURSE) {
+                    if (nextCourse.result == NextCourse.IN_COURSE) {
                         text = "上课中"
                         setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_point_blue, 0, 0, 0)
                     } else {
@@ -152,9 +150,9 @@ class Main2Fragment : BaseMainFragment<Main2Contract.Presenter>(),
                 }
             }
             else -> {
-                layout_syllabus.findViewById<TextView>(R.id.tv_null).text = nextCourse.title
                 layout_syllabus.findViewById<TextView>(R.id.tv_null).visibility = View.VISIBLE
                 layout_syllabus.findViewById<LinearLayout>(R.id.layout_info).visibility = View.GONE
+                layout_syllabus.findViewById<TextView>(R.id.tv_null).text = nextCourse.title
             }
         }
     }

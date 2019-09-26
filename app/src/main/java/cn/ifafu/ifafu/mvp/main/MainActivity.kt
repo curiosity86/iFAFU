@@ -39,8 +39,7 @@ class MainActivity : BaseActivity<IPresenter>() {
                     } else {
                         replace(R.id.view_content, Main2Fragment())
                     }
-                    commit()
-                }
+                }.commit()
             }
         }
     }

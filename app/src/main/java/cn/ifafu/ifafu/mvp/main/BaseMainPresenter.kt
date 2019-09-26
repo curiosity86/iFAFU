@@ -15,6 +15,15 @@ import io.reactivex.disposables.Disposable
 abstract class BaseMainPresenter<V : BaseMainContract.View, M : BaseMainContract.Model>(view: V, model: M)
     : BasePresenter<V, M>(view, model), BaseMainContract.Presenter {
 
+    private var theme: Int = mModel.getSetting().theme
+
+    override fun onCreate() {
+        if (theme != mModel.getSetting().theme) {
+            mView.openActivity(Intent(mView.context, MainActivity::class.java))
+            mView.killSelf()
+        }
+    }
+
     final override fun updateApp() {
         mCompDisposable.add(Observable
                 .fromCallable {

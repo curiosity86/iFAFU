@@ -22,7 +22,6 @@ public abstract class BasePresenter<V extends IView, M extends IModel> implement
 
     protected final String TAG = this.getClass().getSimpleName();
 
-
     public BasePresenter(V view) {
         mView = view;
     }
@@ -30,6 +29,10 @@ public abstract class BasePresenter<V extends IView, M extends IModel> implement
     public BasePresenter(V view, M model) {
         mView = view;
         mModel = model;
+    }
+
+    @Override
+    public void onCreate() {
     }
 
     @Override

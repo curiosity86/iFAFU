@@ -15,6 +15,7 @@ import cn.ifafu.ifafu.data.http.parser.LoginParser
 import cn.ifafu.ifafu.data.http.parser.ParamsParser
 import cn.ifafu.ifafu.data.http.parser.VerifyParser
 import io.reactivex.Observable
+import java.net.URLEncoder
 import javax.security.auth.login.LoginException
 
 abstract class BaseZFModel(context: Context) : BaseModel(context), IZFModel {
@@ -115,7 +116,7 @@ abstract class BaseZFModel(context: Context) : BaseModel(context), IZFModel {
                 .map { params ->
                     params["txtUserName"] = account
                     params["Textbox1"] = ""
-                    params["TextBox2"] = password
+                    params["TextBox2"] = URLEncoder.encode(password, "GBK")
                     params["RadioButtonList1"] = "ѧ��"
                     params["Button1"] = ""
                     params["lbLanguage"] = ""

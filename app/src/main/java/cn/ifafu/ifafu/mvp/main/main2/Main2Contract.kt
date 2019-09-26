@@ -19,9 +19,7 @@ class Main2Contract {
 
         fun setWeatherText(text: String)
 
-        fun setSyllabusTime(text: String)
-
-        fun setNextCourse(nextCourse: NextCourse2)
+        fun setNextCourse(nextCourse: NextCourse)
 
         fun setScoreText(text: String?)
 
@@ -47,8 +45,6 @@ class Main2Contract {
         fun getYearTermList(): Observable<YearTerm>
 
         fun getYearTerm(): Pair<String, String>
-
-        fun getNextCourse2(): Observable<NextCourse2>
 
         fun getNextExams(): Observable<List<NextExam>>
 

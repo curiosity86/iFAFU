@@ -5,8 +5,6 @@ import android.content.Intent
 import cn.ifafu.ifafu.app.IFAFU
 import cn.ifafu.ifafu.data.entity.NextCourse
 import cn.ifafu.ifafu.mvp.main.BaseMainPresenter
-import cn.ifafu.ifafu.mvp.main.MainActivity
-import cn.ifafu.ifafu.mvp.syllabus.SyllabusModel
 import cn.ifafu.ifafu.util.DateUtils
 import cn.ifafu.ifafu.util.RxUtils
 import cn.ifafu.ifafu.view.timeline.TimeAxis
@@ -19,6 +17,7 @@ class Main1Presenter(view: Main1Contract.View)
     : BaseMainPresenter<Main1Contract.View, Main1Contract.Model>(view, Main1Model(view.context)), Main1Contract.Presenter {
 
     override fun onCreate() {
+        super.onCreate()
         val user = mModel.getLoginUser()
         mView.setLeftMenuHeadName(user?.name ?: "Null")
         mView.setLeftMenuHeadIcon(mModel.getSchoolIcon())
@@ -52,71 +51,74 @@ class Main1Presenter(view: Main1Contract.View)
 
     override fun updateWeather() {
         // 获取天气
-        mCompDisposable.add(mModel.getWeather("101230101")
-                .map { Pair("${it.nowTemp}℃" + "", "${it.cityName} | ${it.weather}") }
-                .compose(RxUtils.ioToMain())
-                .subscribe({ mView.setWeatherText(it) }, this::onError)
-        )
+        addDisposable {
+            mModel.getWeather("101230101")
+                    .map { Pair("${it.nowTemp}℃" + "", "${it.cityName} | ${it.weather}") }
+                    .compose(RxUtils.ioToMain())
+                    .subscribe({ mView.setWeatherText(it) }, this::onError)
+        }
     }
 
     @SuppressLint("DefaultLocale")
     override fun updateNextCourseView() {
-        mCompDisposable.add(Observable
-                .fromCallable { SyllabusModel(mView.context).nextCourse }
-                .compose(RxUtils.computationToMain())
-                .subscribe({ next ->
-                    when (next.result) {
-                        NextCourse.IN_HOLIDAY,
-                        NextCourse.EMPTY_DATA,
-                        NextCourse.NO_TODAY_COURSE,
-                        NextCourse.NO_NEXT_COURSE -> {
-                            mView.setCourseText(next.title, "", "", "")
+        addDisposable {
+            mModel.getNextCourse()
+                    .compose(RxUtils.computationToMain())
+                    .subscribe({ next ->
+                        when (next.result) {
+                            NextCourse.IN_HOLIDAY,
+                            NextCourse.EMPTY_DATA,
+                            NextCourse.NO_TODAY_COURSE,
+                            NextCourse.NO_NEXT_COURSE -> {
+                                mView.setCourseText(next.title, "", "", "")
+                            }
+                            NextCourse.HAS_NEXT_COURSE,
+                            NextCourse.IN_COURSE -> {
+                                mView.setCourseText(next.title, next.name, next.address + "   " + next.timeText, next.lastText)
+                            }
                         }
-                        NextCourse.HAS_NEXT_COURSE -> {
-                            mView.setCourseText(next.title, next.name, next.address, next.timeText)
-                        }
-                    }
-                }, { throwable ->
-                    onError(throwable)
-                    mView.setCourseText("获取课程信息失败", "", "", "")
-                })
-        )
+                    }, { throwable ->
+                        onError(throwable)
+                        mView.setCourseText("获取课程信息失败", "", "", "")
+                    })
+        }
     }
 
     override fun updateTimeLine() {
-        mCompDisposable.add(Observable
-                .fromCallable<List<TimeAxis>> {
-                    val list = ArrayList<TimeAxis>()
-                    val now = Date()
+        addDisposable {
+            Observable
+                    .fromCallable<List<TimeAxis>> {
+                        val list = ArrayList<TimeAxis>()
+                        val now = Date()
 
-                    val holidays = mModel.getHoliday()
-                    val format = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
-                    for (holiday in holidays) {
-                        val date = format.parse(holiday.date)
-                        val day = DateUtils.calcLastDays(now, date)
-                        if (day >= 0) {
-                            val axis = TimeAxis(
-                                    holiday.name, holiday.date, day)
-                            list.add(axis)
+                        val holidays = mModel.getHoliday()
+                        val format = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
+                        for (holiday in holidays) {
+                            val date = format.parse(holiday.date)
+                            val day = DateUtils.calcLastDays(now, date)
+                            if (day >= 0) {
+                                val axis = TimeAxis(
+                                        holiday.name, holiday.date, day)
+                                list.add(axis)
+                            }
                         }
-                    }
 
-                    val exams = mModel.getThisTermExams()
-                    for (exam in exams) {
-                        val date = Date(exam.startTime)
-                        val day = DateUtils.calcLastDays(now, date)
-                        if (day >= 0) {
-                            val axis = TimeAxis(
-                                    exam.name, format.format(Date(exam.startTime)), day)
-                            list.add(axis)
+                        val exams = mModel.getThisTermExams()
+                        for (exam in exams) {
+                            val date = Date(exam.startTime)
+                            val day = DateUtils.calcLastDays(now, date)
+                            if (day >= 0) {
+                                val axis = TimeAxis(
+                                        exam.name, format.format(Date(exam.startTime)), day)
+                                list.add(axis)
+                            }
                         }
+                        list.sortWith(Comparator { o1, o2 -> o1.day.compareTo(o2.day) })
+                        list
                     }
-                    list.sortWith(Comparator { o1, o2 -> o1.day.compareTo(o2.day) })
-                    list
-                }
-                .compose(RxUtils.ioToMain())
-                .subscribe({ list -> mView.setTimeLineData(list) }, this::onError)
-        )
+                    .compose(RxUtils.ioToMain())
+                    .subscribe({ list -> mView.setTimeLineData(list) }, this::onError)
+        }
     }
 
 }

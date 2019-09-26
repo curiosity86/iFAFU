@@ -13,10 +13,9 @@ import io.reactivex.Observable
 
 class ExamModel(context: Context) : BaseZFModel(context), ExamContract.Model {
 
-    private lateinit var yearTerm: Pair<String, String>
+    private var yearTerm: Pair<String, String> = getYearTerm()
 
     fun getThisTermExams(): List<Exam> {
-        this.yearTerm = getYearTerm()
         return repository.getExams(yearTerm.first, yearTerm.second)
     }
 

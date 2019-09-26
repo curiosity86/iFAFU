@@ -15,8 +15,8 @@ import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.data.local.RepositoryImpl
 import cn.ifafu.ifafu.mvp.exam.ExamActivity
 import cn.ifafu.ifafu.mvp.login.LoginActivity
-import cn.ifafu.ifafu.mvp.syllabus.SyllabusActivity
 import cn.ifafu.ifafu.mvp.main.MainActivity
+import cn.ifafu.ifafu.mvp.syllabus.SyllabusActivity
 import cn.ifafu.ifafu.util.AppUtils
 import cn.ifafu.ifafu.util.RxUtils
 import com.tencent.bugly.crashreport.CrashReport.CrashHandleCallback
@@ -68,7 +68,7 @@ class SplashActivity : BaseActivity<IPresenter>() {
                 }
                 .subscribe({ clazz ->
                     val intent = Intent(this, clazz)
-                    intent.putExtra("from", Constant.ACTIVITY_SCORE)
+                    intent.putExtra("from", Constant.ACTIVITY_SPLASH)
                     startActivity(intent)
                 }, { throwable: Throwable ->
                     throwable.printStackTrace()

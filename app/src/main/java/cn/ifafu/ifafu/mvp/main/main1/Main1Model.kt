@@ -41,7 +41,6 @@ class Main1Model(context: Context) : BaseMainModel(context), Main1Contract.Model
 
     private fun intent(cls: Class<*>): Intent = Intent(mContext, cls)
 
-
     override fun getThisTermExams(): List<Exam> {
         return ExamModel(mContext).getThisTermExams()
     }

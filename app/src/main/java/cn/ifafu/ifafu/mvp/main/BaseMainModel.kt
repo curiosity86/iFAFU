@@ -1,13 +1,16 @@
 package cn.ifafu.ifafu.mvp.main
 
+import android.annotation.SuppressLint
 import android.content.Context
 import cn.ifafu.ifafu.base.ifafu.BaseZFModel
-import cn.ifafu.ifafu.data.entity.User
-import cn.ifafu.ifafu.data.entity.Weather
+import cn.ifafu.ifafu.data.entity.*
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.data.http.service.WeatherService
+import cn.ifafu.ifafu.mvp.syllabus.SyllabusModel
+import cn.ifafu.ifafu.util.DateUtils
 import com.alibaba.fastjson.JSONObject
 import io.reactivex.Observable
+import java.text.SimpleDateFormat
 import java.util.*
 
 abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainContract.Model {
@@ -16,8 +19,133 @@ abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainC
         return repository.allUser
     }
 
+    override fun getCourses(): Observable<List<Course>> {
+        val syllabusModel = SyllabusModel(mContext)
+        return Observable
+                .fromCallable { syllabusModel.allCoursesFromDB }
+                .flatMap { o: List<Course> ->
+                    if (o.isEmpty()) {
+                        syllabusModel.coursesFromNet
+                    } else {
+                        Observable.just(o)
+                    }
+                }
+    }
+
+    override fun getSetting(): Setting {
+        return repository.setting
+    }
+
     override fun saveLoginUser(user: User) {
         repository.saveLoginUser(user)
+    }
+
+    override fun getNextCourse(): Observable<NextCourse> {
+        val syllabusModel = SyllabusModel(mContext)
+        return getCourses()
+                .map { courses ->
+                    val result = NextCourse()
+                    val setting = syllabusModel.syllabusSetting
+                    var currentWeek = syllabusModel.currentWeek
+                    var currentWeekday: Int = DateUtils.getCurrentWeekday()
+
+                    val date = SimpleDateFormat("MM月dd日", Locale.CHINA).format(Date())
+
+                    if (currentWeek <= 0 || currentWeek > setting.weekCnt) {
+                        result.title = "放假了呀！！"
+                        result.result = NextCourse.IN_HOLIDAY
+                        result.dateText = "放假中 $date ${DateUtils.getWeekdayCN(currentWeekday)}"
+                        return@map result
+                    } else {
+                        result.dateText = "第${currentWeek}周 $date ${DateUtils.getWeekdayCN(currentWeekday)}"
+                    }
+
+                    if (courses.isEmpty()) {
+                        result.title = "暂无课程信息"
+                        result.result = NextCourse.EMPTY_DATA
+                        return@map result
+                    }
+
+                    //计算节假日
+                    syllabusModel.holidayFromToMap[currentWeek]?.run {
+                        this[currentWeekday]?.run {
+                            currentWeek = this.first
+                            currentWeekday = this.second
+                        }
+                    }
+                    //获取当天课程
+                    val todayCourses: MutableList<Course> = ArrayList()
+                    for (course in courses) {
+                        if (course.weekSet.contains(currentWeek) && course.weekday == currentWeekday) {
+                            todayCourses.add(course)
+                        }
+                    }
+                    todayCourses.sortWith(Comparator { o1, o2 -> o1.beginNode.compareTo(o2.beginNode) })
+                    if (todayCourses.isEmpty()) {
+                        result.title = "今天没课哦~"
+                        result.result = NextCourse.NO_TODAY_COURSE
+                        return@map result
+                    }
+
+                    //计算下一节是第几节课
+                    val intTime: List<Int> = setting.beginTime
+                    //将课程按节数排列
+                    @SuppressLint("UseSparseArrays")
+                    val courseMap: MutableMap<Int, Course> = HashMap()
+                    for (course in todayCourses) {
+                        for (i in course.beginNode..course.endNode) {
+                            courseMap[i] = course
+                        }
+                    }
+                    result.totalNode = courseMap.size
+
+                    val c: Calendar = Calendar.getInstance()
+                    val now = c.get(Calendar.HOUR_OF_DAY) * 100 + c.get(Calendar.MINUTE)
+                    var node = 0
+                    for ((i, course) in courseMap) {
+                        node++
+                        val intStartTime = intTime[i]
+                        val intEndTime = if (intStartTime % 100 + setting.nodeLength >= 60) {
+                            intStartTime + 100 - intStartTime % 100 + (intStartTime % 100 + setting.nodeLength % 100) % 60
+                        } else {
+                            intStartTime + setting.nodeLength
+                        }
+                        if (now < intEndTime) {
+                            result.result = NextCourse.HAS_NEXT_COURSE
+                            result.address = course.address
+                            result.node = node
+                            result.timeText = String.format(Locale.CHINA, "%d:%02d-%d:%02d",
+                                    intStartTime / 100, intStartTime % 100, intEndTime / 100, intEndTime % 100)
+                            if (now >= intStartTime) {
+                                //上课中
+                                result.title = "正在上："
+                                result.name = course.name
+                                result.result = NextCourse.IN_COURSE
+                                result.lastText = calcNextCourseIntervalTime(now, intEndTime) + "后下课"
+                                break
+                            } else {
+                                //即将上课
+                                result.title = "下一节课："
+                                result.name = course.name
+                                result.result = NextCourse.HAS_NEXT_COURSE
+                                result.lastText = calcNextCourseIntervalTime(now, intStartTime) + "后上课"
+                                break
+                            }
+                        }
+                    }
+                    if (result.title.isEmpty()) {
+                        result.title = "今天${result.totalNode}节课都上完了"
+                        result.result = NextCourse.NO_NEXT_COURSE
+                    }
+                    return@map result
+                }
+    }
+
+
+    private fun calcNextCourseIntervalTime(start: Int, end: Int): String {
+        val last = (end / 100 - start / 100) * 60 + (end % 100 - start % 100)
+        return (if (last >= 60) "${last / 60}小时" else "") +
+                (if (last % 60 != 0) "${last % 60}分钟" else "")
     }
 
     override fun getLoginUser(): User? {
