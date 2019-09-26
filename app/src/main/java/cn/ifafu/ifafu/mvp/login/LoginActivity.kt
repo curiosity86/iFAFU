@@ -2,10 +2,10 @@ package cn.ifafu.ifafu.mvp.login
 
 import android.os.Build
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.View
 import androidx.annotation.DrawableRes
+import androidx.core.widget.addTextChangedListener
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.view.dialog.ProgressDialog
@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : BaseActivity<LoginContract.Presenter>(), LoginContract.View, View.OnClickListener {
 
-    private var progressDialog: ProgressDialog? = null
+    private val progressDialog: ProgressDialog by lazy { ProgressDialog(this) }
 
     override fun getLayoutId(savedInstanceState: Bundle?): Int {
         return R.layout.activity_login
@@ -32,24 +32,20 @@ class LoginActivity : BaseActivity<LoginContract.Presenter>(), LoginContract.Vie
         }
 
         btn_close.setOnClickListener(this)
-        et_account.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                mPresenter.checkAccount(s.toString())
-            }
-
-            override fun afterTextChanged(s: Editable) {
-
-            }
-        })
         btn_login.setOnClickListener(this)
+        et_account.addTextChangedListener(
+                onTextChanged = { s, _, _, _ ->
+                    mPresenter.checkAccount(s.toString())
+                }
+        )
+        et_password.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == KeyEvent.ACTION_DOWN) {
+                mPresenter.onLogin()
+            }
+            true
+        }
 
-        progressDialog = ProgressDialog(this)
-        progressDialog!!.setText(R.string.logging_in)
-
+        progressDialog.setText(R.string.logging_in)
     }
 
     override fun onClick(v: View) {
@@ -60,11 +56,11 @@ class LoginActivity : BaseActivity<LoginContract.Presenter>(), LoginContract.Vie
     }
 
     override fun showLoading() {
-        progressDialog!!.show()
+        progressDialog.show()
     }
 
     override fun hideLoading() {
-        progressDialog!!.cancel()
+        progressDialog.cancel()
     }
 
     override fun getAccountText(): String {

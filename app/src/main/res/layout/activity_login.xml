@@ -89,7 +89,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="@string/password"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:imeActionLabel="@string/login"
+                android:imeOptions="actionDone"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
