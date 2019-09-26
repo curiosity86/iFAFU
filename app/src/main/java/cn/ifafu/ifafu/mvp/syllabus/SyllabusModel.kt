@@ -19,26 +19,8 @@ class SyllabusModel(context: Context) : BaseZFModel(context), Model {
 
     private val user: User? = repository.loginUser
 
-    private val beginTimes = arrayOf(
-            intArrayOf(0, 800, 850, 955, 1045, 1135, 1400, 1450, 1550, 1640, 1825, 1915, 2005),
-            intArrayOf(0, 830, 920, 1025, 1115, 1205, 1400, 1450, 1545, 1635, 1825, 1915, 2005)
-    )
-
     override fun getSyllabusSetting(): SyllabusSetting {
-        var setting: SyllabusSetting? = repository.syllabusSetting
-        if (setting == null) {
-            setting = SyllabusSetting(repository.loginUser.account)
-            repository.saveSyllabusSetting(setting)
-        }
-        var qs = false
-        for (course in repository.allCourses) {
-            if (course.address?.contains("旗教") == true) {
-                qs = true
-                break
-            }
-        }
-        setting.beginTime = if (qs) beginTimes[1] else beginTimes[0]
-        return setting
+        return repository.syllabusSetting
     }
     override fun getCurrentWeek(): Int {
         return try {
@@ -147,6 +129,16 @@ class SyllabusModel(context: Context) : BaseZFModel(context), Model {
                             repository.deleteAllOnlineCourse()
                             repository.saveCourse(courses)
                         }
+                        val setting = repository.syllabusSetting
+                        var qs = false
+                        for (course in repository.allCourses) {
+                            if (course.address?.contains("旗教") == true) {
+                                qs = true
+                                break
+                            }
+                        }
+                        setting.beginTime = (if (qs) SyllabusSetting.intBeginTime[1] else SyllabusSetting.intBeginTime[0]).toList()
+                        repository.saveSyllabusSetting(setting)
                     }
         }
     }
@@ -204,7 +196,7 @@ class SyllabusModel(context: Context) : BaseZFModel(context), Model {
         }
 
         //计算下一节是第几节课
-        val intTime: IntArray = setting.beginTime
+        val intTime = setting.beginTime
         val c: Calendar = Calendar.getInstance()
         val now = c.get(Calendar.HOUR_OF_DAY) * 100 + c.get(Calendar.MINUTE)
         var nextNode = 9999
@@ -239,8 +231,8 @@ class SyllabusModel(context: Context) : BaseZFModel(context), Model {
             result.name = nextCourse.name
             result.address = nextCourse.address
             val length = setting.nodeLength
-            val intStartTime = intTime[courseNode - 1]
-            var intEndTime = intTime[courseNode - 1]
+            val intStartTime = intTime[courseNode]
+            var intEndTime = intTime[courseNode]
             if (intEndTime % 100 + length >= 60) {
                 intEndTime = intEndTime + 100 - intEndTime % 100 + (intEndTime % 100 + length) % 60
             } else {

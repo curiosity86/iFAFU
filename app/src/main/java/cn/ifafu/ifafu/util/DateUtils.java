@@ -1,7 +1,6 @@
 package cn.ifafu.ifafu.util;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -215,7 +214,6 @@ public class DateUtils {
         if (currentYearWeek < firstYearWeek) {
             firstYearWeek -= 52;
         }
-        Log.d("IFAFU", "Current Week : " + (currentYearWeek - firstYearWeek + 1));
         return currentYearWeek - firstYearWeek + 1;
     }
 

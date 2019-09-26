@@ -23,6 +23,10 @@ public class Setting {
         this.theme = theme;
     }
 
+    public Setting(String account) {
+        this.account = account;
+    }
+
     @Generated(hash = 909716735)
     public Setting() {
     }

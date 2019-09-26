@@ -1,8 +1,8 @@
 package cn.ifafu.ifafu.mvp.syllabus_setting
 
 import android.app.Activity
-import cn.ifafu.ifafu.data.entity.SyllabusSetting
 import cn.ifafu.ifafu.base.BasePresenter
+import cn.ifafu.ifafu.data.entity.SyllabusSetting
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.CheckBoxItem
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.ColorItem
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.SeekBarItem
@@ -16,8 +16,6 @@ class SyllabusSettingPresenter(view: SyllabusSettingContract.View)
     private val settingHash = setting.hashCode()
 
     override fun onCreate() {
-        super.onCreate()
-
         println(JSONObject.toJSONString(setting))
         mView.initRecycleView(listOf(
                 SeekBarItem("一天课程的节数", setting.totalNode, "节", 8, 12) {
@@ -50,6 +48,7 @@ class SyllabusSettingPresenter(view: SyllabusSettingContract.View)
                 }
         ))
     }
+
     override fun onPictureSelect(uri: String) {
         setting.background = uri
     }

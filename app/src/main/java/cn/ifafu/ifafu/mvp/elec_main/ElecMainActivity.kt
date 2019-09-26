@@ -254,9 +254,9 @@ class ElecMainActivity : BaseActivity<ElecMainContract.Presenter>(), ElecMainCon
         }
     }
 
-    override fun setRoomText(text: String) {
-        lastRoomText = text
-        et_room.setText(text)
+    override fun setRoomText(room: String) {
+        lastRoomText = room
+        et_room.setText(room)
     }
 
     override fun getCheckedDKName(): String {

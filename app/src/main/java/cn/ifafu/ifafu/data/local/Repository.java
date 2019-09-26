@@ -13,6 +13,7 @@ import cn.ifafu.ifafu.data.entity.SyllabusSetting;
 import cn.ifafu.ifafu.data.entity.Token;
 import cn.ifafu.ifafu.data.entity.User;
 import cn.ifafu.ifafu.data.entity.YearTerm;
+import kotlin.Pair;
 
 public interface Repository {
 
@@ -76,7 +77,9 @@ public interface Repository {
 
     void clearAllData();
 
-    YearTerm getYearTerm();
+    YearTerm getYearTermList();
+
+    Pair<String, String> getYearTerm();
 
     //电费查询
     ElecQuery getElecQuery();

@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.data.local;
+package cn.ifafu.ifafu.data.local.converter;
 
 import com.alibaba.fastjson.JSONObject;
 

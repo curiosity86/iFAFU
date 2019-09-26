@@ -1,10 +1,8 @@
 package cn.ifafu.ifafu.mvp.main.main2
 
 import android.content.Intent
-import cn.ifafu.ifafu.data.entity.Course
 import cn.ifafu.ifafu.mvp.login.LoginActivity
 import cn.ifafu.ifafu.mvp.main.BaseMainPresenter
-import cn.ifafu.ifafu.mvp.syllabus.SyllabusModel
 import cn.ifafu.ifafu.util.DateUtils
 import cn.ifafu.ifafu.util.RxUtils
 import io.reactivex.Observable
@@ -73,23 +71,37 @@ class Main2Presenter(view: Main2Contract.View)
     }
 
     override fun updateNextCourse() {
-        val syllabusModel = SyllabusModel(mView.context)
-        addDisposable { Observable
-                .fromCallable { syllabusModel.allCoursesFromDB }
-                .flatMap { o: List<Course> ->
-                    if (o.isEmpty()) {
-                        syllabusModel.coursesFromNet
-                    } else {
-                        Observable.just(o)
-                    }
-                }
-                .map {
-                    mModel.getNextCourse2(it)
-                }
-                .compose(RxUtils.ioToMain())
-                .subscribe({
-                    mView.setNextCourse(it)
-                }, this::onError)
+        addDisposable {
+            mModel.getNextCourse2()
+                    .compose(RxUtils.ioToMain())
+                    .subscribe({
+                        mView.setNextCourse(it)
+                    }, this::onError)
         }
     }
+
+    override fun updateExamInfo() {
+        addDisposable {
+            mModel.getNextExams()
+                    .compose(RxUtils.ioToMain())
+                    .subscribe({
+                        mView.setExamData(it)
+                    }, this::onError)
+        }
+    }
+
+    override fun updateScoreInfo() {
+        addDisposable {
+            mModel.getScore()
+                    .compose(RxUtils.ioToMain())
+                    .subscribe({
+                        if (it.isEmpty()) {
+                            mView.setScoreText(null)
+                        } else {
+                            mView.setScoreText("已出${it.size}门成绩")
+                        }
+                    }, this::onError)
+        }
+    }
+
 }

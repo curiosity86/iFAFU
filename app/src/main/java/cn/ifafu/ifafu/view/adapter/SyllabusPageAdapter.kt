@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
 import cn.ifafu.ifafu.util.DateUtils
 import cn.ifafu.ifafu.view.syllabus.CourseBase
-import cn.ifafu.ifafu.view.syllabus.SyllabusView2
+import cn.ifafu.ifafu.view.syllabus.SyllabusView
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -30,7 +30,7 @@ class SyllabusPageAdapter(var setting: SyllabusSetting,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SyllabusViewHolder {
         val context = parent.context
-        val syllabus = SyllabusView2(context)
+        val syllabus = SyllabusView(context)
         syllabus.layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT)
@@ -53,7 +53,7 @@ class SyllabusPageAdapter(var setting: SyllabusSetting,
         holder.setCourseData(courses.getOrNull(position))
                 .setCornerText(dates[0].substring(if (dates[0][0] == '0') 1 else 0, 2) + "\n月")
 //                .setToday(if (position + 1 == mCurrentWeek) mCurrentWeekday else -1 )
-                .setBeginTimeTexts(setting.beginTimeText)
+                .setBeginTimeTexts(setting.beginTimeText.copyOfRange(1, setting.beginTimeText.size))
                 .setDateTexts(dates)
     }
 
@@ -61,9 +61,9 @@ class SyllabusPageAdapter(var setting: SyllabusSetting,
         return setting.weekCnt
     }
 
-    inner class SyllabusViewHolder(itemView: SyllabusView2) : RecyclerView.ViewHolder(itemView) {
+    inner class SyllabusViewHolder(itemView: SyllabusView) : RecyclerView.ViewHolder(itemView) {
 
-        private val syllabus: SyllabusView2 = itemView
+        private val syllabus: SyllabusView = itemView
 
         fun setCornerText(text: String): SyllabusViewHolder {
             syllabus.setCornerText(text)

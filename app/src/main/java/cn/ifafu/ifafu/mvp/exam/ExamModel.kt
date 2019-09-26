@@ -10,26 +10,24 @@ import cn.ifafu.ifafu.data.entity.ZhengFang
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.data.http.parser.ExamParser
 import io.reactivex.Observable
-import java.util.*
 
 class ExamModel(context: Context) : BaseZFModel(context), ExamContract.Model {
 
-    private lateinit var toYear: String
-    private lateinit var toTerm: String
+    private lateinit var yearTerm: Pair<String, String>
 
     fun getThisTermExams(): List<Exam> {
-        val map = yearTerm
-        return repository.getExams(map["xnd"], map["xqd"])
+        this.yearTerm = getYearTerm()
+        return repository.getExams(yearTerm.first, yearTerm.second)
     }
 
-    override fun getExamsFromNet(year: String, term: String): Observable<MutableList<Exam>> {
+    override fun getExamsFromNet(year: String, term: String): Observable<List<Exam>> {
         val user = repository.loginUser
         val examUrl = School.getUrl(ZhengFang.EXAM, user)
         val mainUrl = School.getUrl(ZhengFang.MAIN, user)
         return initParams(examUrl, mainUrl)
                 .flatMap { params ->
                     //考试查询特例，查询本学期考试只能通过GET
-                    val observable = if (year == toYear && term == toTerm) {
+                    val observable = if (year == yearTerm.first && term == yearTerm.second) {
                         APIManager.getZhengFangAPI()
                                 .initParams(examUrl, mainUrl)
                     } else {
@@ -38,8 +36,7 @@ class ExamModel(context: Context) : BaseZFModel(context), ExamContract.Model {
                         APIManager.getZhengFangAPI()
                                 .getInfo(examUrl, examUrl, params)
                     }
-                    observable.map { it.string() }
-                            .compose(ExamParser(user))
+                    observable.compose(ExamParser(user))
                             .map { it.body }
                             .doOnNext { save(it) }
                 }
@@ -51,20 +48,13 @@ class ExamModel(context: Context) : BaseZFModel(context), ExamContract.Model {
 
     @SuppressLint("DefaultLocale")
     override fun getYearTermList(): Observable<YearTerm>? {
-        return Observable.fromCallable { repository.yearTerm }
+        return Observable.fromCallable { repository.yearTermList }
     }
 
     @SuppressLint("DefaultLocale")
-    override fun getYearTerm(): Map<String, String> {
-        val c = Calendar.getInstance()
-        c.add(Calendar.MONTH, 6)
-        HashMap<String, String>()
-        toTerm = if (c.get(Calendar.MONTH) < 8) "1" else "2"
-        val year = c.get(Calendar.YEAR)
-        toYear = String.format("%d-%d", year - 1, year)
-        return mapOf("xnd" to toYear, "xqd" to toTerm)
+    override fun getYearTerm(): Pair<String, String> {
+        return repository.yearTerm
     }
-
 
     override fun save(list: List<Exam>) {
         repository.saveExam(list)

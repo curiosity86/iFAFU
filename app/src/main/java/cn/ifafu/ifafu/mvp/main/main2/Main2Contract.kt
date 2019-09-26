@@ -1,9 +1,6 @@
 package cn.ifafu.ifafu.mvp.main.main2
 
-import cn.ifafu.ifafu.data.entity.Course
-import cn.ifafu.ifafu.data.entity.NextCourse2
-import cn.ifafu.ifafu.data.entity.SyllabusSetting
-import cn.ifafu.ifafu.data.entity.YearTerm
+import cn.ifafu.ifafu.data.entity.*
 import cn.ifafu.ifafu.mvp.main.BaseMainContract
 import io.reactivex.Observable
 
@@ -25,12 +22,20 @@ class Main2Contract {
         fun setSyllabusTime(text: String)
 
         fun setNextCourse(nextCourse: NextCourse2)
+
+        fun setScoreText(text: String?)
+
+        fun setExamData(data: List<NextExam>)
     }
 
     interface Presenter: BaseMainContract.Presenter {
         fun updateWeather()
 
         fun updateNextCourse()
+
+        fun updateExamInfo()
+
+        fun updateScoreInfo()
     }
 
     interface Model: BaseMainContract.Model {
@@ -43,6 +48,10 @@ class Main2Contract {
 
         fun getYearTerm(): Pair<String, String>
 
-        fun getNextCourse2(courses: List<Course>): NextCourse2
+        fun getNextCourse2(): Observable<NextCourse2>
+
+        fun getNextExams(): Observable<List<NextExam>>
+
+        fun getScore(): Observable<List<Score>>
     }
 }

@@ -1,5 +1,7 @@
 package cn.ifafu.ifafu.data.http.parser;
 
+import androidx.annotation.NonNull;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -37,7 +39,7 @@ public class SyllabusParser extends BaseParser<List<Course>> {
     }
 
     @Override
-    public List<Course> parse(String html) {
+    public List<Course> parse(@NonNull String html) {
         List<Course> courses = new ArrayList<>();
         Document doc = Jsoup.parse(html);
         Elements nodeTrs = doc.getElementById("Table1").getElementsByTag("tr");

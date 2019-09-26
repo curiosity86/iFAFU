@@ -23,9 +23,9 @@ class ScorePresenter(view: ScoreContract.View)
                 .getYearTermList()
                 .doOnNext { yearTerm = it }
                 .flatMap { mModel.getYearTerm() }
-                .doOnNext { map: Map<String, String> ->
-                    mCurrentYear = map["ddlxn"] ?: error("")
-                    mCurrentTerm = map["ddlxq"] ?: error("")
+                .doOnNext {
+                    mCurrentYear = it.first
+                    mCurrentTerm = it.second
                 }
                 .compose(RxUtils.computationToMain())
                 .subscribe({

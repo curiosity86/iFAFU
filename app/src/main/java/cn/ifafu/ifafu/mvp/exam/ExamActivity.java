@@ -96,7 +96,7 @@ public class ExamActivity extends BaseActivity<ExamContract.Presenter>
             yearTermOPV = new OptionsPickerBuilder(this,
                     (options1, options2, options3, v) -> {
                         setSubtitle(years.get(options1), terms.get(options2));
-                        mPresenter.switchYearTerm(options1, options2);
+                        mPresenter.switchYearTerm(years.get(options1), terms.get(options2));
                     })
                     .setCancelText("取消")
                     .setSubmitText("确定")
@@ -145,7 +145,6 @@ public class ExamActivity extends BaseActivity<ExamContract.Presenter>
     public void hideLoading() {
         progressDialog.cancel();
     }
-
 
     private void setSubtitle(String year, String term) {
         tbExam.setSubtitle(String.format("%s学年第%s学期", year, term));

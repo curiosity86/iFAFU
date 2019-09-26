@@ -8,7 +8,7 @@ import org.greenrobot.greendao.annotation.Id;
 import java.util.HashMap;
 import java.util.Map;
 
-import cn.ifafu.ifafu.data.local.StringMapConverter;
+import cn.ifafu.ifafu.data.local.converter.StringMapConverter;
 
 @Entity
 public class ElecCookie {

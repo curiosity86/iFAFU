@@ -32,7 +32,7 @@ import cn.ifafu.ifafu.view.syllabus.listener.OnCourseLongClickListener;
 /**
  * Created by woolsen
  */
-public class SyllabusView2 extends LinearLayout {
+public class SyllabusView extends LinearLayout {
 
     //rootView's width and height
     private int mWidth;
@@ -97,11 +97,11 @@ public class SyllabusView2 extends LinearLayout {
 
     private static final String TAG = "SyllabusView2";
 
-    public SyllabusView2(Context context) {
+    public SyllabusView(Context context) {
         this(context, null);
     }
 
-    public SyllabusView2(Context context, AttributeSet attrs) {
+    public SyllabusView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setOrientation(HORIZONTAL);
         initPaint();

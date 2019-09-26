@@ -7,10 +7,11 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import cn.ifafu.ifafu.R;
-import cn.ifafu.ifafu.data.exception.NoLogException;
 import cn.ifafu.ifafu.base.i.IModel;
 import cn.ifafu.ifafu.base.i.IPresenter;
 import cn.ifafu.ifafu.base.i.IView;
+import cn.ifafu.ifafu.data.exception.NoLogException;
+import io.reactivex.ObservableTransformer;
 import io.reactivex.disposables.CompositeDisposable;
 
 public abstract class BasePresenter<V extends IView, M extends IModel> implements IPresenter {
@@ -32,11 +33,6 @@ public abstract class BasePresenter<V extends IView, M extends IModel> implement
     }
 
     @Override
-    public void onCreate() {
-
-    }
-
-    @Override
     public void onDestroy() {
         if (mModel != null) {
             mModel.onDestroy();
@@ -45,6 +41,11 @@ public abstract class BasePresenter<V extends IView, M extends IModel> implement
         mCompDisposable.dispose();
         mCompDisposable = null;
         mView = null;
+    }
+
+    protected <T> ObservableTransformer<T, T> showHideLoading() {
+        return upstream -> upstream.doOnSubscribe(disposable -> mView.showLoading())
+                .doFinally(() -> mView.hideLoading());
     }
 
     protected void onError(Throwable throwable) {

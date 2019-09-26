@@ -3,17 +3,19 @@ package cn.ifafu.ifafu.data.entity;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 
+import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.Transient;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+
+import cn.ifafu.ifafu.data.local.converter.IntListConverter;
 
 @Entity
 public class SyllabusSetting {
@@ -51,18 +53,16 @@ public class SyllabusSetting {
 
     private boolean isForceRefresh = false; // 每次进入课表，自动刷新课表
 
-    @Transient
-    private int[] beginTime;
+    @Convert(converter = IntListConverter.class, columnType = String.class)
+    private List<Integer> beginTime;
 
     public SyllabusSetting(String account) {
         this.account = account;
     }
 
-    @Generated(hash = 665193961)
-    public SyllabusSetting(String account, int weekCnt, int nodeCnt, boolean showSaturday, boolean showSunday,
-            boolean showBeginTimeText, boolean showHorizontalLine, boolean showVerticalLine, String openingDay,
-            int nodeLength, int firstDayOfWeek, String background, int textSize, int themeColor,
-            boolean statusDartFont, boolean isForceRefresh) {
+    @Generated(hash = 245806061)
+    public SyllabusSetting(String account, int weekCnt, int nodeCnt, boolean showSaturday, boolean showSunday, boolean showBeginTimeText, boolean showHorizontalLine, boolean showVerticalLine, String openingDay, int nodeLength, int firstDayOfWeek,
+            String background, int textSize, int themeColor, boolean statusDartFont, boolean isForceRefresh, List<Integer> beginTime) {
         this.account = account;
         this.weekCnt = weekCnt;
         this.nodeCnt = nodeCnt;
@@ -79,6 +79,7 @@ public class SyllabusSetting {
         this.themeColor = themeColor;
         this.statusDartFont = statusDartFont;
         this.isForceRefresh = isForceRefresh;
+        this.beginTime = beginTime;
     }
 
     @Generated(hash = 310423812)
@@ -149,22 +150,14 @@ public class SyllabusSetting {
         this.openingDay = openingDay;
     }
 
-    public int[] getBeginTime() {
-        return beginTime;
-    }
-
-    public void setBeginTime(int[] beginTime) {
-        this.beginTime = beginTime;
-    }
-
     @SuppressLint("DefaultLocale")
     public String[] getBeginTimeText() {
         if (beginTime == null) {
             return null;
         }
         String[] text = new String[weekCnt];
-        for (int i = 0; i < text.length && i < beginTime.length; i++) {
-            text[i] = String.format("%d:%02d", beginTime[i] / 100, beginTime[i] % 100);
+        for (int i = 0; i < text.length && i < beginTime.size(); i++) {
+            text[i] = String.format("%d:%02d", beginTime.get(i) / 100, beginTime.get(i) % 100);
         }
         return text;
     }
@@ -279,13 +272,24 @@ public class SyllabusSetting {
                 Objects.equals(account, that.account) &&
                 Objects.equals(openingDay, that.openingDay) &&
                 Objects.equals(background, that.background) &&
-                Arrays.equals(beginTime, that.beginTime);
+                Objects.equals(beginTime, that.beginTime);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(account, weekCnt, nodeCnt, showSaturday, showSunday, showBeginTimeText, showHorizontalLine, showVerticalLine, openingDay, nodeLength, firstDayOfWeek, background, textSize, themeColor, statusDartFont, isForceRefresh);
-        result = 31 * result + Arrays.hashCode(beginTime);
-        return result;
+        return Objects.hash(account, weekCnt, nodeCnt, showSaturday, showSunday, showBeginTimeText, showHorizontalLine, showVerticalLine, openingDay, nodeLength, firstDayOfWeek, background, textSize, themeColor, statusDartFont, isForceRefresh, beginTime);
     }
+
+    public List<Integer> getBeginTime() {
+        return this.beginTime;
+    }
+
+    public void setBeginTime(List<Integer> beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    public static Integer[][] intBeginTime = new Integer[][]{
+            {0, 800, 850, 955, 1045, 1135, 1400, 1450, 1550, 1640, 1825, 1915, 2005},
+            {0, 830, 920, 1025, 1115, 1205, 1400, 1450, 1545, 1635, 1825, 1915, 2005}
+    };
 }

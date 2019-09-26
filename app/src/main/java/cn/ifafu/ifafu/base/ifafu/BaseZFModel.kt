@@ -102,6 +102,13 @@ abstract class BaseZFModel(context: Context) : BaseModel(context), IZFModel {
                              paramsParser: LoginParamParser,
                              loginParser: LoginParser,
                              verifyParser: VerifyParser): Observable<Response<String>> {
+//        Log.d(TAG, "$loginUrl: String," +
+//                "$verifyUrl: String," +
+//                "$account: String," +
+//                "$password: String," +
+//                "$paramsParser: LoginParamParser," +
+//                "$loginParser: LoginParser," +
+//                "$verifyParser: VerifyParser")
         return APIManager.getZhengFangAPI()
                 .initParams(loginUrl)
                 .compose(paramsParser)

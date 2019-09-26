@@ -6,6 +6,7 @@ import org.greenrobot.greendao.AbstractDao;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -29,10 +30,11 @@ import cn.ifafu.ifafu.data.entity.Exam;
 import cn.ifafu.ifafu.data.entity.Score;
 import cn.ifafu.ifafu.data.entity.Setting;
 import cn.ifafu.ifafu.data.entity.SyllabusSetting;
-import cn.ifafu.ifafu.data.entity.YearTerm;
 import cn.ifafu.ifafu.data.entity.Token;
 import cn.ifafu.ifafu.data.entity.User;
+import cn.ifafu.ifafu.data.entity.YearTerm;
 import cn.ifafu.ifafu.util.SPUtils;
+import kotlin.Pair;
 
 public class RepositoryImpl implements Repository {
 
@@ -165,7 +167,23 @@ public class RepositoryImpl implements Repository {
 
     @Override
     public SyllabusSetting getSyllabusSetting() {
-        return syllabusSettingDao.load(getLoginUser().getAccount());
+        String account = getLoginUser().getAccount();
+        SyllabusSetting setting = syllabusSettingDao.load(account);
+        if (setting == null) {
+            setting = new SyllabusSetting();
+            setting.setAccount(account);
+            boolean js = false;
+            for (Course c : getAllCourses()) {
+                if (c.getAddress() != null && c.getAddress().contains("旗教")) {
+                    js = true;
+                    break;
+                }
+            }
+            ArrayList<Integer> times = new ArrayList<>();
+            Collections.addAll(times, SyllabusSetting.intBeginTime[js ? 1 : 0]);
+            setting.setBeginTime(times);
+        }
+        return setting;
     }
 
     @Override
@@ -269,7 +287,7 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public YearTerm getYearTerm() {
+    public YearTerm getYearTermList() {
         List<String> yearList = new ArrayList<>();
         Calendar c = Calendar.getInstance();
         c.add(Calendar.MONTH, 8);
@@ -290,6 +308,16 @@ public class RepositoryImpl implements Repository {
             termList.add(String.valueOf(i));
         }
         return new YearTerm(yearList, termList);
+    }
+
+    @Override
+    public Pair<String, String> getYearTerm() {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.MONTH, 6);
+        String toTerm = c.get(Calendar.MONTH) < 8? "1" : "2";
+        int year = c.get(Calendar.YEAR);
+        String toYear = String.format("%d-%d", year - 1, year);
+        return new Pair(toYear, toTerm);
     }
 
     @Override

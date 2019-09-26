@@ -36,7 +36,6 @@ abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainC
         repository.deleteUser(user)
     }
 
-
     override fun getWeather(cityCode: String): Observable<Weather> {
         return Observable.fromCallable {
             val weather = Weather()

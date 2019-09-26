@@ -2,11 +2,11 @@ package cn.ifafu.ifafu.mvp.elec_login
 
 import android.content.Intent
 import cn.ifafu.ifafu.app.School
+import cn.ifafu.ifafu.base.BasePresenter
 import cn.ifafu.ifafu.data.entity.ElecCookie
 import cn.ifafu.ifafu.data.entity.ElecQuery
 import cn.ifafu.ifafu.data.entity.ElecUser
 import cn.ifafu.ifafu.data.local.RepositoryImpl
-import cn.ifafu.ifafu.base.BasePresenter
 import cn.ifafu.ifafu.mvp.elec_main.ElecMainActivity
 import cn.ifafu.ifafu.util.RxUtils
 import com.alibaba.fastjson.JSONObject
@@ -71,8 +71,7 @@ class ElecLoginPresenter internal constructor(view: ElecLoginContract.View) : Ba
                     }
                 }
                 .compose(RxUtils.ioToMain())
-                .doOnSubscribe { disposable -> mView.showLoading() }
-                .doFinally { mView.hideLoading() }
+                .compose(showHideLoading())
                 .subscribe({ s ->
                     val jo = JSONObject.parseObject(s)
                     if (jo.getBoolean("IsSucceed")) {

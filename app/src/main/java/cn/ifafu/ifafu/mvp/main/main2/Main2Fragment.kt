@@ -3,6 +3,7 @@ package cn.ifafu.ifafu.mvp.main.main2
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.GravityCompat
@@ -10,6 +11,7 @@ import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.data.entity.NextCourse
 import cn.ifafu.ifafu.data.entity.NextCourse2
+import cn.ifafu.ifafu.data.entity.NextExam
 import cn.ifafu.ifafu.mvp.elec_splash.ElecSplashActivity
 import cn.ifafu.ifafu.mvp.exam.ExamActivity
 import cn.ifafu.ifafu.mvp.main.BaseMainFragment
@@ -109,6 +111,7 @@ class Main2Fragment : BaseMainFragment<Main2Contract.Presenter>(),
             "检查更新" -> mPresenter.updateApp()
             "关于iFAFU" -> startActivity(Intent(context, AboutActivity::class.java))
         }
+        layout_drawer.closeDrawer(GravityCompat.START)
     }
 
     override fun setWeatherText(text: String) {
@@ -122,6 +125,8 @@ class Main2Fragment : BaseMainFragment<Main2Contract.Presenter>(),
     override fun onStart() {
         super.onStart()
         mPresenter.updateNextCourse()
+        mPresenter.updateExamInfo()
+        mPresenter.updateScoreInfo()
     }
 
     override fun setNextCourse(nextCourse: NextCourse2) {
@@ -152,5 +157,45 @@ class Main2Fragment : BaseMainFragment<Main2Contract.Presenter>(),
                 layout_syllabus.findViewById<LinearLayout>(R.id.layout_info).visibility = View.GONE
             }
         }
+    }
+
+    override fun setScoreText(text: String?) {
+        if (text.isNullOrEmpty()) {
+            layout_score.findViewById<TextView>(R.id.tv_null).visibility = View.VISIBLE
+            layout_score.findViewById<TextView>(R.id.tv_score_detail).visibility = View.GONE
+        } else {
+            val tvScore = layout_score.findViewById<TextView>(R.id.tv_score_detail)
+            layout_score.findViewById<TextView>(R.id.tv_null).visibility = View.GONE
+            tvScore.visibility = View.VISIBLE
+            tvScore.text = text
+        }
+    }
+
+    override fun setExamData(data: List<NextExam>) {
+        if (data.isEmpty()) {
+            layout_exam.findViewById<TextView>(R.id.tv_null).visibility = View.VISIBLE
+            layout_exam.findViewById<LinearLayout>(R.id.layout_exam1).visibility = View.GONE
+            layout_exam.findViewById<LinearLayout>(R.id.layout_exam2).visibility = View.GONE
+        } else {
+            layout_exam.findViewById<TextView>(R.id.tv_null).visibility = View.GONE
+            layout_exam.findViewById<LinearLayout>(R.id.layout_exam1).visibility = View.VISIBLE
+            fillExamInfo(layout_exam.findViewById(R.id.layout_exam1), data[0], 1)
+            if (data.size >= 2) {
+                layout_exam.findViewById<LinearLayout>(R.id.layout_exam2).visibility = View.VISIBLE
+                fillExamInfo(layout_exam.findViewById(R.id.layout_exam2), data[1], 2)
+            } else {
+                layout_exam.findViewById<LinearLayout>(R.id.layout_exam2).visibility = View.GONE
+            }
+        }
+    }
+
+    private fun fillExamInfo(view: ViewGroup, exam: NextExam, index: Int) {
+        view.findViewById<TextView>(R.id.tv_num).text = index.toString()
+        view.findViewById<TextView>(R.id.tv_name).text = exam.name
+        view.findViewById<TextView>(R.id.tv_time).text = exam.time
+        view.findViewById<TextView>(R.id.tv_location).text = exam.address
+        view.findViewById<TextView>(R.id.tv_seat).text = exam.seatNum
+        view.findViewById<TextView>(R.id.tv_last).text = exam.last.first
+        view.findViewById<TextView>(R.id.tv_unit).text = exam.last.second
     }
 }

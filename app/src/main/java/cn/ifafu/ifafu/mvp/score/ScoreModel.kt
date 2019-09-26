@@ -3,16 +3,15 @@ package cn.ifafu.ifafu.mvp.score
 import android.annotation.SuppressLint
 import android.content.Context
 import cn.ifafu.ifafu.app.School
+import cn.ifafu.ifafu.base.ifafu.BaseZFModel
 import cn.ifafu.ifafu.data.entity.Score
 import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.data.entity.YearTerm
 import cn.ifafu.ifafu.data.entity.ZhengFang
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.data.http.parser.ScoreParser
-import cn.ifafu.ifafu.base.ifafu.BaseZFModel
 import cn.ifafu.ifafu.mvp.score.ScoreContract.Model
 import io.reactivex.Observable
-import java.util.*
 
 class ScoreModel(context: Context) : BaseZFModel(context), Model {
 
@@ -74,7 +73,7 @@ class ScoreModel(context: Context) : BaseZFModel(context), Model {
     @SuppressLint("DefaultLocale")
     override fun getYearTermList(): Observable<YearTerm> {
         return Observable.fromCallable {
-            repository.yearTerm.apply {
+            repository.yearTermList.apply {
                 addTerm("全部")
                 addYear("全部")
             }
@@ -82,15 +81,9 @@ class ScoreModel(context: Context) : BaseZFModel(context), Model {
     }
 
     @SuppressLint("DefaultLocale")
-    override fun getYearTerm(): Observable<Map<String, String>> {
+    override fun getYearTerm(): Observable<Pair<String, String>> {
         return Observable.fromCallable {
-            val c: Calendar = Calendar.getInstance()
-            c.add(Calendar.MONTH, 6)
-            val map: MutableMap<String, String> = HashMap()
-            map["ddlxq"] = if (c.get(Calendar.MONTH) < 8) "1" else "2"
-            val year = c.get(Calendar.YEAR)
-            map["ddlxn"] = String.format("%d-%d", year - 1, year)
-            map
+            repository.yearTerm
         }
     }
 

@@ -68,6 +68,8 @@ abstract class BaseMainPresenter<V : BaseMainContract.View, M : BaseMainContract
     }
 
     final override fun checkoutTheme() {
+        mView.hideCheckoutDialog()
+        mView.hideLoading()
         mView.openActivity(Intent(mView.context, MainActivity::class.java))
         mView.killSelf()
     }

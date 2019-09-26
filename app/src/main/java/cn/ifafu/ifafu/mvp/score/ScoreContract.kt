@@ -1,10 +1,10 @@
 package cn.ifafu.ifafu.mvp.score
 
-import cn.ifafu.ifafu.data.entity.Score
-import cn.ifafu.ifafu.data.entity.YearTerm
 import cn.ifafu.ifafu.base.i.IView
 import cn.ifafu.ifafu.base.ifafu.IZFModel
 import cn.ifafu.ifafu.base.ifafu.IZFPresenter
+import cn.ifafu.ifafu.data.entity.Score
+import cn.ifafu.ifafu.data.entity.YearTerm
 import io.reactivex.Observable
 
 class ScoreContract {
@@ -42,6 +42,6 @@ class ScoreContract {
 
         fun getYearTermList(): Observable<YearTerm>
 
-        fun getYearTerm(): Observable<Map<String, String>>
+        fun getYearTerm(): Observable<Pair<String, String>>
     }
 }

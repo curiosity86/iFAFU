@@ -1,9 +1,9 @@
 package cn.ifafu.ifafu.mvp.elec_main
 
 import cn.ifafu.ifafu.R
+import cn.ifafu.ifafu.base.BasePresenter
 import cn.ifafu.ifafu.data.entity.ElecQuery
 import cn.ifafu.ifafu.data.entity.Selection
-import cn.ifafu.ifafu.base.BasePresenter
 import cn.ifafu.ifafu.util.RxUtils
 import io.reactivex.Observable
 import java.util.*
@@ -55,9 +55,9 @@ class ElecMainPresenter(view: ElecMainContract.View) : BasePresenter<ElecMainCon
         mCompDisposable.add(mModel.queryDKInfos()
                 .doOnNext { stringStringMap -> dkNameToAidMap = stringStringMap }
                 .compose(RxUtils.ioToMain())
-                .doOnSubscribe { disposable -> mView.showLoading() }
+                .doOnSubscribe { mView.showLoading() }
                 .doOnNext { map -> mView.hideLoading() }
-                .subscribe({ s ->
+                .subscribe({
                     mView.showDKSelection(dkNameToAidMap.keys)
                     //设置快捷查询电费
                     quickQueryElec()
@@ -114,9 +114,9 @@ class ElecMainPresenter(view: ElecMainContract.View) : BasePresenter<ElecMainCon
         }
     }
 
-    override fun onDKSelect(name: String) {
+    override fun onDKSelect(aid: String) {
         //如果存在Room，则设置不初始化mView
-        onDKChecked(name)
+        onDKChecked(aid)
     }
 
     override fun onAreaSelect(name: String) {
@@ -204,7 +204,7 @@ class ElecMainPresenter(view: ElecMainContract.View) : BasePresenter<ElecMainCon
         mCompDisposable.add(mModel.queryBalance()
                 .map { aDouble -> String.format(Locale.CHINA, "%.2f", aDouble) }  // 取2位小数
                 .compose(RxUtils.ioToMain())
-                .doOnSubscribe { disposable ->
+                .doOnSubscribe {
                     if (showToast) {
                         mView.showLoading()
                     }

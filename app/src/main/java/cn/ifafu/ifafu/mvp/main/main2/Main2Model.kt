@@ -4,11 +4,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.data.entity.*
+import cn.ifafu.ifafu.mvp.exam.ExamModel
 import cn.ifafu.ifafu.mvp.main.BaseMainModel
+import cn.ifafu.ifafu.mvp.score.ScoreModel
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusModel
 import cn.ifafu.ifafu.util.DateUtils
 import io.reactivex.Observable
 import java.text.MessageFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 class Main2Model(context: Context) : BaseMainModel(context), Main2Contract.Model {
@@ -64,7 +67,7 @@ class Main2Model(context: Context) : BaseMainModel(context), Main2Contract.Model
 
     @SuppressLint("DefaultLocale")
     override fun getYearTermList(): Observable<YearTerm> {
-        return Observable.fromCallable { repository.yearTerm }
+        return Observable.fromCallable { repository.yearTermList }
     }
 
     @SuppressLint("DefaultLocale")
@@ -78,108 +81,170 @@ class Main2Model(context: Context) : BaseMainModel(context), Main2Contract.Model
         return Pair(toYear, toTerm)
     }
 
-    override fun getNextCourse2(courses: List<Course>): NextCourse2 {
+    override fun getNextCourse2(): Observable<NextCourse2> {
         val syllabusModel = SyllabusModel(mContext)
-        val result = NextCourse2()
-        val setting = syllabusModel.syllabusSetting
-        var currentWeek = syllabusModel.currentWeek
-        if (currentWeek <= 0 || currentWeek > setting.weekCnt) {
-            result.title = "放假了呀！！"
-            result.result = NextCourse.IN_HOLIDAY
-            return result
-        }
-        result.weekText = MessageFormat.format("第{0}周", currentWeek)
-        if (courses.isEmpty()) {
-            result.title = "暂无课程信息"
-            result.result = NextCourse.EMPTY_DATA
-            return result
-        }
-        var currentWeekday: Int = DateUtils.getCurrentWeekday()
-        //计算节假日
-        syllabusModel.holidayFromToMap[currentWeek]?.run {
-            this[currentWeekday]?.run {
-                currentWeek = this.first
-                currentWeekday = this.second
-            }
-        }
-        //获取当天课程
-        val todayCourses: MutableList<Course> = ArrayList()
-        for (course in courses) {
-            if (course.weekSet.contains(currentWeek) && course.weekday == currentWeekday) {
-                todayCourses.add(course)
-            }
-        }
-        todayCourses.sortWith(Comparator { o1, o2 -> o1.beginNode.compareTo(o2.beginNode) })
-        if (todayCourses.isEmpty()) {
-            result.title = "今天没课哦~"
-            result.result = NextCourse.NO_TODAY_COURSE
-            return result
-        }
-
-//        //计算下一节是第几节课
-        val intTime: IntArray = setting.beginTime
-//        val c: Calendar = Calendar.getInstance()
-//        val now = c.get(Calendar.HOUR_OF_DAY) * 100 + c.get(Calendar.MINUTE)
-//        var nextNode = 9999
-//        for (i in intTime.indices) {
-//            if (now < intTime[i]) {
-//                nextNode = i
-//                break
-//            }
-//        }
-        //将课程按节数排列
-        @SuppressLint("UseSparseArrays")
-        val courseMap: MutableMap<Int, Course> = HashMap()
-        for (course in todayCourses) {
-            for (i in course.beginNode..course.endNode) {
-                courseMap[i] = course
-            }
-        }
-        result.totalNode = courseMap.size
-
-        val c: Calendar = Calendar.getInstance()
-        val now = c.get(Calendar.HOUR_OF_DAY) * 100 + c.get(Calendar.MINUTE)
-        var node = 0
-        for ((i, course) in courseMap) {
-            node++
-            val intStartTime = intTime[i]
-            val intEndTime = if (intStartTime % 100 + setting.nodeLength >= 60) {
-                intStartTime + 100 - intStartTime % 100 + (intStartTime % 100 + setting.nodeLength % 100) % 60
-            } else {
-                intStartTime + setting.nodeLength
-            }
-            if (now < intEndTime) {
-                result.result = NextCourse.HAS_NEXT_COURSE
-                result.address = course.address
-                result.node = node
-                result.timeText = String.format(Locale.CHINA, "%d:%02d-%d:%02d",
-                        intStartTime / 100, intStartTime % 100, intEndTime / 100, intEndTime % 100)
-                if (now >= intStartTime) {
-                    //上课中
-                    result.title = "当前：${course.name}"
-                    result.result = NextCourse2.IN_COURSE
-                    val last = (intEndTime / 100 - now / 100) * 60 + (intEndTime % 100 - now % 100)
-                    result.lastText = (if (last >= 60) "${last / 60}小时" else "") +
-                            (if (last % 60 != 0) "${last % 60}分钟" else "") +
-                            "后下课"
-                    break
-                } else {
-                    //即将上课
-                    result.title = "下一节课：${course.name}"
-                    result.result = NextCourse.HAS_NEXT_COURSE
-                    val last = (intStartTime / 100 - now / 100) * 60 + (intStartTime % 100 - now % 100)
-                    result.lastText = (if (last >= 60) "${last / 60 }小时" else "") +
-                            (if (last % 60 != 0) "${last % 60}分钟" else "") +
-                            "后上课"
-                    break
+        return Observable
+                .fromCallable { syllabusModel.allCoursesFromDB }
+                .flatMap { o: List<Course> ->
+                    if (o.isEmpty()) {
+                        syllabusModel.coursesFromNet
+                    } else {
+                        Observable.just(o)
+                    }
                 }
-            }
-        }
-        if (result.title.isEmpty()) {
-            result.title = "今天${result.totalNode}节课都上完了"
-            result.result = NextCourse.NO_NEXT_COURSE
-        }
-        return result
+                .map { courses ->
+                    val result = NextCourse2()
+                    val setting = syllabusModel.syllabusSetting
+                    var currentWeek = syllabusModel.currentWeek
+                    if (currentWeek <= 0 || currentWeek > setting.weekCnt) {
+                        result.title = "放假了呀！！"
+                        result.result = NextCourse.IN_HOLIDAY
+                        return@map result
+                    }
+                    result.weekText = MessageFormat.format("第{0}周", currentWeek)
+                    if (courses.isEmpty()) {
+                        result.title = "暂无课程信息"
+                        result.result = NextCourse.EMPTY_DATA
+                        return@map result
+                    }
+                    var currentWeekday: Int = DateUtils.getCurrentWeekday()
+                    //计算节假日
+                    syllabusModel.holidayFromToMap[currentWeek]?.run {
+                        this[currentWeekday]?.run {
+                            currentWeek = this.first
+                            currentWeekday = this.second
+                        }
+                    }
+                    //获取当天课程
+                    val todayCourses: MutableList<Course> = ArrayList()
+                    for (course in courses) {
+                        if (course.weekSet.contains(currentWeek) && course.weekday == currentWeekday) {
+                            todayCourses.add(course)
+                        }
+                    }
+                    todayCourses.sortWith(Comparator { o1, o2 -> o1.beginNode.compareTo(o2.beginNode) })
+                    if (todayCourses.isEmpty()) {
+                        result.title = "今天没课哦~"
+                        result.result = NextCourse.NO_TODAY_COURSE
+                        return@map result
+                    }
+
+                    //计算下一节是第几节课
+                    val intTime: List<Int> = setting.beginTime
+                    //将课程按节数排列
+                    @SuppressLint("UseSparseArrays")
+                    val courseMap: MutableMap<Int, Course> = HashMap()
+                    for (course in todayCourses) {
+                        for (i in course.beginNode..course.endNode) {
+                            courseMap[i] = course
+                        }
+                    }
+                    result.totalNode = courseMap.size
+
+                    val c: Calendar = Calendar.getInstance()
+                    val now = c.get(Calendar.HOUR_OF_DAY) * 100 + c.get(Calendar.MINUTE)
+                    var node = 0
+                    for ((i, course) in courseMap) {
+                        node++
+                        val intStartTime = intTime[i]
+                        val intEndTime = if (intStartTime % 100 + setting.nodeLength >= 60) {
+                            intStartTime + 100 - intStartTime % 100 + (intStartTime % 100 + setting.nodeLength % 100) % 60
+                        } else {
+                            intStartTime + setting.nodeLength
+                        }
+                        if (now < intEndTime) {
+                            result.result = NextCourse.HAS_NEXT_COURSE
+                            result.address = course.address
+                            result.node = node
+                            result.timeText = String.format(Locale.CHINA, "%d:%02d-%d:%02d",
+                                    intStartTime / 100, intStartTime % 100, intEndTime / 100, intEndTime % 100)
+                            if (now >= intStartTime) {
+                                //上课中
+                                result.title = "当前：${course.name}"
+                                result.result = NextCourse2.IN_COURSE
+                                result.lastText = calcNextCourseIntervalTime(now, intEndTime) + "后上课"
+                                break
+                            } else {
+                                //即将上课
+                                result.title = "下一节课：${course.name}"
+                                result.result = NextCourse.HAS_NEXT_COURSE
+                                result.lastText = calcNextCourseIntervalTime(now, intStartTime) + "后上课"
+                                break
+                            }
+                        }
+                    }
+                    if (result.title.isEmpty()) {
+                        result.title = "今天${result.totalNode}节课都上完了"
+                        result.result = NextCourse.NO_NEXT_COURSE
+                    }
+                    return@map result
+                }
     }
 
+    private fun calcNextCourseIntervalTime(start: Int, end: Int): String {
+        val last = (end / 100 - start / 100) * 60 + (end % 100 - start % 100)
+        return (if (last >= 60) "${last / 60}小时" else "") +
+                (if (last % 60 != 0) "${last % 60}分钟" else "")
+    }
+
+    override fun getNextExams(): Observable<List<NextExam>> {
+        return Observable
+                .fromCallable {
+                    val now = System.currentTimeMillis()
+                    val list = ExamModel(mContext).getThisTermExams()
+                            .filter { it.startTime > now }
+                            .sortedBy { it.startTime }
+                    list
+                }
+                .map {
+                    val list = ArrayList<NextExam>()
+                    val max = if (it.size < 2) it.size else 2
+                    val dateFormat = SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA)
+                    val timeFormat = SimpleDateFormat("hh:mm", Locale.CHINA)
+                    val now = System.currentTimeMillis()
+                    for (i in 0 until max) {
+                        val time = dateFormat.format(Date(it[i].startTime)) + "(" +
+                                timeFormat.format(Date(it[i].startTime)) + "-" +
+                                timeFormat.format(Date(it[i].endTime)) + ")"
+                        list.add(NextExam(
+                                name = it[i].name,
+                                time = time,
+                                address = it[i].address,
+                                seatNum = it[i].seatNumber,
+                                last = calcExamIntervalTime(now, it[i].startTime)
+                        ))
+                    }
+                    list
+                }
+    }
+
+    private fun calcExamIntervalTime(start: Long, end: Long): Pair<String, String> {
+        val intervalSec = (end - start) / 1000
+        return when {
+            intervalSec >= (24 * 60 * 60) ->
+                Pair("${intervalSec / (24 * 60 * 60)}", "天")
+            intervalSec >= 60 * 60 ->
+                Pair("${intervalSec / (60 * 60)}", "小时")
+            else ->
+                Pair("${intervalSec / 60}", "分钟")
+        }
+    }
+
+    override fun getScore(): Observable<List<Score>> {
+        val scoreModel = ScoreModel(mContext)
+        val yearTerm: Pair<String, String> by lazy { scoreModel.getYearTerm().blockingFirst() }
+        return Observable
+                .fromCallable {
+                    scoreModel.getScoresFromDB(yearTerm.first, yearTerm.second)
+                }
+                .map {  list ->
+                    if (list.isEmpty()) {
+                        scoreModel.getScoresFromNet()
+                                .blockingFirst()
+                                .filter { it.year == yearTerm.first && it.term == yearTerm.second }
+                    } else {
+                        list
+                    }
+                }
+    }
 }

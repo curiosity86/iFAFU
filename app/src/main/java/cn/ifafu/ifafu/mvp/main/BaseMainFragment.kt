@@ -58,7 +58,7 @@ abstract class BaseMainFragment<T : BaseMainContract.Presenter> : BaseFragment<T
 
     private fun showAccountDetail(user: User) {
         MaterialDialog(context!!).show {
-            title(text = user.name)
+            title(text = "${user.name} ${user.account}")
             customView(viewRes = R.layout.dialog_account_detail)
             getCustomView().findViewById<EditText>(R.id.et_password).setText(user.password)
             negativeButton(text = "删除账号") {

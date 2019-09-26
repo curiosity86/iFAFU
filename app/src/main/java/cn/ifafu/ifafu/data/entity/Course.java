@@ -10,7 +10,7 @@ import org.greenrobot.greendao.annotation.Id;
 import java.util.Objects;
 import java.util.TreeSet;
 
-import cn.ifafu.ifafu.data.local.IntTreeSetConverter;
+import cn.ifafu.ifafu.data.local.converter.IntTreeSetConverter;
 import cn.ifafu.ifafu.util.DateUtils;
 import cn.ifafu.ifafu.view.syllabus.CourseBase;
 import cn.ifafu.ifafu.view.syllabus.ToCourseBase;
@@ -151,7 +151,7 @@ public class Course implements ToCourseBase {
     @Override
     public CourseBase toCourseBase() {
         CourseBase courseBase = new CourseBase();
-        if (address != null && address.isEmpty()) {
+        if (address == null || address.isEmpty()) {
             courseBase.setText(name);
         } else {
             courseBase.setText(name + "\n@" + address);
