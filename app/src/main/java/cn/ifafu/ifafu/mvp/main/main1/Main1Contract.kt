@@ -1,7 +1,6 @@
 package cn.ifafu.ifafu.mvp.main.main1
 
 import android.graphics.drawable.Drawable
-import cn.ifafu.ifafu.data.entity.Exam
 import cn.ifafu.ifafu.data.entity.Holiday
 import cn.ifafu.ifafu.data.entity.Menu
 import cn.ifafu.ifafu.mvp.main.BaseMainContract
@@ -41,8 +40,6 @@ class Main1Contract {
     }
 
     interface Model : BaseMainContract.Model {
-
-        fun getThisTermExams(): List<Exam>
 
         /**
          * 获取主页菜单信息

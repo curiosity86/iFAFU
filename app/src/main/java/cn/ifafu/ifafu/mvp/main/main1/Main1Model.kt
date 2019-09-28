@@ -7,12 +7,10 @@ import androidx.annotation.DrawableRes
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.School
-import cn.ifafu.ifafu.data.entity.Exam
 import cn.ifafu.ifafu.data.entity.Holiday
 import cn.ifafu.ifafu.data.entity.Menu
 import cn.ifafu.ifafu.mvp.elec_splash.ElecSplashActivity
 import cn.ifafu.ifafu.mvp.exam.ExamActivity
-import cn.ifafu.ifafu.mvp.exam.ExamModel
 import cn.ifafu.ifafu.mvp.main.BaseMainModel
 import cn.ifafu.ifafu.mvp.score.ScoreActivity
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusActivity
@@ -40,10 +38,6 @@ class Main1Model(context: Context) : BaseMainModel(context), Main1Contract.Model
     private fun drawable(@DrawableRes id: Int): Drawable = mContext.getDrawable(id)!!
 
     private fun intent(cls: Class<*>): Intent = Intent(mContext, cls)
-
-    override fun getThisTermExams(): List<Exam> {
-        return ExamModel(mContext).getThisTermExams()
-    }
 
     override fun getSchoolIcon(): Drawable {
         return when (repository.loginUser.schoolCode) {

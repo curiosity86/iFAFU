@@ -26,8 +26,8 @@ internal class LoginPresenter(view: LoginContract.View) : BaseZFPresenter<LoginC
     }
 
     override fun onLogin() {
-        var account = mView.accountText
-        val password = mView.passwordText
+        var account = mView.getAccountText()
+        val password = mView.getPasswordText()
         if (!formatIsOK(account, password)) {
             return
         }

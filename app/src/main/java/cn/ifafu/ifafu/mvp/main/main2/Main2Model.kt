@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.data.entity.*
-import cn.ifafu.ifafu.mvp.exam.ExamModel
 import cn.ifafu.ifafu.mvp.main.BaseMainModel
 import cn.ifafu.ifafu.mvp.score.ScoreModel
 import io.reactivex.Observable
@@ -36,7 +35,7 @@ class Main2Model(context: Context) : BaseMainModel(context), Main2Contract.Model
                 "实用工具" to listOf(
                         Pair("我的课表", R.drawable.tab_white_syllabus),
                         Pair("网页模式", R.drawable.tab_white_web),
-                        Pair("后勤服务", R.drawable.tab_white_repair)),
+                        Pair("报修服务", R.drawable.tab_white_repair)),
                 "软件设置" to listOf(
                         Pair("软件设置", R.drawable.ic_setting3),
                         Pair("账号管理", R.drawable.tab_white_manage)),
@@ -66,7 +65,7 @@ class Main2Model(context: Context) : BaseMainModel(context), Main2Contract.Model
         return Observable
                 .fromCallable {
                     val now = System.currentTimeMillis()
-                    val list = ExamModel(mContext).getThisTermExams()
+                    val list = getThisTermExams()
                             .filter { it.startTime > now }
                             .sortedBy { it.startTime }
                     list
@@ -112,13 +111,11 @@ class Main2Model(context: Context) : BaseMainModel(context), Main2Contract.Model
                 .fromCallable {
                     scoreModel.getScoresFromDB(yearTerm.first, yearTerm.second)
                 }
-                .map { list ->
+                .flatMap { list ->
                     if (list.isEmpty()) {
-                        scoreModel.getScoresFromNet()
-                                .blockingFirst()
-                                .filter { it.year == yearTerm.first && it.term == yearTerm.second }
+                        scoreModel.getScoresFromNet(yearTerm.first, yearTerm.second)
                     } else {
-                        list
+                        Observable.just(list)
                     }
                 }
     }

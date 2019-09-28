@@ -2,7 +2,9 @@ package cn.ifafu.ifafu.mvp.syllabus
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
@@ -18,8 +20,6 @@ import cn.ifafu.ifafu.util.ChineseNumbers
 import cn.ifafu.ifafu.view.adapter.SyllabusPageAdapter
 import cn.ifafu.ifafu.view.dialog.ProgressDialog
 import cn.ifafu.ifafu.view.syllabus.CourseBase
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.activity_syllabus.*
 import java.text.SimpleDateFormat
@@ -47,6 +47,9 @@ class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusCon
 
         progressDialog = ProgressDialog(this)
         progressDialog.setText("加载中")
+//        progressDialog.setOnCancelListener {
+//            mPresenter.cancelLoading()
+//        }
 
         btn_back.setOnClickListener(this)
         btn_add.setOnClickListener(this)
@@ -76,12 +79,16 @@ class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusCon
         }
         view_pager.adapter = mPageAdapter
         setCurrentWeek(setting.currentWeek)
+        Log.d(TAG, "background: ${setting.background}")
 
         if (setting.background != null) {
-            Glide.with(this)
-                    .load(setting.background)
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(iv_background)
+//            Glide.with(this)
+//                    .load(setting.background)
+//                    .skipMemoryCache(true)
+//                    .transition(DrawableTransitionOptions.withCrossFade())
+//                    .into(iv_background)
+            iv_background.setImageDrawable(null)
+            iv_background.setImageURI(Uri.parse(setting.background))
         } else {
             iv_background.setImageDrawable(null)
         }
@@ -150,7 +157,7 @@ class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusCon
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event!!.action == KeyEvent.ACTION_DOWN) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event?.action == KeyEvent.ACTION_DOWN) {
             onFinishActivity()
             return true
         }
@@ -171,13 +178,12 @@ class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusCon
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == Constant.ACTIVITY_SYLLABUS_ITEM && resultCode == Activity.RESULT_OK) {
             mPresenter.updateSyllabusLocal()
-            return
         } else if (requestCode == Constant.ACTIVITY_SYLLABUS_SETTING && resultCode == Activity.RESULT_OK) {
             mPresenter.updateSyllabusSetting()
             mPresenter.updateSyllabusLocal()
-            return
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
         }
-        super.onActivityResult(requestCode, resultCode, data)
     }
 
     companion object {

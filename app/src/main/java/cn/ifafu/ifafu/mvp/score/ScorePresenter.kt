@@ -203,4 +203,7 @@ class ScorePresenter(view: ScoreContract.View)
         mView.showIESDetail(sb.toString())
     }
 
+    override fun cancelLoading() {
+        mCompDisposable.clear()
+    }
 }

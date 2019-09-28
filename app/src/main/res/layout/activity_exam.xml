@@ -14,7 +14,7 @@
         app:navigationIcon="@drawable/ic_back">
 
         <ImageButton
-            android:id="@+id/btn_exam_refresh"
+            android:id="@+id/btn_refresh"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_alignParentEnd="true"

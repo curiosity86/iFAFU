@@ -32,6 +32,11 @@ abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainC
                 }
     }
 
+    override fun getThisTermExams(): List<Exam> {
+        val yearTerm = repository.yearTerm
+        return repository.getExams(yearTerm.first, yearTerm.second)
+    }
+
     override fun getSetting(): Setting {
         return repository.setting
     }

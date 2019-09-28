@@ -1,6 +1,5 @@
 package cn.ifafu.ifafu.mvp.exam
 
-import android.annotation.SuppressLint
 import android.content.Context
 import cn.ifafu.ifafu.app.School
 import cn.ifafu.ifafu.base.ifafu.BaseZFModel
@@ -10,16 +9,13 @@ import cn.ifafu.ifafu.data.entity.ZhengFang
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.data.http.parser.ExamParser
 import io.reactivex.Observable
+import io.reactivex.ObservableTransformer
 
 class ExamModel(context: Context) : BaseZFModel(context), ExamContract.Model {
 
     private var yearTerm: Pair<String, String> = getYearTerm()
 
-    fun getThisTermExams(): List<Exam> {
-        return repository.getExams(yearTerm.first, yearTerm.second)
-    }
-
-    override fun getExamsFromNet(year: String, term: String): Observable<List<Exam>> {
+    override fun getExamsFromNet(year: String, term: String): Observable<MutableList<Exam>> {
         val user = repository.loginUser
         val examUrl = School.getUrl(ZhengFang.EXAM, user)
         val mainUrl = School.getUrl(ZhengFang.MAIN, user)
@@ -39,24 +35,41 @@ class ExamModel(context: Context) : BaseZFModel(context), ExamContract.Model {
                             .map { it.body }
                             .doOnNext { save(it) }
                 }
+                .compose(sort())
     }
 
-    override fun getExamsFromDB(year: String, term: String): Observable<List<Exam>> {
+    override fun getExamsFromDB(year: String, term: String): Observable<MutableList<Exam>> {
         return Observable.fromCallable { repository.getExams(year, term) }
+                .compose(sort())
     }
 
-    @SuppressLint("DefaultLocale")
-    override fun getYearTermList(): Observable<YearTerm>? {
+    override fun getYearTermList(): Observable<YearTerm> {
         return Observable.fromCallable { repository.yearTermList }
     }
 
-    @SuppressLint("DefaultLocale")
     override fun getYearTerm(): Pair<String, String> {
         return repository.yearTerm
     }
 
     override fun save(list: List<Exam>) {
         repository.saveExam(list)
+    }
+
+    private fun sort(): ObservableTransformer<MutableList<Exam>, MutableList<Exam>> {
+        val now = System.currentTimeMillis()
+        return ObservableTransformer { t ->
+            t.doOnNext {
+                it.sortedWith(Comparator { o1, o2 ->
+                    if (o1.endTime < now && o2.endTime < now) {
+                        o2.endTime.compareTo(o1.endTime)
+                    } else if (o1.endTime < now || o2.endTime < now) {
+                        -1
+                    } else {
+                        o1.endTime.compareTo(o2.endTime)
+                    }
+                })
+            }
+        }
     }
 
 }

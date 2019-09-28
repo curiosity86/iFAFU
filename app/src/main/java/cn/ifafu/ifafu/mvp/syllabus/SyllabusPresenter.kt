@@ -1,11 +1,13 @@
 package cn.ifafu.ifafu.mvp.syllabus
 
 import android.annotation.SuppressLint
-import android.util.Log
+import android.content.Intent
 import cn.ifafu.ifafu.R.string
+import cn.ifafu.ifafu.base.addDisposable
 import cn.ifafu.ifafu.base.ifafu.BaseZFPresenter
 import cn.ifafu.ifafu.data.entity.Course
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
+import cn.ifafu.ifafu.mvp.login.LoginActivity
 import cn.ifafu.ifafu.util.RxUtils
 import cn.ifafu.ifafu.view.syllabus.CourseBase
 import io.reactivex.Observable
@@ -17,42 +19,49 @@ class SyllabusPresenter(view: SyllabusContract.View)
 
     @SuppressLint("DefaultLocale")
     override fun onCreate() {
-        mModel.syllabusSetting
+        val setting = mModel.syllabusSetting
+        if (setting == null) {
+            mView.openActivity(Intent(mView.context, LoginActivity::class.java))
+            mView.killSelf()
+            return
+        }
         mView.setSyllabusSetting(mModel.syllabusSetting)
         updateSyllabusLocal()
     }
 
     override fun updateSyllabusNet() {
-        mCompDisposable.add(mModel.coursesFromNet
-                .map(this::holidayChange)
-                .compose(RxUtils.ioToMain())
-                .doOnSubscribe { mView.showLoading() }
-                .doFinally { mView.hideLoading() }
-                .subscribe({ list ->
-                    mView.setSyllabusDate(list)
-                    mView.showMessage(string.syllabus_refresh_success)
-                }, this::onError)
-        )
+        addDisposable {
+            mModel.coursesFromNet
+                    .map(this::holidayChange)
+                    .compose(RxUtils.ioToMain())
+                    .doOnSubscribe { mView.showLoading() }
+                    .doFinally { mView.hideLoading() }
+                    .subscribe({ list ->
+                        mView.setSyllabusDate(list)
+                        mView.showMessage(string.syllabus_refresh_success)
+                    }, this::onError)
+        }
     }
 
     override fun updateSyllabusLocal() {
-        mCompDisposable.add(Observable
-                .fromCallable { mModel.allCoursesFromDB }
-                .flatMap { o: List<Course> ->
-                    if (o.isEmpty()) {
-                        mModel.coursesFromNet
-                    } else {
-                        Observable.just(o)
+        addDisposable {
+            Observable
+                    .fromCallable { mModel.allCoursesFromDB }
+                    .flatMap { o: List<Course> ->
+                        if (o.isEmpty()) {
+                            mModel.coursesFromNet
+                        } else {
+                            Observable.just(o)
+                        }
                     }
-                }
-                .map(this::holidayChange)
-                .compose(RxUtils.ioToMain())
-                .doOnSubscribe { mView.showLoading() }
-                .doFinally { mView.hideLoading() }
-                .subscribe({ list ->
-                    mView.setSyllabusDate(list)
-                }, this::onError)
-        )
+                    .map(this::holidayChange)
+                    .compose(RxUtils.ioToMain())
+                    .doOnSubscribe { mView.showLoading() }
+                    .doFinally { mView.hideLoading() }
+                    .subscribe({ list ->
+                        mView.setSyllabusDate(list)
+                    }, this::onError)
+        }
     }
 
     override fun updateSyllabusSetting() {
@@ -76,7 +85,6 @@ class SyllabusPresenter(view: SyllabusContract.View)
         @SuppressLint("UseSparseArrays")
         val fromTo: MutableMap<Int, MutableMap<Int, Pair<Int, Int>?>> = mModel.holidayFromToMap
 
-        Log.d("Holiday Calc", "fromTo: $fromTo")
         //按周排列课程
         val courseArray: MutableList<MutableList<CourseBase>?> = ArrayList()
         for (i in 0 until 24) {
@@ -118,5 +126,9 @@ class SyllabusPresenter(view: SyllabusContract.View)
     override fun onDelete(course: Course) {
         mModel.deleteCourse(course)
         updateSyllabusLocal()
+    }
+
+    override fun cancelLoading() {
+        mCompDisposable.clear()
     }
 }

@@ -4,13 +4,12 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
-import cn.ifafu.ifafu.data.entity.Course;
-import cn.ifafu.ifafu.data.entity.Holiday;
-import cn.ifafu.ifafu.data.entity.NextCourse;
-import cn.ifafu.ifafu.data.entity.SyllabusSetting;
 import cn.ifafu.ifafu.base.i.IView;
 import cn.ifafu.ifafu.base.ifafu.IZFModel;
 import cn.ifafu.ifafu.base.ifafu.IZFPresenter;
+import cn.ifafu.ifafu.data.entity.Course;
+import cn.ifafu.ifafu.data.entity.Holiday;
+import cn.ifafu.ifafu.data.entity.SyllabusSetting;
 import cn.ifafu.ifafu.view.syllabus.CourseBase;
 import io.reactivex.Observable;
 import kotlin.Pair;
@@ -35,6 +34,8 @@ public class SyllabusContract {
          * 删除课程
          */
         void onDelete(Course course);
+
+        void cancelLoading();
     }
 
     public interface Model extends IZFModel {

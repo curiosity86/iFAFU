@@ -38,6 +38,8 @@ class BaseMainContract {
 
         fun getCourses(): Observable<List<Course>>
 
+        fun getThisTermExams(): List<Exam>
+
         /**
          *
          * @return [NextCourse.IN_COURSE]       正在上课

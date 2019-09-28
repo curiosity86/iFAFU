@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.activity_score.*
 class ScoreActivity : BaseActivity<ScoreContract.Presenter>(), ScoreContract.View, View.OnClickListener {
 
     private var mAdapter: ScoreAdapter? = null
-    private var progressDialog: ProgressDialog? = null
+    private lateinit var progressDialog: ProgressDialog
     private var yearTermOPV: OptionsPickerView<String>? = null
 
     override fun getLayoutId(savedInstanceState: Bundle?): Int {
@@ -38,6 +38,9 @@ class ScoreActivity : BaseActivity<ScoreContract.Presenter>(), ScoreContract.Vie
                 .init()
         mPresenter = ScorePresenter(this)
         progressDialog = ProgressDialog(this)
+        progressDialog.setOnCancelListener {
+            mPresenter.cancelLoading()
+        }
 
         tv_score_title.setOnClickListener(this)
         btn_refresh.setOnClickListener(this)

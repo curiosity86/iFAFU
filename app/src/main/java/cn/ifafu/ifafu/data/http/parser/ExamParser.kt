@@ -9,16 +9,16 @@ import org.jsoup.select.Elements
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ExamParser(user: User) : BaseParser<Response<List<Exam>>>() {
+class ExamParser(user: User) : BaseParser<Response<MutableList<Exam>>>() {
 
     private val account: String = user.account
     private val schoolCode: Int = user.schoolCode
 
-    override fun parse(html: String): Response<List<Exam>> {
+    override fun parse(html: String): Response<MutableList<Exam>> {
         val document = Jsoup.parse(html)
         val elementsTemp = document.select("table[id=\"DataGrid1\"]")
         if (elementsTemp.size == 0) {
-            return Response.success(emptyList())
+            return Response.success(ArrayList())
         }
         val elements = elementsTemp[0].getElementsByTag("tr")
         val list = ArrayList<Exam>()
