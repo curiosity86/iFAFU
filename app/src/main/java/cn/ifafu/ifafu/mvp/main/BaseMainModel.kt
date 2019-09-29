@@ -72,10 +72,13 @@ abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainC
                     }
 
                     //计算节假日
-                    syllabusModel.holidayFromToMap[currentWeek]?.run {
-                        this[currentWeekday]?.run {
-                            currentWeek = this.first
-                            currentWeekday = this.second
+                    for1@for ((week, pair) in syllabusModel.holidayFromToMap) {
+                        for ((weekday, pair2) in pair) {
+                            if (pair2 != null && pair2.first == currentWeek && pair2.second == currentWeekday) {
+                                currentWeek = week
+                                currentWeekday = weekday
+                                break@for1
+                            }
                         }
                     }
                     //获取当天课程

@@ -2,12 +2,14 @@ package cn.ifafu.ifafu.mvp.login
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.core.widget.addTextChangedListener
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BaseActivity
+import cn.ifafu.ifafu.util.GlobalLib
 import cn.ifafu.ifafu.view.dialog.ProgressDialog
 import com.bumptech.glide.Glide
 import com.jaeger.library.StatusBarUtil
@@ -39,8 +41,10 @@ class LoginActivity : BaseActivity<LoginContract.Presenter>(), LoginContract.Vie
                 }
         )
         et_password.setOnEditorActionListener { v, actionId, event ->
-            if (actionId == KeyEvent.ACTION_DOWN) {
+            Log.d(TAG, "$v, $actionId, $event")
+            if (actionId == KeyEvent.ACTION_DOWN || actionId == KeyEvent.KEYCODE_ENDCALL) {
                 mPresenter.onLogin()
+                GlobalLib.hideSoftKeyboard(this)
             }
             true
         }

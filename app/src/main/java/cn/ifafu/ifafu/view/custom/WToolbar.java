@@ -249,12 +249,12 @@ public class WToolbar extends RelativeLayout {
     private void ensureNavButtonView() {
         if (mNavButtonView == null) {
             mNavButtonView = new AppCompatImageButton(getContext());
-            int dp24 = (int) DensityUtils.dp2px(getContext(), 36);
+            int dp24 = DensityUtils.dp2px(getContext(), 36);
             LayoutParams lp = new LayoutParams(dp24, dp24);
             lp.addRule(CENTER_VERTICAL);
             lp.addRule(ALIGN_PARENT_START);
-            lp.setMarginStart((int) DensityUtils.dp2px(getContext(), 8));
-            int dp4 = (int) DensityUtils.dp2px(getContext(), 4);
+            lp.setMarginStart(DensityUtils.dp2px(getContext(), 8));
+            int dp4 = DensityUtils.dp2px(getContext(), 4);
             mNavButtonView.setPadding(dp4, dp4, dp4, dp4);
             mNavButtonView.setLayoutParams(lp);
         }

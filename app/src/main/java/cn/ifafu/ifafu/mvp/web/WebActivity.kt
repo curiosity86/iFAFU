@@ -4,21 +4,17 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.KeyEvent
 import android.webkit.*
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BaseActivity
-import cn.ifafu.ifafu.util.DensityUtils
-import cn.ifafu.ifafu.util.Glide4Engine
 import cn.ifafu.ifafu.view.dialog.ProgressDialog
 import com.gyf.immersionbar.ImmersionBar
-import com.zhihu.matisse.Matisse
-import com.zhihu.matisse.MimeType
 import kotlinx.android.synthetic.main.activity_web.*
 
 class WebActivity : BaseActivity<WebContract.Presenter>(), WebContract.View {
@@ -28,7 +24,7 @@ class WebActivity : BaseActivity<WebContract.Presenter>(), WebContract.View {
     private lateinit var webView: WebView
 
     private var mFilePathCallback: ValueCallback<Array<Uri>>? = null
-    private val REQUEST_CODE_CHOOSE_ACTIVITY = 1023
+    private val PHOTO_REQUEST_CODE = 1023
 
     override fun getLayoutId(savedInstanceState: Bundle?): Int {
         return R.layout.activity_web
@@ -45,6 +41,9 @@ class WebActivity : BaseActivity<WebContract.Presenter>(), WebContract.View {
         mPresenter = WebPresenter(this)
         progressDialog = ProgressDialog(this)
         progressDialog.setText("加载中")
+//        progressDialog.setOnCancelListener {
+//            webView.stopLoading()
+//        }
         initWebView()
     }
 
@@ -70,17 +69,9 @@ class WebActivity : BaseActivity<WebContract.Presenter>(), WebContract.View {
 
         webView.webChromeClient = object : WebChromeClient() {
             override fun onShowFileChooser(webView: WebView?, filePathCallback: ValueCallback<Array<Uri>>?, fileChooserParams: FileChooserParams?): Boolean {
-                Log.d("WebChromeClient", "onShowFileChooser")
                 mFilePathCallback = filePathCallback
-                Matisse.from(this@WebActivity)
-                        .choose(MimeType.ofImage())
-                        .countable(true)
-                        .maxSelectable(3)
-                        .gridExpectedSize(DensityUtils.dp2px(context, 120F))
-                        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
-                        .thumbnailScale(0.85f)
-                        .imageEngine(Glide4Engine())
-                        .forResult(REQUEST_CODE_CHOOSE_ACTIVITY)
+                val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                startActivityForResult(intent, PHOTO_REQUEST_CODE)
                 return true
             }
         }
@@ -100,8 +91,10 @@ class WebActivity : BaseActivity<WebContract.Presenter>(), WebContract.View {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_CODE_CHOOSE_ACTIVITY && resultCode == Activity.RESULT_OK) {
-            mFilePathCallback?.onReceiveValue(Matisse.obtainResult(data).toTypedArray())
+        if (requestCode == PHOTO_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            data?.data?.run {
+                mFilePathCallback?.onReceiveValue(arrayOf(this))
+            }
         }
         super.onActivityResult(requestCode, resultCode, data)
     }

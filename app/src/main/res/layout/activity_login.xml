@@ -81,7 +81,8 @@
             android:layout_marginTop="16dp"
             android:textColorHint="@color/blue1"
             app:hintTextAppearance="@style/TextInput"
-            app:passwordToggleEnabled="true">
+            app:passwordToggleEnabled="true"
+            android:theme="@style/Theme.Design.Light.NoActionBar">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_password"

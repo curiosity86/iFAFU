@@ -111,13 +111,15 @@ class SyllabusWidget : AppWidgetProvider() {
                 R.id.tv_refresh -> updateSyllabusWidget(context, remoteViews)
                 R.id.btn_jump -> {
                     val jumpIntent: Intent
-                    if (IFAFU.FIRST_START_APP) {
-                        jumpIntent = Intent(context, SplashActivity::class.java)
-                        jumpIntent.putExtra("jump", Constant.ACTIVITY_SYLLABUS)
-                    } else if (RepositoryImpl.getInstance().loginUser == null) {
-                        jumpIntent = Intent(context, SplashActivity::class.java)
-                    } else {
-                        jumpIntent = Intent(context, SyllabusActivity::class.java)
+                    when {
+                        RepositoryImpl.getInstance().loginUser == null -> {
+                            jumpIntent = Intent(context, SplashActivity::class.java)
+                        }
+                        IFAFU.FIRST_START_APP -> {
+                            jumpIntent = Intent(context, SplashActivity::class.java)
+                            jumpIntent.putExtra("jump", Constant.ACTIVITY_SYLLABUS)
+                        }
+                        else -> jumpIntent = Intent(context, SyllabusActivity::class.java)
                     }
                     jumpIntent.putExtra("from", Constant.SYLLABUS_WIDGET)
                     jumpIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

@@ -1,6 +1,7 @@
 package cn.ifafu.ifafu.mvp.syllabus_setting
 
 import android.app.Activity
+import android.os.Build
 import cn.ifafu.ifafu.base.BasePresenter
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.CheckBoxItem
@@ -39,7 +40,13 @@ class SyllabusSettingPresenter(view: SyllabusSettingContract.View)
                 CheckBoxItem("标题栏深色字体", "", setting.statusDartFont) {
                     setting.statusDartFont = it
                 },
-                TextViewItem("课表背景", "长按重置为默认背景", { mView.showPicturePicker() }, {
+                TextViewItem("课表背景", "长按重置为默认背景", {
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+                        mView.showMessage("AndroidQ暂不支持自定义背景，方法还在研究中~")
+                    } else {
+                        mView.showPicturePicker()
+                    }
+                }, {
                     setting.background = null
                     mView.showMessage("课表背景已重置")
                 }),

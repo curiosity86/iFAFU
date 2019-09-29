@@ -82,7 +82,10 @@ class Main2Presenter(view: Main2Contract.View)
                         } else {
                             mView.setScoreText("已出${it.size}门成绩")
                         }
-                    }, this::onError)
+                    }, {
+                        onError(it)
+                        mView.setScoreText("获取成绩信息出错")
+                    })
         }
     }
 
