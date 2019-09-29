@@ -1,5 +1,6 @@
 package cn.ifafu.ifafu.data.http.parser;
 
+import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -22,7 +23,7 @@ public class LoginParser extends BaseParser<Response<String>> {
      * {@link Response#FAILURE} 信息错误 msg = return msg
      * {@link Response#ERROR}   服务器错误  msg = error msg
      */
-    public Response<String> parse(String html) throws VerifyException {
+    public Response<String> parse(@NotNull  String html) throws VerifyException {
         Document doc = Jsoup.parse(html);
         Element ele = doc.getElementById("xhxm");
         if (ele != null) {
@@ -48,6 +49,7 @@ public class LoginParser extends BaseParser<Response<String>> {
         }
     }
 
+    @NotNull
     @Override
     public ObservableSource<Response<String>> apply(Observable<ResponseBody> upstream) {
         return upstream.map(responseBody -> parse(responseBody.string()));
