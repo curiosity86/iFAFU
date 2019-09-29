@@ -310,6 +310,13 @@ public class SyllabusView extends LinearLayout {
 
     public void setDateTexts(String[] dateTexts) {
         this.dateTexts = dateTexts;
+        if (mFirstDraw) return;
+        if (dateTexts != null) {
+            int length = dateTexts.length < 7 ? dateTexts.length : 7;
+            for (int i = 0; i < length; i++) {
+                dateItems[i + 1].setDateText(dateTexts[i]);
+            }
+        }
     }
 
     public String[] getDateTexts() {

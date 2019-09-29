@@ -14,13 +14,7 @@ import java.util.*
 
 class ExamAdapter(
         private val mContext: Context,
-        data: List<Exam>) : RecyclerView.Adapter<ExamAdapter.ExamViewHolder>() {
-
-    var data: List<Exam> = emptyList()
-
-    init {
-        this.data = data
-    }
+        var data: List<Exam>) : RecyclerView.Adapter<ExamAdapter.ExamViewHolder>() {
 
     private val format = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
     private val format2 = SimpleDateFormat("HH:mm", Locale.CHINA)
