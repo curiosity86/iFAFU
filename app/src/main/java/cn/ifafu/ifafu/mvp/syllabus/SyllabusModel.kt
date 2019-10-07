@@ -63,6 +63,8 @@ class SyllabusModel(context: Context) : BaseZFModel(context), Model {
      * 获取调课方式
      * Map<fromWeek+fromWeekday, toWeek+toWeekday>
      * @return MutableMap<fromWeek, MutableMap<fromWeekday, Pair<toWeek, toWeekday>>>
+     *     把(fromWeek,fromWeekday)的课调到(toWeek,toWeekday)
+     *     放假则Pair<toWeek, toWeekday>为null
      */
     override fun getHolidayFromToMap(): Map<Int, Map<Int, Pair<Int, Int>?>> {
         //MutableMap<fromWeek, MutableMap<fromWeekday, Pair<toWeek, toWeekday>>>

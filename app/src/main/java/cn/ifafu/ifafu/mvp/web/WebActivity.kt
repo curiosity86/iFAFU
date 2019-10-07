@@ -11,6 +11,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.KeyEvent
 import android.webkit.*
+import android.widget.LinearLayout
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.view.dialog.ProgressDialog
@@ -41,15 +42,15 @@ class WebActivity : BaseActivity<WebContract.Presenter>(), WebContract.View {
         mPresenter = WebPresenter(this)
         progressDialog = ProgressDialog(this)
         progressDialog.setText("加载中")
-//        progressDialog.setOnCancelListener {
-//            webView.stopLoading()
-//        }
         initWebView()
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun initWebView() {
-        webView = view_web
+        webView = WebView(this)
+        view_root.addView(webView, LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT))
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
@@ -120,6 +121,11 @@ class WebActivity : BaseActivity<WebContract.Presenter>(), WebContract.View {
         if (!this.isDestroyed) {
             progressDialog.cancel()
         }
+    }
+
+    override fun onDestroy() {
+        hideLoading()
+        super.onDestroy()
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {

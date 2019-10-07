@@ -243,12 +243,13 @@ public class SyllabusView extends LinearLayout {
 
     private void realAddCourseItemView(CourseBase course) {
         View itemView = createCourseItemView(course);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 mRowItemHeight * course.getNodeCnt());
         params.topMargin = (course.getBeginNode() - 1) * mRowItemHeight + mDateHeight;
-        itemView.setLayoutParams(params);
-        mCourseLayouts[course.getWeekday()].addView(itemView);
+//        params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        Log.d(TAG, "topMargin: " + params.topMargin + ", mRowItemHeight: " + mRowItemHeight);
+        mCourseLayouts[course.getWeekday()].addView(itemView, params);
         courseToView.put(course, itemView);
     }
 

@@ -56,6 +56,22 @@ abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainC
 
                     val date = SimpleDateFormat("MM月dd日", Locale.CHINA).format(Date())
 
+                    //计算节假日
+                    val holidayFromToMap = syllabusModel.holidayFromToMap
+                    if (holidayFromToMap[currentWeek]?.containsKey(currentWeekday) == true) {
+                        currentWeek = -1
+                    } else {
+                        for1@for ((week, pair) in holidayFromToMap) {
+                            for ((weekday, pair2) in pair) {
+                                if (pair2 != null && pair2.first == currentWeek && pair2.second == currentWeekday) {
+                                    currentWeek = week
+                                    currentWeekday = weekday
+                                    break@for1
+                                }
+                            }
+                        }
+                    }
+
                     if (currentWeek <= 0 || currentWeek > setting.weekCnt) {
                         result.title = "放假了呀！！"
                         result.result = NextCourse.IN_HOLIDAY
@@ -71,16 +87,6 @@ abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainC
                         return@map result
                     }
 
-                    //计算节假日
-                    for1@for ((week, pair) in syllabusModel.holidayFromToMap) {
-                        for ((weekday, pair2) in pair) {
-                            if (pair2 != null && pair2.first == currentWeek && pair2.second == currentWeekday) {
-                                currentWeek = week
-                                currentWeekday = weekday
-                                break@for1
-                            }
-                        }
-                    }
                     //获取当天课程
                     val todayCourses: MutableList<Course> = ArrayList()
                     for (course in courses) {
@@ -119,26 +125,24 @@ abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainC
                             intStartTime + setting.nodeLength
                         }
                         if (now < intEndTime) {
+                            result.name = course.name
                             result.result = NextCourse.HAS_NEXT_COURSE
-                            result.address = course.address
+                            result.address = course.address ?: "无"
                             result.node = node
                             result.timeText = String.format(Locale.CHINA, "%d:%02d-%d:%02d",
                                     intStartTime / 100, intStartTime % 100, intEndTime / 100, intEndTime % 100)
                             if (now >= intStartTime) {
                                 //上课中
                                 result.title = "正在上："
-                                result.name = course.name
                                 result.result = NextCourse.IN_COURSE
                                 result.lastText = calcNextCourseIntervalTime(now, intEndTime) + "后下课"
-                                break
                             } else {
                                 //即将上课
                                 result.title = "下一节课："
-                                result.name = course.name
                                 result.result = NextCourse.HAS_NEXT_COURSE
                                 result.lastText = calcNextCourseIntervalTime(now, intStartTime) + "后上课"
-                                break
                             }
+                            return@map result
                         }
                     }
                     if (result.title.isEmpty()) {

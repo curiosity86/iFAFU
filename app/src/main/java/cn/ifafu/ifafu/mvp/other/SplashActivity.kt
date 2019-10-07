@@ -76,13 +76,4 @@ class SplashActivity : BaseActivity<IPresenter>() {
                 })
     }
 
-    internal class MyCrashHandleCallback : CrashHandleCallback() {
-        override fun onCrashHandleStart(crashType: Int,
-                                        errorType: String?,
-                                        errorMessage: String?,
-                                        errorStack: String?
-        ): MutableMap<String, String> {
-            return mutableMapOf("account" to RepositoryImpl.getInstance().loginUser.account)
-        }
-    }
 }

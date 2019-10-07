@@ -6,8 +6,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.provider.Settings;
-import android.telephony.TelephonyManager;
 import android.webkit.WebSettings;
 
 import cn.ifafu.ifafu.base.BaseApplication;
@@ -117,18 +115,19 @@ public class AppUtils {
 
     @SuppressLint({"MissingPermission", "HardwareIds"})
     public static String imei() {
-        String str;
-        try {
-            TelephonyManager telephonyManager = (TelephonyManager) BaseApplication.getAppContext().getSystemService(Context.TELEPHONY_SERVICE);
-            if (telephonyManager.getDeviceId() != null) {
-                str = telephonyManager.getDeviceId();
-            } else {
-                str = Settings.Secure.getString(BaseApplication.getAppContext().getApplicationContext().getContentResolver(), "android_id");
-            }
-        } catch(Exception e) {
-            str = Settings.Secure.getString(BaseApplication.getAppContext().getApplicationContext().getContentResolver(), "android_id");
-        }
-        return StringUtils.md5(str);
+//        String str;
+//        try {
+//            TelephonyManager telephonyManager = (TelephonyManager) BaseApplication.getAppContext().getSystemService(Context.TELEPHONY_SERVICE);
+//            if (telephonyManager.getDeviceId() != null) {
+//                str = telephonyManager.getDeviceId();
+//            } else {
+//                str = Settings.Secure.getString(BaseApplication.getAppContext().getApplicationContext().getContentResolver(), "android_id");
+//            }
+//        } catch(Exception e) {
+//            str = Settings.Secure.getString(BaseApplication.getAppContext().getApplicationContext().getContentResolver(), "android_id");
+//        }
+//        return StringUtils.md5(str);
+        return "";
     }
 
     @SuppressLint("ObsoleteSdkInt")

@@ -6,9 +6,9 @@ import android.util.Log
 import cn.ifafu.ifafu.BuildConfig
 import cn.ifafu.ifafu.base.BaseApplication
 import cn.ifafu.ifafu.data.exception.LoginInfoErrorException
+import cn.ifafu.ifafu.data.local.RepositoryImpl
 import cn.ifafu.ifafu.mvp.login.LoginActivity
 import cn.ifafu.ifafu.mvp.login.LoginModel
-import cn.ifafu.ifafu.mvp.other.SplashActivity
 import cn.ifafu.ifafu.util.AppUtils
 import cn.ifafu.ifafu.util.RxUtils
 import com.tencent.bugly.Bugly
@@ -50,13 +50,12 @@ class IFAFU : BaseApplication() {
         fun initConfig(context: Context) {
             Log.d("IFAFU", "IFAFU.FIRST_START_APP = $FIRST_START_APP")
             if (FIRST_START_APP) {
+                //初始化Bugly
                 val strategy = CrashReport.UserStrategy(context)
-                strategy.setCrashHandleCallback(SplashActivity.MyCrashHandleCallback())
+                strategy.setCrashHandleCallback(MyCrashHandleCallback())
                 strategy.appVersion = AppUtils.getVersionName(context) + "-" + AppUtils.getVersionCode(context)
-                println("Bugly APP_VERSION: " + strategy.appVersion)
                 Bugly.init(context, "46836c4eaa", BuildConfig.DEBUG, strategy)
                 Beta.enableHotfix = false
-                FIRST_START_APP = false
 
                 loginDisposable = LoginModel(context).reLogin()
                         .compose(RxUtils.ioToMain())
@@ -66,8 +65,20 @@ class IFAFU : BaseApplication() {
                             }
                             throwable.printStackTrace()
                         })
+
+                FIRST_START_APP = false
             }
         }
 
+    }
+
+    private class MyCrashHandleCallback : CrashReport.CrashHandleCallback() {
+        override fun onCrashHandleStart(crashType: Int,
+                                        errorType: String?,
+                                        errorMessage: String?,
+                                        errorStack: String?
+        ): MutableMap<String, String> {
+            return mutableMapOf("account" to RepositoryImpl.getInstance().loginUser.account)
+        }
     }
 }
