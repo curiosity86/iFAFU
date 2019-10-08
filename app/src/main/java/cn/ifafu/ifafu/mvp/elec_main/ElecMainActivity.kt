@@ -26,7 +26,8 @@ import kotlinx.android.synthetic.main.include_elec_main_balance.*
 import kotlinx.android.synthetic.main.include_elec_main_elec.*
 
 class ElecMainActivity : BaseActivity<ElecMainContract.Presenter>(), ElecMainContract.View, RadioGroup.OnCheckedChangeListener, View.OnClickListener {
-    private var progress: ProgressDialog? = null
+
+    private lateinit var progress: ProgressDialog
 
     private var viewIdToNameMap: SparseArray<String> = SparseArray()  //记录RadioButtonId对应的电控名字
 
@@ -58,7 +59,7 @@ class ElecMainActivity : BaseActivity<ElecMainContract.Presenter>(), ElecMainCon
         viewIdToNameMap = SparseArray()
 
         progress = ProgressDialog(this)
-        progress!!.setText("加载中")
+        progress.setText("加载中")
 
         radioGroup.setOnCheckedChangeListener(this)
 

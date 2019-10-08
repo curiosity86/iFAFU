@@ -39,7 +39,7 @@ class ScoreActivity : BaseActivity<ScoreContract.Presenter>(), ScoreContract.Vie
         mPresenter = ScorePresenter(this)
         progressDialog = ProgressDialog(this)
         progressDialog.setOnCancelListener {
-            mPresenter.cancelLoading()
+            mPresenter?.cancelLoading()
         }
 
         tv_score_title.setOnClickListener(this)

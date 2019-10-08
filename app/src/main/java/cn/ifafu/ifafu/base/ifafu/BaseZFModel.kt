@@ -103,25 +103,23 @@ abstract class BaseZFModel(context: Context) : BaseModel(context), IZFModel {
                              paramsParser: LoginParamParser,
                              loginParser: LoginParser,
                              verifyParser: VerifyParser): Observable<Response<String>> {
-//        Log.d(TAG, "$loginUrl: String," +
-//                "$verifyUrl: String," +
-//                "$account: String," +
-//                "$password: String," +
-//                "$paramsParser: LoginParamParser," +
-//                "$loginParser: LoginParser," +
-//                "$verifyParser: VerifyParser")
         return APIManager.getZhengFangAPI()
                 .initParams(loginUrl)
                 .compose(paramsParser)
                 .map { params ->
                     params["txtUserName"] = account
                     params["Textbox1"] = ""
-                    params["TextBox2"] = URLEncoder.encode(password, "GBK")
+                    params["TextBox2"] = password
                     params["RadioButtonList1"] = "ѧ��"
                     params["Button1"] = ""
                     params["lbLanguage"] = ""
                     params["hidPdrs"] = ""
                     params["hidsc"] = ""
+                    for (entry in params.entries) {
+                        if (entry.value.isNotEmpty()) {
+                            entry.setValue(URLEncoder.encode(entry.value, "GBK"))
+                        }
+                    }
                     params
                 }
                 .flatMap { params ->

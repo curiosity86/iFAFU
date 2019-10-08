@@ -9,8 +9,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import cn.ifafu.ifafu.base.i.IPresenter;
 import cn.ifafu.ifafu.base.i.IView;
 
@@ -18,7 +16,6 @@ public abstract class BaseActivity<P extends IPresenter> extends AppCompatActivi
 
     protected P mPresenter;
     protected final String TAG = this.getClass().getSimpleName();
-    private Unbinder unbinder;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,7 +23,6 @@ public abstract class BaseActivity<P extends IPresenter> extends AppCompatActivi
         if (getLayoutId(savedInstanceState) != 0) {
             setContentView(getLayoutId(savedInstanceState));
         }
-        unbinder = ButterKnife.bind(this);
         initData(savedInstanceState);
         if (mPresenter != null) {
             mPresenter.onCreate();
@@ -73,9 +69,6 @@ public abstract class BaseActivity<P extends IPresenter> extends AppCompatActivi
         if (mPresenter != null) {
             mPresenter.onDestroy();
             mPresenter = null;
-        }
-        if (unbinder != null) {
-            unbinder.unbind();
         }
         super.onDestroy();
     }

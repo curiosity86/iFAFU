@@ -29,8 +29,8 @@ import kotlin.collections.ArrayList
 class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusContract.View,
         View.OnClickListener, View.OnLongClickListener {
 
-    private lateinit var mPageAdapter: SyllabusPageAdapter
     private var mCurrentWeek = 1
+    private lateinit var mPageAdapter: SyllabusPageAdapter
     private lateinit var progressDialog: ProgressDialog
 
     override fun getLayoutId(savedInstanceState: Bundle?): Int {
@@ -47,9 +47,9 @@ class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusCon
 
         progressDialog = ProgressDialog(this)
         progressDialog.setText("加载中")
-//        progressDialog.setOnCancelListener {
-//            mPresenter.cancelLoading()
-//        }
+        progressDialog.setOnCancelListener {
+            mPresenter?.cancelLoading()
+        }
 
         btn_back.setOnClickListener(this)
         btn_add.setOnClickListener(this)

@@ -70,12 +70,6 @@ class SyllabusItemPresenter extends BasePresenter<SyllabusItemContract.View, Syl
     }
 
     @Override
-    public void onFinish() {
-        mView.getActivity().setResult(resultCode);
-        mView.killSelf();
-    }
-
-    @Override
     public void onSave() {
         mCompDisposable.add(Observable
                 .fromCallable(() -> {

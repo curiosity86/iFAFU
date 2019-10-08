@@ -87,7 +87,7 @@ class SyllabusParser(user: User?) : BaseParser<List<Course>>() {
         }
         val list = ArrayList<Course>()
 
-        for (s1 in td.html().split("<br><br>".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()) {
+        for (s1 in td.html().split("(<br>){2,3}".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()) {
             if (!s1.contains("(调") && !s1.contains("(换")) {
                 //TODO 调课、换课
                 val info = s1.split("<br>".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
@@ -114,9 +114,15 @@ class SyllabusParser(user: User?) : BaseParser<List<Course>>() {
         if (col == 0) {
             col = 7
         }
-        for (i in 0 until course.nodeCnt) {
-            locFlag[i + course.beginNode][col] = true
-        }
+
+//        kotlin.runCatching {
+            for (i in 0 until course.nodeCnt) {
+                locFlag[i + course.beginNode][col] = true
+            }
+//        }.onFailure {
+//            println(course)
+//            it.printStackTrace()
+//        }
 //        println("${course.name}, beginNode=${course.beginNode}, nodeCnt=${course.nodeCnt}, weekday=${course.weekday}")
 //        testHelpPrintf()
     }

@@ -49,7 +49,7 @@ public class WeekItemAdapter extends RecyclerView.Adapter<WeekItemAdapter.VH> {
     public void onBindViewHolder(@NonNull VH holder, int position) {
         holder.textView.setText(String.valueOf(position + 1));
         if (weekList.contains(position + 1)) {
-            holder.textView.setBackgroundResource(R.color.cyan);
+            holder.textView.setBackgroundResource(R.color.ifafu_blue);
         } else {
             holder.textView.setBackgroundResource(R.color.light_gray);
         }

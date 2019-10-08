@@ -13,7 +13,9 @@ import cn.ifafu.ifafu.data.entity.Score
 import cn.ifafu.ifafu.util.GlobalLib
 import cn.ifafu.ifafu.view.custom.SmoothCheckBox
 
-class ScoreFilterAdapter(context: Context, var data: List<Score>) : RecyclerView.Adapter<ScoreFilterAdapter.ViewHolder>() {
+class ScoreFilterAdapter(context: Context) : RecyclerView.Adapter<ScoreFilterAdapter.ViewHolder>() {
+
+    var data: List<Score> = ArrayList()
 
     private val layoutInflater = LayoutInflater.from(context)
     private var mOnCheckedListener: OnCheckedListener? = null

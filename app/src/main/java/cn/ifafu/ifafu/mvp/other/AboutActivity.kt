@@ -62,7 +62,7 @@ class AboutActivity : BaseActivity<IPresenter>(), View.OnClickListener {
                 val email = "support@ifafu.cn"
                 val cm = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
                 if (cm != null) {
-                    cm.primaryClip = ClipData.newPlainText("Label", email)
+                    cm.setPrimaryClip(ClipData.newPlainText("Label", email))
                     Toast.makeText(this, R.string.success_copy_email, Toast.LENGTH_SHORT).show()
                 }
                 val intent = Intent(Intent.ACTION_SENDTO, Uri.parse(email))

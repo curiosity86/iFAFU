@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : BaseActivity<LoginContract.Presenter>(), LoginContract.View, View.OnClickListener {
 
-    private val progressDialog: ProgressDialog by lazy { ProgressDialog(this) }
+    private lateinit var progressDialog: ProgressDialog
 
     override fun getLayoutId(savedInstanceState: Bundle?): Int {
         return R.layout.activity_login
@@ -49,6 +49,7 @@ class LoginActivity : BaseActivity<LoginContract.Presenter>(), LoginContract.Vie
             true
         }
 
+        progressDialog = ProgressDialog(this)
         progressDialog.setText(R.string.logging_in)
     }
 

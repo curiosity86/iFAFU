@@ -26,7 +26,7 @@ public interface ZhengFangService {
     @FormUrlEncoded
     Observable<ResponseBody> login(
             @Url String url,
-            @FieldMap Map<String, String> filedMap);
+            @FieldMap(encoded = true) Map<String, String> filedMap);
 
     @POST
     Observable<ResponseBody> getInfo(

@@ -37,9 +37,13 @@ class ExamActivity : BaseActivity<ExamContract.Presenter>(), ExamContract.View {
                 .init()
         mPresenter = ExamPresenter(this)
         progressDialog = ProgressDialog(this)
-        progressDialog.setOnCancelListener { mPresenter.cancelLoading() }
+        progressDialog.setOnCancelListener {
+            mPresenter?.cancelLoading()
+        }
 
-        btn_refresh.setOnClickListener { mPresenter.update() }
+        btn_refresh.setOnClickListener {
+            mPresenter?.update()
+        }
         tb_exam.setNavigationOnClickListener { finish() }
 
     }
