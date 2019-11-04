@@ -51,6 +51,7 @@ class SyllabusModel(context: Context) : BaseZFModel(context), Model {
                     addFromTo("2019-10-04", "2019-09-29")
                     addFromTo("2019-10-07", "2019-10-12")
                 },
+                Holiday("双十一", "2019-11-11", 0),
                 Holiday("圣诞节", "2019-12-25", 0),
                 Holiday("元旦", "2020-01-01", 3),
                 Holiday("春节", "2020-01-25", 0),

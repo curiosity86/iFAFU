@@ -105,6 +105,10 @@ class Main1Presenter(view: Main1Contract.View)
 
                         val exams = mModel.getThisTermExams()
                         for (exam in exams) {
+                            println("start time: ${exam.startTime}")
+                            if (exam.startTime == 0L) { //暂无时间信息
+                                continue
+                            }
                             val date = Date(exam.startTime)
                             val day = DateUtils.calcLastDays(now, date)
                             if (day >= 0) {

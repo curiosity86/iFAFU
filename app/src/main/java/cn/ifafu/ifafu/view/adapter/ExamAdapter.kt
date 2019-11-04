@@ -29,18 +29,30 @@ class ExamAdapter(
         val start = Calendar.getInstance()
         start.time = Date(exam.startTime)
         val weekday = DateUtils.getWeekdayCN(start.get(Calendar.DAY_OF_WEEK))
-        holder.tvExamTime.text = String.format("%s (%s %s~%s)",
-                format.format(Date(exam.startTime)),
-                weekday,
-                format2.format(Date(exam.startTime)),
-                format2.format(Date(exam.endTime)))
+
+        holder.tvExamTime.text = if (exam.endTime == 0L) {
+            "未出考试时间"
+        } else {
+            String.format("%s (%s %s~%s)",
+                    format.format(Date(exam.startTime)),
+                    weekday,
+                    format2.format(Date(exam.startTime)),
+                    format2.format(Date(exam.endTime)))
+        }
+
         holder.tvExamName.text = exam.name
         holder.tvExamAddress.text = String.format("%s   %s", exam.address, exam.seatNumber)
-        if (exam.endTime < System.currentTimeMillis()) {
-            holder.tvExamLast.setText(R.string.exam_over)
-        } else {
-            holder.tvExamLast.text = String.format("剩余%s",
-                    DateUtils.calcIntervalTime(System.currentTimeMillis(), exam.startTime))
+        when {
+            exam.endTime == 0L -> {
+                holder.tvExamLast.text = "未知"
+            }
+            exam.endTime < System.currentTimeMillis() -> {
+                holder.tvExamLast.setText(R.string.exam_over)
+            }
+            else -> {
+                holder.tvExamLast.text = String.format("剩余%s",
+                        DateUtils.calcIntervalTime(System.currentTimeMillis(), exam.startTime))
+            }
         }
     }
 

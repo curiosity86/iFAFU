@@ -7,6 +7,8 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.util.*
 import java.util.regex.Pattern
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 /**
  * Created by woolsen on 19/8/1
@@ -28,8 +30,8 @@ class SyllabusParser(user: User?) : BaseParser<List<Course>>() {
         val doc = Jsoup.parse(html)
         val nodeTrs = doc.getElementById("Table1").getElementsByTag("tr")
         val help = Help()
-        for (i in 2 until nodeTrs.size) {
-            //定位到课程元素
+        for (i in 2 until nodeTrs.size) { //定位到第几节课一行过的所有元素
+
             val tds = nodeTrs[i].getElementsByTag("td")
             //开始节数的备用方案，通过解析侧边节数获取
             var index = 0
@@ -43,41 +45,44 @@ class SyllabusParser(user: User?) : BaseParser<List<Course>>() {
                 }
                 index++
             }
-            //解析课程信息
-            for (j in 0 until tds.size - index) {
+            for (j in 0 until tds.size - index) {  //定位到第几节课第几格的元素
                 val td = tds[index + j]
                 //列的备用方案
                 help.col = j
                 var hNode = 0
-//                if (tds[j].text().contains("测试")) {
-//                    println("-------断点-------")
-//                    testHelpPrintf()
-//                    println("help: $help")
-//                }
                 for (col in 1..7) {
                     if (locFlag[help.beginNode][col % 7]) {
-                        hNode ++
+                        hNode++
                     } else {
                         break
                     }
                 }
-                help.col += hNode
-                //课程节数的备用方案，通过“rowspan“获取
+                help.col = hNode
+                //通过“rowspan“获取 课程节数(备用方案)
                 if (td.hasAttr("rowspan")) {
-                    help.nodeNum = Integer.parseInt(td.attr("rowspan"))
+                    help.rowspan = Integer.parseInt(td.attr("rowspan"))
+                } else {
+                    help.rowspan = 1
                 }
-                val clist = parseTdElement2(td, help)
-                if (clist != null) {
-                    courses.addAll(clist)
-                    for (c in clist) {
-                        mark(c)
-                    }
+
+//                println("help: $help")
+//                println("td: $td")
+//                println(help)
+                mark(help) //标记课程位置
+//                println()
+
+                parseTdElement2(td, help)?.run {
+                    courses.addAll(this)
                 }
             }
         }
-//        println("---------END----------")
 //        testHelpPrintf()
-        return merge(courses)
+        return merge(courses).apply {
+            forEach {
+                it.account = account
+                it.id = it.hashCode().toLong()
+            }
+        }
     }
 
     private fun parseTdElement2(td: Element, help: Help): List<Course>? {
@@ -99,7 +104,6 @@ class SyllabusParser(user: User?) : BaseParser<List<Course>>() {
                     course.address = info[3]
                 }
                 course.account = account
-                course.id = course.hashCode().toLong()
                 list.add(course)
             }
         }
@@ -107,26 +111,16 @@ class SyllabusParser(user: User?) : BaseParser<List<Course>>() {
     }
 
     /**
-     * flag标记课程位置，用于定位
+     * flag标记课程位置，用于备用方案的列定位
      */
-    private fun mark(course: Course) {
-        var col = course.weekday - 1
-        if (col == 0) {
-            col = 7
+    private fun mark(help: Help) {
+        for (i in 0 until help.rowspan) {
+            locFlag[i + help.beginNode][help.col + 1] = true
         }
-
-//        kotlin.runCatching {
-            for (i in 0 until course.nodeCnt) {
-                locFlag[i + course.beginNode][col] = true
-            }
-//        }.onFailure {
-//            println(course)
-//            it.printStackTrace()
-//        }
-//        println("${course.name}, beginNode=${course.beginNode}, nodeCnt=${course.nodeCnt}, weekday=${course.weekday}")
 //        testHelpPrintf()
     }
 
+    //测试用
     private fun testHelpPrintf() {
         print("   ")
         for (j in 1 until 8) {
@@ -151,14 +145,7 @@ class SyllabusParser(user: User?) : BaseParser<List<Course>>() {
     }
 
     private fun parseTime(course: Course, text: String, help: Help) {
-//        if (course.name.contains("测试")) {
-//            println("------测试------")
-//            println("course: $course")
-//            println("text: $text")
-//            println("help: $help")
-//            testHelpPrintf()
-//        }
-        //beginNode, nodeNum
+        //beginNode, rowspan
         val m1 = Pattern.compile("第.*节").matcher(text)
         if (m1.find() && !m1.group().contains("-")) {
             val intList = RegexUtils.getNumbers(m1.group())
@@ -170,7 +157,7 @@ class SyllabusParser(user: User?) : BaseParser<List<Course>>() {
             if (m2.find()) {
                 course.nodeCnt = RegexUtils.getNumbers(m2.group())[0]
             } else {
-                course.nodeCnt = help.nodeNum
+                course.nodeCnt = help.rowspan
             }
         }
 
@@ -225,31 +212,85 @@ class SyllabusParser(user: User?) : BaseParser<List<Course>>() {
     }
 
     private fun merge(courses: List<Course>): List<Course> {
-        val newList = ArrayList<Course>()
-        val map = HashMap<String, MutableList<Course>>()
-        for (course in courses) {
-            val key = (course.name + course.teacher + course.address + course.weekday
-                    + course.weekSet.first() + course.weekSet.last())
-            if (map[key] == null) {
-                map[key] = ArrayList()
+
+        val map = HashMap<String, Array<BooleanArray>>()
+        courses.forEach { course ->
+            val key = "${course.name}❤${course.teacher}❤${course.address}❤${course.weekday}"
+            val nodes = map.getOrPut(key, { Array(25) { BooleanArray(13) } })
+            course.weekSet.forEach { week ->
+                for (node in course.beginNode until (course.beginNode + course.nodeCnt)) {
+                    nodes[week][node] = true
+                }
             }
-            map[key]!!.add(course)
         }
-        for (cl in map.values) {
-            cl.sortWith(Comparator { o1, o2 -> o1.beginNode.compareTo(o2.beginNode) })
-            if (cl.size == 2 && cl[0].beginNode + cl[0].nodeCnt == cl[1].beginNode) {
-                cl[0].nodeCnt = cl[0].nodeCnt + cl[1].nodeCnt
-                cl.removeAt(1)
+
+        val afterMergeCourses = ArrayList<Course>()
+
+        for ((k, nodes) in map) {
+//            println(k)
+//            for (i in 1..24) {
+//                print("%2d ".format(i))
+//            }
+//            println()
+//            for (i in 1 until 13) {
+//                for (j in 1 until 25) {
+//                    if (nodes[j][i]) {
+//                        print(" ● ")
+//                    } else {
+//                        print(" ○ ")
+//                    }
+//                }
+//                println()
+//            }
+            val info = k.split("❤")
+            for (week in 0 until 24) {
+                for (node in 0 until 13) {
+                    if (nodes[week][node]) {
+
+                        var nodeLength = 1
+                        while (nodes[week][node + nodeLength]) {
+                            nodeLength++
+                        }
+
+                        val course = Course()
+                        course.name = info[0]
+                        course.teacher = info[1]
+                        course.address = info[2]
+                        course.weekday = info[3].toInt()
+                        course.beginNode = node
+                        course.nodeCnt = nodeLength
+
+                        var weekDump = 0
+                        lengthWhile@ while (week + weekDump <= 24) {
+                            var flag = true
+                            for (j1 in 0 until nodeLength) {
+                                if (!nodes[week + weekDump][node + j1]) {
+                                    flag = false
+                                    break
+                                }
+                            }
+                            if (flag) {
+                                course.weekSet.add(week + weekDump)
+                                for (j1 in 0 until nodeLength) {
+                                    nodes[week + weekDump][node + j1] = false
+                                }
+                            }
+                            weekDump++
+                        }
+                        afterMergeCourses.add(course)
+                    }
+                }
             }
-            newList.addAll(cl)
         }
-        return newList
+        afterMergeCourses.sortBy { it.name + it.weekday }
+
+        return afterMergeCourses
     }
 
     private data class Help(
-        internal var beginNode: Int = 0,
-        internal var nodeNum: Int = 0,
-        internal var col: Int = 0
+            var beginNode: Int = 0,
+            var rowspan: Int = 0,
+            var col: Int = 0
     )
 
 }

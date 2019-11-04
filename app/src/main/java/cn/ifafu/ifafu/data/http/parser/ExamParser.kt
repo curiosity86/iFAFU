@@ -35,31 +35,42 @@ class ExamParser(user: User) : BaseParser<Response<MutableList<Exam>>>() {
     }
 
     private fun getExam(e: Elements): Exam {
-        val numbers = RegexUtils.getNumbers(e[3].text())
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.SECOND, 0)
-        calendar.set(Calendar.MILLISECOND, 0)
-
-        calendar.set(Calendar.YEAR, numbers[0])
-        calendar.set(Calendar.MONTH, numbers[1] - 1)
-        calendar.set(Calendar.DAY_OF_MONTH, numbers[2])
-        calendar.set(Calendar.HOUR_OF_DAY, numbers[3])
-        calendar.set(Calendar.MINUTE, numbers[4])
-        val start = calendar.time.time
-
-        calendar.set(Calendar.HOUR_OF_DAY, numbers[5])
-        calendar.set(Calendar.MINUTE, numbers[6])
-        val end = calendar.time.time
-
         val exam = Exam()
+
+
+        val numbers = RegexUtils.getNumbers(e[3].text())
+        val calendar = Calendar.getInstance().apply {
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+
+        if (numbers.size > 6) {
+            calendar.set(Calendar.YEAR, numbers[0])
+            calendar.set(Calendar.MONTH, numbers[1] - 1)
+            calendar.set(Calendar.DAY_OF_MONTH, numbers[2])
+
+            val start = calendar.apply {
+                set(Calendar.HOUR_OF_DAY, numbers[3])
+                set(Calendar.MINUTE, numbers[4])
+            }.time.time
+
+            val end = calendar.apply {
+                set(Calendar.HOUR_OF_DAY, numbers[5])
+                set(Calendar.MINUTE, numbers[6])
+            }.time.time
+
+            exam.startTime = start
+            exam.endTime = end
+        }
+
+
         exam.id = e[0].text().hashCode().toLong()
         exam.name = e[1].text()
-        exam.address = e[4].text()
-        exam.startTime = start
-        exam.endTime = end
-        exam.seatNumber = e[6].text().run {
-            if (this.matches("[0-9]+".toRegex())) this + "号" else this
-        }
+        exam.address = if (e.size > 4) e[4].text() else ""
+        exam.seatNumber = if (e.size > 6) e[6].text().run {
+            if (this.matches("[0-9]+".toRegex())) this + "号"
+            else this
+        } else ""
         exam.account = account
 
         return exam

@@ -19,11 +19,11 @@ class SyllabusItemContract {
 
         fun getTeacherText(): String
 
-        fun setNameText(name: String)
+        fun setNameText(name: String?)
 
-        fun setAddressText(address: String)
+        fun setAddressText(address: String?)
 
-        fun setTeacherText(teacher: String)
+        fun setTeacherText(teacher: String?)
 
         fun setWeekData(weekData: TreeSet<Int>)
 

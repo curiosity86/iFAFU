@@ -30,9 +30,14 @@ public class CookieInterceptor implements Interceptor {
                 cookie.setAccount(repository.getLoginUser().getAccount());
             }
             for (String header: response.headers("Set-Cookie")) {
+                System.out.println(header);
                 String[] kv = header.substring(0, header.indexOf(";")).split("=");
                 System.out.println("Cookie put: " + Arrays.toString(kv) + ", Header: " + header);
-                cookie.set(kv[0], kv[1]);
+                if (kv.length < 2) {
+                    cookie.set(kv[0], "");
+                } else {
+                    cookie.set(kv[0], kv[1]);
+                }
             }
             repository.saveElecCookie(cookie);
         }

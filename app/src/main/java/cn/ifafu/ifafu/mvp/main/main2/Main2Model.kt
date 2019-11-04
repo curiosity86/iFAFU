@@ -66,7 +66,7 @@ class Main2Model(context: Context) : BaseMainModel(context), Main2Contract.Model
                 .fromCallable {
                     val now = System.currentTimeMillis()
                     val list = getThisTermExams()
-                            .filter { it.startTime > now }
+                            .filter { it.startTime > now || it.startTime == 0L }
                             .sortedBy { it.startTime }
                     list
                 }
@@ -77,15 +77,24 @@ class Main2Model(context: Context) : BaseMainModel(context), Main2Contract.Model
                     val timeFormat = SimpleDateFormat("hh:mm", Locale.CHINA)
                     val now = System.currentTimeMillis()
                     for (i in 0 until max) {
-                        val time = dateFormat.format(Date(it[i].startTime)) + "(" +
-                                timeFormat.format(Date(it[i].startTime)) + "-" +
-                                timeFormat.format(Date(it[i].endTime)) + ")"
+                        var time: String
+                        var last: Pair<String, String>
+                        if (it[i].startTime == 0L) {
+                            time = "暂无考试时间"
+                            last = Pair("", "")
+                        } else {
+                            time = dateFormat.format(Date(it[i].startTime)) +
+                                    "(${timeFormat.format(Date(it[i].startTime))}" +
+                                    "-" +
+                                    "${timeFormat.format(Date(it[i].endTime))})"
+                            last = calcExamIntervalTime(now, it[i].startTime)
+                        }
                         list.add(NextExam(
                                 name = it[i].name,
                                 time = time,
                                 address = it[i].address,
                                 seatNum = it[i].seatNumber,
-                                last = calcExamIntervalTime(now, it[i].startTime)
+                                last = last
                         ))
                     }
                     list

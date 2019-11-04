@@ -191,8 +191,18 @@ class Main2Fragment : BaseMainFragment<Main2Contract.Presenter>(),
         view.findViewById<TextView>(R.id.tv_num).text = index.toString()
         view.findViewById<TextView>(R.id.tv_name).text = exam.name
         view.findViewById<TextView>(R.id.tv_time).text = exam.time
-        view.findViewById<TextView>(R.id.tv_location).text = exam.address
-        view.findViewById<TextView>(R.id.tv_seat).text = exam.seatNum
+        if (exam.address.isBlank()) {
+            view.findViewById<TextView>(R.id.tv_location).visibility = View.GONE
+        } else {
+            view.findViewById<TextView>(R.id.tv_location).visibility = View.VISIBLE
+            view.findViewById<TextView>(R.id.tv_location).text = exam.address
+        }
+        if (exam.seatNum.isBlank()) {
+            view.findViewById<TextView>(R.id.tv_seat).visibility = View.GONE
+        } else {
+            view.findViewById<TextView>(R.id.tv_seat).visibility = View.VISIBLE
+            view.findViewById<TextView>(R.id.tv_seat).text = exam.seatNum
+        }
         view.findViewById<TextView>(R.id.tv_last).text = exam.last.first
         view.findViewById<TextView>(R.id.tv_unit).text = exam.last.second
     }
