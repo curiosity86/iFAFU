@@ -53,6 +53,7 @@
         <activity android:name=".mvp.elec_login.ElecLoginActivity" />
         <activity android:name=".mvp.elec_main.ElecMainActivity" />
         <activity android:name=".mvp.setting.SettingActivity" />
+        <activity android:name=".mvp.electives.ElectiveActivity" />
 
         <meta-data
             android:name="APP_ICON_HD"

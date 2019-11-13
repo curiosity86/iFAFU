@@ -134,12 +134,10 @@ public class SyllabusView extends LinearLayout {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         mHeight = h;
         mWidth = w;
-        Log.d(TAG, "onSizeChanged before: mSideWidth = " + mSideWidth);
         mColItemWidth = (mWidth - mSideWidth) / mColCount;
         mSideWidth = mWidth - mColItemWidth * mColCount;
         mRowItemHeight = (mHeight - mDateHeight) / mRowCount;
         mDateHeight = mHeight - mRowItemHeight * mRowCount;
-        Log.d(TAG, "onSizeChanged after: mSideWidth = " + mSideWidth);
     }
 
     @Override
@@ -179,7 +177,6 @@ public class SyllabusView extends LinearLayout {
     }
 
     private void initSideItemView() {
-        Log.d(TAG, "initSideItemView: width = " + mSideWidth + ", row count = " + mRowCount);
         mSideLayout.removeAllViews();
         ensureCornerText();
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mDateHeight);
@@ -230,17 +227,6 @@ public class SyllabusView extends LinearLayout {
         mSideLayout.addView(itemView, mSideWidth, mRowItemHeight);
     }
 
-    public void setToday(int weekday) {
-//        if (weekday == -1) {
-//            if (today != -1) {
-//                dateItems[today].setBackground(null);
-//            }
-//            this.today = weekday;
-//        } else if (dateItems[weekday] != null) {
-//            dateItems[weekday].setBackgroundColor(todayBackground);
-//        }
-    }
-
     private void realAddCourseItemView(CourseBase course) {
         View itemView = createCourseItemView(course);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
@@ -248,7 +234,7 @@ public class SyllabusView extends LinearLayout {
                 mRowItemHeight * course.getNodeCnt());
         params.topMargin = (course.getBeginNode() - 1) * mRowItemHeight + mDateHeight;
 //        params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        Log.d(TAG, "topMargin: " + params.topMargin + ", mRowItemHeight: " + mRowItemHeight);
+//        Log.d(TAG, "topMargin: " + params.topMargin + ", mRowItemHeight: " + mRowItemHeight);
         mCourseLayouts[course.getWeekday()].addView(itemView, params);
         courseToView.put(course, itemView);
     }

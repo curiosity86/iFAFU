@@ -48,15 +48,18 @@ class IFAFU : BaseApplication() {
         var loginDisposable: Disposable? = null
 
         fun initConfig(context: Context) {
-            Log.d("IFAFU", "IFAFU.FIRST_START_APP = $FIRST_START_APP")
             if (FIRST_START_APP) {
                 //初始化Bugly
                 val strategy = CrashReport.UserStrategy(context)
                 strategy.setCrashHandleCallback(MyCrashHandleCallback())
                 strategy.appVersion = AppUtils.getVersionName(context) + "-" + AppUtils.getVersionCode(context)
                 Bugly.init(context, "46836c4eaa", BuildConfig.DEBUG, strategy)
-                Beta.enableHotfix = false
-
+                RepositoryImpl.getInstance().loginUser.account.run {
+                    if (this != null) {
+                        Bugly.setUserId(context, this)
+                    }
+                }
+                Beta.enableHotfix = true
                 loginDisposable = LoginModel(context).reLogin()
                         .compose(RxUtils.ioToMain())
                         .subscribe({ }, { throwable: Throwable ->

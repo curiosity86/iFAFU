@@ -13,7 +13,7 @@ import kotlin.collections.HashMap
 /**
  * Created by woolsen on 19/8/1
  */
-class SyllabusParser(user: User?) : BaseParser<List<Course>>() {
+class SyllabusParser(user: User?) : BaseParser<MutableList<Course>>() {
 
     private val weekdayCN = arrayOf("周日", "周一", "周二", "周三", "周四", "周五", "周六")
 
@@ -21,11 +21,11 @@ class SyllabusParser(user: User?) : BaseParser<List<Course>>() {
             Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY, Calendar.SATURDAY)
 
     //用于标记课程位置
-    private val locFlag = Array(20) { BooleanArray(8) }
+    private val locFlag = Array(24) { BooleanArray(20) }
 
     private val account: String = user?.account ?: "null"
 
-    override fun parse(html: String): List<Course> {
+    override fun parse(html: String): MutableList<Course> {
         val courses = ArrayList<Course>()
         val doc = Jsoup.parse(html)
         val nodeTrs = doc.getElementById("Table1").getElementsByTag("tr")
@@ -93,7 +93,11 @@ class SyllabusParser(user: User?) : BaseParser<List<Course>>() {
         val list = ArrayList<Course>()
 
         for (s1 in td.html().split("(<br>){2,3}".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()) {
-            if (!s1.contains("(调") && !s1.contains("(换")) {
+            println(s1)
+//            if (s1.contains("\\([调停换]".toRegex())) {
+//                continue
+//            }
+            kotlin.runCatching {
                 //TODO 调课、换课
                 val info = s1.split("<br>".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                 val course = Course()
@@ -105,6 +109,8 @@ class SyllabusParser(user: User?) : BaseParser<List<Course>>() {
                 }
                 course.account = account
                 list.add(course)
+            }.onFailure {
+                it.printStackTrace()
             }
         }
         return list
@@ -211,12 +217,12 @@ class SyllabusParser(user: User?) : BaseParser<List<Course>>() {
         }
     }
 
-    private fun merge(courses: List<Course>): List<Course> {
+    private fun merge(courses: List<Course>): MutableList<Course> {
 
         val map = HashMap<String, Array<BooleanArray>>()
         courses.forEach { course ->
-            val key = "${course.name}❤${course.teacher}❤${course.address}❤${course.weekday}"
-            val nodes = map.getOrPut(key, { Array(25) { BooleanArray(13) } })
+            val key = "${course.name}❤${course.teacher ?: ""}❤${course.address ?: ""}❤${course.weekday}"
+            val nodes = map.getOrPut(key, { Array(25) { BooleanArray(20) } })
             course.weekSet.forEach { week ->
                 for (node in course.beginNode until (course.beginNode + course.nodeCnt)) {
                     nodes[week][node] = true

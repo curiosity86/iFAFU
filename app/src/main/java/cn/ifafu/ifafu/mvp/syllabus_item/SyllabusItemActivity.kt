@@ -136,12 +136,12 @@ class SyllabusItemActivity : BaseActivity<SyllabusItemContract.Presenter>(), Syl
         et_course_name.setText(name)
     }
 
-    override fun setAddressText(address: String?) {
+    override fun setAddressText(address: String) {
         tv_course_address.text = address
         et_course_address.setText(address)
     }
 
-    override fun setTeacherText(teacher: String?) {
+    override fun setTeacherText(teacher: String) {
         tv_course_teacher.text = teacher
         et_course_teacher.setText(teacher)
     }

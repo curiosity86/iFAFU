@@ -13,17 +13,17 @@ class SyllabusItemContract {
 
         fun getWeekData(): TreeSet<Int>
 
-        fun getNameText(): String
+        fun getNameText(): String?
 
-        fun getAddressText(): String
+        fun getAddressText(): String?
 
-        fun getTeacherText(): String
+        fun getTeacherText(): String?
 
         fun setNameText(name: String?)
 
-        fun setAddressText(address: String?)
+        fun setAddressText(address: String)
 
-        fun setTeacherText(teacher: String?)
+        fun setTeacherText(teacher: String)
 
         fun setWeekData(weekData: TreeSet<Int>)
 
@@ -45,7 +45,7 @@ class SyllabusItemContract {
     }
 
     interface Model : IModel {
-        val syllabusSetting: SyllabusSetting
+        fun getSyllabusSetting(): SyllabusSetting
 
         fun save(course: Course)
 

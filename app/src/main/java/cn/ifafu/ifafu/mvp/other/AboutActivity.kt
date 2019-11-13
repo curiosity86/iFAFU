@@ -40,6 +40,10 @@ class AboutActivity : BaseActivity<IPresenter>(), View.OnClickListener {
         aboutAppSubName.text = String.format(
                 Locale.getDefault(), getString(R.string.app_sub_name),
                 GlobalLib.getLocalVersionName(this))
+        aboutAppSubName.setOnLongClickListener {
+            showMessage("当前迭代版本号：" + GlobalLib.getLocalVersionCode(this).toString())
+            true
+        }
 
         btn_feed.setOnClickListener(this)
         btn_goto_qq_group.setOnClickListener(this)

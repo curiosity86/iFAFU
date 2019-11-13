@@ -35,9 +35,9 @@ class ExamContract {
 
         fun getYearTerm(): Pair<String, String>
 
-        fun getExamsFromNet(year: String, term: String): Observable<MutableList<Exam>>
+        fun getExamsFromNet(year: String, term: String): Observable<List<Exam>>
 
-        fun getExamsFromDB(year: String, term: String): Observable<MutableList<Exam>>
+        fun getExamsFromDB(year: String, term: String): Observable<List<Exam>>
 
         fun save(list: List<Exam>)
 

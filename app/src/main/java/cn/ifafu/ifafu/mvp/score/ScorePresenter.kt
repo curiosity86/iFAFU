@@ -82,7 +82,7 @@ class ScorePresenter(view: ScoreContract.View)
                 .subscribe({ list: List<Score> ->
                     calcIES(list)
                     calcGPA(list)
-                    mView.setIESText(list.size.toString(), "门")
+                    mView.setCntText(list.size.toString(), "门")
                     mView.setRvScoreData(list)
                 }, this::onError)
         )

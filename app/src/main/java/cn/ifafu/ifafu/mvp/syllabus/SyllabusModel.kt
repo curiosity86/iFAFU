@@ -130,17 +130,22 @@ class SyllabusModel(context: Context) : BaseZFModel(context), Model {
                         if (courses.isNotEmpty()) {
                             repository.deleteAllOnlineCourse()
                             repository.saveCourse(courses)
-                        }
-                        val setting = repository.syllabusSetting
-                        var qs = false
-                        for (course in repository.allCourses) {
-                            if (course.address?.contains("旗教") == true) {
-                                qs = true
-                                break
+                            //获取校区信息（影响上课时间）
+                            val setting = repository.syllabusSetting
+                            var qs = false
+                            for (course in repository.allCourses) {
+                                if (course.address?.contains("旗教") == true) {
+                                    qs = true
+                                    break
+                                }
                             }
+                            setting.beginTime = (if (qs) SyllabusSetting.intBeginTime[1] else SyllabusSetting.intBeginTime[0]).toList()
+                            repository.saveSyllabusSetting(setting)
+                            courses.addAll(repository.getCourses(true))
+                        } else {
+                            //获取课表为空则调取数据库完整课表
+                            courses.addAll(repository.allCourses)
                         }
-                        setting.beginTime = (if (qs) SyllabusSetting.intBeginTime[1] else SyllabusSetting.intBeginTime[0]).toList()
-                        repository.saveSyllabusSetting(setting)
                     }
         }
     }

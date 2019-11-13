@@ -8,6 +8,6 @@
     <ImageView
         android:layout_width="240dp"
         android:layout_height="240dp"
-        android:src="@drawable/ic_launcher_elec" />
+        android:src="@drawable/ic_elec" />
 
 </LinearLayout>

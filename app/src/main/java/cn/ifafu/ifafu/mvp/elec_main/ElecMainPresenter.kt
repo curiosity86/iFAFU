@@ -23,6 +23,7 @@ class ElecMainPresenter(view: ElecMainContract.View) : BasePresenter<ElecMainCon
         elecQuery = mModel.getQueryData().run {
             if (this == null) {
                 mView.openLoginActivity()
+                mView.killSelf()
                 return@onCreate
             } else {
                 this

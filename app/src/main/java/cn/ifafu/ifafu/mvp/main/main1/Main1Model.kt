@@ -22,7 +22,8 @@ class Main1Model(context: Context) : BaseMainModel(context), Main1Contract.Model
 
     override fun getMenus(): Observable<List<Menu>> {
         return Observable.fromCallable {
-            listOf(Menu(drawable(R.drawable.tab_syllabus), "课程表", intent(SyllabusActivity::class.java)),
+            listOf(
+                    Menu(drawable(R.drawable.tab_syllabus), "课程表", intent(SyllabusActivity::class.java)),
                     Menu(drawable(R.drawable.tab_exam), "考试计划", intent(ExamActivity::class.java)),
                     Menu(drawable(R.drawable.tab_score), "成绩查询", intent(ScoreActivity::class.java)),
                     Menu(drawable(R.drawable.tab_web), "网页模式", intent(WebActivity::class.java)),

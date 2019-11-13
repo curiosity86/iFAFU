@@ -1,14 +1,25 @@
 package cn.ifafu.ifafu.mvp.syllabus_setting
 
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Build
+import cn.ifafu.ifafu.app.School
 import cn.ifafu.ifafu.base.BasePresenter
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
+import cn.ifafu.ifafu.data.entity.User
+import cn.ifafu.ifafu.data.entity.ZhengFang
+import cn.ifafu.ifafu.data.http.APIManager
+import cn.ifafu.ifafu.data.local.RepositoryImpl
+import cn.ifafu.ifafu.util.RxUtils
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.CheckBoxItem
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.ColorItem
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.SeekBarItem
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.TextViewItem
 import com.alibaba.fastjson.JSONObject
+
+
 
 class SyllabusSettingPresenter(view: SyllabusSettingContract.View)
     : BasePresenter<SyllabusSettingContract.View, SyllabusSettingContract.Model>(view, SyllabusSettingModel(view.context)), SyllabusSettingContract.Presenter {
@@ -52,7 +63,32 @@ class SyllabusSettingPresenter(view: SyllabusSettingContract.View)
                 }),
                 ColorItem("主题颜色", "按钮颜色，文本颜色（除课程文本）", setting.themeColor) { ivColor ->
                     mView.showColorPicker(setting, ivColor)
-                }
+                },
+                TextViewItem("导出测试数据到剪切板", "", {
+                    val user: User? = RepositoryImpl.getInstance().loginUser
+                    val url: String = School.getUrl(ZhengFang.SYLLABUS, user) ?: ""
+                    val referer: String = School.getUrl(ZhengFang.MAIN, user) ?: ""
+                    APIManager.getZhengFangAPI()
+                            .getInfo(url, referer)
+                            .map {
+//                                val doc = Jsoup.parse(it.string())
+//                                val table = doc.getElementById("Table1")
+//                                table.outerHtml()
+                                it.string()
+                            }
+                            .compose(RxUtils.ioToMain())
+                            .subscribe({
+                                val cm = mView.activity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
+                                if (cm != null) {
+                                    cm.setPrimaryClip(ClipData.newPlainText("Label", it))
+                                    mView.showMessage("测试数据已复制至剪切板")
+                                } else {
+                                    mView.showMessage("导出失败")
+                                }
+                            }, {
+                                mView.showMessage(it.message ?: "ERROR")
+                            })
+                }, {})
         ))
     }
 

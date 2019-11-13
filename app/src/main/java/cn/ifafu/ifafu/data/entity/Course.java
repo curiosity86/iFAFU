@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.TreeSet;
 
 import cn.ifafu.ifafu.data.local.converter.IntTreeSetConverter;
+import cn.ifafu.ifafu.util.DateUtils;
 import cn.ifafu.ifafu.view.syllabus.CourseBase;
 import cn.ifafu.ifafu.view.syllabus.ToCourseBase;
 
@@ -170,7 +171,7 @@ public class Course implements ToCourseBase {
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", teacher='" + teacher + '\'' +
-                ", weekday=" + weekday +
+                ", weekday=" + DateUtils.getWeekdayCN(weekday) +
                 ", beginNode=" + beginNode +
                 ", nodeCnt=" + nodeCnt +
                 ", weekSet=" + weekSet +

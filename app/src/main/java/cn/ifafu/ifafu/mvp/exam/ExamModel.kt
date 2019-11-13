@@ -15,7 +15,7 @@ class ExamModel(context: Context) : BaseZFModel(context), ExamContract.Model {
 
     private var yearTerm: Pair<String, String> = getYearTerm()
 
-    override fun getExamsFromNet(year: String, term: String): Observable<MutableList<Exam>> {
+    override fun getExamsFromNet(year: String, term: String): Observable<List<Exam>> {
         val user = repository.loginUser
         val examUrl = School.getUrl(ZhengFang.EXAM, user)
         val mainUrl = School.getUrl(ZhengFang.MAIN, user)
@@ -38,7 +38,7 @@ class ExamModel(context: Context) : BaseZFModel(context), ExamContract.Model {
                 .compose(sort())
     }
 
-    override fun getExamsFromDB(year: String, term: String): Observable<MutableList<Exam>> {
+    override fun getExamsFromDB(year: String, term: String): Observable<List<Exam>> {
         return Observable.fromCallable { repository.getExams(year, term) }
                 .compose(sort())
     }
@@ -58,16 +58,24 @@ class ExamModel(context: Context) : BaseZFModel(context), ExamContract.Model {
     private fun sort(): ObservableTransformer<MutableList<Exam>, MutableList<Exam>> {
         val now = System.currentTimeMillis()
         return ObservableTransformer { t ->
-            t.doOnNext {
+            t.map {
                 it.sortedWith(Comparator { o1, o2 ->
-                    if (o1.endTime < now && o2.endTime < now) {
-                        o2.endTime.compareTo(o1.endTime)
-                    } else if (o1.endTime < now || o2.endTime < now) {
+                    if (o1.startTime == 0L && o2.startTime == 0L) {
+                        o1.id.compareTo(o2.id)
+                    } else if (o1.startTime == 0L) {
+                        1
+                    } else if (o2.startTime == 0L) {
+                        -1
+                    } else if (o1.endTime > now && o2.endTime > now) {
+                        o1.endTime.compareTo(o2.endTime)
+                    } else if (o1.endTime < now) {
+                        1
+                    }  else if (o2.endTime < now) {
                         -1
                     } else {
                         o1.endTime.compareTo(o2.endTime)
                     }
-                })
+                }).toMutableList()
             }
         }
     }

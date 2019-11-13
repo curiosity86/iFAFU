@@ -62,7 +62,7 @@ internal class ExamPresenter(view: ExamContract.View) : BaseZFPresenter<ExamCont
         mCompDisposable.clear()
     }
 
-    private fun getExams(op1: String, op2: String, update: Boolean): Observable<MutableList<Exam>> {
+    private fun getExams(op1: String, op2: String, update: Boolean): Observable<List<Exam>> {
         return if (update) {
             mModel.getExamsFromNet(op1, op2)
         } else {

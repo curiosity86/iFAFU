@@ -63,7 +63,8 @@ public class SyllabusContract {
         List<Course> getCoursesFromDB(int week, int weekday);
 
         /**
-         * 获取网络课表。若获取成功，则清除数据库网络课表，并保存
+         * 获取网络课表。
+         *  若获取成功，1、清除数据库网络课表并保存 2、加入本地课程
          * @return Html
          */
         Observable<List<Course>> getCoursesFromNet();
