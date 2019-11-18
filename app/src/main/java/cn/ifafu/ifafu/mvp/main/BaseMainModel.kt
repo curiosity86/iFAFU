@@ -6,6 +6,7 @@ import cn.ifafu.ifafu.base.ifafu.BaseZFModel
 import cn.ifafu.ifafu.data.entity.*
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.data.http.service.WeatherService
+import cn.ifafu.ifafu.mvp.exam.ExamModel
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusModel
 import cn.ifafu.ifafu.util.DateUtils
 import com.alibaba.fastjson.JSONObject
@@ -34,7 +35,15 @@ abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainC
 
     override fun getThisTermExams(): List<Exam> {
         val yearTerm = repository.yearTerm
-        return repository.getExams(yearTerm.first, yearTerm.second)
+        val model = ExamModel(mContext)
+        return model.getExamsFromDB(yearTerm.first, yearTerm.second)
+                .flatMap {
+                    if (it.isEmpty()) {
+                        model.getExamsFromNet(yearTerm.first, yearTerm.second)
+                    } else {
+                        Observable.just(it)
+                    }
+                }.blockingFirst()
     }
 
     override fun getSetting(): Setting {

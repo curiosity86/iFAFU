@@ -166,18 +166,12 @@ public class Course implements ToCourseBase {
     @NonNull
     @Override
     public String toString() {
-        return "Course{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                ", teacher='" + teacher + '\'' +
-                ", weekday=" + DateUtils.getWeekdayCN(weekday) +
-                ", beginNode=" + beginNode +
-                ", nodeCnt=" + nodeCnt +
-                ", weekSet=" + weekSet +
-//                ", color=" + color +
-                ", account='" + account + '\'' +
-                ", local=" + local +
+        return "Course{" + name  +
+                ", " + address +
+                ", " + teacher +
+                ", " + DateUtils.getWeekdayCN(weekday) +
+                "第" + beginNode + "-" + (beginNode + nodeCnt - 1) + "节" +
+                ", " + weekSet +
                 '}';
     }
 

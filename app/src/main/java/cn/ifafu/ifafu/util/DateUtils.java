@@ -15,7 +15,7 @@ import cn.ifafu.ifafu.view.syllabus.Weekday;
  */
 public class DateUtils {
 
-    private static String[] weekdays = {
+    public static final String[] weekdays = {
             "周日", "周一", "周二", "周三", "周四", "周五", "周六"};
 
     private static Calendar calendar = Calendar.getInstance();

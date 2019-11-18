@@ -22,18 +22,21 @@ class ExamModel(context: Context) : BaseZFModel(context), ExamContract.Model {
         return initParams(examUrl, mainUrl)
                 .flatMap { params ->
                     //考试查询特例，查询本学期考试只能通过GET
-                    val observable = if (year == yearTerm.first && term == yearTerm.second) {
+                    if (year == yearTerm.first && term == yearTerm.second) {
                         APIManager.getZhengFangAPI()
                                 .initParams(examUrl, mainUrl)
+                                .compose(ExamParser(user))
+                                .map { it.body }
+                                .doOnNext { save(it) }
                     } else {
                         params["xnd"] = year
                         params["xqd"] = term
                         APIManager.getZhengFangAPI()
                                 .getInfo(examUrl, examUrl, params)
+                                .compose(ExamParser(user))
+                                .map { it.body }
+                                .doOnNext { save(it) }
                     }
-                    observable.compose(ExamParser(user))
-                            .map { it.body }
-                            .doOnNext { save(it) }
                 }
                 .compose(sort())
     }

@@ -13,7 +13,6 @@ import cn.ifafu.ifafu.mvp.main.main2.Main2Fragment
 import cn.ifafu.ifafu.util.ButtonUtils
 import cn.ifafu.ifafu.view.custom.DragLayout
 import com.gyf.immersionbar.ImmersionBar
-import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.fragment_main1.*
 import kotlinx.android.synthetic.main.fragment_main2.*
 
@@ -32,7 +31,7 @@ class MainActivity : BaseActivity<IPresenter>() {
 
     private fun checkoutFragment() {
         RepositoryImpl.getInstance().setting.run {
-            MobclickAgent.onProfileSignIn(account)
+//            MobclickAgent.onProfileSignIn(account)
             if (nowTheme != theme) {
                 nowTheme = theme
                 supportFragmentManager.beginTransaction().apply {
