@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.mvp.other
+package cn.ifafu.ifafu.mvp.activity
 
 import android.content.ClipData
 import android.content.ClipboardManager

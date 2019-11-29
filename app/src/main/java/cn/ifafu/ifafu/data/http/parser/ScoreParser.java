@@ -1,5 +1,6 @@
 package cn.ifafu.ifafu.data.http.parser;
 
+import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -24,7 +25,7 @@ public class ScoreParser extends BaseParser<List<Score>> {
     }
 
     @Override
-    public List<Score> parse(String html) {
+    public List<Score> parse(@NotNull String html) {
         List<Score> list = new ArrayList<>();
         Document document = Jsoup.parse(html);
         Elements elementsTemp = document.select("table[id=\"Datagrid1\"]");

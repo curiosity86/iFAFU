@@ -21,6 +21,7 @@ public class ZhengFang {
     public static final String SYLLABUS = "SYLLABUS";
     public static final String EXAM = "EXAM";
     public static final String SCORE = "SCORE";
+    public static final String COMMENT = "COMMENT";
 
     private String baseUrl;
     private String login;

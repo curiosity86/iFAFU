@@ -5,6 +5,7 @@ import cn.ifafu.ifafu.app.IFAFU
 import cn.ifafu.ifafu.app.School
 import cn.ifafu.ifafu.base.BaseModel
 import cn.ifafu.ifafu.data.entity.Response
+import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.data.entity.ZhengFang
 import cn.ifafu.ifafu.data.exception.LoginInfoErrorException
 import cn.ifafu.ifafu.data.exception.NoAuthException
@@ -95,6 +96,8 @@ abstract class BaseZFModel(context: Context) : BaseModel(context), IZFModel {
                     }
         }
     }
+
+    protected fun getUser(): User = repository.loginUser
 
     protected fun innerLogin(loginUrl: String,
                              verifyUrl: String,

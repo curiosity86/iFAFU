@@ -12,12 +12,20 @@ android {
         applicationId "cn.ifafu.ifafu"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 43
-        versionName "1.0.14"
+        versionCode 44
+        versionName "1.0.15"
         resConfigs "zh"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        debug {
+            storeFile file('debug.jks')
+            storePassword 'woolsen'
+            keyAlias = 'key0debug'
+            keyPassword 'woolsen'
+        }
+    }
 
     buildTypes {
         debug {

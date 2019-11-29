@@ -35,7 +35,8 @@ class Main2Model(context: Context) : BaseMainModel(context), Main2Contract.Model
                 "实用工具" to listOf(
                         Pair("我的课表", R.drawable.tab_white_syllabus),
                         Pair("网页模式", R.drawable.tab_white_web),
-                        Pair("报修服务", R.drawable.tab_white_repair)),
+                        Pair("报修服务", R.drawable.tab_white_repair),
+                        Pair("一键评教", R.drawable.tab_while_comment)),
                 "软件设置" to listOf(
                         Pair("软件设置", R.drawable.ic_setting3),
                         Pair("账号管理", R.drawable.tab_white_manage)),

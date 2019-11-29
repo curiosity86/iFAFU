@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.mvp.other
+package cn.ifafu.ifafu.mvp.activity
 
 import android.R.anim
 import android.annotation.SuppressLint
@@ -19,7 +19,6 @@ import cn.ifafu.ifafu.mvp.main.MainActivity
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusActivity
 import cn.ifafu.ifafu.util.AppUtils
 import cn.ifafu.ifafu.util.RxUtils
-import com.tencent.bugly.crashreport.CrashReport.CrashHandleCallback
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_splash.*
 

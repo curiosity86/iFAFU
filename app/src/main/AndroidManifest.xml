@@ -30,7 +30,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="ExportedService,GoogleAppIndexingWarning,UnusedAttribute">
 
-        <activity android:name=".mvp.other.SplashActivity">
+        <activity android:name=".mvp.activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -48,12 +48,13 @@
         <activity android:name=".mvp.score_filter.ScoreFilterActivity" />
         <activity android:name=".mvp.exam.ExamActivity" />
         <activity android:name=".mvp.web.WebActivity" />
-        <activity android:name=".mvp.other.AboutActivity" />
+        <activity android:name=".mvp.activity.AboutActivity" />
         <activity android:name=".mvp.elec_splash.ElecSplashActivity" />
         <activity android:name=".mvp.elec_login.ElecLoginActivity" />
         <activity android:name=".mvp.elec_main.ElecMainActivity" />
         <activity android:name=".mvp.setting.SettingActivity" />
         <activity android:name=".mvp.electives.ElectiveActivity" />
+        <activity android:name=".mvp.activity.CommentActivity" />
 
         <meta-data
             android:name="APP_ICON_HD"

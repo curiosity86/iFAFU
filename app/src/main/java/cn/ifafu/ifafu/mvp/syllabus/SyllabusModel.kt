@@ -16,11 +16,10 @@ import java.util.*
 
 class SyllabusModel(context: Context) : BaseZFModel(context), Model {
 
-    private val user: User? = repository.loginUser
-
     override fun getSyllabusSetting(): SyllabusSetting {
         return repository.syllabusSetting
     }
+
     override fun getCurrentWeek(): Int {
         return try {
             val setting = syllabusSetting
@@ -120,6 +119,7 @@ class SyllabusModel(context: Context) : BaseZFModel(context), Model {
     }
 
     override fun getCoursesFromNet(): Observable<List<Course>> {
+        val user = getUser()
         val url: String = School.getUrl(ZhengFang.SYLLABUS, user) ?: ""
         val referer: String = School.getUrl(ZhengFang.MAIN, user) ?: ""
         return initParams(url, referer).flatMap {

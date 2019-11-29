@@ -41,4 +41,20 @@ public interface ZhengFangService {
             @Header("Referer") String referer,
             @FieldMap Map<String, String> fieldMap
     );
+
+
+    @POST
+    @FormUrlEncoded
+    Observable<ResponseBody> post(
+            @Url String url,
+            @FieldMap Map<String, String> fieldMap
+    );
+
+    @POST
+    @FormUrlEncoded
+    Observable<ResponseBody> post(
+            @Url String url,
+            @Header("Referer") String referer,
+            @FieldMap Map<String, String> fieldMap
+    );
 }

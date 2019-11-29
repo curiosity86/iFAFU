@@ -10,7 +10,7 @@ import androidx.test.runner.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import cn.ifafu.ifafu.mvp.other.AboutActivity;
+import cn.ifafu.ifafu.mvp.activity.AboutActivity;
 
 /**
  * Instrumented test, which will execute on an Android device.

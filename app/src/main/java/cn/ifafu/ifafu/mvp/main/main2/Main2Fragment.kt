@@ -12,10 +12,11 @@ import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.data.entity.NextCourse
 import cn.ifafu.ifafu.data.entity.NextExam
+import cn.ifafu.ifafu.mvp.activity.AboutActivity
+import cn.ifafu.ifafu.mvp.activity.CommentActivity
 import cn.ifafu.ifafu.mvp.elec_splash.ElecSplashActivity
 import cn.ifafu.ifafu.mvp.exam.ExamActivity
 import cn.ifafu.ifafu.mvp.main.BaseMainFragment
-import cn.ifafu.ifafu.mvp.other.AboutActivity
 import cn.ifafu.ifafu.mvp.score.ScoreActivity
 import cn.ifafu.ifafu.mvp.setting.SettingActivity
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusActivity
@@ -106,6 +107,7 @@ class Main2Fragment : BaseMainFragment<Main2Contract.Presenter>(),
                     putExtra("url", Constant.REPAIR_URL)
                 })
             }
+            "一键评教" -> startActivity(Intent(context, CommentActivity::class.java))
             "账号管理" -> mPresenter.checkout()
             "软件设置" -> startActivityForResult(Intent(context, SettingActivity::class.java), Constant.ACTIVITY_SETTING)
             "检查更新" -> mPresenter.updateApp()

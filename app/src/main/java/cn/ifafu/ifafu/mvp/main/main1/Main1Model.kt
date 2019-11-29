@@ -9,6 +9,7 @@ import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.School
 import cn.ifafu.ifafu.data.entity.Holiday
 import cn.ifafu.ifafu.data.entity.Menu
+import cn.ifafu.ifafu.mvp.activity.CommentActivity
 import cn.ifafu.ifafu.mvp.elec_splash.ElecSplashActivity
 import cn.ifafu.ifafu.mvp.exam.ExamActivity
 import cn.ifafu.ifafu.mvp.main.BaseMainModel
@@ -31,7 +32,8 @@ class Main1Model(context: Context) : BaseMainModel(context), Main1Contract.Model
                     Menu(drawable(R.drawable.tab_repair), "报修服务", intent(WebActivity::class.java).apply {
                         putExtra("title", "报修服务")
                         putExtra("url", Constant.REPAIR_URL)
-                    })
+                    }),
+                    Menu(drawable(R.drawable.tab_comment), "一键评教", intent(CommentActivity::class.java))
             )
         }
     }

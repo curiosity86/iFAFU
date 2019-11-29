@@ -16,7 +16,10 @@ public class Response<T> {
 
     private Map<String, String> hiddenParams;
 
-    private Response(int code, T body, String message) {
+    public Response() {
+    }
+
+    public Response(int code, T body, String message) {
         this.code = code;
         this.message = message;
         this.body = body;
@@ -28,6 +31,10 @@ public class Response<T> {
 
     public T getBody() {
         return body;
+    }
+
+    public void setBody(T body) {
+        this.body = body;
     }
 
     public String getMessage() {

@@ -10,7 +10,7 @@ import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.data.entity.Menu
 import cn.ifafu.ifafu.mvp.main.BaseMainFragment
-import cn.ifafu.ifafu.mvp.other.AboutActivity
+import cn.ifafu.ifafu.mvp.activity.AboutActivity
 import cn.ifafu.ifafu.mvp.setting.SettingActivity
 import cn.ifafu.ifafu.util.ButtonUtils
 import cn.ifafu.ifafu.view.adapter.MenuAdapter

@@ -4,7 +4,6 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 
 import cn.ifafu.ifafu.app.School;
-import cn.ifafu.ifafu.data.announce.SchoolCode;
 import org.greenrobot.greendao.annotation.Generated;
 
 @Entity
@@ -15,7 +14,10 @@ public class User {
     private String password; // 密码
     private String name; // 名字
 
-    @SchoolCode
+    /**
+     * {@link School.FAFU}
+     * {@link School.FAFU_JS}
+     */
     private int schoolCode = School.FAFU;
 
     @Generated(hash = 201153438)

@@ -28,17 +28,6 @@ class IFAFU : BaseApplication() {
         }
         UMConfigure.init(this, "5d4082673fc1955041000408", "web", UMConfigure.DEVICE_TYPE_PHONE, "1a446c1ae0455153aa502937a87e5634")
         MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
-////        UMConfigure.setLogEnabled(BuildConfig.DEBUG)
-//        val mPushAgent = PushAgent.getInstance(this)
-//        mPushAgent.register(object : IUmengRegisterCallback {
-//            override fun onSuccess(p0: String?) {
-//                Log.i("UMLog", "注册成功：deviceToken：-------->  $p0")
-//            }
-//
-//            override fun onFailure(p0: String?, p1: String?) {
-//                Log.i("UMLog", "注册失败：deviceToken：-------->  $p0, $p1")
-//            }
-//        })
     }
 
     companion object {

@@ -25,6 +25,7 @@ public class School {
                     put(ZhengFang.SYLLABUS, new ZFApi("xskbcx.aspx", "N121602"));
                     put(ZhengFang.EXAM, new ZFApi("xskscx.aspx", "N121604"));
                     put(ZhengFang.SCORE, new ZFApi("xscjcx_dq_fafu.aspx", "N121605"));
+                    put(ZhengFang.COMMENT, new ZFApi("xsjxpj2fafu2.aspx", "N121400"));
                 }}));
         URL_MAP.put(FAFU_JS, new ZhengFang(FAFU_JS, "http://js.ifafu.cn/",
                 "default.aspx",

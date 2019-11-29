@@ -14,28 +14,31 @@ internal class WebPresenter(view: View) : BaseZFPresenter<View, WebContract.Mode
     override fun onCreate() {
 
         val title: String? = mView.activity.intent.getStringExtra("title")
+        val referer: String? = mView.activity.intent.getStringExtra("referer")
         val url: String? = mView.activity.intent.getStringExtra("url")
 
-        if (title != null && url != null) {
+        if (url != null && title != null) {
             mView.setTitle(title)
+            if (referer != null) {
+                setCookie(url, referer)
+            }
             mView.loadUrl(url)
         } else {
             mView.setTitle(resId = R.string.title_web_mode)
-            loadZF()
+            loadUrl(mModel.getMainUrl(), SPUtils.get(Constant.SP_COOKIE).getString("ASP.NET_SessionId"))
         }
     }
 
-    private fun loadZF() {
+    private fun loadUrl(url: String, cookie: String) {
         mCompDisposable.add(mModel.loadMainHtml()
                 .map {
-                    mModel.getMainUrl().apply {
-                        setCookie(this, SPUtils.get(Constant.SP_COOKIE).getString("ASP.NET_SessionId"))
-                    }
+                    setCookie(url, cookie)
+                    url
                 }
                 .compose(RxUtils.ioToMain())
                 .doOnSubscribe { mView.showLoading() }
                 .doFinally { mView.hideLoading() }
-                .subscribe({ url: String -> mView.loadUrl(url) }, { throwable: Throwable ->
+                .subscribe({ mView.loadUrl(url) }, { throwable: Throwable ->
                     mView.loadUrl(mModel.getMainUrl())
                     onError(throwable)
                 })
