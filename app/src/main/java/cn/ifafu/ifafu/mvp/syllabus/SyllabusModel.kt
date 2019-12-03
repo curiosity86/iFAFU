@@ -2,17 +2,18 @@ package cn.ifafu.ifafu.mvp.syllabus
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import cn.ifafu.ifafu.app.School
 import cn.ifafu.ifafu.base.ifafu.BaseZFModel
 import cn.ifafu.ifafu.data.entity.*
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.data.http.parser.SyllabusParser
+import cn.ifafu.ifafu.data.http.parser.SyllabusParser2
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusContract.Model
 import cn.ifafu.ifafu.util.DateUtils
 import io.reactivex.Observable
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class SyllabusModel(context: Context) : BaseZFModel(context), Model {
 
@@ -78,19 +79,16 @@ class SyllabusModel(context: Context) : BaseZFModel(context), Model {
         for (holiday in holidays) {
             if (holiday.fromTo != null) { //节假日需要调课
                 for ((key, value) in holiday.fromTo) {
-
                     val fromDate: Date = format.parse(key)
                     val fromWeek = DateUtils.getCurrentWeek(openingDate, fromDate, setting.firstDayOfWeek)
                     calendar.time = fromDate
                     val fromWeekday = calendar.get(Calendar.DAY_OF_WEEK)
-                    Log.d("Holiday Calc", "from week: $fromWeek, fromWeekday: $fromWeekday")
-
+//                    Log.d("Holiday Calc", "from week: $fromWeek, fromWeekday: $fromWeekday")
                     val toDate: Date = format.parse(value)
                     val toWeek = DateUtils.getCurrentWeek(openingDate, toDate, setting.firstDayOfWeek)
                     calendar.time = toDate
                     val toWeekday = calendar.get(Calendar.DAY_OF_WEEK)
                     val toPair = Pair(toWeek, toWeekday)
-
                     fromToMap.getOrPut(fromWeek, { HashMap() })[fromWeekday] = toPair
                 }
             }
@@ -118,40 +116,47 @@ class SyllabusModel(context: Context) : BaseZFModel(context), Model {
         return fromToMap
     }
 
-    override fun getCoursesFromNet(): Observable<List<Course>> {
+    override fun getCoursesFromNet(): Observable<Response<MutableList<Course>>> {
         val user = getUser()
         val url: String = School.getUrl(ZhengFang.SYLLABUS, user) ?: ""
         val referer: String = School.getUrl(ZhengFang.MAIN, user) ?: ""
-        return initParams(url, referer).flatMap {
-            APIManager.getZhengFangAPI()
-                    .getInfo(url, referer)
-                    .compose(SyllabusParser(user))
-                    .doOnNext { courses ->
-                        if (courses.isNotEmpty()) {
-                            repository.deleteAllOnlineCourse()
-                            repository.saveCourse(courses)
-                            //获取校区信息（影响上课时间）
-                            val setting = repository.syllabusSetting
-                            var qs = false
-                            for (course in repository.allCourses) {
-                                if (course.address?.contains("旗教") == true) {
-                                    qs = true
-                                    break
-                                }
-                            }
-                            setting.beginTime = (if (qs) SyllabusSetting.intBeginTime[1] else SyllabusSetting.intBeginTime[0]).toList()
-                            repository.saveSyllabusSetting(setting)
-                            courses.addAll(repository.getCourses(true))
-                        } else {
-                            //获取课表为空则调取数据库完整课表
-                            courses.addAll(repository.allCourses)
-                        }
+        return initParams(url, referer)
+                .flatMap {
+                    val type = repository.syllabusSetting.parseType
+                    if (type == 1) {
+                        APIManager.getZhengFangAPI()
+                                .getInfo(url, referer)
+                                .compose(SyllabusParser(user))
+                    } else {
+                        val html = APIManager.getZhengFangAPI().getInfo(url, referer).blockingFirst().string()
+                        APIManager.getZhengFangAPI()
+                                .parse("http://woolsen.cn:8080/syllabus", html)
+                                .compose(SyllabusParser2(user))
+                                .map { Response.success(it) }
                     }
-        }
-    }
-
-    override fun deleteCourse(course: Course) {
-        repository.deleteCourse(course)
+                }
+                .doOnNext { response ->
+                    val courses = response.body ?: ArrayList()
+                    if (courses.isNotEmpty()) {
+                        repository.deleteAllOnlineCourse()
+                        repository.saveCourse(courses)
+                        //获取校区信息（影响上课时间）
+                        val setting = repository.syllabusSetting
+                        var qs = false
+                        for (course in repository.allCourses) {
+                            if (course.address?.contains("旗教") == true) {
+                                qs = true
+                                break
+                            }
+                        }
+                        setting.beginTime = (if (qs) SyllabusSetting.intBeginTime[1] else SyllabusSetting.intBeginTime[0]).toList()
+                        repository.saveSyllabusSetting(setting)
+                        courses.addAll(repository.getCourses(true))
+                    } else {
+                        //获取课表为空则调取数据库完整课表
+                        courses.addAll(repository.allCourses)
+                    }
+                }
     }
 
     override fun getCoursesFromDB(week: Int, weekday: Int): List<Course> {

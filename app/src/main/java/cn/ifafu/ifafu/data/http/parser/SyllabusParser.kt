@@ -1,9 +1,10 @@
 package cn.ifafu.ifafu.data.http.parser
 
+import android.util.Log
 import cn.ifafu.ifafu.data.entity.Course
+import cn.ifafu.ifafu.data.entity.Response
 import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.util.DateUtils
-import cn.ifafu.ifafu.util.RegexUtils
 import cn.ifafu.ifafu.util.getInts
 import org.jsoup.Jsoup
 import java.util.*
@@ -14,11 +15,11 @@ import kotlin.collections.HashMap
 /**
  * Created by woolsen on 19/8/1
  */
-class SyllabusParser(user: User? = null) : BaseParser<MutableList<Course>>() {
+class SyllabusParser(user: User? = null) : BaseParser<Response<MutableList<Course>>>() {
 
     private val account: String = user?.account ?: "null"
 
-    override fun parse(html: String): MutableList<Course> {
+    override fun parse(html: String): Response<MutableList<Course>> {
         val courses = ArrayList<Course>()
         //模拟html绘制表格，标记课程位置[1-12][1-7]，用于辅助解析课程时间
         val locFlag = Array(16) { BooleanArray(8) }
@@ -27,39 +28,47 @@ class SyllabusParser(user: User? = null) : BaseParser<MutableList<Course>>() {
         val doc = Jsoup.parse(html)
         //解析调课信息
         val changeMap = HashMap<String, Pair<Course, Course?>>()
-        val changeTds = doc.getElementById("DBGrid").getElementsByTag("tr")
+        val table = doc.getElementById("DBGrid")
+                ?: return if (html.contains("完成评价")) {
+                    Response.failure("请先完成学生教学评价后，才能查询课表")
+                } else {
+                    Response.failure("未知错误")
+                }
+        val changeTds = table.getElementsByTag("tr")
         for (i in 2 until changeTds.size) {
             val tds = changeTds[i].getElementsByTag("td")
             val tds0Text = tds[0].text()
-            if (tds0Text.matches("补[0-9]{3,4}".toRegex())) {//补课
-                //直接添加到list中
-                val course = Course().apply {
-                    name = tds[1].text()
-                    parseText(tds[3].text())
-                }
-                courses.add(course)
-            } else { //调课、换课、停课
-                //获取原上课信息
-                val beforeChangeCourse = Course().apply {
-                    name = tds[1].text()
-                    parseText(tds[2].text())
-                }
-                //获取现上课信息，若停课则为null
-                val afterChangeCourse =
-                        if (tds0Text.matches("停[0-9]{3,4}".toRegex())) {
-                            null
-                        } else {
-                            Course().apply {
-                                name = tds[1].text()
-                                parseText(tds[3].text())
+            try {
+                if (tds0Text.matches("补[0-9]{3,4}".toRegex())) {//补课
+                    //直接添加到list中
+                    val course = Course().apply {
+                        name = tds[1].text()
+                        parseText(tds[3].text())
+                    }
+                    courses.add(course)
+                } else { //调课、换课、停课
+                    //获取原上课信息
+                    val beforeChangeCourse = Course().apply {
+                        name = tds[1].text()
+                        parseText(tds[2].text())
+                    }
+                    //获取现上课信息，若停课则为null
+                    val afterChangeCourse =
+                            if (tds0Text.matches("停[0-9]{3,4}".toRegex())) {
+                                null
+                            } else {
+                                Course().apply {
+                                    name = tds[1].text()
+                                    parseText(tds[3].text())
+                                }
                             }
-                        }
-                changeMap[tds0Text] = Pair(beforeChangeCourse, afterChangeCourse)
+                    changeMap[tds0Text] = Pair(beforeChangeCourse, afterChangeCourse)
+                }
+            } catch (e: ParseException) {
+                Log.e("Syllabus ERROR", tds.outerHtml())
+                e.printStackTrace()
             }
         }
-//        changeMap.entries.forEach {
-//            println(it)
-//        }
         //定位到第几节课一行过的所有元素
         val nodeTrs = doc.getElementById("Table1").getElementsByTag("tr")
         for (i in 2 until nodeTrs.size) {
@@ -70,7 +79,7 @@ class SyllabusParser(user: User? = null) : BaseParser<MutableList<Course>>() {
                 val s = tds[index].text()
                 val nodeRegex = "第[0-9]{1,2}节"
                 if (s.matches(nodeRegex.toRegex())) {
-                    time.beginNode = RegexUtils.getNumbers(s)[0]
+                    time.beginNode = s.getInts()[0]
                     index++
                     break
                 }
@@ -78,7 +87,6 @@ class SyllabusParser(user: User? = null) : BaseParser<MutableList<Course>>() {
             }
             for (j in 0 until tds.size - index) {  //定位到第几节课第几格的元素
                 val td = tds[index + j]
-
                 //列的备用方案
                 var hNode = 0
                 for (col in 1..7) {
@@ -113,11 +121,11 @@ class SyllabusParser(user: User? = null) : BaseParser<MutableList<Course>>() {
                     try {
                         val info = s1.split("<br>".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                         val course = Course()
-                        course.name = info[0]
+                        course.name = info[0].trim()
                         course.into(Time.parse1(info[1], time))
-                        course.teacher = info[2]
+                        course.teacher = info[2].trim()
                         if (info.size > 3) {
-                            course.address = info[3]
+                            course.address = info[3].trim()
                         }
                         course.account = account
                         if (s1.contains("\\([调停换][0-9]{3,4}\\)".toRegex())) {
@@ -197,12 +205,12 @@ class SyllabusParser(user: User? = null) : BaseParser<MutableList<Course>>() {
             }
         }
         afterMergeCourses.sortBy { it.name + it.weekday }
-        return afterMergeCourses.apply {
+        return Response.success(afterMergeCourses.apply {
             forEach {
                 it.account = account
                 it.id = it.hashCode().toLong()
             }
-        }
+        })
     }
 
     private fun Course.into(time: Time) {
@@ -238,14 +246,14 @@ class SyllabusParser(user: User? = null) : BaseParser<MutableList<Course>>() {
                 //解析上课节数
                 val m1 = Pattern.compile("第.*节").matcher(text)
                 if (m1.find() && !m1.group().contains("-")) {
-                    val intList = RegexUtils.getNumbers(m1.group())
+                    val intList = m1.group().getInts()
                     time.beginNode = intList[0]
                     time.nodeLength = intList.size
                 } else {
                     time.beginNode = help.beginNode
                     val m2 = Pattern.compile("[0-9]+节\\\\周").matcher(text)
                     time.nodeLength = if (m2.find()) {
-                        RegexUtils.getNumbers(m2.group())[0]
+                        m2.group().getInts()[0]
                     } else {
                         help.nodeLength
                     }
@@ -265,7 +273,7 @@ class SyllabusParser(user: User? = null) : BaseParser<MutableList<Course>>() {
                 //解析周次
                 val m2 = Pattern.compile("第[0-9]+-[0-9]+周").matcher(text)
                 if (m2.find()) {
-                    val intList = RegexUtils.getNumbers(m2.group())
+                    val intList = m2.group().getInts()
                     var beginWeek = intList[0]
                     val endWeek = intList[1]
                     //weekType
@@ -297,7 +305,7 @@ class SyllabusParser(user: User? = null) : BaseParser<MutableList<Course>>() {
             @Throws(ParseException::class)
             fun parse2(text: String): Time {
                 val time = Time()
-                Pattern.compile("周[0-9]").matcher(text).runCatching {
+                Pattern.compile("周[1-7]").matcher(text).runCatching {
                     find()
                     time.weekday = this.group().getInts()[0]
                 }.onFailure {

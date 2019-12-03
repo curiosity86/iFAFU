@@ -47,20 +47,18 @@ internal class SyllabusItemPresenter(view: SyllabusItemContract.View) : BasePres
     }
 
     private fun resetView(course: Course) {
-        mView.setNameText(course.name)
-
-        if (course.teacher.isEmpty()) {
-            mView.setTeacherText("无")
-        } else {
-            mView.setTeacherText(course.teacher)
-        }
-
-        if (course.address.isEmpty()) {
-            mView.setAddressText("无")
-        } else {
-            mView.setAddressText(course.address)
-        }
-
+        mView.setNameText(
+                if (course.name.isNullOrEmpty()) "无"
+                else course.name
+        )
+        mView.setTeacherText(
+                if (course.teacher.isNullOrEmpty()) "无"
+                else course.teacher
+        )
+        mView.setAddressText(
+                if (course.address.isNullOrEmpty()) "无"
+                else course.address
+        )
         mView.setWeekData(course.weekSet)
         onTimeSelect(course.weekday - 1, course.beginNode - 1,
                 course.beginNode + course.nodeCnt - 2)

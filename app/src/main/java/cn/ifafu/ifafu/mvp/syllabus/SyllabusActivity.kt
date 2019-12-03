@@ -119,7 +119,7 @@ class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusCon
         view_pager.setCurrentItem(currentWeek - 1, false)
     }
 
-    override fun setSyllabusDate(courses: MutableList<MutableList<CourseBase>?>) {
+    override fun setSyllabusData(courses: MutableList<MutableList<CourseBase>?>) {
         mPageAdapter.courses = courses
     }
 

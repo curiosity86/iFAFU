@@ -12,7 +12,7 @@ android {
         applicationId "cn.ifafu.ifafu"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 44
+        versionCode 46
         versionName "1.0.15"
         resConfigs "zh"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -63,10 +63,6 @@ android {
 
         }
 
-        huawei {
-            
-        }
-
         productFlavors.all { flavor ->
             flavor.manifestPlaceholders = [channel: name]
         }
@@ -84,7 +80,7 @@ android {
 
     greendao {
         //版本号，升级时可配置
-        schemaVersion 31
+        schemaVersion 32
         daoPackage 'cn.ifafu.ifafu.dao'
     }
 
@@ -100,16 +96,16 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta3'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation "androidx.viewpager2:viewpager2:1.0.0-rc01"
-    implementation 'androidx.core:core:1.2.0-beta02'
-    implementation 'com.google.android.material:material:1.2.0-alpha01'
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
+    implementation 'androidx.core:core:1.2.0-rc01'
+    implementation 'com.google.android.material:material:1.2.0-alpha02'
     //Kotlin
     implementation "androidx.core:core-ktx:1.1.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     //选择器
     implementation 'com.contrarywind:Android-PickerView:4.1.7'
     implementation 'com.orhanobut:dialogplus:1.11@aar'
-    implementation 'com.zhihu.android:matisse:0.5.3-beta2'
+    implementation 'com.zhihu.android:matisse:0.5.3-beta3'
 //    implementation 'com.nfleo:MatisseKotlin:1.1.1'
 //    implementation 'com.jph.takephoto:takephoto_library:4.+'
     //刷新库

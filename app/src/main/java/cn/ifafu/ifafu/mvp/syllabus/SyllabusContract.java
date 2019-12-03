@@ -9,6 +9,7 @@ import cn.ifafu.ifafu.base.ifafu.IZFModel;
 import cn.ifafu.ifafu.base.ifafu.IZFPresenter;
 import cn.ifafu.ifafu.data.entity.Course;
 import cn.ifafu.ifafu.data.entity.Holiday;
+import cn.ifafu.ifafu.data.entity.Response;
 import cn.ifafu.ifafu.data.entity.SyllabusSetting;
 import cn.ifafu.ifafu.view.syllabus.CourseBase;
 import io.reactivex.Observable;
@@ -29,11 +30,6 @@ public class SyllabusContract {
          * 强制刷新（显示 Progress 与 Toast）
          */
         void updateSyllabusNet();
-
-        /**
-         * 删除课程
-         */
-        void onDelete(Course course);
 
         void cancelLoading();
     }
@@ -67,9 +63,7 @@ public class SyllabusContract {
          *  若获取成功，1、清除数据库网络课表并保存 2、加入本地课程
          * @return Html
          */
-        Observable<List<Course>> getCoursesFromNet();
-
-        void deleteCourse(Course course);
+        Observable<Response<List<Course>>> getCoursesFromNet();
 
     }
 
@@ -79,7 +73,7 @@ public class SyllabusContract {
 
         void setSyllabusSetting(SyllabusSetting setting);
 
-        void setSyllabusDate(List<List<CourseBase>> courses);
+        void setSyllabusData(List<List<CourseBase>> courses);
 
     }
 }

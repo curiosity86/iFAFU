@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.data.http.parser
 import cn.ifafu.ifafu.data.entity.Exam
 import cn.ifafu.ifafu.data.entity.Response
 import cn.ifafu.ifafu.data.entity.User
-import cn.ifafu.ifafu.util.RegexUtils
+import cn.ifafu.ifafu.util.getInts
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
 import java.util.*
@@ -38,7 +38,7 @@ class ExamParser(user: User) : BaseParser<Response<MutableList<Exam>>>() {
         val exam = Exam()
 
 
-        val numbers = RegexUtils.getNumbers(e[3].text())
+        val numbers = e[3].text().getInts()
         val calendar = Calendar.getInstance().apply {
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)

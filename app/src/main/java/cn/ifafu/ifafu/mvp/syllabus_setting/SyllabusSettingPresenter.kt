@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.os.Build
 import cn.ifafu.ifafu.app.School
 import cn.ifafu.ifafu.base.BasePresenter
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
@@ -30,6 +29,14 @@ class SyllabusSettingPresenter(view: SyllabusSettingContract.View)
     override fun onCreate() {
         println(JSONObject.toJSONString(setting))
         mView.initRecycleView(listOf(
+                CheckBoxItem("是否使用网络解析", "通过服务器解析，课表出问题就选它，然后刷新课表",
+                        setting.parseType == 2) {
+                    if (it) {
+                        setting.parseType = 2
+                    } else {
+                        setting.parseType = 1
+                    }
+                },
                 SeekBarItem("一天课程的节数", setting.totalNode, "节", 8, 12) {
                     setting.totalNode = it
                 },
@@ -52,11 +59,7 @@ class SyllabusSettingPresenter(view: SyllabusSettingContract.View)
                     setting.statusDartFont = it
                 },
                 TextViewItem("课表背景", "长按重置为默认背景", {
-                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                        mView.showMessage("AndroidQ暂不支持自定义背景，方法还在研究中~")
-                    } else {
-                        mView.showPicturePicker()
-                    }
+                    mView.showPicturePicker()
                 }, {
                     setting.background = null
                     mView.showMessage("课表背景已重置")

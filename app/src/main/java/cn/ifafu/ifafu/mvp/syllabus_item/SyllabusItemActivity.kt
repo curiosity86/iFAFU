@@ -131,7 +131,7 @@ class SyllabusItemActivity : BaseActivity<SyllabusItemContract.Presenter>(), Syl
         return et_course_teacher.text.toString()
     }
 
-    override fun setNameText(name: String?) {
+    override fun setNameText(name: String) {
         tv_course_name.text = name
         et_course_name.setText(name)
     }

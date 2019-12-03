@@ -53,6 +53,8 @@ public class SyllabusSetting {
 
     private boolean isForceRefresh = false; // 每次进入课表，自动刷新课表
 
+    private int parseType = 1; //1:本地解析   2：网络解析
+
     @Convert(converter = IntListConverter.class, columnType = String.class)
     private List<Integer> beginTime;
 
@@ -60,9 +62,9 @@ public class SyllabusSetting {
         this.account = account;
     }
 
-    @Generated(hash = 245806061)
+    @Generated(hash = 488381023)
     public SyllabusSetting(String account, int weekCnt, int nodeCnt, boolean showSaturday, boolean showSunday, boolean showBeginTimeText, boolean showHorizontalLine, boolean showVerticalLine, String openingDay, int nodeLength, int firstDayOfWeek,
-            String background, int textSize, int themeColor, boolean statusDartFont, boolean isForceRefresh, List<Integer> beginTime) {
+            String background, int textSize, int themeColor, boolean statusDartFont, boolean isForceRefresh, int parseType, List<Integer> beginTime) {
         this.account = account;
         this.weekCnt = weekCnt;
         this.nodeCnt = nodeCnt;
@@ -79,6 +81,7 @@ public class SyllabusSetting {
         this.themeColor = themeColor;
         this.statusDartFont = statusDartFont;
         this.isForceRefresh = isForceRefresh;
+        this.parseType = parseType;
         this.beginTime = beginTime;
     }
 
@@ -286,6 +289,14 @@ public class SyllabusSetting {
 
     public void setBeginTime(List<Integer> beginTime) {
         this.beginTime = beginTime;
+    }
+
+    public int getParseType() {
+        return this.parseType;
+    }
+
+    public void setParseType(int parseType) {
+        this.parseType = parseType;
     }
 
     public static Integer[][] intBeginTime = new Integer[][]{

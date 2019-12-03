@@ -4,6 +4,7 @@ import java.util.Map;
 
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;
+import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -56,5 +57,12 @@ public interface ZhengFangService {
             @Url String url,
             @Header("Referer") String referer,
             @FieldMap Map<String, String> fieldMap
+    );
+
+    @POST
+    @FormUrlEncoded
+    Observable<ResponseBody> parse(
+            @Url String url,
+            @Field(value = "html") String html
     );
 }

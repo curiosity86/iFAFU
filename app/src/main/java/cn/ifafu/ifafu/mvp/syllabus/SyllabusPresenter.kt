@@ -6,6 +6,7 @@ import cn.ifafu.ifafu.R.string
 import cn.ifafu.ifafu.base.addDisposable
 import cn.ifafu.ifafu.base.ifafu.BaseZFPresenter
 import cn.ifafu.ifafu.data.entity.Course
+import cn.ifafu.ifafu.data.entity.Response
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
 import cn.ifafu.ifafu.mvp.login.LoginActivity
 import cn.ifafu.ifafu.util.RxUtils
@@ -32,13 +33,18 @@ class SyllabusPresenter(view: SyllabusContract.View)
     override fun updateSyllabusNet() {
         addDisposable {
             mModel.coursesFromNet
-                    .map(this::holidayChange)
                     .compose(RxUtils.ioToMain())
                     .doOnSubscribe { mView.showLoading() }
                     .doFinally { mView.hideLoading() }
-                    .subscribe({ list ->
-                        mView.setSyllabusDate(list)
-                        mView.showMessage(string.syllabus_refresh_success)
+                    .subscribe({ response ->
+                        if (response.isSuccess) {
+                            val courses = holidayChange(response.body)
+                            mView.setSyllabusData(courses)
+                            mView.showMessage(string.syllabus_refresh_success)
+                        } else {
+                            mView.showMessage(response.message)
+                            mView.setSyllabusData(emptyList())
+                        }
                     }, this::onError)
         }
     }
@@ -52,14 +58,19 @@ class SyllabusPresenter(view: SyllabusContract.View)
                             mModel.coursesFromNet
                         } else {
                             Observable.just(o)
+                                    .map { Response.success(it) }
                         }
                     }
-                    .map(this::holidayChange)
                     .compose(RxUtils.ioToMain())
                     .doOnSubscribe { mView.showLoading() }
                     .doFinally { mView.hideLoading() }
-                    .subscribe({ list ->
-                        mView.setSyllabusDate(list)
+                    .subscribe({ response ->
+                        if (response.isSuccess) {
+                            mView.setSyllabusData(holidayChange(response.body))
+                        } else {
+                            mView.setSyllabusData(emptyList())
+                            mView.showMessage(response.message)
+                        }
                     }, this::onError)
         }
     }
@@ -121,11 +132,6 @@ class SyllabusPresenter(view: SyllabusContract.View)
             }
         }
         return courseArray
-    }
-
-    override fun onDelete(course: Course) {
-        mModel.deleteCourse(course)
-        updateSyllabusLocal()
     }
 
     override fun cancelLoading() {
