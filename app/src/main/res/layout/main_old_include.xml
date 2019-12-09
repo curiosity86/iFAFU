@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_content"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@drawable/main_old_bg"
+    android:layout_height="match_parent">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:background="@color/global_blue"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/global_blue">
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/shape_head_img"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_name_big"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:gravity="center_horizontal|bottom"
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tv_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="24dp"
+                android:gravity="center_horizontal"
+                android:paddingTop="2dp"
+                android:textColor="#ffffff"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                style="@style/CardStyle">
+
+                <include android:id="@+id/layout_syllabus"
+                    layout="@layout/main_old_syllabus_include" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                style="@style/CardStyle">
+
+                <include android:id="@+id/layout_exam"
+                    layout="@layout/main_old_exam_include" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                style="@style/CardStyle">
+
+                <include android:id="@+id/layout_score"
+                    layout="@layout/main_old_score_include" />
+
+            </LinearLayout>
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="160dp"-->
+<!--                style="@style/CardStyle">-->
+
+<!--            </LinearLayout>-->
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="16dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</LinearLayout>

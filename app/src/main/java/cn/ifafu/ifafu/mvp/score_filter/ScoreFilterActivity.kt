@@ -9,14 +9,14 @@ import cn.ifafu.ifafu.data.entity.Score
 import cn.ifafu.ifafu.view.adapter.ScoreFilterAdapter
 import cn.ifafu.ifafu.view.custom.RecyclerViewDivider
 import com.jaeger.library.StatusBarUtil
-import kotlinx.android.synthetic.main.activity_score_filter.*
+import kotlinx.android.synthetic.main.score_filter_activity.*
 
 class ScoreFilterActivity : BaseActivity<ScoreFilterConstant.Presenter>(), ScoreFilterConstant.View {
 
     private lateinit var mAdapter: ScoreFilterAdapter
 
     override fun getLayoutId(savedInstanceState: Bundle?): Int {
-        return R.layout.activity_score_filter
+        return R.layout.score_filter_activity
     }
 
     override fun initData(savedInstanceState: Bundle?) {

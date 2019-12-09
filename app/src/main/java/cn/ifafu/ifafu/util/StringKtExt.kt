@@ -1,5 +1,6 @@
 package cn.ifafu.ifafu.util
 
+import java.net.URLEncoder
 import java.util.regex.Pattern
 
 fun String.getInts(): List<Int> {
@@ -9,4 +10,8 @@ fun String.getInts(): List<Int> {
         list.add(m.group().toInt())
     }
     return list
+}
+
+fun String.encode(enc: String): String {
+    return URLEncoder.encode(this, enc)
 }

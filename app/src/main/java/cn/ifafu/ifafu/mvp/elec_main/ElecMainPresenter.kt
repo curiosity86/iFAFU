@@ -1,14 +1,21 @@
 package cn.ifafu.ifafu.mvp.elec_main
 
 import cn.ifafu.ifafu.R
+import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.base.BasePresenter
 import cn.ifafu.ifafu.data.entity.ElecQuery
 import cn.ifafu.ifafu.data.entity.Selection
+import cn.ifafu.ifafu.data.local.RepositoryImpl
+import cn.ifafu.ifafu.util.AppUtils
 import cn.ifafu.ifafu.util.RxUtils
+import cn.ifafu.ifafu.util.SPUtils
 import io.reactivex.Observable
 import java.util.*
 
-class ElecMainPresenter(view: ElecMainContract.View) : BasePresenter<ElecMainContract.View, ElecMainContract.Model>(view, ElecMainModel(view.context)), ElecMainContract.Presenter {
+class ElecMainPresenter(view: ElecMainContract.View) :
+        BasePresenter<ElecMainContract.View, ElecMainContract.Model>(
+                view, ElecMainModel(view.context)
+        ), ElecMainContract.Presenter {
 
     private var areaInfos: Selection? = null
     private var buildingInfos: Selection? = null
@@ -47,6 +54,22 @@ class ElecMainPresenter(view: ElecMainContract.View) : BasePresenter<ElecMainCon
                     }
                 }, { this.onError(it) })
         )
+    }
+
+    /**
+     * @return true MainActivity
+     * false LoginActivity
+     */
+    private fun jumpJudge(): Boolean {
+        val elecCookie = RepositoryImpl.getInstance().elecCookie
+        val elecUser = RepositoryImpl.getInstance().elecUser
+        if (!SPUtils.get(Constant.SP_ELEC).contain("IMEI")) {
+            SPUtils.get(Constant.SP_ELEC).putString("IMEI", AppUtils.imei())
+        }
+        if (!SPUtils.get(Constant.SP_ELEC).contain("User-Agent")) {
+            SPUtils.get(Constant.SP_ELEC).putString("User-Agent", AppUtils.getUserAgent())
+        }
+        return elecCookie != null && elecUser != null
     }
 
     /**

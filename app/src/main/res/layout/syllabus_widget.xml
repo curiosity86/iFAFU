@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="160dp"
-    android:background="@drawable/bg_translucent"
+    android:background="@drawable/syllabus_widget_bg_translucent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="8dp">

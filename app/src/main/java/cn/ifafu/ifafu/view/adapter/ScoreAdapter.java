@@ -32,7 +32,7 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
     @NonNull
     @Override
     public ScoreViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_score, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.score_list_recycle_item, parent, false);
         return new ScoreViewHolder(view);
     }
 

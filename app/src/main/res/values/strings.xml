@@ -101,7 +101,7 @@
     <string name="title_syllabus_setting">课表设置</string>
 
     <!--电费模块-->
-    <string name="fafu_elec_title">FAFU电宝</string>
+    <string name="fafu_elec_title">电费查询</string>
     <string name="choose_xq">点击选择校区</string>
     <string name="choose_ld">点击选择楼栋</string>
     <string name="choose_lc">点击选择楼层</string>

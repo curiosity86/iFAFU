@@ -6,7 +6,7 @@ import cn.ifafu.ifafu.base.ifafu.BaseZFModel
 import cn.ifafu.ifafu.data.entity.*
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.data.http.service.WeatherService
-import cn.ifafu.ifafu.mvp.exam.ExamModel
+import cn.ifafu.ifafu.mvp.exam_list.ExamModel
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusModel
 import cn.ifafu.ifafu.util.DateUtils
 import com.alibaba.fastjson.JSONObject
@@ -27,6 +27,13 @@ abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainC
                 .flatMap { o: List<Course> ->
                     if (o.isEmpty()) {
                         syllabusModel.coursesFromNet
+                                .map {
+                                    if (!it.isSuccess) {
+                                        throw Exception(it.message)
+                                    } else {
+                                        it.body
+                                    }
+                                }
                     } else {
                         Observable.just(o)
                     }

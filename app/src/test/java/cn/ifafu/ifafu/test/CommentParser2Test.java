@@ -1,11 +1,8 @@
 package cn.ifafu.ifafu.test;
 
-import com.alibaba.fastjson.JSONObject;
-
 import org.junit.Test;
 
 import cn.ifafu.ifafu.FileUtils;
-import cn.ifafu.ifafu.data.http.parser.CommentParser;
 import cn.ifafu.ifafu.data.http.parser.CommentParser2;
 
 public class CommentParser2Test {

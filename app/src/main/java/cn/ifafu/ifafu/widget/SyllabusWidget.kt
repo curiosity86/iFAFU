@@ -16,7 +16,7 @@ import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.IFAFU
 import cn.ifafu.ifafu.data.entity.NextCourse
 import cn.ifafu.ifafu.data.local.RepositoryImpl
-import cn.ifafu.ifafu.mvp.main.main2.Main2Model
+import cn.ifafu.ifafu.mvp.main.main_old.Main2Model
 import cn.ifafu.ifafu.mvp.activity.SplashActivity
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusActivity
 import java.text.SimpleDateFormat

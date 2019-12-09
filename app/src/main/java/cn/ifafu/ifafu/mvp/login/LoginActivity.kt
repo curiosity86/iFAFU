@@ -13,14 +13,14 @@ import cn.ifafu.ifafu.util.GlobalLib
 import cn.ifafu.ifafu.view.dialog.ProgressDialog
 import com.bumptech.glide.Glide
 import com.jaeger.library.StatusBarUtil
-import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.login_activity.*
 
 class LoginActivity : BaseActivity<LoginContract.Presenter>(), LoginContract.View, View.OnClickListener {
 
     private lateinit var progressDialog: ProgressDialog
 
     override fun getLayoutId(savedInstanceState: Bundle?): Int {
-        return R.layout.activity_login
+        return R.layout.login_activity
     }
 
     override fun initData(savedInstanceState: Bundle?) {

@@ -1,16 +1,10 @@
 package cn.ifafu.ifafu.data.http.parser
 
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
-import org.jsoup.nodes.Element
-import org.jsoup.select.Elements
-
-import java.util.ArrayList
-import java.util.regex.Matcher
-import java.util.regex.Pattern
-
 import cn.ifafu.ifafu.data.entity.CommentItem
 import cn.ifafu.ifafu.data.entity.Response
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
+import java.util.*
 
 class CommentParserJS : BaseParser<Response<List<CommentItem>>>() {
 
@@ -18,17 +12,31 @@ class CommentParserJS : BaseParser<Response<List<CommentItem>>>() {
     override fun parse(html: String): Response<List<CommentItem>> {
         val document = Jsoup.parse(html)
         val table = document.select("li[class=\"top\"]")
-        val lis = table[2].getElementsByTag("a")
+        var menu: Element? = null
+        for (t in table) {
+            if (t.text().contains("教学质量评价")) {
+                menu = t
+                break
+            }
+        }
+        if (menu == null) {
+            return Response.failure("一键评教出错")
+        }
+        val lis = menu.getElementsByTag("a")
+        if (lis.size == 1) {
+            return Response.failure("无需评教")
+        }
         val commentItems = ArrayList<CommentItem>()
-        for (li in lis) {
+        for (i in 1 until lis.size) {
+            val li = lis[i]
             val item = CommentItem()
             item.courseName = li.text()
             item.teacherName = ""
             item.commentUrl = li.attr("href")
             commentItems.add(item)
-            println(li.outerHtml())
         }
         val response = Response<List<CommentItem>>()
+        response.code = Response.SUCCESS
         response.body = commentItems
         response.hiddenParams = ParamsParser().parse(html)
         return response

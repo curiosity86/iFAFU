@@ -19,9 +19,6 @@ internal class WebPresenter(view: View) : BaseZFPresenter<View, WebContract.Mode
 
         if (url != null && title != null) {
             mView.setTitle(title)
-            if (referer != null) {
-                setCookie(url, referer)
-            }
             mView.loadUrl(url)
         } else {
             mView.setTitle(resId = R.string.title_web_mode)

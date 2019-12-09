@@ -13,7 +13,7 @@ import cn.ifafu.ifafu.view.adapter.AccountAdapter
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
-import kotlinx.android.synthetic.main.dialog_account.view.*
+import kotlinx.android.synthetic.main.account_dialog.view.*
 
 abstract class BaseMainFragment<T : BaseMainContract.Presenter> : BaseFragment<T>(), BaseMainContract.View {
 
@@ -25,7 +25,7 @@ abstract class BaseMainFragment<T : BaseMainContract.Presenter> : BaseFragment<T
     override fun setCheckoutDialogData(users: List<User>) {
         if (mAccountAdapter == null) {
             checkoutDialog = MaterialDialog(context!!).apply {
-                customView(viewRes = R.layout.dialog_account)
+                customView(viewRes = R.layout.account_dialog)
                 title(text = "多账号管理")
                 negativeButton(text = "添加账号") {
                     openLoginActivity()
@@ -59,7 +59,7 @@ abstract class BaseMainFragment<T : BaseMainContract.Presenter> : BaseFragment<T
     private fun showAccountDetail(user: User) {
         MaterialDialog(context!!).show {
             title(text = "${user.name} ${user.account}")
-            customView(viewRes = R.layout.dialog_account_detail)
+            customView(viewRes = R.layout.account_password_dialog)
             getCustomView().findViewById<EditText>(R.id.et_password).setText(user.password)
             negativeButton(text = "删除账号") {
                 mPresenter.deleteUser(user)

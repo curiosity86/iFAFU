@@ -8,20 +8,20 @@ import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.base.i.IPresenter
 import cn.ifafu.ifafu.data.entity.Setting
 import cn.ifafu.ifafu.data.local.RepositoryImpl
-import cn.ifafu.ifafu.mvp.main.main1.Main1Fragment
-import cn.ifafu.ifafu.mvp.main.main2.Main2Fragment
+import cn.ifafu.ifafu.mvp.main.main_new.Main1Fragment
+import cn.ifafu.ifafu.mvp.main.main_old.Main2Fragment
 import cn.ifafu.ifafu.util.ButtonUtils
 import cn.ifafu.ifafu.view.custom.DragLayout
 import com.gyf.immersionbar.ImmersionBar
-import kotlinx.android.synthetic.main.fragment_main1.*
-import kotlinx.android.synthetic.main.fragment_main2.*
+import kotlinx.android.synthetic.main.main_fragment.*
+import kotlinx.android.synthetic.main.main_old_fragment.*
 
 class MainActivity : BaseActivity<IPresenter>() {
 
     private var nowTheme = -999
 
     override fun getLayoutId(savedInstanceState: Bundle?): Int {
-        return R.layout.activity_main
+        return R.layout.main_activity
     }
 
     override fun initData(savedInstanceState: Bundle?) {

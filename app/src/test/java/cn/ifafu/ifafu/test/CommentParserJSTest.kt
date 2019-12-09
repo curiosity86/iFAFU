@@ -11,13 +11,13 @@ class CommentParserJSTest {
     @Throws(Exception::class)
     fun test() {
         val parser = CommentParserJS()
-        parser.parse(FileUtils.read("$path\\101.html")).body.forEach {
+        parser.parse(FileUtils.read("$path\\002.html")).body.forEach {
             println(JSONObject.toJSONString(it))
         }
     }
 
     companion object {
-        private val path = "D:\\AndroidProjects\\iFAFU\\app\\src\\test\\java\\cn\\ifafu\\ifafu\\data\\comment"
+        private val path = "D:\\AndroidProjects\\iFAFU\\app\\src\\test\\java\\cn\\ifafu\\ifafu\\data\\comment\\js"
     }
 
 }

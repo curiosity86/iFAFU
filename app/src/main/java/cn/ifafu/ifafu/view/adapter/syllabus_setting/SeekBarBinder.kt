@@ -12,7 +12,7 @@ import me.drakeet.multitype.ItemViewBinder
 class SeekBarBinder: ItemViewBinder<SeekBarItem, SeekBarBinder.ViewHolder>() {
 
     override fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): ViewHolder {
-        return ViewHolder(inflater.inflate(R.layout.item_setting_seekbar, parent, false))
+        return ViewHolder(inflater.inflate(R.layout.setting_seekbar_recycle_item, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, item: SeekBarItem) {

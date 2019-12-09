@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".mvp.main.MainActivity">
+
+    <cn.ifafu.ifafu.view.custom.WToolbar
+        android:id="@+id/tb_elec"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        app:elevation="4dp"
+        app:title="@string/fafu_elec_title" />
+
+    <include layout="@layout/include_elec_main_balance" />
+
+    <include layout="@layout/elec_main_elec_include" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:autoLink="web"
+        android:gravity="start"
+        android:text="@string/elec_tos_3"
+        android:textAlignment="center" />
+
+</LinearLayout>

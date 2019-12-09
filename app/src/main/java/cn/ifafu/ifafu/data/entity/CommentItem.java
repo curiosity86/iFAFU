@@ -1,10 +1,13 @@
 package cn.ifafu.ifafu.data.entity;
 
+import java.util.Map;
+
 public class CommentItem {
 
     private String courseName; //课程名称
     private String teacherName; //老师名称
     private String commentUrl; //评教链接
+    private Map<String, String> comments; //评教选项
     private boolean done; //是否已评价
 
     public String getCourseName() {
@@ -37,5 +40,13 @@ public class CommentItem {
 
     public void setDone(boolean done) {
         this.done = done;
+    }
+
+    public Map<String, String> getComments() {
+        return comments;
+    }
+
+    public void setComments(Map<String, String> comments) {
+        this.comments = comments;
     }
 }

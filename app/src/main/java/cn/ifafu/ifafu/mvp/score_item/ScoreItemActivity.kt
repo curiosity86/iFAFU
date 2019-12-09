@@ -6,14 +6,14 @@ import cn.ifafu.ifafu.R.layout
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.view.adapter.ScoreItemAdapter
 import com.gyf.immersionbar.ImmersionBar
-import kotlinx.android.synthetic.main.activity_score_item.*
+import kotlinx.android.synthetic.main.score_item_activity.*
 
 class ScoreItemActivity : BaseActivity<ScoreItemConstant.Presenter>(), ScoreItemConstant.View {
 
     private var mAdapter: ScoreItemAdapter? = null
 
     override fun getLayoutId(savedInstanceState: Bundle?): Int {
-        return layout.activity_score_item
+        return layout.score_item_activity
     }
 
     override fun initData(savedInstanceState: Bundle?) {

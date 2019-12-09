@@ -13,14 +13,14 @@ import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.base.i.IPresenter
 import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.data.local.RepositoryImpl
-import cn.ifafu.ifafu.mvp.exam.ExamActivity
+import cn.ifafu.ifafu.mvp.exam_list.ExamActivity
 import cn.ifafu.ifafu.mvp.login.LoginActivity
 import cn.ifafu.ifafu.mvp.main.MainActivity
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusActivity
 import cn.ifafu.ifafu.util.AppUtils
 import cn.ifafu.ifafu.util.RxUtils
 import io.reactivex.Observable
-import kotlinx.android.synthetic.main.activity_splash.*
+import kotlinx.android.synthetic.main.splash_activity.*
 
 class SplashActivity : BaseActivity<IPresenter>() {
     override fun getLayoutId(savedInstanceState: Bundle?): Int {
@@ -28,7 +28,7 @@ class SplashActivity : BaseActivity<IPresenter>() {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         //隐藏顶部状态栏
         window.addFlags(LayoutParams.FLAG_FULLSCREEN)
-        return R.layout.activity_splash
+        return R.layout.splash_activity
     }
 
     @SuppressLint("CheckResult")

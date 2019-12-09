@@ -9,14 +9,14 @@ import com.chad.library.adapter.base.BaseViewHolder
 class AccountAdapter(
         data: List<User>,
         val onClick: (user: User) -> Unit
-) : BaseQuickAdapter<User, BaseViewHolder>(R.layout.item_account, data) {
+) : BaseQuickAdapter<User, BaseViewHolder>(R.layout.main_account_recycle_item, data) {
 
     override fun convert(helper: BaseViewHolder, item: User?) {
         if (item == null) return
         helper.setText(R.id.tv_text, "${item.name}   ${item.account}")
                 .setImageResource(R.id.iv_school, when (item.schoolCode) {
-                    School.FAFU -> R.drawable.icon_fafu_b_white
-                    School.FAFU_JS -> R.drawable.icon_fafu_js_white
+                    School.FAFU -> R.drawable.fafu_bb_icon_white
+                    School.FAFU_JS -> R.drawable.fafu_js_icon_white
                     else -> R.drawable.icon_ifafu_round
                 })
         helper.itemView.setOnClickListener {

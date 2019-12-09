@@ -24,7 +24,7 @@ import com.afollestad.materialdialogs.color.colorChooser
 import com.gyf.immersionbar.ImmersionBar
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
-import kotlinx.android.synthetic.main.activity_syllabus_setting.*
+import kotlinx.android.synthetic.main.syllabus_setting_activity.*
 import me.drakeet.multitype.MultiTypeAdapter
 
 class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(), SyllabusSettingContract.View {
@@ -44,7 +44,7 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(
     }
 
     override fun getLayoutId(savedInstanceState: Bundle?): Int {
-        return R.layout.activity_syllabus_setting
+        return R.layout.syllabus_setting_activity
     }
 
     override fun initData(savedInstanceState: Bundle?) {

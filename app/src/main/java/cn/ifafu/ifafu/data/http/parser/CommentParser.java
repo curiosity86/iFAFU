@@ -7,7 +7,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,7 +41,8 @@ public class CommentParser extends BaseParser<Response<List<CommentItem>>> {
                     String aText = a.text();
                     item.setDone(aText.contains("已评价"));
                     item.setTeacherName(aText.replaceAll("\\(.*\\)", ""));
-                    String matchUrl = urlMatcher.group();
+                    String matchUrl = urlMatcher.group()
+                            .replaceAll("&amp;", "&");
                     item.setCommentUrl(matchUrl.substring(6, matchUrl.length() - 1));
                     list.add(item);
                 }

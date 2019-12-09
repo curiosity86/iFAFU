@@ -22,7 +22,7 @@ internal class LoginPresenter(view: LoginContract.View) : BaseZFPresenter<LoginC
         if (comeFromWhere == Constant.ACTIVITY_MAIN) {
             mView.showCloseBtn()
         }
-        mView.setBackgroundLogo(R.drawable.icon_fafu_b)
+        mView.setBackgroundLogo(R.drawable.fafu_bb_icon)
     }
 
     override fun onLogin() {
@@ -83,10 +83,10 @@ internal class LoginPresenter(view: LoginContract.View) : BaseZFPresenter<LoginC
         if (account.isEmpty() || account.length < 9) return
         if (schoolCode != School.FAFU_JS && account[0] == '0' || account.length == 9) {
             schoolCode = School.FAFU_JS
-            mView.setBackgroundLogo(R.drawable.icon_fafu_js)
+            mView.setBackgroundLogo(R.drawable.fafu_js_icon)
         } else if (schoolCode != School.FAFU) {
             schoolCode = School.FAFU
-            mView.setBackgroundLogo(R.drawable.icon_fafu_b)
+            mView.setBackgroundLogo(R.drawable.fafu_bb_icon)
         }
     }
 

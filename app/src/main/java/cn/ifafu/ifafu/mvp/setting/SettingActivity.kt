@@ -7,13 +7,13 @@ import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.*
 import com.gyf.immersionbar.ImmersionBar
-import kotlinx.android.synthetic.main.activity_setting.*
+import kotlinx.android.synthetic.main.setting_activity.*
 import me.drakeet.multitype.MultiTypeAdapter
 
 class SettingActivity : BaseActivity<SettingContract.Presenter>(), SettingContract.View {
 
     override fun getLayoutId(savedInstanceState: Bundle?): Int {
-        return R.layout.activity_setting
+        return R.layout.setting_activity
     }
 
     override fun initData(savedInstanceState: Bundle?) {

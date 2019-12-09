@@ -6,14 +6,14 @@ import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.view.dialog.ProgressDialog
 import com.jaeger.library.StatusBarUtil
-import kotlinx.android.synthetic.main.activity_elec_login.*
+import kotlinx.android.synthetic.main.elec_login_activity.*
 
 class ElecLoginActivity : BaseActivity<ElecLoginContract.Presenter>(), ElecLoginContract.View {
 
     private lateinit var progress: ProgressDialog
 
     override fun getLayoutId(savedInstanceState: Bundle?): Int {
-        return R.layout.activity_elec_login
+        return R.layout.elec_login_activity
     }
 
     override fun initData(savedInstanceState: Bundle?) {

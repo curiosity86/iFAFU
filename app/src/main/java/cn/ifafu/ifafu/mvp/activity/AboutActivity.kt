@@ -15,13 +15,13 @@ import cn.ifafu.ifafu.util.AppUtils
 import cn.ifafu.ifafu.util.GlobalLib
 import com.afollestad.materialdialogs.MaterialDialog
 import com.gyf.immersionbar.ImmersionBar
-import kotlinx.android.synthetic.main.activity_about.*
+import kotlinx.android.synthetic.main.about_activity.*
 import java.util.*
 
 class AboutActivity : BaseActivity<IPresenter>(), View.OnClickListener {
 
     override fun getLayoutId(savedInstanceState: Bundle?): Int {
-        return R.layout.activity_about
+        return R.layout.about_activity
     }
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -74,18 +74,7 @@ class AboutActivity : BaseActivity<IPresenter>(), View.OnClickListener {
             }
             R.id.btn_feed -> {
                 MaterialDialog(this).show {
-                    title(text = "投喂")
-                    message(text = "悄咪咪地求阔落喝~")
-                    positiveButton(text = "支付宝") {
-                        try {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("alipays://platformapi/startapp?saId=10000007&clientVersion=3.7.0.0718&qrcode=https%3A%2F%2Fqr.alipay.com%2ffkx03685w5hx7yw2mobj804%3F_s%3Dweb-other"))
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            startActivity(intent)
-                            showMessage("ヾ(^∀^ゞ)，iFAFU一定会努力的！！")
-                        } catch (e: Exception) {
-                            showMessage("投喂系统出错，即便如此iFAFU也会努力~")
-                        }
-                    }
+                    setContentView(R.layout.about_feed)
                 }
             }
         }

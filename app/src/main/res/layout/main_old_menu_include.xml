@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#686868"
+    android:orientation="horizontal">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="24dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/layout_left_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/vipHat"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="-3dp"
+                android:src="@drawable/icon_hat" />
+
+            <TextView
+                android:id="@+id/tv_left_name"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/main_old_shape_bigheadimg"
+                android:gravity="center"
+                android:textColor="#ffffff"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_account"
+                android:layout_width="match_parent"
+                android:layout_height="26dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="#ffffff"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/vipMark"
+                android:layout_width="60dp"
+                android:layout_height="18dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/main_old_menu_vip"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="VIP"
+                android:textColor="#ff0000"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_online"
+                android:layout_width="match_parent"
+                android:layout_height="26dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

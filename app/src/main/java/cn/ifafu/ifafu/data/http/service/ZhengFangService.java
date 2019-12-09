@@ -56,7 +56,7 @@ public interface ZhengFangService {
     Observable<ResponseBody> post(
             @Url String url,
             @Header("Referer") String referer,
-            @FieldMap Map<String, String> fieldMap
+            @FieldMap(encoded = true) Map<String, String> fieldMap
     );
 
     @POST

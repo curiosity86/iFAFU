@@ -26,7 +26,7 @@ public class ProgressDialog extends Dialog {
 
     public ProgressDialog(@NonNull Context context, int themeResId) {
         super(context, themeResId);
-        setContentView(R.layout.dialog_progress);
+        setContentView(R.layout.progress_dialog);
         setCanceledOnTouchOutside(false);
         loadingTV = findViewById(R.id.tv_progress_text);
         ProgressBar progressBar = findViewById(R.id.pb_progress);

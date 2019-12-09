@@ -29,6 +29,10 @@ public class Response<T> {
         return code;
     }
 
+    public void setCode(int code) {
+        this.code = code;
+    }
+
     public T getBody() {
         return body;
     }

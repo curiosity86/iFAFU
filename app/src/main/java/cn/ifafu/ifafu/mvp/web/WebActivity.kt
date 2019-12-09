@@ -16,7 +16,7 @@ import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.view.dialog.ProgressDialog
 import com.gyf.immersionbar.ImmersionBar
-import kotlinx.android.synthetic.main.activity_web.*
+import kotlinx.android.synthetic.main.web_activity.*
 
 class WebActivity : BaseActivity<WebContract.Presenter>(), WebContract.View {
 
@@ -27,8 +27,10 @@ class WebActivity : BaseActivity<WebContract.Presenter>(), WebContract.View {
     private var mFilePathCallback: ValueCallback<Array<Uri>>? = null
     private val PHOTO_REQUEST_CODE = 1023
 
+    private var first = true
+
     override fun getLayoutId(savedInstanceState: Bundle?): Int {
-        return R.layout.activity_web
+        return R.layout.web_activity
     }
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -64,6 +66,11 @@ class WebActivity : BaseActivity<WebContract.Presenter>(), WebContract.View {
 
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                 Log.d(TAG, request?.url.toString())
+                if (first && intent.hasExtra("referer")) {
+                    val referer = intent.getStringExtra("referer")
+                    request?.requestHeaders?.put("referer", referer)
+                    first = false
+                }
                 return super.shouldOverrideUrlLoading(view, request)
             }
         }

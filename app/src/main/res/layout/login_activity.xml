@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/bg_logo"
+        android:layout_width="360dp"
+        android:layout_height="360dp"
+        android:layout_centerInParent="true"
+        android:alpha="0.05"
+        android:src="@drawable/fafu_bb_icon" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/login_welcome"
+        android:textColor="@color/blue1"
+        android:textSize="25sp"
+        android:textStyle="normal" />
+
+    <ImageButton
+        android:id="@+id/btn_close"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/ic_close"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingBottom="48dp"
+        android:layoutAnimation="@anim/layout_fall_down"
+        tools:layoutAnimation="@null">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/icon_ifafu_round" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/base_on_fafu"
+            android:textColor="@color/blue1"
+            android:textSize="18sp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="220dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:textColorHint="@color/blue1"
+            app:hintTextAppearance="@style/TextInput">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_account"
+                style="@style/EditText.Material"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/account"
+                android:inputType="number"
+                android:textColorLink="@color/blue1" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="220dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:textColorHint="@color/blue1"
+            app:hintTextAppearance="@style/TextInput"
+            app:passwordToggleEnabled="true"
+            android:theme="@style/Theme.Design.Light.NoActionBar">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_password"
+                style="@style/EditText.Material"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:imeActionLabel="@string/login"
+                android:imeOptions="actionDone"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_login"
+            android:layout_width="220dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/shape_btn_blue"
+            android:text="@string/login"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+</RelativeLayout>

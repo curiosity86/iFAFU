@@ -21,9 +21,9 @@ import com.afollestad.materialdialogs.checkbox.isCheckPromptChecked
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.view.OptionsPickerView
 import com.gyf.immersionbar.ImmersionBar
-import kotlinx.android.synthetic.main.activity_elec_main.*
+import kotlinx.android.synthetic.main.elec_main_activity.*
 import kotlinx.android.synthetic.main.include_elec_main_balance.*
-import kotlinx.android.synthetic.main.include_elec_main_elec.*
+import kotlinx.android.synthetic.main.elec_main_elec_include.*
 
 class ElecMainActivity : BaseActivity<ElecMainContract.Presenter>(), ElecMainContract.View, RadioGroup.OnCheckedChangeListener, View.OnClickListener {
 
@@ -44,7 +44,7 @@ class ElecMainActivity : BaseActivity<ElecMainContract.Presenter>(), ElecMainCon
     private var lastRoomText = ""
 
     override fun getLayoutId(savedInstanceState: Bundle?): Int {
-        return R.layout.activity_elec_main
+        return R.layout.elec_main_activity
     }
 
     override fun initData(savedInstanceState: Bundle?) {

@@ -2,11 +2,10 @@ package cn.ifafu.ifafu.view.adapter
 
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.data.entity.CommentItem
-import cn.ifafu.ifafu.data.entity.User
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 
-class CommentRvAdapter(data: List<CommentItem>, val click: (item: CommentItem) -> Unit) : BaseQuickAdapter<CommentItem, BaseViewHolder>(R.layout.item_comment, data) {
+class CommentRvAdapter(data: List<CommentItem>, val click: (item: CommentItem) -> Unit) : BaseQuickAdapter<CommentItem, BaseViewHolder>(R.layout.comment_recycle_item, data) {
 
     override fun convert(helper: BaseViewHolder, item: CommentItem?) {
         helper.run {

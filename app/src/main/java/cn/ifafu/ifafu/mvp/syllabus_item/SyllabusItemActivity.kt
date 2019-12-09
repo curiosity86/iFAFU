@@ -11,7 +11,7 @@ import cn.ifafu.ifafu.view.adapter.WeekItemAdapter
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.view.OptionsPickerView
 import com.gyf.immersionbar.ImmersionBar
-import kotlinx.android.synthetic.main.activity_syllabus_item.*
+import kotlinx.android.synthetic.main.syllabus_info_activity.*
 import java.util.*
 
 class SyllabusItemActivity : BaseActivity<SyllabusItemContract.Presenter>(), SyllabusItemContract.View, View.OnClickListener {
@@ -21,7 +21,7 @@ class SyllabusItemActivity : BaseActivity<SyllabusItemContract.Presenter>(), Syl
     private lateinit var weekAdapter: WeekItemAdapter
 
     override fun getLayoutId(savedInstanceState: Bundle?): Int {
-        return R.layout.activity_syllabus_item
+        return R.layout.syllabus_info_activity
     }
 
     override fun initData(savedInstanceState: Bundle?) {

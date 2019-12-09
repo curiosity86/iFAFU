@@ -21,7 +21,7 @@ import cn.ifafu.ifafu.view.adapter.SyllabusPageAdapter
 import cn.ifafu.ifafu.view.dialog.ProgressDialog
 import cn.ifafu.ifafu.view.syllabus.CourseBase
 import com.gyf.immersionbar.ImmersionBar
-import kotlinx.android.synthetic.main.activity_syllabus.*
+import kotlinx.android.synthetic.main.syllabus_activity.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -34,7 +34,7 @@ class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusCon
     private lateinit var progressDialog: ProgressDialog
 
     override fun getLayoutId(savedInstanceState: Bundle?): Int {
-        return R.layout.activity_syllabus
+        return R.layout.syllabus_activity
     }
 
     override fun initData(savedInstanceState: Bundle?) {

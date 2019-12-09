@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:background="@color/white"
+    android:gravity="center_horizontal">
+
+    <ImageView
+        android:layout_width="162dp"
+        android:layout_height="206dp"
+        android:background="@drawable/about_feed_qr"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="感谢小伙伴们的支持~\n祝各位小伙伴身体健康，生意兴隆，万事如意，恭喜发财，步步高升，学业有成，五福临门，财源广进，飞黄腾达，美梦连连，阖家欢乐，幸福美满，大吉大利，心想事成，年年有余，财运亨通，寿比南山，如意吉祥，一帆风顺，健康长寿，万事顺利，吉星高照，早生贵子~" />
+
+</LinearLayout>

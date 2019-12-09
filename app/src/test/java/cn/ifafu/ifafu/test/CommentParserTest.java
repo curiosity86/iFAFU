@@ -13,7 +13,7 @@ import cn.ifafu.ifafu.data.http.parser.CommentParser;
 
 public class CommentParserTest {
 
-    private static final String path = "D:\\AndroidProjects\\iFAFU\\app\\src\\test\\java\\cn\\ifafu\\ifafu\\data\\comment";
+    private static final String path = "D:\\AndroidProjects\\iFAFU\\app\\src\\test\\java\\cn\\ifafu\\ifafu\\data\\comment\\bb";
 
     @Test
     public void test() throws Exception {
