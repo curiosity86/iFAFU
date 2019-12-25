@@ -2,7 +2,7 @@ package cn.ifafu.ifafu.view.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import cn.ifafu.ifafu.data.entity.SyllabusSetting
+import cn.ifafu.ifafu.entity.SyllabusSetting
 import cn.ifafu.ifafu.util.DateUtils
 import cn.ifafu.ifafu.view.syllabus.CourseBase
 import cn.ifafu.ifafu.view.syllabus.SyllabusView
@@ -34,7 +34,7 @@ class SyllabusPageAdapter(var setting: SyllabusSetting,
         syllabus.layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT)
-        syllabus.rowCount = setting.nodeCnt
+        syllabus.rowCount = setting.totalNode
         syllabus.isShowTimeTexts = setting.showBeginTimeText
         syllabus.isShowHorizontalDivider = setting.showHorizontalLine
         syllabus.isShowVerticalDivider = setting.showVerticalLine
@@ -80,7 +80,7 @@ class SyllabusPageAdapter(var setting: SyllabusSetting,
             return this
         }
 
-        fun setBeginTimeTexts(beginTimeTexts: Array<String?>?): SyllabusViewHolder {
+        fun setBeginTimeTexts(beginTimeTexts: Array<String>): SyllabusViewHolder {
             syllabus.setBeginTimeTexts(beginTimeTexts)
             return this
         }

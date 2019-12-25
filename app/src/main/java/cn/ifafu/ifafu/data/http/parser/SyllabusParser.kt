@@ -1,9 +1,9 @@
 package cn.ifafu.ifafu.data.http.parser
 
 import android.util.Log
-import cn.ifafu.ifafu.data.entity.Course
-import cn.ifafu.ifafu.data.entity.Response
-import cn.ifafu.ifafu.data.entity.User
+import cn.ifafu.ifafu.entity.Course
+import cn.ifafu.ifafu.entity.Response
+import cn.ifafu.ifafu.entity.User
 import cn.ifafu.ifafu.util.DateUtils
 import cn.ifafu.ifafu.util.getInts
 import org.jsoup.Jsoup

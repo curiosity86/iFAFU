@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.ifafu.ifafu.R;
-import cn.ifafu.ifafu.data.entity.Menu;
+import cn.ifafu.ifafu.entity.Menu;
 
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder> {
 

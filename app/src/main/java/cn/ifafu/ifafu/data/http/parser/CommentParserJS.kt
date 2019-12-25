@@ -1,7 +1,7 @@
 package cn.ifafu.ifafu.data.http.parser
 
-import cn.ifafu.ifafu.data.entity.CommentItem
-import cn.ifafu.ifafu.data.entity.Response
+import cn.ifafu.ifafu.entity.CommentItem
+import cn.ifafu.ifafu.entity.Response
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.util.*

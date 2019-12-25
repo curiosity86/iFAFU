@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BaseActivity
-import cn.ifafu.ifafu.data.entity.SyllabusSetting
+import cn.ifafu.ifafu.entity.SyllabusSetting
 import cn.ifafu.ifafu.util.DensityUtils
 import cn.ifafu.ifafu.util.Glide4Engine
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.*

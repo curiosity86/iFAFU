@@ -1,6 +1,6 @@
 package cn.ifafu.ifafu.mvp.setting
 
-import cn.ifafu.ifafu.data.entity.Setting
+import cn.ifafu.ifafu.entity.GlobalSetting
 import cn.ifafu.ifafu.base.i.IModel
 import cn.ifafu.ifafu.base.i.IPresenter
 import cn.ifafu.ifafu.base.i.IView
@@ -16,9 +16,9 @@ class SettingContract {
     }
 
     interface Model : IModel {
-        fun getSetting() : Setting
+        fun getSetting() : GlobalSetting
 
-        fun save(setting: Setting)
+        fun save(setting: GlobalSetting)
     }
 
 }

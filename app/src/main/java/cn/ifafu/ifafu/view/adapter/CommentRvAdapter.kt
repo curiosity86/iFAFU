@@ -1,7 +1,7 @@
 package cn.ifafu.ifafu.view.adapter
 
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.data.entity.CommentItem
+import cn.ifafu.ifafu.entity.CommentItem
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 

@@ -9,7 +9,7 @@ import org.jsoup.select.Elements;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import cn.ifafu.ifafu.data.entity.Response;
+import cn.ifafu.ifafu.entity.Response;
 import cn.ifafu.ifafu.data.exception.VerifyException;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -23,7 +23,7 @@ public class LoginParser extends BaseParser<Response<String>> {
      * {@link Response#FAILURE} 信息错误 msg = return msg
      * {@link Response#ERROR}   服务器错误  msg = error msg
      */
-    public Response<String> parse(@NotNull  String html) throws VerifyException {
+    public Response<String> parse(@NotNull String html) throws VerifyException {
         Document doc = Jsoup.parse(html);
         Element ele = doc.getElementById("xhxm");
         if (ele != null) {
@@ -34,13 +34,16 @@ public class LoginParser extends BaseParser<Response<String>> {
         }
         Elements script = doc.select("script[language=javascript]");
         if (script.size() < 2) {
+            if (html.contains("ERROR")) {
+                return Response.error("教务系统又双叒崩溃了！");
+            }
             return Response.error("网络异常 0x001");
         } else {
             String s = getAlertString(script.get(1).html());
             if (s.contains("用户名") || s.contains("密码")) {
                 return Response.failure(s);
             } else if (doc.text().contains("ERROR")) {
-                return Response.error("教务系统又双叒崩溃了");
+                return Response.error("教务系统又双叒崩溃了！");
             } else if (s.contains("验证码")) {
                 throw new VerifyException();
             } else {

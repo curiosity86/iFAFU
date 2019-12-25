@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.mvp.main.main_old
 import android.annotation.SuppressLint
 import android.content.Context
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.data.entity.*
+import cn.ifafu.ifafu.entity.*
 import cn.ifafu.ifafu.mvp.main.BaseMainModel
 import cn.ifafu.ifafu.mvp.score_list.ScoreListModel
 import io.reactivex.Observable
@@ -14,16 +14,12 @@ class Main2Model(context: Context) : BaseMainModel(context), Main2Contract.Model
     private lateinit var toYear: String
     private lateinit var toTerm: String
 
-    override fun getAllUser(): MutableList<User> {
-        return repository.allUser
-    }
-
     override fun saveLoginUser(user: User) {
-        repository.saveLoginUser(user)
+        repository.saveUser(user)
     }
 
     override fun getSyllabusSetting(): SyllabusSetting {
-        return repository.syllabusSetting
+        return repository.getSyllabusSetting()!!
     }
 
     override fun getFunctionTab(): Map<String, List<Pair<String, Int>>> {
@@ -48,7 +44,7 @@ class Main2Model(context: Context) : BaseMainModel(context), Main2Contract.Model
 
     @SuppressLint("DefaultLocale")
     override fun getYearTermList(): Observable<YearTerm> {
-        return Observable.fromCallable { repository.yearTermList }
+        return Observable.fromCallable { repository.getYearTermList() }
     }
 
     @SuppressLint("DefaultLocale")

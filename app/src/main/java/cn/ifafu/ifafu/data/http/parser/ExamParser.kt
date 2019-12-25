@@ -1,8 +1,8 @@
 package cn.ifafu.ifafu.data.http.parser
 
-import cn.ifafu.ifafu.data.entity.Exam
-import cn.ifafu.ifafu.data.entity.Response
-import cn.ifafu.ifafu.data.entity.User
+import cn.ifafu.ifafu.entity.Exam
+import cn.ifafu.ifafu.entity.Response
+import cn.ifafu.ifafu.entity.User
 import cn.ifafu.ifafu.util.getInts
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
@@ -12,7 +12,7 @@ import kotlin.collections.ArrayList
 class ExamParser(user: User) : BaseParser<Response<MutableList<Exam>>>() {
 
     private val account: String = user.account
-    private val schoolCode: Int = user.schoolCode
+    private val schoolCode: String = user.schoolCode
 
     override fun parse(html: String): Response<MutableList<Exam>> {
         val document = Jsoup.parse(html)

@@ -10,14 +10,13 @@ import android.content.Intent
 import android.net.Uri
 import android.view.View
 import android.widget.RemoteViews
-
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.IFAFU
-import cn.ifafu.ifafu.data.entity.NextCourse
-import cn.ifafu.ifafu.data.local.RepositoryImpl
-import cn.ifafu.ifafu.mvp.main.main_old.Main2Model
+import cn.ifafu.ifafu.data.RepositoryImpl
+import cn.ifafu.ifafu.entity.NextCourse
 import cn.ifafu.ifafu.mvp.activity.SplashActivity
+import cn.ifafu.ifafu.mvp.main.main_old.Main2Model
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusActivity
 import java.text.SimpleDateFormat
 import java.util.*
@@ -112,7 +111,7 @@ class SyllabusWidget : AppWidgetProvider() {
                 R.id.btn_jump -> {
                     val jumpIntent: Intent
                     when {
-                        RepositoryImpl.getInstance().loginUser == null -> {
+                        RepositoryImpl.getInUseUser() == null -> {
                             jumpIntent = Intent(context, SplashActivity::class.java)
                         }
                         IFAFU.FIRST_START_APP -> {

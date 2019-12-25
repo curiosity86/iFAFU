@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.base.BaseActivity
-import cn.ifafu.ifafu.data.entity.Score
+import cn.ifafu.ifafu.entity.Score
 import cn.ifafu.ifafu.mvp.score_item.ScoreItemActivity
 import cn.ifafu.ifafu.view.adapter.ScoreAdapter
 import cn.ifafu.ifafu.view.custom.RecyclerViewDivider

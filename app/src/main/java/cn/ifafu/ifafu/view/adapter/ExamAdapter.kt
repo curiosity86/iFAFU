@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.data.entity.Exam
+import cn.ifafu.ifafu.entity.Exam
 import cn.ifafu.ifafu.util.DateUtils
 import java.text.SimpleDateFormat
 import java.util.*

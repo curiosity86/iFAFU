@@ -5,7 +5,7 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BaseActivity
-import cn.ifafu.ifafu.data.entity.Score
+import cn.ifafu.ifafu.entity.Score
 import cn.ifafu.ifafu.view.adapter.ScoreFilterAdapter
 import cn.ifafu.ifafu.view.custom.RecyclerViewDivider
 import com.jaeger.library.StatusBarUtil

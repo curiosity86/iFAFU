@@ -1,5 +1,7 @@
 package cn.ifafu.ifafu.data.http.parser;
 
+import com.alibaba.fastjson.JSONObject;
+
 import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -10,14 +12,14 @@ import java.util.Collections;
 import java.util.List;
 
 import cn.ifafu.ifafu.app.School;
-import cn.ifafu.ifafu.data.entity.Score;
-import cn.ifafu.ifafu.data.entity.User;
+import cn.ifafu.ifafu.entity.Score;
+import cn.ifafu.ifafu.entity.User;
 import cn.ifafu.ifafu.util.NumUtils;
 
 public class ScoreParser extends BaseParser<List<Score>> {
 
     private String account;
-    private int schoolCode;
+    private String schoolCode;
 
     public ScoreParser(User user) {
         this.account = user.getAccount();
@@ -45,7 +47,7 @@ public class ScoreParser extends BaseParser<List<Score>> {
                 }
                 break;
         }
-        Collections.sort(list, (o1, o2) -> o1.getId().compareTo(o2.getId()));
+        Collections.sort(list, (o1, o2) -> Long.compare(o1.getId(), o2.getId()));
         for (Score score : list) {
             score.setAccount(account);
             score.setId(score.getId() * 31 + account.hashCode());
@@ -61,25 +63,34 @@ public class ScoreParser extends BaseParser<List<Score>> {
         score.setName(eles.get(3));
         score.setNature(eles.get(4));
         score.setAttr(eles.get(5));
-        score.setCredit(NumUtils.toFloat(eles.get(6)));
+        if (!eles.get(6).isEmpty()) {
+            score.setCredit(NumUtils.toFloat(eles.get(6)));
+        }
         String ele7 = eles.get(7);
         if (ele7.contains("免修")) {
             score.setScore(Score.FREE_COURSE);
         } else {
-            score.setScore(NumUtils.toFloat(eles.get(7)));
+            if (!eles.get(7).isEmpty()) {
+                score.setScore(NumUtils.toFloat(eles.get(7)));
+            }
         }
-        score.setMakeupScore(NumUtils.toFloat(eles.get(8)));
+        System.out.println(JSONObject.toJSONString(eles));
+        if (!eles.get(8).isEmpty()) {
+            score.setMakeupScore(NumUtils.toFloat(eles.get(8)));
+        }
         score.setRestudy(eles.get(9).isEmpty());
         score.setInstitute(eles.get(10));
         if (eles.size() > 13) {
-            score.setGpa(NumUtils.toFloat(eles.get(11)));
+            if (!eles.get(11).isEmpty()) {
+                score.setGpa(NumUtils.toFloat(eles.get(11)));
+            }
             score.setRemarks(eles.get(12));
             score.setMakeupRemarks(eles.get(13));
         } else {
             score.setRemarks(eles.get(11));
             score.setMakeupRemarks(eles.get(12));
         }
-        score.setIsIESItem(score.getScore() != Score.FREE_COURSE
+        score.setIESItem(score.getScore() != Score.FREE_COURSE
                 && !score.getNature().contains("任意选修")
                 && !score.getNature().contains("公共选修")
                 && !score.getName().contains("体育"));
@@ -105,7 +116,7 @@ public class ScoreParser extends BaseParser<List<Score>> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        score.setIsIESItem(!score.getNature().contains("任意选修") && !score.getName().contains("体育"));
+        score.setIESItem(!score.getNature().contains("任意选修") && !score.getName().contains("体育"));
         return score;
     }
 

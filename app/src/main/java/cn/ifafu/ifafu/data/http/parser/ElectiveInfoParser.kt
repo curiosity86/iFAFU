@@ -1,8 +1,8 @@
 package cn.ifafu.ifafu.data.http.parser
 
 import cn.ifafu.ifafu.app.School
-import cn.ifafu.ifafu.data.entity.ElectivesInfo
-import cn.ifafu.ifafu.data.entity.User
+import cn.ifafu.ifafu.entity.ElectivesInfo
+import cn.ifafu.ifafu.entity.User
 import org.jsoup.Jsoup
 
 class ElectiveInfoParser(val user: User) : BaseParser<ElectivesInfo>() {

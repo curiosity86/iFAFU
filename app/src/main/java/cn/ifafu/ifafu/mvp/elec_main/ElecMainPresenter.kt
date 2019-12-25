@@ -1,15 +1,19 @@
 package cn.ifafu.ifafu.mvp.elec_main
 
+import android.accounts.NetworkErrorException
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.base.BasePresenter
-import cn.ifafu.ifafu.data.entity.ElecQuery
-import cn.ifafu.ifafu.data.entity.Selection
-import cn.ifafu.ifafu.data.local.RepositoryImpl
+import cn.ifafu.ifafu.data.RepositoryImpl
+import cn.ifafu.ifafu.entity.ElecQuery
+import cn.ifafu.ifafu.entity.Selection
 import cn.ifafu.ifafu.util.AppUtils
 import cn.ifafu.ifafu.util.RxUtils
 import cn.ifafu.ifafu.util.SPUtils
 import io.reactivex.Observable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 class ElecMainPresenter(view: ElecMainContract.View) :
@@ -27,33 +31,40 @@ class ElecMainPresenter(view: ElecMainContract.View) :
     private var dkNameToAidMap: Map<String, String> = HashMap()
 
     override fun onCreate() {
-        elecQuery = mModel.getQueryData().run {
-            if (this == null) {
-                mView.openLoginActivity()
-                mView.killSelf()
-                return@onCreate
-            } else {
-                this
+        GlobalScope.launch(Dispatchers.IO) {
+            mModel.getQueryData().run {
+                GlobalScope.launch(Dispatchers.Main) {
+                    if (this@run == null) {
+                        mView.openLoginActivity()
+                        mView.killSelf()
+                    } else {
+                        elecQuery = this@run
+                        // 检查登录态
+                        mCompDisposable.add(mModel.initCookie()
+                                .compose(RxUtils.ioToMain())
+                                .doOnSubscribe { mView.showLoading() }
+                                .doOnNext { mView.hideLoading() }
+                                .subscribe({ isReLogin ->
+                                    if (isReLogin) {
+                                        mView.showMessage("登录态失效，请重新登录")
+                                        mView.openLoginActivity()
+                                    } else {
+                                        // 查询余额
+                                        queryCardBalance(false)
+                                        // 初始化电控
+                                        intiElecCtrl()
+                                    }
+                                }, {
+                                    if (it !is NullPointerException) {
+                                        this@ElecMainPresenter.onError(it)
+                                    }
+                                })
+                        )
+                    }
+                }
             }
         }
 
-        // 检查登录态
-        mCompDisposable.add(mModel.initCookie()
-                .compose(RxUtils.ioToMain())
-                .doOnSubscribe { mView.showLoading() }
-                .doOnNext { mView.hideLoading() }
-                .subscribe({ isReLogin ->
-                    if (isReLogin) {
-                        mView.showMessage("登录态失效，请重新登录")
-                        mView.openLoginActivity()
-                    } else {
-                        // 查询余额
-                        queryCardBalance(false)
-                        // 初始化电控
-                        intiElecCtrl()
-                    }
-                }, { this.onError(it) })
-        )
     }
 
     /**
@@ -61,8 +72,8 @@ class ElecMainPresenter(view: ElecMainContract.View) :
      * false LoginActivity
      */
     private fun jumpJudge(): Boolean {
-        val elecCookie = RepositoryImpl.getInstance().elecCookie
-        val elecUser = RepositoryImpl.getInstance().elecUser
+        val elecCookie = RepositoryImpl.getElecCookie()
+        val elecUser = RepositoryImpl.getElecUser()
         if (!SPUtils.get(Constant.SP_ELEC).contain("IMEI")) {
             SPUtils.get(Constant.SP_ELEC).putString("IMEI", AppUtils.imei())
         }
@@ -91,18 +102,18 @@ class ElecMainPresenter(view: ElecMainContract.View) :
 
     //设置快捷查询电费
     private fun quickQueryElec() {
-        if (elecQuery.room == null || elecQuery.room.isEmpty())
+        if (elecQuery.room.isEmpty() || elecQuery.room.isEmpty())
             return
         for ((key, value) in dkNameToAidMap) {
             if (value == elecQuery.aid) {
                 mView.setSelections(key, elecQuery.area, elecQuery.building, elecQuery.floor)
-                if (elecQuery.area != null && !elecQuery.area.isEmpty()) {
+                if (elecQuery.area.isEmpty() && !elecQuery.area.isEmpty()) {
                     onAreaSelect(elecQuery.area)
                 }
-                if (elecQuery.building != null && !elecQuery.building.isEmpty()) {
+                if (elecQuery.building.isEmpty() && !elecQuery.building.isEmpty()) {
                     onBuildingSelect(elecQuery.building)
                 }
-                if (elecQuery.floor != null && !elecQuery.floor.isEmpty()) {
+                if (elecQuery.floor.isEmpty() && !elecQuery.floor.isEmpty()) {
                     onFloorSelect(elecQuery.floor)
                 }
                 mView.setRoomText(elecQuery.room)
@@ -250,7 +261,7 @@ class ElecMainPresenter(view: ElecMainContract.View) :
     override fun queryElecBalance() {
         //设置电控信息
         val dkName = mView.getCheckedDKName()
-        elecQuery.aid = dkNameToAidMap[dkName]
+        elecQuery.aid = dkNameToAidMap[dkName]!!
         //设置地区
         val area = mView.getAreaText()
         if (area.isNotEmpty() && areaInfos != null) {
@@ -289,18 +300,20 @@ class ElecMainPresenter(view: ElecMainContract.View) :
             return
         }
         mCompDisposable.add(mModel.queryElectricity(elecQuery)
+                .doOnNext {
+                    if (it.contains("无法")) {
+                        throw NetworkErrorException("$it，请检查信息是否正确")
+                    } else {
+                        mModel.save(elecQuery)
+                    }
+                }
                 .compose(RxUtils.ioToMain())
                 .doOnSubscribe { mView.showLoading() }
                 .doFinally { mView.hideLoading() }
                 .subscribe({ s ->
-                    if (s.contains("无法")) {
-                        mView.showMessage("$s，请检查信息是否正确")
-                    } else {
-                        mModel.save(elecQuery)
-                        mView.setElecText(s)
-                        mView.showMessage("查询成功")
-                        mView.showPayView()
-                    }
+                    mView.setElecText(s)
+                    mView.showMessage("查询成功")
+                    mView.showPayView()
                 }, { this.onError(it) })
         )
     }

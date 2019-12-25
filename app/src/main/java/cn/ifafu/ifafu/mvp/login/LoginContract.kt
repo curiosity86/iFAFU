@@ -4,8 +4,8 @@ import androidx.annotation.DrawableRes
 import cn.ifafu.ifafu.base.i.IView
 import cn.ifafu.ifafu.base.ifafu.IZFModel
 import cn.ifafu.ifafu.base.ifafu.IZFPresenter
-import cn.ifafu.ifafu.data.entity.Response
-import cn.ifafu.ifafu.data.entity.User
+import cn.ifafu.ifafu.entity.Response
+import cn.ifafu.ifafu.entity.User
 import io.reactivex.Observable
 
 class LoginContract {

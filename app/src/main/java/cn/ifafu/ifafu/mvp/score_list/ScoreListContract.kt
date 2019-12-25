@@ -3,8 +3,8 @@ package cn.ifafu.ifafu.mvp.score_list
 import cn.ifafu.ifafu.base.i.IView
 import cn.ifafu.ifafu.base.ifafu.IZFModel
 import cn.ifafu.ifafu.base.ifafu.IZFPresenter
-import cn.ifafu.ifafu.data.entity.Score
-import cn.ifafu.ifafu.data.entity.YearTerm
+import cn.ifafu.ifafu.entity.Score
+import cn.ifafu.ifafu.entity.YearTerm
 import io.reactivex.Observable
 
 class ScoreListContract {

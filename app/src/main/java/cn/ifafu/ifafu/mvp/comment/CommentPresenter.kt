@@ -4,11 +4,14 @@ import android.content.Intent
 import cn.ifafu.ifafu.app.School
 import cn.ifafu.ifafu.base.BasePresenter
 import cn.ifafu.ifafu.base.addDisposable
-import cn.ifafu.ifafu.data.entity.CommentItem
-import cn.ifafu.ifafu.data.entity.Response
+import cn.ifafu.ifafu.entity.CommentItem
+import cn.ifafu.ifafu.entity.Response
 import cn.ifafu.ifafu.mvp.web.WebActivity
 import cn.ifafu.ifafu.util.RxUtils
 import io.reactivex.rxkotlin.toObservable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class CommentPresenter(view: CommentContract.View) : BasePresenter<CommentContract.View, CommentContract.Model>(view, CommentModel(view.context)), CommentContract.Presenter {
 
@@ -24,12 +27,16 @@ class CommentPresenter(view: CommentContract.View) : BasePresenter<CommentContra
     }
 
     override fun click(item: CommentItem) {
-        if (mModel.getSchoolCode() != School.FAFU_JS) {
-            val intent = Intent(mView.context, WebActivity::class.java)
-            mModel.getJumpInfo(item).forEach { (k, u) ->
-                intent.putExtra(k, u)
+        GlobalScope.launch(Dispatchers.IO) {
+            if (mModel.getSchoolCode() != School.FAFU_JS) {
+                val intent = Intent(mView.context, WebActivity::class.java)
+                mModel.getJumpInfo(item).forEach { (k, u) ->
+                    intent.putExtra(k, u)
+                }
+                launch(Dispatchers.Main) {
+                    mView.openActivity(intent)
+                }
             }
-            mView.openActivity(intent)
         }
     }
 

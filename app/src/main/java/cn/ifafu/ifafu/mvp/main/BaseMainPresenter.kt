@@ -4,24 +4,37 @@ import android.content.Intent
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.IFAFU
 import cn.ifafu.ifafu.base.BasePresenter
-import cn.ifafu.ifafu.data.entity.User
+import cn.ifafu.ifafu.entity.User
 import cn.ifafu.ifafu.mvp.login.LoginActivity
 import cn.ifafu.ifafu.util.GlobalLib
 import cn.ifafu.ifafu.util.RxUtils
 import com.tencent.bugly.beta.Beta
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 abstract class BaseMainPresenter<V : BaseMainContract.View, M : BaseMainContract.Model>(view: V, model: M)
     : BasePresenter<V, M>(view, model), BaseMainContract.Presenter {
 
-    private var theme: Int = mModel.getSetting().theme
+    private var nowTheme: Int = -1
 
     override fun onCreate() {
-        if (theme != mModel.getSetting().theme) {
-            mView.openActivity(Intent(mView.context, MainActivity::class.java))
-            mView.killSelf()
+        addDisposable {
+            Observable.fromCallable {
+                nowTheme = mModel.getSetting().theme
+                nowTheme
+            }
+                    .compose(RxUtils.ioToMain())
+                    .subscribe({
+                        if (nowTheme != it) {
+                            mView.openActivity(Intent(mView.context, MainActivity::class.java))
+                            mView.killSelf()
+                        }
+                    }, this::onError)
         }
+
     }
 
     final override fun updateApp() {
@@ -46,14 +59,18 @@ abstract class BaseMainPresenter<V : BaseMainContract.View, M : BaseMainContract
     }
 
     override fun addAccountSuccess() {
-        mView.showMessage("已切换到${mModel.getLoginUser()?.account}")
-        onCreate()
+        GlobalScope.launch(Dispatchers.IO) {
+            val user = mModel.getLoginUser()
+            launch(Dispatchers.Main) {
+                mView.showMessage("已切换到${user?.account}")
+                onCreate()
+            }
+        }
     }
 
     final override fun checkout() {
         // 多账号管理数据
-        mCompDisposable.add(Observable
-                .just(mModel.getAllUser())
+        mCompDisposable.add(Observable.fromCallable { mModel.getAllUser() }
                 .compose(RxUtils.computationToMain())
                 .subscribe({
                     mView.setCheckoutDialogData(it)
@@ -63,15 +80,19 @@ abstract class BaseMainPresenter<V : BaseMainContract.View, M : BaseMainContract
     }
 
     final override fun deleteUser(user: User) {
-        mModel.deleteAccount(user)
-        mModel.getLoginUser().run {
-            if (this == null) {
-                mView.openActivity(Intent(mView.activity, LoginActivity::class.java))
-                mView.killSelf()
-            } else {
-                mView.showMessage("已切换到${account}")
-                mView.hideCheckoutDialog()
-                onCreate()
+        GlobalScope.launch(Dispatchers.IO) {
+            mModel.deleteAccount(user)
+            mModel.getLoginUser().run {
+                launch(Dispatchers.Main) {
+                    if (this@run == null) {
+                        mView.openActivity(Intent(mView.activity, LoginActivity::class.java))
+                        mView.killSelf()
+                    } else {
+                        mView.showMessage("已切换到${account}")
+                        mView.hideCheckoutDialog()
+                        onCreate()
+                    }
+                }
             }
         }
     }
@@ -84,21 +105,23 @@ abstract class BaseMainPresenter<V : BaseMainContract.View, M : BaseMainContract
     }
 
     final override fun checkoutTo(user: User) {
-        if (user.account == mModel.getLoginUser()?.account) {
-            return
-        } else {
-            mModel.saveLoginUser(user)
-            val ld = mModel.reLogin()
-                    .compose(RxUtils.ioToMain())
-                    .doOnSubscribe { mView.showLoading() }
-                    .doFinally { mView.hideLoading() }
-                    .subscribe({
-                        mView.showMessage("成功切换到${user.account}")
-                    }, this::onError)
-            IFAFU.loginDisposable = ld
-            mCompDisposable.add(ld)
-            mView.hideCheckoutDialog()
-            this.onCreate()
+        GlobalScope.launch(Dispatchers.IO) {
+            if (user.account != mModel.getLoginUser()?.account) {
+                mModel.saveLoginUser(user)
+                launch(Dispatchers.Main) {
+                    val ld = mModel.reLogin()
+                            .compose(RxUtils.ioToMain())
+                            .doOnSubscribe { mView.showLoading() }
+                            .doFinally { mView.hideLoading() }
+                            .subscribe({
+                                mView.showMessage("成功切换到${user.account}")
+                            }, this@BaseMainPresenter::onError)
+                    IFAFU.loginDisposable = ld
+                    mCompDisposable.add(ld)
+                    mView.hideCheckoutDialog()
+                    this@BaseMainPresenter.onCreate()
+                }
+            }
         }
     }
 }

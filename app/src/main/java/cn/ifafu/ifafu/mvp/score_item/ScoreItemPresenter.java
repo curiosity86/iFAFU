@@ -5,7 +5,7 @@ import android.annotation.SuppressLint;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import cn.ifafu.ifafu.data.entity.Score;
+import cn.ifafu.ifafu.entity.Score;
 import cn.ifafu.ifafu.base.BasePresenter;
 import cn.ifafu.ifafu.util.GlobalLib;
 import cn.ifafu.ifafu.util.RxUtils;
@@ -29,13 +29,13 @@ public class ScoreItemPresenter extends BasePresenter<ScoreItemConstant.View, Sc
                         Score score = mModel.getScoreById(id);
                         Map<String, String> map = new LinkedHashMap<>();
                         map.put("课程名称", score.getName());
-                        map.put("成绩", score.getScore() != null ?
+                        map.put("成绩", score.getScore() != -1F ?
                                 GlobalLib.formatFloat(score.getScore(), 2) + "分" : "无");
-                        map.put("学分", score.getCredit() != null ?
+                        map.put("学分", score.getCredit() != -1F ?
                                 GlobalLib.formatFloat(score.getCredit(), 2) + "分" : "无");
-                        map.put("绩点", score.getGpa() != null ?
+                        map.put("绩点", score.getGpa() != -1F ?
                                 GlobalLib.formatFloat(score.getGpa(), 2) + "分" : "无");
-                        map.put("补考成绩", score.getMakeupScore() != null ?
+                        map.put("补考成绩", score.getMakeupScore() != -1F ?
                                 GlobalLib.formatFloat(score.getMakeupScore(), 2) + "分" : "无");
                         map.put("课程性质", score.getNature() != null && !score.getNature().isEmpty() ?
                                 score.getNature() : "无");

@@ -1,8 +1,8 @@
 package cn.ifafu.ifafu.mvp.main.main_new
 
 import android.graphics.drawable.Drawable
-import cn.ifafu.ifafu.data.entity.Holiday
-import cn.ifafu.ifafu.data.entity.Menu
+import cn.ifafu.ifafu.entity.Holiday
+import cn.ifafu.ifafu.entity.Menu
 import cn.ifafu.ifafu.mvp.main.BaseMainContract
 import cn.ifafu.ifafu.view.timeline.TimeAxis
 import io.reactivex.Observable

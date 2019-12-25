@@ -4,9 +4,6 @@ import android.content.Context
 import cn.ifafu.ifafu.app.IFAFU
 import cn.ifafu.ifafu.app.School
 import cn.ifafu.ifafu.base.BaseModel
-import cn.ifafu.ifafu.data.entity.Response
-import cn.ifafu.ifafu.data.entity.User
-import cn.ifafu.ifafu.data.entity.ZhengFang
 import cn.ifafu.ifafu.data.exception.LoginInfoErrorException
 import cn.ifafu.ifafu.data.exception.NoAuthException
 import cn.ifafu.ifafu.data.exception.VerifyException
@@ -15,6 +12,9 @@ import cn.ifafu.ifafu.data.http.parser.LoginParamParser
 import cn.ifafu.ifafu.data.http.parser.LoginParser
 import cn.ifafu.ifafu.data.http.parser.ParamsParser
 import cn.ifafu.ifafu.data.http.parser.VerifyParser
+import cn.ifafu.ifafu.entity.Response
+import cn.ifafu.ifafu.entity.User
+import cn.ifafu.ifafu.entity.ZhengFang
 import io.reactivex.Observable
 import java.net.URLEncoder
 import javax.security.auth.login.LoginException
@@ -33,7 +33,6 @@ abstract class BaseZFModel(context: Context) : BaseModel(context), IZFModel {
                 .retryWhen {
                     it.flatMap { throwable ->
                         if (throwable is NoAuthException || throwable.message?.contains("302") == true) {
-                            println(IFAFU.loginDisposable)
                             val loginDisposable = IFAFU.loginDisposable
                             if (loginDisposable != null && !loginDisposable.isDisposed) {
                                 while (!loginDisposable.isDisposed) {
@@ -53,7 +52,7 @@ abstract class BaseZFModel(context: Context) : BaseModel(context), IZFModel {
 
     override fun reLogin(): Observable<Response<String>> {
         return Observable.just(true).flatMap { _ ->
-            val user = repository.loginUser ?: return@flatMap Observable.empty<Response<String>>()
+            val user = repository.getInUseUser() ?: return@flatMap Observable.empty<Response<String>>()
             val loginUrl = School.getUrl(ZhengFang.LOGIN, user)
             val verifyUrl = School.getUrl(ZhengFang.VERIFY, user)
             val mainUrl = School.getUrl(ZhengFang.MAIN, user)
@@ -62,7 +61,6 @@ abstract class BaseZFModel(context: Context) : BaseModel(context), IZFModel {
                     .getInfo(mainUrl, null)
                     .compose(loginParser)
                     .flatMap<Response<String>> { stringResponse ->
-                        println("Observable.getInfo")
                         if (!stringResponse.isSuccess) {
                             APIManager.getZhengFangAPI()
                                     .getInfo(mainUrl, null)
@@ -97,7 +95,7 @@ abstract class BaseZFModel(context: Context) : BaseModel(context), IZFModel {
         }
     }
 
-    protected fun getUser(): User = repository.loginUser
+    protected fun getUser(): User? = repository.getInUseUser()
 
     protected fun innerLogin(loginUrl: String,
                              verifyUrl: String,

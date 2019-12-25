@@ -1,25 +1,18 @@
 package cn.ifafu.ifafu.mvp.syllabus_setting
 
 import android.content.Context
-import android.util.Log
-
-import cn.ifafu.ifafu.data.entity.SyllabusSetting
 import cn.ifafu.ifafu.base.ifafu.BaseZFModel
-import com.alibaba.fastjson.JSONObject
+import cn.ifafu.ifafu.entity.SyllabusSetting
 
 class SyllabusSettingModel(context: Context) : BaseZFModel(context), SyllabusSettingContract.Model {
 
     override fun getSetting(): SyllabusSetting {
-        var setting: SyllabusSetting? = repository.syllabusSetting
-        if (setting == null) {
-            setting = SyllabusSetting(repository.loginUser.account)
-            repository.saveSyllabusSetting(setting)
-        }
-        Log.d(TAG, "getSetting: " + JSONObject.toJSONString(setting))
-        return setting
+        return repository.getSyllabusSetting()
     }
 
     override fun save(setting: SyllabusSetting) {
-        repository.saveSyllabusSetting(setting)
+        Thread {
+            repository.saveSyllabusSetting(setting)
+        }.start()
     }
 }

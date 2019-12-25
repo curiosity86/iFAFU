@@ -6,8 +6,8 @@ import androidx.core.view.GravityCompat
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.base.i.IPresenter
-import cn.ifafu.ifafu.data.entity.Setting
-import cn.ifafu.ifafu.data.local.RepositoryImpl
+import cn.ifafu.ifafu.data.RepositoryImpl
+import cn.ifafu.ifafu.entity.GlobalSetting
 import cn.ifafu.ifafu.mvp.main.main_new.Main1Fragment
 import cn.ifafu.ifafu.mvp.main.main_old.Main2Fragment
 import cn.ifafu.ifafu.util.ButtonUtils
@@ -30,26 +30,31 @@ class MainActivity : BaseActivity<IPresenter>() {
     }
 
     private fun checkoutFragment() {
-        RepositoryImpl.getInstance().setting.run {
-//            MobclickAgent.onProfileSignIn(account)
-            if (nowTheme != theme) {
-                nowTheme = theme
-                supportFragmentManager.beginTransaction().apply {
-                    if (theme == Setting.THEME_NEW) {
-                        replace(R.id.view_content, Main1Fragment())
-                    } else {
-                        replace(R.id.view_content, Main2Fragment())
+        Thread {
+            RepositoryImpl.getGlobalSetting().run {
+                //            MobclickAgent.onProfileSignIn(account)
+                if (nowTheme != theme) {
+                    nowTheme = theme
+                    runOnUiThread {
+                        supportFragmentManager.beginTransaction().apply {
+                            if (theme == GlobalSetting.THEME_NEW) {
+                                replace(R.id.view_content, Main1Fragment())
+                            } else {
+                                replace(R.id.view_content, Main2Fragment())
+                            }
+                        }.commit()
                     }
-                }.commit()
+                }
             }
-        }
+
+        }.start()
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_DOWN) {
-            if (nowTheme == Setting.THEME_NEW && drawer_main.status == DragLayout.Status.Open) {
+            if (nowTheme == GlobalSetting.THEME_NEW && drawer_main.status == DragLayout.Status.Open) {
                 drawer_main.close(true)
-            } else if (nowTheme == Setting.THEME_OLD && layout_drawer.isDrawerOpen(GravityCompat.START)) {
+            } else if (nowTheme == GlobalSetting.THEME_OLD && layout_drawer.isDrawerOpen(GravityCompat.START)) {
                 layout_drawer.closeDrawer(GravityCompat.START)
             } else if (ButtonUtils.isFastDoubleClick()) {
                 finish()

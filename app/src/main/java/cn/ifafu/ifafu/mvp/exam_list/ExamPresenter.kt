@@ -2,8 +2,8 @@ package cn.ifafu.ifafu.mvp.exam_list
 
 import cn.ifafu.ifafu.base.addDisposable
 import cn.ifafu.ifafu.base.ifafu.BaseZFPresenter
-import cn.ifafu.ifafu.data.entity.Exam
-import cn.ifafu.ifafu.data.entity.YearTerm
+import cn.ifafu.ifafu.entity.Exam
+import cn.ifafu.ifafu.entity.YearTerm
 import cn.ifafu.ifafu.util.RxUtils
 import io.reactivex.Observable
 
@@ -16,30 +16,27 @@ internal class ExamPresenter(view: ExamContract.View) : BaseZFPresenter<ExamCont
 
     override fun onCreate() {
         addDisposable {
-            mModel.getYearTermList()
-                    .flatMap {
-                        this.yearTerm = it
+            Observable
+                    .fromCallable {
                         val yearTerm = mModel.getYearTerm()
                         mCurrentYear = yearTerm.first
                         mCurrentTerm = yearTerm.second
+                    }.flatMap {
+                        mModel.getYearTermList()
+                    }
+                    .flatMap {
+                        this.yearTerm = it
                         getExams(mCurrentYear, mCurrentTerm, false)
                     }
+                    .compose(RxUtils.ioToMain())
+                    .compose(showHideLoading())
                     .subscribe({ list ->
                         mView.setYearTermData(yearTerm.yearList, yearTerm.termList)
                         mView.setYearTermOptions(
                                 yearTerm.yearIndexOf(mCurrentYear),
                                 yearTerm.termIndexOf(mCurrentTerm))
                         mView.setExamAdapterData(list)
-                    }, this::onError)
-        }
-        addDisposable {
-            getExams(mCurrentYear, mCurrentTerm, true)
-                    .subscribe({ list ->
-                        mView.setYearTermData(yearTerm.yearList, yearTerm.termList)
-                        mView.setYearTermOptions(
-                                yearTerm.yearIndexOf(mCurrentYear),
-                                yearTerm.termIndexOf(mCurrentTerm))
-                        mView.setExamAdapterData(list)
+                        update()
                     }, this::onError)
         }
     }
@@ -54,6 +51,7 @@ internal class ExamPresenter(view: ExamContract.View) : BaseZFPresenter<ExamCont
 
     override fun switchYearTerm(op1: String, op2: String) {
         mCompDisposable.add(getExams(op1, op2, false)
+                .compose(RxUtils.ioToMain())
                 .subscribe({ list -> mView.setExamAdapterData(list) }, this::onError)
         )
     }
@@ -75,8 +73,6 @@ internal class ExamPresenter(view: ExamContract.View) : BaseZFPresenter<ExamCont
                         }
                     }
         }
-                .compose(RxUtils.ioToMain())
-                .compose(showHideLoading())
     }
 
     override fun onError(throwable: Throwable) {

@@ -4,12 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import cn.ifafu.ifafu.app.School
 import cn.ifafu.ifafu.base.ifafu.BaseZFModel
-import cn.ifafu.ifafu.data.entity.Score
-import cn.ifafu.ifafu.data.entity.User
-import cn.ifafu.ifafu.data.entity.YearTerm
-import cn.ifafu.ifafu.data.entity.ZhengFang
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.data.http.parser.ScoreParser
+import cn.ifafu.ifafu.entity.Score
+import cn.ifafu.ifafu.entity.YearTerm
+import cn.ifafu.ifafu.entity.ZhengFang
 import cn.ifafu.ifafu.mvp.score_list.ScoreListContract.Model
 import io.reactivex.Observable
 
@@ -28,10 +27,15 @@ class ScoreListModel(context: Context) : BaseZFModel(context), Model {
     }
 
     override fun getScoresFromNet(): Observable<MutableList<Score>> {
-        val user: User = repository.loginUser
-        val scoreUrl: String = School.getUrl(ZhengFang.SCORE, user)
-        val mainUrl = School.getUrl(ZhengFang.MAIN, user)
-        return initParams(scoreUrl, mainUrl)
+        val user by lazy { repository.getInUseUser()!! }
+        var scoreUrl = ""
+        var mainUrl = ""
+        return Observable.fromCallable {  }
+                .flatMap {
+                    scoreUrl = School.getUrl(ZhengFang.SCORE, user)
+                    mainUrl = School.getUrl(ZhengFang.MAIN, user)
+                    initParams(scoreUrl, mainUrl)
+                }
                 .flatMap { params: MutableMap<String, String> ->
                     when (user.schoolCode) {
                         School.FAFU -> {
@@ -60,7 +64,7 @@ class ScoreListModel(context: Context) : BaseZFModel(context), Model {
 
     override fun getScoresFromDB(year: String, term: String): List<Score> {
         return if (year == "全部" && term == "全部") {
-            repository.allScores
+            repository.getAllScores()
         } else if (year == "全部") {
             repository.getScoresByTerm(term)
         } else if (term == "全部") {
@@ -73,7 +77,7 @@ class ScoreListModel(context: Context) : BaseZFModel(context), Model {
     @SuppressLint("DefaultLocale")
     override fun getYearTermList(): Observable<YearTerm> {
         return Observable.fromCallable {
-            repository.yearTermList.apply {
+            repository.getYearTermList().apply {
                 addTerm("全部")
                 addYear("全部")
             }
@@ -83,7 +87,7 @@ class ScoreListModel(context: Context) : BaseZFModel(context), Model {
     @SuppressLint("DefaultLocale")
     override fun getYearTerm(): Observable<Pair<String, String>> {
         return Observable.fromCallable {
-            repository.yearTerm
+            repository.getYearTerm()
         }
     }
 

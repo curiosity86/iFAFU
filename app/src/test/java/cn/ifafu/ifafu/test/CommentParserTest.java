@@ -4,11 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.function.Consumer;
-
 import cn.ifafu.ifafu.FileUtils;
-import cn.ifafu.ifafu.data.entity.CommentItem;
 import cn.ifafu.ifafu.data.http.parser.CommentParser;
 
 public class CommentParserTest {

@@ -2,9 +2,9 @@ package cn.ifafu.ifafu.mvp.elec_login
 
 import android.graphics.Bitmap
 
-import cn.ifafu.ifafu.data.entity.ElecCookie
-import cn.ifafu.ifafu.data.entity.ElecQuery
-import cn.ifafu.ifafu.data.entity.ElecUser
+import cn.ifafu.ifafu.entity.ElecCookie
+import cn.ifafu.ifafu.entity.ElecQuery
+import cn.ifafu.ifafu.entity.ElecUser
 import cn.ifafu.ifafu.base.i.IModel
 import cn.ifafu.ifafu.base.i.IPresenter
 import cn.ifafu.ifafu.base.i.IView

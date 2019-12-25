@@ -3,11 +3,12 @@ package cn.ifafu.ifafu.mvp.exam_list
 import android.content.Context
 import cn.ifafu.ifafu.app.School
 import cn.ifafu.ifafu.base.ifafu.BaseZFModel
-import cn.ifafu.ifafu.data.entity.Exam
-import cn.ifafu.ifafu.data.entity.YearTerm
-import cn.ifafu.ifafu.data.entity.ZhengFang
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.data.http.parser.ExamParser
+import cn.ifafu.ifafu.entity.Exam
+import cn.ifafu.ifafu.entity.User
+import cn.ifafu.ifafu.entity.YearTerm
+import cn.ifafu.ifafu.entity.ZhengFang
 import io.reactivex.Observable
 
 class ExamModel(context: Context) : BaseZFModel(context), ExamContract.Model {
@@ -15,16 +16,23 @@ class ExamModel(context: Context) : BaseZFModel(context), ExamContract.Model {
     private var yearTerm: Pair<String, String> = getYearTerm()
 
     override fun getExamsFromNet(year: String, term: String): Observable<List<Exam>> {
-        val user = repository.loginUser
-        val examUrl = School.getUrl(ZhengFang.EXAM, user)
-        val mainUrl = School.getUrl(ZhengFang.MAIN, user)
-        return initParams(examUrl, mainUrl)
+        var examUrl = ""
+        var mainUrl = ""
+        var user: User? = null
+        return Observable.fromCallable {
+            repository.getInUseUser()!!
+        }.flatMap { it ->
+            user = it
+            examUrl = School.getUrl(ZhengFang.EXAM, it)
+            mainUrl = School.getUrl(ZhengFang.MAIN, it)
+            initParams(examUrl, mainUrl)
+        }
                 .flatMap { params ->
                     //考试查询特例，查询本学期考试只能通过GET
                     if (year == yearTerm.first && term == yearTerm.second) {
                         APIManager.getZhengFangAPI()
                                 .initParams(examUrl, mainUrl)
-                                .compose(ExamParser(user))
+                                .compose(ExamParser(user!!))
                                 .map { it.body }
                                 .doOnNext { save(it) }
                     } else {
@@ -32,7 +40,7 @@ class ExamModel(context: Context) : BaseZFModel(context), ExamContract.Model {
                         params["xqd"] = term
                         APIManager.getZhengFangAPI()
                                 .getInfo(examUrl, examUrl, params)
-                                .compose(ExamParser(user))
+                                .compose(ExamParser(user!!))
                                 .map { it.body }
                                 .doOnNext { save(it) }
                     }
@@ -42,15 +50,15 @@ class ExamModel(context: Context) : BaseZFModel(context), ExamContract.Model {
 
     override fun getExamsFromDB(year: String, term: String): Observable<List<Exam>> {
         return Observable.fromCallable { repository.getExams(year, term) }
-                .map { sort(it) }
+                .map { sort(it.toMutableList()) }
     }
 
     override fun getYearTermList(): Observable<YearTerm> {
-        return Observable.fromCallable { repository.yearTermList }
+        return Observable.fromCallable { repository.getYearTermList() }
     }
 
     override fun getYearTerm(): Pair<String, String> {
-        return repository.yearTerm
+        return repository.getYearTerm()
     }
 
     override fun save(list: List<Exam>) {

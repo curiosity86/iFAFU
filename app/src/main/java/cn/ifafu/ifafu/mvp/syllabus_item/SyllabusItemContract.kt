@@ -3,8 +3,8 @@ package cn.ifafu.ifafu.mvp.syllabus_item
 import cn.ifafu.ifafu.base.i.IModel
 import cn.ifafu.ifafu.base.i.IPresenter
 import cn.ifafu.ifafu.base.i.IView
-import cn.ifafu.ifafu.data.entity.Course
-import cn.ifafu.ifafu.data.entity.SyllabusSetting
+import cn.ifafu.ifafu.entity.Course
+import cn.ifafu.ifafu.entity.SyllabusSetting
 import java.util.*
 
 class SyllabusItemContract {
@@ -51,7 +51,7 @@ class SyllabusItemContract {
 
         fun delete(course: Course)
 
-        fun getCourseById(id: Long): Course
+        fun getCourseById(id: Long): Course?
     }
 
 }

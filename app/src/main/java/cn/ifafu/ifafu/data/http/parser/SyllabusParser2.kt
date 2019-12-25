@@ -1,7 +1,7 @@
 package cn.ifafu.ifafu.data.http.parser
 
-import cn.ifafu.ifafu.data.entity.Course
-import cn.ifafu.ifafu.data.entity.User
+import cn.ifafu.ifafu.entity.Course
+import cn.ifafu.ifafu.entity.User
 import com.alibaba.fastjson.JSONObject
 import io.reactivex.Observable
 import io.reactivex.ObservableSource

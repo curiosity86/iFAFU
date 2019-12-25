@@ -8,9 +8,9 @@ import android.util.Base64;
 import java.io.IOException;
 
 import cn.ifafu.ifafu.app.Constant;
-import cn.ifafu.ifafu.data.entity.ElecCookie;
-import cn.ifafu.ifafu.data.entity.ElecQuery;
-import cn.ifafu.ifafu.data.entity.ElecUser;
+import cn.ifafu.ifafu.entity.ElecCookie;
+import cn.ifafu.ifafu.entity.ElecQuery;
+import cn.ifafu.ifafu.entity.ElecUser;
 import cn.ifafu.ifafu.data.http.elec.LoginService;
 import cn.ifafu.ifafu.data.http.elec.RetrofitFactory;
 import cn.ifafu.ifafu.base.BaseModel;

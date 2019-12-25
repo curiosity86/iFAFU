@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import cn.ifafu.ifafu.R;
-import cn.ifafu.ifafu.data.entity.Score;
+import cn.ifafu.ifafu.entity.Score;
 import cn.ifafu.ifafu.util.GlobalLib;
 
 public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHolder> {

@@ -10,8 +10,8 @@ import android.widget.TextView
 import androidx.core.view.GravityCompat
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
-import cn.ifafu.ifafu.data.entity.NextCourse
-import cn.ifafu.ifafu.data.entity.NextExam
+import cn.ifafu.ifafu.entity.NextCourse
+import cn.ifafu.ifafu.entity.NextExam
 import cn.ifafu.ifafu.mvp.activity.AboutActivity
 import cn.ifafu.ifafu.mvp.comment.CommentActivity
 import cn.ifafu.ifafu.mvp.elec_main.ElecMainActivity

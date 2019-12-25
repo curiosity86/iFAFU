@@ -5,9 +5,9 @@ import android.content.Intent
 import cn.ifafu.ifafu.R.string
 import cn.ifafu.ifafu.base.addDisposable
 import cn.ifafu.ifafu.base.ifafu.BaseZFPresenter
-import cn.ifafu.ifafu.data.entity.Course
-import cn.ifafu.ifafu.data.entity.Response
-import cn.ifafu.ifafu.data.entity.SyllabusSetting
+import cn.ifafu.ifafu.entity.Course
+import cn.ifafu.ifafu.entity.Response
+import cn.ifafu.ifafu.entity.SyllabusSetting
 import cn.ifafu.ifafu.mvp.login.LoginActivity
 import cn.ifafu.ifafu.util.RxUtils
 import cn.ifafu.ifafu.view.syllabus.CourseBase
@@ -20,32 +20,45 @@ class SyllabusPresenter(view: SyllabusContract.View)
 
     @SuppressLint("DefaultLocale")
     override fun onCreate() {
-        val setting = mModel.syllabusSetting
-        if (setting == null) {
-            mView.openActivity(Intent(mView.context, LoginActivity::class.java))
-            mView.killSelf()
-            return
+        addDisposable {
+            Observable.fromCallable { mModel.syllabusSetting }
+                    .compose(RxUtils.ioToMain())
+                    .subscribe({
+                        mView.setSyllabusSetting(it)
+                        updateSyllabusLocal()
+                    }, {
+                        if (it is NullPointerException) {
+                            mView.openActivity(Intent(mView.context, LoginActivity::class.java))
+                            mView.killSelf()
+                        } else {
+                            onError(it)
+                        }
+                    })
         }
-        mView.setSyllabusSetting(mModel.syllabusSetting)
-        updateSyllabusLocal()
     }
 
     override fun updateSyllabusNet() {
         addDisposable {
             mModel.coursesFromNet
+                    .map { response ->
+                        if (response.isSuccess) {
+                            holidayChange(response.body)
+                        } else {
+                            throw NullPointerException(response.message)
+                        }
+                    }
                     .compose(RxUtils.ioToMain())
                     .doOnSubscribe { mView.showLoading() }
                     .doFinally { mView.hideLoading() }
-                    .subscribe({ response ->
-                        if (response.isSuccess) {
-                            val courses = holidayChange(response.body)
-                            mView.setSyllabusData(courses)
-                            mView.showMessage(string.syllabus_refresh_success)
-                        } else {
-                            mView.showMessage(response.message)
+                    .subscribe({ courses ->
+                        mView.setSyllabusData(courses)
+                        mView.showMessage(string.syllabus_refresh_success)
+                    }, {
+                        if (it is NullPointerException) {
                             mView.setSyllabusData(emptyList())
                         }
-                    }, this::onError)
+                        onError(it)
+                    })
         }
     }
 
@@ -61,17 +74,22 @@ class SyllabusPresenter(view: SyllabusContract.View)
                                     .map { Response.success(it) }
                         }
                     }
+                    .map {
+                        if (!it.isSuccess) {
+                            throw Exception(it.message)
+                        } else {
+                            holidayChange(it.body)
+                        }
+                    }
                     .compose(RxUtils.ioToMain())
                     .doOnSubscribe { mView.showLoading() }
                     .doFinally { mView.hideLoading() }
-                    .subscribe({ response ->
-                        if (response.isSuccess) {
-                            mView.setSyllabusData(holidayChange(response.body))
-                        } else {
-                            mView.setSyllabusData(emptyList())
-                            mView.showMessage(response.message)
-                        }
-                    }, this::onError)
+                    .subscribe({
+                        mView.setSyllabusData(it)
+                    }, {
+                        onError(it)
+                        mView.setSyllabusData(emptyList())
+                    })
         }
     }
 
@@ -93,7 +111,6 @@ class SyllabusPresenter(view: SyllabusContract.View)
     private fun holidayChange(oldCourses: List<Course>): MutableList<MutableList<CourseBase>?> {
 
         //MutableMap<fromWeek, MutableMap<fromWeekday, Pair<toWeek, toWeekday>>>
-        @SuppressLint("UseSparseArrays")
         val fromTo: MutableMap<Int, MutableMap<Int, Pair<Int, Int>?>> = mModel.holidayFromToMap
 
         //按周排列课程

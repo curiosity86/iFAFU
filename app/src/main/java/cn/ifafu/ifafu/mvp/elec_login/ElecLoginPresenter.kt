@@ -3,38 +3,45 @@ package cn.ifafu.ifafu.mvp.elec_login
 import android.content.Intent
 import cn.ifafu.ifafu.app.School
 import cn.ifafu.ifafu.base.BasePresenter
-import cn.ifafu.ifafu.data.entity.ElecCookie
-import cn.ifafu.ifafu.data.entity.ElecQuery
-import cn.ifafu.ifafu.data.entity.ElecUser
-import cn.ifafu.ifafu.data.local.RepositoryImpl
+import cn.ifafu.ifafu.data.RepositoryImpl
+import cn.ifafu.ifafu.entity.ElecCookie
+import cn.ifafu.ifafu.entity.ElecQuery
+import cn.ifafu.ifafu.entity.ElecUser
 import cn.ifafu.ifafu.mvp.elec_main.ElecMainActivity
 import cn.ifafu.ifafu.util.RxUtils
 import com.alibaba.fastjson.JSONObject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class ElecLoginPresenter internal constructor(view: ElecLoginContract.View) : BasePresenter<ElecLoginContract.View, ElecLoginContract.Model>(view, ElecLoginModel(view.context)), ElecLoginContract.Presenter {
 
     private lateinit var elecUser: ElecUser
 
     override fun onCreate() {
-        elecUser = mModel.getUser().run {
-            if (this == null) {
-                val elecUser = ElecUser()
-                val user = RepositoryImpl.getInstance().loginUser
-                elecUser.account = user.account
-                val account = user.account
-                if (user.schoolCode == School.FAFU_JS) {
-                    elecUser.xfbAccount = "0$account"
+        GlobalScope.launch(Dispatchers.IO) {
+            elecUser = mModel.getUser().run {
+                if (this == null) {
+                    val elecUser = ElecUser()
+                    val user = RepositoryImpl.getInUseUser()
+                    elecUser.account = user!!.account
+                    val account = user.account
+                    if (user.schoolCode == School.FAFU_JS) {
+                        elecUser.xfbAccount = "0$account"
+                    } else {
+                        elecUser.xfbAccount = account
+                    }
+                    elecUser
                 } else {
-                    elecUser.xfbAccount = account
+                    this
                 }
-                elecUser
-            } else {
-                this
+            }
+            launch(Dispatchers.Main) {
+                mView.setPasswordText(elecUser.password)
+                mView.setSnoEtText(elecUser.xfbAccount)
+                verify()
             }
         }
-        mView.setPasswordText(elecUser.password)
-        mView.setSnoEtText(elecUser.xfbAccount)
-        verify()
     }
 
     override fun verify() {

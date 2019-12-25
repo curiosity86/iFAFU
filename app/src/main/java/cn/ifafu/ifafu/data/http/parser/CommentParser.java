@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import cn.ifafu.ifafu.data.entity.CommentItem;
-import cn.ifafu.ifafu.data.entity.Response;
+import cn.ifafu.ifafu.entity.CommentItem;
+import cn.ifafu.ifafu.entity.Response;
 
 public class CommentParser extends BaseParser<Response<List<CommentItem>>> {
 

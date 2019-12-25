@@ -3,17 +3,17 @@ package cn.ifafu.ifafu.mvp.syllabus_item
 import android.content.Context
 
 import cn.ifafu.ifafu.base.BaseModel
-import cn.ifafu.ifafu.data.entity.Course
-import cn.ifafu.ifafu.data.entity.SyllabusSetting
+import cn.ifafu.ifafu.entity.Course
+import cn.ifafu.ifafu.entity.SyllabusSetting
 
 internal class SyllabusItemModel(context: Context) : BaseModel(context), SyllabusItemContract.Model {
 
     override fun getSyllabusSetting(): SyllabusSetting {
-        return repository.syllabusSetting
+        return repository.getSyllabusSetting()
     }
 
     override fun save(course: Course) {
-        course.account = repository.loginUser.account
+        course.account = repository.getInUseUser()!!.account
         repository.saveCourse(course)
     }
 
@@ -21,7 +21,7 @@ internal class SyllabusItemModel(context: Context) : BaseModel(context), Syllabu
         repository.deleteCourse(course)
     }
 
-    override fun getCourseById(id: Long): Course {
+    override fun getCourseById(id: Long): Course? {
         return repository.getCourseById(id)
     }
 }

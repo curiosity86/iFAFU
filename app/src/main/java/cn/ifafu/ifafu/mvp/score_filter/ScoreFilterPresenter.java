@@ -4,7 +4,7 @@ import android.content.Intent;
 
 import java.util.List;
 
-import cn.ifafu.ifafu.data.entity.Score;
+import cn.ifafu.ifafu.entity.Score;
 import cn.ifafu.ifafu.base.BasePresenter;
 import cn.ifafu.ifafu.util.GlobalLib;
 import cn.ifafu.ifafu.util.RxUtils;
@@ -39,7 +39,7 @@ class ScoreFilterPresenter extends BasePresenter<ScoreFilterConstant.View, Score
 
     @Override
     public void onCheck(Score score, boolean checked) {
-        score.setIsIESItem(checked);
+        score.setIESItem(checked);
         mModel.save(score);
         updateIES();
     }

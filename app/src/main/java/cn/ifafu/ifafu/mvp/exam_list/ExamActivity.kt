@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BaseActivity
-import cn.ifafu.ifafu.data.entity.Exam
+import cn.ifafu.ifafu.entity.Exam
 import cn.ifafu.ifafu.view.adapter.ExamAdapter
 import cn.ifafu.ifafu.view.dialog.ProgressDialog
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder

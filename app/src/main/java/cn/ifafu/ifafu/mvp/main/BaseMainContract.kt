@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.mvp.main
 import cn.ifafu.ifafu.base.i.IPresenter
 import cn.ifafu.ifafu.base.i.IView
 import cn.ifafu.ifafu.base.ifafu.IZFModel
-import cn.ifafu.ifafu.data.entity.*
+import cn.ifafu.ifafu.entity.*
 import io.reactivex.Observable
 
 class BaseMainContract {
@@ -34,7 +34,7 @@ class BaseMainContract {
 
     interface Model : IZFModel {
 
-        fun getSetting(): Setting
+        fun getSetting(): GlobalSetting
 
         fun getCourses(): Observable<List<Course>>
 

@@ -11,8 +11,8 @@ import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.IFAFU
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.base.i.IPresenter
-import cn.ifafu.ifafu.data.entity.User
-import cn.ifafu.ifafu.data.local.RepositoryImpl
+import cn.ifafu.ifafu.data.RepositoryImpl
+import cn.ifafu.ifafu.entity.User
 import cn.ifafu.ifafu.mvp.exam_list.ExamActivity
 import cn.ifafu.ifafu.mvp.login.LoginActivity
 import cn.ifafu.ifafu.mvp.main.MainActivity
@@ -40,14 +40,14 @@ class SplashActivity : BaseActivity<IPresenter>() {
         Observable
                 .fromCallable {
                     IFAFU.initConfig(applicationContext)
-                    val repository = RepositoryImpl.getInstance()
+                    val repository = RepositoryImpl
                     when (intent.getIntExtra("jump", -1)) {
                         Constant.ACTIVITY_SYLLABUS -> SyllabusActivity::class.java
                         Constant.ACTIVITY_EXAM -> ExamActivity::class.java
                         else -> {
-                            var user: User? = repository.loginUser
+                            var user: User? = repository.getInUseUser()
                             if (user == null) {
-                                user = repository.allUser.getOrNull(0)
+                                user = repository.getAllUsers().getOrNull(0)
                                 if (user != null) {
                                     repository.saveLoginUser(user)
                                     MainActivity::class.java

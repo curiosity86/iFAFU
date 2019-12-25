@@ -1,22 +1,20 @@
 package cn.ifafu.ifafu.app;
 
-import android.util.SparseArray;
-
 import java.util.HashMap;
+import java.util.Map;
 
-import cn.ifafu.ifafu.data.entity.ZFApi;
-import cn.ifafu.ifafu.data.entity.ZhengFang;
-import cn.ifafu.ifafu.data.entity.User;
+import cn.ifafu.ifafu.entity.User;
+import cn.ifafu.ifafu.entity.ZFApi;
+import cn.ifafu.ifafu.entity.ZhengFang;
 
 public class School {
 
-    public static final int FAFU = 1;
-    public static final int FAFU_JS = 2;
+    public static final String FAFU = "FAFU";
+    public static final String FAFU_JS = "FAFU_JS";
 
-    private static final SparseArray<ZhengFang> URL_MAP = new SparseArray<>();
+    private static final Map<String, ZhengFang> URL_MAP = new HashMap<>();
 
     static {
-
         URL_MAP.put(FAFU, new ZhengFang(FAFU, "http://jwgl.fafu.edu.cn/{token}/",
                 "default2.aspx",
                 "CheckCode.aspx",
@@ -46,7 +44,7 @@ public class School {
      * @return url
      */
     public static String getUrl(String filed, User user) {
-        return URL_MAP.get(user.getSchoolCode()).get(filed, user.getAccount(), user.getName());
+        return URL_MAP.get(user.getSchoolCode()).get(filed, user);
     }
 
 }

@@ -3,9 +3,9 @@ package cn.ifafu.ifafu.mvp.main
 import android.annotation.SuppressLint
 import android.content.Context
 import cn.ifafu.ifafu.base.ifafu.BaseZFModel
-import cn.ifafu.ifafu.data.entity.*
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.data.http.service.WeatherService
+import cn.ifafu.ifafu.entity.*
 import cn.ifafu.ifafu.mvp.exam_list.ExamModel
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusModel
 import cn.ifafu.ifafu.util.DateUtils
@@ -16,8 +16,8 @@ import java.util.*
 
 abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainContract.Model {
 
-    override fun getAllUser(): MutableList<User> {
-        return repository.allUser
+    override fun getAllUser(): List<User> {
+        return repository.getAllUsers()
     }
 
     override fun getCourses(): Observable<List<Course>> {
@@ -41,7 +41,7 @@ abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainC
     }
 
     override fun getThisTermExams(): List<Exam> {
-        val yearTerm = repository.yearTerm
+        val yearTerm = repository.getYearTerm()
         val model = ExamModel(mContext)
         return model.getExamsFromDB(yearTerm.first, yearTerm.second)
                 .flatMap {
@@ -53,12 +53,12 @@ abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainC
                 }.blockingFirst()
     }
 
-    override fun getSetting(): Setting {
-        return repository.setting
+    override fun getSetting(): GlobalSetting {
+        return repository.getGlobalSetting()
     }
 
     override fun saveLoginUser(user: User) {
-        repository.saveLoginUser(user)
+        repository.saveUser(user)
     }
 
     override fun getNextCourse(): Observable<NextCourse> {
@@ -177,9 +177,9 @@ abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainC
     }
 
     override fun getLoginUser(): User? {
-        var user = repository.loginUser
+        var user = repository.getInUseUser()
         if (user == null) {
-            user = repository.allUser.getOrNull(0)
+            user = repository.getAllUsers().getOrNull(0)
             if (user != null) {
                 saveLoginUser(user)
             }

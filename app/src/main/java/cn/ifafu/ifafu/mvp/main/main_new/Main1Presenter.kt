@@ -2,8 +2,10 @@ package cn.ifafu.ifafu.mvp.main.main_new
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.IFAFU
-import cn.ifafu.ifafu.data.entity.NextCourse
+import cn.ifafu.ifafu.app.School
+import cn.ifafu.ifafu.entity.NextCourse
 import cn.ifafu.ifafu.mvp.main.BaseMainPresenter
 import cn.ifafu.ifafu.util.DateUtils
 import cn.ifafu.ifafu.util.RxUtils
@@ -18,14 +20,24 @@ class Main1Presenter(view: Main1Contract.View)
 
     override fun onCreate() {
         super.onCreate()
-        val user = mModel.getLoginUser()
-        mView.setLeftMenuHeadName(user?.name ?: "Null")
-        mView.setLeftMenuHeadIcon(mModel.getSchoolIcon())
+        addDisposable {
+            Observable.fromCallable { mModel.getLoginUser() }
+                    .compose(RxUtils.ioToMain())
+                    .subscribe({ user ->
+                        mView.setLeftMenuHeadName(user!!.name)
+                        mView.setLeftMenuHeadIcon(when (user.schoolCode) {
+                            School.FAFU -> mView.context.getDrawable(R.drawable.fafu_bb_icon_white)!!
+                            School.FAFU_JS -> mView.context.getDrawable(R.drawable.fafu_js_icon_white)!!
+                            else -> mView.context.getDrawable(R.mipmap.ic_launcher_round)!!
+                        })
+                    }, this::onError)
+        }
         // 获取主页菜单
-        mCompDisposable.add(mModel.getMenus()
-                .compose(RxUtils.ioToMain())
-                .subscribe({ menus -> mView.setMenuAdapterData(menus) }, this::onError)
-        )
+        addDisposable {
+            mModel.getMenus()
+                    .compose(RxUtils.ioToMain())
+                    .subscribe({ menus -> mView.setMenuAdapterData(menus) }, this::onError)
+        }
         updateWeather()
         updateTimeLine()
         updateNextCourseView()

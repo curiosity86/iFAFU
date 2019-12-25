@@ -1,10 +1,10 @@
 package cn.ifafu.ifafu.mvp.syllabus_setting
 
 import android.widget.ImageView
-import cn.ifafu.ifafu.data.entity.SyllabusSetting
 import cn.ifafu.ifafu.base.i.IModel
 import cn.ifafu.ifafu.base.i.IPresenter
 import cn.ifafu.ifafu.base.i.IView
+import cn.ifafu.ifafu.entity.SyllabusSetting
 
 class SyllabusSettingContract {
 

@@ -11,8 +11,8 @@ import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.base.BaseActivity
-import cn.ifafu.ifafu.data.entity.Course
-import cn.ifafu.ifafu.data.entity.SyllabusSetting
+import cn.ifafu.ifafu.entity.Course
+import cn.ifafu.ifafu.entity.SyllabusSetting
 import cn.ifafu.ifafu.mvp.main.MainActivity
 import cn.ifafu.ifafu.mvp.syllabus_item.SyllabusItemActivity
 import cn.ifafu.ifafu.mvp.syllabus_setting.SyllabusSettingActivity
@@ -81,7 +81,7 @@ class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusCon
         setCurrentWeek(setting.currentWeek)
         Log.d(TAG, "background: ${setting.background}")
 
-        if (setting.background != null) {
+        if (setting.background.isNotEmpty()) {
 //            Glide.with(this)
 //                    .load(setting.background)
 //                    .skipMemoryCache(true)

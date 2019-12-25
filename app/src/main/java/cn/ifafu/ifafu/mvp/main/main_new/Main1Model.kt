@@ -7,8 +7,8 @@ import androidx.annotation.DrawableRes
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.School
-import cn.ifafu.ifafu.data.entity.Holiday
-import cn.ifafu.ifafu.data.entity.Menu
+import cn.ifafu.ifafu.entity.Holiday
+import cn.ifafu.ifafu.entity.Menu
 import cn.ifafu.ifafu.mvp.comment.CommentActivity
 import cn.ifafu.ifafu.mvp.elec_main.ElecMainActivity
 import cn.ifafu.ifafu.mvp.exam_list.ExamActivity
@@ -43,7 +43,7 @@ class Main1Model(context: Context) : BaseMainModel(context), Main1Contract.Model
     private fun intent(cls: Class<*>): Intent = Intent(mContext, cls)
 
     override fun getSchoolIcon(): Drawable {
-        return when (repository.loginUser.schoolCode) {
+        return when (repository.getInUseUser()?.schoolCode) {
             School.FAFU -> drawable(R.drawable.fafu_bb_icon_white)
             School.FAFU_JS -> drawable(R.drawable.fafu_js_icon_white)
             else -> drawable(R.mipmap.ic_launcher_round)

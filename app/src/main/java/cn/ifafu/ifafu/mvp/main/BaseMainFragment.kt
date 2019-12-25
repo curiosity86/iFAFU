@@ -2,17 +2,20 @@ package cn.ifafu.ifafu.mvp.main
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
+import cn.ifafu.ifafu.BuildConfig
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.base.BaseFragment
-import cn.ifafu.ifafu.data.entity.User
+import cn.ifafu.ifafu.entity.User
 import cn.ifafu.ifafu.mvp.login.LoginActivity
 import cn.ifafu.ifafu.view.adapter.AccountAdapter
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
+import com.alibaba.fastjson.JSONObject
 import kotlinx.android.synthetic.main.account_dialog.view.*
 
 abstract class BaseMainFragment<T : BaseMainContract.Presenter> : BaseFragment<T>(), BaseMainContract.View {
@@ -23,6 +26,9 @@ abstract class BaseMainFragment<T : BaseMainContract.Presenter> : BaseFragment<T
     private var checkoutDialog: MaterialDialog? = null
 
     override fun setCheckoutDialogData(users: List<User>) {
+        if (BuildConfig.DEBUG) {
+            Log.d("User", JSONObject.toJSONString(users))
+        }
         if (mAccountAdapter == null) {
             checkoutDialog = MaterialDialog(context!!).apply {
                 customView(viewRes = R.layout.account_dialog)

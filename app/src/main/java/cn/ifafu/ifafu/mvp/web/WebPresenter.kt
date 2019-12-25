@@ -8,13 +8,15 @@ import cn.ifafu.ifafu.mvp.web.WebContract.Presenter
 import cn.ifafu.ifafu.mvp.web.WebContract.View
 import cn.ifafu.ifafu.util.RxUtils
 import cn.ifafu.ifafu.util.SPUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 internal class WebPresenter(view: View) : BaseZFPresenter<View, WebContract.Model>(view, WebModel(view.context)), Presenter {
 
     override fun onCreate() {
 
         val title: String? = mView.activity.intent.getStringExtra("title")
-        val referer: String? = mView.activity.intent.getStringExtra("referer")
         val url: String? = mView.activity.intent.getStringExtra("url")
 
         if (url != null && title != null) {
@@ -22,7 +24,12 @@ internal class WebPresenter(view: View) : BaseZFPresenter<View, WebContract.Mode
             mView.loadUrl(url)
         } else {
             mView.setTitle(resId = R.string.title_web_mode)
-            loadUrl(mModel.getMainUrl(), SPUtils.get(Constant.SP_COOKIE).getString("ASP.NET_SessionId"))
+            GlobalScope.launch(Dispatchers.IO) {
+                val url = mModel.getMainUrl()
+                launch(Dispatchers.Main) {
+                    loadUrl(url, SPUtils.get(Constant.SP_COOKIE).getString("ASP.NET_SessionId"))
+                }
+            }
         }
     }
 

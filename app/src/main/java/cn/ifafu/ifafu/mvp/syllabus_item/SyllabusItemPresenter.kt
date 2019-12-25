@@ -3,10 +3,13 @@ package cn.ifafu.ifafu.mvp.syllabus_item
 import android.app.Activity
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BasePresenter
-import cn.ifafu.ifafu.data.entity.Course
+import cn.ifafu.ifafu.entity.Course
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusActivity
 import cn.ifafu.ifafu.util.RxUtils
 import io.reactivex.Observable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 internal class SyllabusItemPresenter(view: SyllabusItemContract.View) : BasePresenter<SyllabusItemContract.View, SyllabusItemContract.Model>(view, SyllabusItemModel(view.context)), SyllabusItemContract.Presenter {
@@ -21,28 +24,37 @@ internal class SyllabusItemPresenter(view: SyllabusItemContract.View) : BasePres
     private val nodes = ArrayList<String>()
 
     override fun onCreate() {
-        val setting = mModel.getSyllabusSetting()
-        for (i in 1..setting.nodeCnt) {
-            nodes.add("第" + i + "节")
-        }
-        mView.setTimeOPVOptions(weekdays, nodes, nodes)
+        GlobalScope.launch(Dispatchers.IO) {
 
-        val intent = mView.activity.intent
-        // 1 表示通过添加按钮打开Activity
-        come_from = intent.getIntExtra("come_from", -1)
-        if (come_from == SyllabusActivity.BUTTON_ADD) {
-            mView.isEditMode(true)
-        }
-        // 获取跳转课程id
-        val id = intent.getLongExtra("course_id", -1L)
-        if (id != -1L) {
-            course = mModel.getCourseById(id)
-            if (course != null) {
-                resetView(course!!)
+            val setting = mModel.getSyllabusSetting()
+            for (i in 1..setting.nodeLength) {
+                nodes.add("第" + i + "节")
             }
-        }
-        if (course == null) {
-            course = Course()
+            launch(Dispatchers.Main) {
+                mView.setTimeOPVOptions(weekdays, nodes, nodes)
+            }
+
+            val intent = mView.activity.intent
+            // 1 表示通过添加按钮打开Activity
+            come_from = intent.getIntExtra("come_from", -1)
+            if (come_from == SyllabusActivity.BUTTON_ADD) {
+                launch(Dispatchers.Main) {
+                    mView.isEditMode(true)
+                }
+            }
+            // 获取跳转课程id
+            val id = intent.getLongExtra("course_id", -1L)
+            if (id != -1L) {
+                course = mModel.getCourseById(id)
+                if (course != null) {
+                    launch(Dispatchers.Main) {
+                        resetView(course!!)
+                    }
+                }
+            }
+            if (course == null) {
+                course = Course()
+            }
         }
     }
 
@@ -80,8 +92,8 @@ internal class SyllabusItemPresenter(view: SyllabusItemContract.View) : BasePres
                     val address = mView.getAddressText()
                     val teacher = mView.getTeacherText()
                     course!!.name = name
-                    course!!.teacher = teacher
-                    course!!.address = address
+                    course!!.teacher = teacher ?: ""
+                    course!!.address = address ?: ""
                     course!!.weekSet = mView.getWeekData()
                     course!!.local = true
                     mModel.save(course!!)
@@ -109,10 +121,15 @@ internal class SyllabusItemPresenter(view: SyllabusItemContract.View) : BasePres
     }
 
     override fun onDelete() {
-        mModel.delete(course!!)
-        mView.showMessage(R.string.delete_successful)
-        mView.activity.setResult(Activity.RESULT_OK)
-        mView.killSelf()
+
+        GlobalScope.launch(Dispatchers.IO) {
+            mModel.delete(course!!)
+            launch(Dispatchers.Main) {
+                mView.showMessage(R.string.delete_successful)
+                mView.activity.setResult(Activity.RESULT_OK)
+                mView.killSelf()
+            }
+        }
     }
 
     override fun onTimeSelect(options1: Int, options2: Int, options3: Int) {

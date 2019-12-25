@@ -1,6 +1,6 @@
 package cn.ifafu.ifafu.mvp.main.main_old
 
-import cn.ifafu.ifafu.data.entity.*
+import cn.ifafu.ifafu.entity.*
 import cn.ifafu.ifafu.mvp.main.BaseMainContract
 import io.reactivex.Observable
 

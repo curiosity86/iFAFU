@@ -10,7 +10,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import java.util.List;
 
-import cn.ifafu.ifafu.data.entity.Score;
+import cn.ifafu.ifafu.entity.Score;
 
 public class GlobalLib {
 
@@ -36,7 +36,7 @@ public class GlobalLib {
         float totalCredit = 0;
         float totalMinus = 0;
         for (Score score : scoreList) {
-            if (score.getIsIESItem()) {
+            if (score.isIESItem()) {
                 float calcScore = score.getCalcScore();
                 totalScore += calcScore;
                 totalCredit += score.getCredit();
