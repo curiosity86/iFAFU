@@ -10,14 +10,14 @@ import androidx.core.widget.addTextChangedListener
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.util.GlobalLib
-import cn.ifafu.ifafu.view.dialog.ProgressDialog
+import cn.ifafu.ifafu.view.dialog.LoadingDialog
 import com.bumptech.glide.Glide
 import com.jaeger.library.StatusBarUtil
 import kotlinx.android.synthetic.main.login_activity.*
 
 class LoginActivity : BaseActivity<LoginContract.Presenter>(), LoginContract.View, View.OnClickListener {
 
-    private lateinit var progressDialog: ProgressDialog
+    private lateinit var loadingDialog: LoadingDialog
 
     override fun getLayoutId(savedInstanceState: Bundle?): Int {
         return R.layout.login_activity
@@ -49,8 +49,8 @@ class LoginActivity : BaseActivity<LoginContract.Presenter>(), LoginContract.Vie
             true
         }
 
-        progressDialog = ProgressDialog(this)
-        progressDialog.setText(R.string.logging_in)
+        loadingDialog = LoadingDialog(this)
+        loadingDialog.setText(R.string.logging_in)
     }
 
     override fun onClick(v: View) {
@@ -61,11 +61,11 @@ class LoginActivity : BaseActivity<LoginContract.Presenter>(), LoginContract.Vie
     }
 
     override fun showLoading() {
-        progressDialog.show()
+        loadingDialog.show()
     }
 
     override fun hideLoading() {
-        progressDialog.cancel()
+        loadingDialog.cancel()
     }
 
     override fun getAccountText(): String {

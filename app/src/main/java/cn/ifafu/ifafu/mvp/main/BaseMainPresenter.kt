@@ -14,27 +14,26 @@ import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 abstract class BaseMainPresenter<V : BaseMainContract.View, M : BaseMainContract.Model>(view: V, model: M)
     : BasePresenter<V, M>(view, model), BaseMainContract.Presenter {
 
-    private var nowTheme: Int = -1
+    private var nowTheme: Int = -999
 
     override fun onCreate() {
-        addDisposable {
-            Observable.fromCallable {
-                nowTheme = mModel.getSetting().theme
-                nowTheme
+        GlobalScope.launch {
+            val settingTheme = mModel.getSetting().theme
+            if (nowTheme == -999) {
+                nowTheme = settingTheme
             }
-                    .compose(RxUtils.ioToMain())
-                    .subscribe({
-                        if (nowTheme != it) {
-                            mView.openActivity(Intent(mView.context, MainActivity::class.java))
-                            mView.killSelf()
-                        }
-                    }, this::onError)
+            withContext(Dispatchers.Main) {
+                if (nowTheme != settingTheme) {
+                    mView.killSelf()
+                    mView.openActivity(Intent(mView.context, MainActivity::class.java))
+                }
+            }
         }
-
     }
 
     final override fun updateApp() {
@@ -100,8 +99,8 @@ abstract class BaseMainPresenter<V : BaseMainContract.View, M : BaseMainContract
     final override fun checkoutTheme() {
         mView.hideCheckoutDialog()
         mView.hideLoading()
-        mView.openActivity(Intent(mView.context, MainActivity::class.java))
         mView.killSelf()
+        mView.openActivity(Intent(mView.context, MainActivity::class.java))
     }
 
     final override fun checkoutTo(user: User) {

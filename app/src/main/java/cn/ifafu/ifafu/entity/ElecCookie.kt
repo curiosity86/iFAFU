@@ -10,7 +10,10 @@ class ElecCookie {
     var account: String = ""
     var rescouseType: String = ""
 
-    var map: HashMap<String, String> = HashMap()
+    var map: HashMap<String, String> = hashMapOf(
+            "imeiticket" to "",
+            "sourcetypeticket" to "0"
+    )
 
     operator fun set(name: String, value: String) {
         map[name] = value

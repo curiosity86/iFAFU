@@ -60,15 +60,15 @@ internal class SyllabusItemPresenter(view: SyllabusItemContract.View) : BasePres
 
     private fun resetView(course: Course) {
         mView.setNameText(
-                if (course.name.isNullOrEmpty()) "无"
+                if (course.name.isEmpty()) "无"
                 else course.name
         )
         mView.setTeacherText(
-                if (course.teacher.isNullOrEmpty()) "无"
+                if (course.teacher.isEmpty()) "无"
                 else course.teacher
         )
         mView.setAddressText(
-                if (course.address.isNullOrEmpty()) "无"
+                if (course.address.isEmpty()) "无"
                 else course.address
         )
         mView.setWeekData(course.weekSet)

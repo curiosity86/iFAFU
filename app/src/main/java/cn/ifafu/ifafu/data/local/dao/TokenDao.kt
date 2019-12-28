@@ -14,4 +14,7 @@ interface TokenDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(token: Token)
+
+    @Query("DELETE FROM Token WHERE account=:account")
+    fun delete(account: String)
 }

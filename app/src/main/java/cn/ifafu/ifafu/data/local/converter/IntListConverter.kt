@@ -13,4 +13,5 @@ class IntListConverter {
     fun convertToDatabaseValue(entityProperty: List<Int>): String {
         return JSONObject.toJSONString(entityProperty)
     }
+
 }

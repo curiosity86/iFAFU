@@ -5,7 +5,7 @@ import android.content.Intent;
 import cn.ifafu.ifafu.app.Constant;
 import cn.ifafu.ifafu.base.BasePresenter;
 import cn.ifafu.ifafu.base.i.IView;
-import cn.ifafu.ifafu.data.exception.LoginInfoErrorException;
+import cn.ifafu.ifafu.entity.exception.LoginInfoErrorException;
 import cn.ifafu.ifafu.mvp.login.LoginActivity;
 
 public abstract class BaseZFPresenter<V extends IView, M extends IZFModel> extends BasePresenter<V, M> implements IZFPresenter {

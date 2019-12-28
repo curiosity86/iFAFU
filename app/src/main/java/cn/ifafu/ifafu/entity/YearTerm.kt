@@ -6,8 +6,16 @@ package cn.ifafu.ifafu.entity
  */
 class YearTerm(
         var yearList: MutableList<String>,
-        var termList: MutableList<String>
+        var termList: MutableList<String>,
+        var yearIndex: Int = 0,
+        var termIndex: Int = 0
 ) {
+
+    val yearStr: String
+        get() = yearList[yearIndex]
+
+    val termStr: String
+        get() = termList[termIndex]
 
     fun addYear(year: String) {
         yearList.add(year)
@@ -31,6 +39,11 @@ class YearTerm(
 
     fun termIndexOf(term: String): Int {
         return termList.indexOf(term)
+    }
+
+    fun setYearTermIndex(yearIndex: Int, termIndex: Int) {
+        this.yearIndex = yearIndex
+        this.termIndex = termIndex
     }
 
 }

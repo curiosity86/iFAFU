@@ -2,7 +2,7 @@ package cn.ifafu.ifafu.base.ifafu;
 
 import cn.ifafu.ifafu.base.i.IModel;
 import cn.ifafu.ifafu.entity.Response;
-import cn.ifafu.ifafu.data.exception.LoginInfoErrorException;
+import cn.ifafu.ifafu.entity.exception.LoginInfoErrorException;
 import io.reactivex.Observable;
 
 public interface IZFModel extends IModel {

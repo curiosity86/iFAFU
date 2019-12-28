@@ -6,15 +6,19 @@ import androidx.core.view.GravityCompat
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.base.i.IPresenter
-import cn.ifafu.ifafu.data.RepositoryImpl
+import cn.ifafu.ifafu.data.Repository
 import cn.ifafu.ifafu.entity.GlobalSetting
-import cn.ifafu.ifafu.mvp.main.main_new.Main1Fragment
-import cn.ifafu.ifafu.mvp.main.main_old.Main2Fragment
+import cn.ifafu.ifafu.mvp.main.new.Main1Fragment
+import cn.ifafu.ifafu.mvp.main.old.Main2Fragment
 import cn.ifafu.ifafu.util.ButtonUtils
 import cn.ifafu.ifafu.view.custom.DragLayout
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.main_fragment.*
 import kotlinx.android.synthetic.main.main_old_fragment.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : BaseActivity<IPresenter>() {
 
@@ -30,24 +34,19 @@ class MainActivity : BaseActivity<IPresenter>() {
     }
 
     private fun checkoutFragment() {
-        Thread {
-            RepositoryImpl.getGlobalSetting().run {
-                //            MobclickAgent.onProfileSignIn(account)
-                if (nowTheme != theme) {
-                    nowTheme = theme
-                    runOnUiThread {
-                        supportFragmentManager.beginTransaction().apply {
-                            if (theme == GlobalSetting.THEME_NEW) {
-                                replace(R.id.view_content, Main1Fragment())
-                            } else {
-                                replace(R.id.view_content, Main2Fragment())
-                            }
-                        }.commit()
+        GlobalScope.launch {
+            val setting = Repository.getGlobalSetting()
+            // MobclickAgent.onProfileSignIn(account)
+            withContext(Dispatchers.Main) {
+                supportFragmentManager.beginTransaction().apply {
+                    if (setting.theme == GlobalSetting.THEME_NEW) {
+                        replace(R.id.view_content, Main1Fragment())
+                    } else {
+                        replace(R.id.view_content, Main2Fragment())
                     }
-                }
+                }.commit()
             }
-
-        }.start()
+        }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {

@@ -1,22 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    tools:context=".mvp.score_item.ScoreItemActivity">
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
-    <cn.ifafu.ifafu.view.custom.WToolbar
-        android:id="@+id/tb_score_item"
+    <data>
+        <variable
+            name="layoutManager"
+            type="androidx.recyclerview.widget.RecyclerView.LayoutManager" />
+        <variable
+            name="adapter"
+            type="cn.ifafu.ifafu.view.adapter.ScoreItemAdapter" />
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        app:elevation="4dp"
-        app:title="成绩详情" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".mvp.score_item.ScoreItemActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_score_item"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <cn.ifafu.ifafu.view.custom.WToolbar
+            android:id="@+id/tb_score_item"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            app:elevation="4dp"
+            app:title="成绩详情" />
 
-</LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_score_item"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="@{layoutManager}"
+            app:adapter="@{adapter}"/>
+
+    </LinearLayout>
+</layout>

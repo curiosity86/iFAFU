@@ -8,13 +8,12 @@ import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.data.http.parser.ScoreParser
 import cn.ifafu.ifafu.entity.Score
 import cn.ifafu.ifafu.entity.YearTerm
-import cn.ifafu.ifafu.entity.ZhengFang
-import cn.ifafu.ifafu.mvp.score_list.ScoreListContract.Model
+import cn.ifafu.ifafu.entity.ZFApiList
 import io.reactivex.Observable
 
-class ScoreListModel(context: Context) : BaseZFModel(context), Model {
+class ScoreListModel(context: Context) : BaseZFModel(context) {
 
-    override fun getScoresFromNet(year: String, term: String): Observable<List<Score>> {
+    fun getScoresFromNet(year: String, term: String): Observable<List<Score>> {
         return getScoresFromNet()
                 .map { list ->
                     list.filter {
@@ -26,14 +25,14 @@ class ScoreListModel(context: Context) : BaseZFModel(context), Model {
                 }
     }
 
-    override fun getScoresFromNet(): Observable<MutableList<Score>> {
+    fun getScoresFromNet(): Observable<List<Score>> {
         val user by lazy { repository.getInUseUser()!! }
         var scoreUrl = ""
         var mainUrl = ""
         return Observable.fromCallable {  }
                 .flatMap {
-                    scoreUrl = School.getUrl(ZhengFang.SCORE, user)
-                    mainUrl = School.getUrl(ZhengFang.MAIN, user)
+                    scoreUrl = School.getUrl(ZFApiList.SCORE, user)
+                    mainUrl = School.getUrl(ZFApiList.MAIN, user)
                     initParams(scoreUrl, mainUrl)
                 }
                 .flatMap { params: MutableMap<String, String> ->
@@ -53,6 +52,7 @@ class ScoreListModel(context: Context) : BaseZFModel(context), Model {
                     APIManager.getZhengFangAPI()
                             .getInfo(scoreUrl, scoreUrl, params)
                             .compose(ScoreParser(user))
+                            .map { scorelist -> scorelist.sortedBy { it.id } }
                             .doOnNext {
                                 if (it.isNotEmpty()) {
                                     repository.deleteAllScore()
@@ -62,7 +62,7 @@ class ScoreListModel(context: Context) : BaseZFModel(context), Model {
                 }
     }
 
-    override fun getScoresFromDB(year: String, term: String): List<Score> {
+    fun getScoresFromDB(year: String, term: String): List<Score> {
         return if (year == "全部" && term == "全部") {
             repository.getAllScores()
         } else if (year == "全部") {
@@ -75,9 +75,9 @@ class ScoreListModel(context: Context) : BaseZFModel(context), Model {
     }
 
     @SuppressLint("DefaultLocale")
-    override fun getYearTermList(): Observable<YearTerm> {
+    fun getYearTermList(): Observable<YearTerm> {
         return Observable.fromCallable {
-            repository.getYearTermList().apply {
+            repository.getNowYearTerm().apply {
                 addTerm("全部")
                 addYear("全部")
             }
@@ -85,7 +85,7 @@ class ScoreListModel(context: Context) : BaseZFModel(context), Model {
     }
 
     @SuppressLint("DefaultLocale")
-    override fun getYearTerm(): Observable<Pair<String, String>> {
+    fun getYearTerm(): Observable<Pair<String, String>> {
         return Observable.fromCallable {
             repository.getYearTerm()
         }

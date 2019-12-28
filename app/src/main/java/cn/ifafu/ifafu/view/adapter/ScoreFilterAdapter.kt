@@ -2,7 +2,6 @@ package cn.ifafu.ifafu.view.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +17,7 @@ class ScoreFilterAdapter(context: Context) : RecyclerView.Adapter<ScoreFilterAda
     var data: List<Score> = ArrayList()
 
     private val layoutInflater = LayoutInflater.from(context)
-    private var mOnCheckedListener: OnCheckedListener? = null
+    var afterCheckedListener: ((score: Score) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = layoutInflater.inflate(R.layout.score_filter_recycle_item, parent, false)
@@ -42,34 +41,25 @@ class ScoreFilterAdapter(context: Context) : RecyclerView.Adapter<ScoreFilterAda
         }
         holder.checkBox.setOnCheckedChangeListener(null)
         holder.checkBox.setChecked(score.isIESItem, false)
-        holder.checkBox.setOnCheckedChangeListener { checkBox, isChecked ->
-            Log.d("ScoreFilterAdapter", "OnCheckedChange： $isChecked")
-            mOnCheckedListener?.onCheckedChanged(checkBox, score, isChecked)
+        holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
+            score.isIESItem = isChecked
+            afterCheckedListener?.invoke(score)
         }
         holder.itemView.setOnClickListener {
-            Log.d("ScoreFilterAdapter", "OnClick: ${!holder.checkBox.isChecked}")
-            holder.checkBox.setChecked(!holder.checkBox.isChecked, false)
-            mOnCheckedListener?.onCheckedChanged(it, score, holder.checkBox.isChecked)
+            holder.checkBox.setChecked(!holder.checkBox.isChecked, true)
         }
-    }
-
-    fun setOnCheckedListener(listener: OnCheckedListener) {
-        mOnCheckedListener = listener
     }
 
     fun setAllChecked() {
         for (score in data) {
             score.isIESItem = true
         }
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTV: TextView = itemView.findViewById(R.id.tv_score_name)
         val scoreTV: TextView = itemView.findViewById(R.id.tv_score_score)
         val checkBox: SmoothCheckBox = itemView.findViewById(R.id.checkbox)
-    }
-
-    interface OnCheckedListener {
-        fun onCheckedChanged(v: View?, item: Score, isChecked: Boolean)
     }
 }

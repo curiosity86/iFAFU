@@ -1,6 +1,6 @@
 package cn.ifafu.ifafu.data.http.parser
 
-import cn.ifafu.ifafu.data.exception.NoAuthException
+import cn.ifafu.ifafu.entity.exception.NoAuthException
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
@@ -18,6 +18,7 @@ abstract class BaseParser<T> : ObservableTransformer<ResponseBody, T> {
         val e = document.select("span[id=\"Label5\"]")
         return e.text().replace("学号：", "")
     }
+
 
     override fun apply(upstream: Observable<ResponseBody>): ObservableSource<T> {
         return upstream.map { responseBody ->

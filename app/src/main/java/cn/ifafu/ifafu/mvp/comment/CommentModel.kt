@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.mvp.comment
 import android.content.Context
 import cn.ifafu.ifafu.app.School
 import cn.ifafu.ifafu.base.ifafu.BaseZFModel
-import cn.ifafu.ifafu.data.RepositoryImpl
+import cn.ifafu.ifafu.data.Repository
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.data.http.parser.CommentParser
 import cn.ifafu.ifafu.data.http.parser.CommentParser2
@@ -12,7 +12,7 @@ import cn.ifafu.ifafu.data.http.parser.CommentParserJS2
 import cn.ifafu.ifafu.entity.CommentItem
 import cn.ifafu.ifafu.entity.Response
 import cn.ifafu.ifafu.entity.User
-import cn.ifafu.ifafu.entity.ZhengFang
+import cn.ifafu.ifafu.entity.ZFApiList
 import cn.ifafu.ifafu.util.RxUtils
 import cn.ifafu.ifafu.util.encode
 import io.reactivex.Observable
@@ -31,11 +31,11 @@ class CommentModel(context: Context) : BaseZFModel(context), CommentContract.Mod
         var commentUrl = ""
         return Observable.fromCallable {
             user = getUser()
-            mainUrl = School.getUrl(ZhengFang.MAIN, user)
+            mainUrl = School.getUrl(ZFApiList.MAIN, user!!)
             commentUrl = if (user!!.schoolCode == School.FAFU_JS) {
                 mainUrl
             } else {
-                School.getUrl(ZhengFang.COMMENT, user)
+                School.getUrl(ZFApiList.COMMENT, user!!)
             }
         }
                 .flatMap { initParams(commentUrl, mainUrl) }
@@ -50,7 +50,7 @@ class CommentModel(context: Context) : BaseZFModel(context), CommentContract.Mod
                                     if (!response.isSuccess) {
                                         throw Exception(response.message)
                                     }
-                                    val item = response.body.firstOrNull()
+                                    val item = response.body!!.firstOrNull()
                                     if (item != null) {
                                         val referer = "http://js.ifafu.cn/"
                                         val url = "http://js.ifafu.cn/" + item.commentUrl
@@ -63,7 +63,7 @@ class CommentModel(context: Context) : BaseZFModel(context), CommentContract.Mod
                                                     html.contains("所有评价已完成")
                                                 }.blockingFirst()
                                         if (done) {
-                                            response.body.forEach {
+                                            response.body!!.forEach {
                                                 it.isDone = done
                                             }
                                         }
@@ -108,22 +108,21 @@ class CommentModel(context: Context) : BaseZFModel(context), CommentContract.Mod
     }
 
     override fun getSchoolCode(): String {
-        return RepositoryImpl.getInUseUser()?.schoolCode ?: School.FAFU
+        return Repository.getInUseUser()?.schoolCode ?: School.FAFU
     }
 
     override fun submit(params: MutableMap<String, String>): Observable<Boolean> {
-        var user: User? = null
-        return Observable.fromCallable { user = getUser() }
-                .flatMap {
-                    if (user!!.schoolCode == School.FAFU) {
-                        val commentUrl = School.getUrl(ZhengFang.COMMENT, user)
-                        val mainUrl = School.getUrl(ZhengFang.MAIN, user)
+        return Observable.fromCallable { getUser() }
+                .flatMap { user ->
+                    if (user.schoolCode == School.FAFU) {
+                        val commentUrl = School.getUrl(ZFApiList.COMMENT, user)
+                        val mainUrl = School.getUrl(ZFApiList.MAIN, user)
                         params["btn_tj"] = ""
                         APIManager.getZhengFangAPI()
                                 .post(commentUrl, mainUrl, params)
                                 .map { responseBody -> responseBody.string().contains("完成评价") }
                     } else {
-                        val referer = School.getUrl(ZhengFang.MAIN, user)
+                        val referer = School.getUrl(ZFApiList.MAIN, user)
                         val params2 = APIManager.getZhengFangAPI()
                                 .initParams(commitUrlJS, referer)
                                 .compose(CommentParserJS2())

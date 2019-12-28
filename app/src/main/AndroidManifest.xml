@@ -4,44 +4,39 @@
     package="cn.ifafu.ifafu">
 
     <uses-permission android:name="android.permission.INTERNET" />
-<!--    <uses-permission android:name="android.permission.READ_PHONE_STATE" />-->
-<!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-<!--    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
-<!--    <uses-permission-->
-<!--        android:name="android.permission.READ_LOGS"-->
-<!--        tools:ignore="ProtectedPermissions" />-->
-
     <application
         android:name=".app.IFAFU"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="${app_icon}"
-        android:roundIcon="${app_icon_round}"
         android:label="${app_name}"
-        android:largeHeap="true"
         android:networkSecurityConfig="@xml/network_security_config"
+        android:roundIcon="${app_icon_round}"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="ExportedService,GoogleAppIndexingWarning,UnusedAttribute">
 
-        <activity android:name=".mvp.activity.SplashActivity">
+        <activity android:name=".mvp.activity.SplashActivity"
+            android:theme="@style/AppTheme.Launch">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".mvp.main.MainActivity"/>
-        <activity android:name=".mvp.login.LoginActivity"
+        <activity
+            android:name=".mvp.main.MainActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".mvp.login.LoginActivity"
             android:launchMode="singleTask" />
         <activity android:name=".mvp.syllabus.SyllabusActivity" />
-        <activity android:name=".mvp.syllabus_item.SyllabusItemActivity"/>
+        <activity android:name=".mvp.syllabus_item.SyllabusItemActivity" />
         <activity android:name=".mvp.syllabus_setting.SyllabusSettingActivity" />
         <activity android:name=".mvp.score_list.ScoreListActivity" />
         <activity android:name=".mvp.score_item.ScoreItemActivity" />
@@ -53,36 +48,30 @@
         <activity android:name=".mvp.elec_main.ElecMainActivity" />
         <activity android:name=".mvp.setting.SettingActivity" />
         <activity android:name=".mvp.comment.CommentActivity" />
-
-        <meta-data
-            android:name="APP_ICON_HD"
-            android:resource="${app_icon_hd}" />
+        <activity android:name=".mvp.elective.ElectiveActivity" />
 
         <meta-data
             android:name="BUGLY_APP_CHANNEL"
             android:value="${channel}" />
-
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${channel}" />
-
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="5d4082673fc1955041000408" />
-
         <meta-data
             android:name="android.notch_support"
             android:value="true" />
         <meta-data
             android:name="notch.config"
             android:value="portrait|landscape" />
-        <receiver android:name=".widget.SyllabusWidget"
+        <receiver
+            android:name=".widget.SyllabusWidget"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="ifafu.widget.syllabus.REFRESH" />
             </intent-filter>
-
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/syllabus_widget_info" />

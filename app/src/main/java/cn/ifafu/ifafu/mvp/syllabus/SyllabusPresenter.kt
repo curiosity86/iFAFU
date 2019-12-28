@@ -42,7 +42,7 @@ class SyllabusPresenter(view: SyllabusContract.View)
             mModel.coursesFromNet
                     .map { response ->
                         if (response.isSuccess) {
-                            holidayChange(response.body)
+                            holidayChange(response.body!!)
                         } else {
                             throw NullPointerException(response.message)
                         }
@@ -78,7 +78,7 @@ class SyllabusPresenter(view: SyllabusContract.View)
                         if (!it.isSuccess) {
                             throw Exception(it.message)
                         } else {
-                            holidayChange(it.body)
+                            holidayChange(it.body!!)
                         }
                     }
                     .compose(RxUtils.ioToMain())

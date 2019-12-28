@@ -1,11 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#ffffff">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
 
-</LinearLayout>
+        <import type="android.view.View" />
+
+        <variable
+            name="total"
+            type="cn.ifafu.ifafu.entity.ElectiveInfo" />
+        <variable
+            name="totalAdapter"
+            type="androidx.recyclerview.widget.RecyclerView.Adapter" />
+        <variable
+            name="totalShowMore"
+            type="Boolean" />
+
+        <variable
+            name="zrkx"
+            type="cn.ifafu.ifafu.entity.ElectiveInfo" />
+        <variable
+            name="zrkxAdapter"
+            type="androidx.recyclerview.widget.RecyclerView.Adapter" />
+        <variable
+            name="zrkxShowMore"
+            type="Boolean" />
+
+        <variable
+            name="rwsk"
+            type="cn.ifafu.ifafu.entity.ElectiveInfo" />
+        <variable
+            name="rwskAdapter"
+            type="androidx.recyclerview.widget.RecyclerView.Adapter" />
+        <variable
+            name="rwskShowMore"
+            type="Boolean" />
+
+        <variable
+            name="ysty"
+            type="cn.ifafu.ifafu.entity.ElectiveInfo" />
+        <variable
+            name="ystyAdapter"
+            type="androidx.recyclerview.widget.RecyclerView.Adapter" />
+        <variable
+            name="ystyShowMore"
+            type="Boolean" />
+
+        <variable
+            name="wxsy"
+            type="cn.ifafu.ifafu.entity.ElectiveInfo" />
+        <variable
+            name="wxsyAdapter"
+            type="androidx.recyclerview.widget.RecyclerView.Adapter" />
+        <variable
+            name="wxsyShowMore"
+            type="Boolean" />
+
+        <variable
+            name="cxcy"
+            type="cn.ifafu.ifafu.entity.ElectiveInfo" />
+        <variable
+            name="cxcyAdapter"
+            type="androidx.recyclerview.widget.RecyclerView.Adapter" />
+        <variable
+            name="cxcyShowMore"
+            type="Boolean" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <cn.ifafu.ifafu.view.custom.WToolbar
+            android:id="@+id/tb_elective"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            app:elevation="4dp"
+            app:title="@string/elective" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{total == null? View.GONE : View.VISIBLE}">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:orientation="vertical">
+
+                <include  android:id="@+id/layout_total"
+                    layout="@layout/elective_include"
+                    app:info="@{total}"
+                    app:show="@{totalShowMore}"
+                    app:adapter="@{totalAdapter}" />
+
+                <include android:id="@+id/layout_zrkx"
+                    layout="@layout/elective_include"
+                    android:visibility="@{zrkx == null? View.GONE : View.VISIBLE}"
+                    app:info="@{zrkx}"
+                    app:show="@{zrkxShowMore}"
+                    app:adapter="@{zrkxAdapter}" />
+
+                <include android:id="@+id/layout_rwsk"
+                    layout="@layout/elective_include"
+                    android:visibility="@{rwsk == null? View.GONE : View.VISIBLE}"
+                    app:info="@{rwsk}"
+                    app:show="@{rwskShowMore}"
+                    app:adapter="@{rwskAdapter}" />
+
+                <include android:id="@+id/layout_ysty"
+                    layout="@layout/elective_include"
+                    android:visibility="@{ysty == null? View.GONE : View.VISIBLE}"
+                    app:info="@{ysty}"
+                    app:show="@{ystyShowMore}"
+                    app:adapter="@{ystyAdapter}" />
+
+                <include android:id="@+id/layout_wxsy"
+                    layout="@layout/elective_include"
+                    android:visibility="@{wxsy == null? View.GONE : View.VISIBLE}"
+                    app:info="@{wxsy}"
+                    app:show="@{wxsyShowMore}"
+                    app:adapter="@{wxsyAdapter}" />
+
+                <include android:id="@+id/layout_cxcy"
+                    layout="@layout/elective_include"
+                    android:visibility="@{cxcy == null? View.GONE : View.VISIBLE}"
+                    app:info="@{cxcy}"
+                    app:show="@{cxcyShowMore}"
+                    app:adapter="@{cxcyAdapter}"/>
+
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+</layout>

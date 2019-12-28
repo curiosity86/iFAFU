@@ -9,7 +9,7 @@ import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.entity.Exam
 import cn.ifafu.ifafu.view.adapter.ExamAdapter
-import cn.ifafu.ifafu.view.dialog.ProgressDialog
+import cn.ifafu.ifafu.view.dialog.LoadingDialog
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.view.OptionsPickerView
 import com.gyf.immersionbar.ImmersionBar
@@ -19,7 +19,7 @@ class ExamActivity : BaseActivity<ExamContract.Presenter>(), ExamContract.View {
 
     private var examAdapter: ExamAdapter? = null
 
-    private lateinit var progressDialog: ProgressDialog
+    private lateinit var loadingDialog: LoadingDialog
     private var yearTermOPV: OptionsPickerView<String>? = null
 
     private var years: List<String>? = null
@@ -36,8 +36,8 @@ class ExamActivity : BaseActivity<ExamContract.Presenter>(), ExamContract.View {
                 .statusBarDarkFont(true)
                 .init()
         mPresenter = ExamPresenter(this)
-        progressDialog = ProgressDialog(this)
-        progressDialog.setOnCancelListener {
+        loadingDialog = LoadingDialog(this)
+        loadingDialog.setOnCancelListener {
             mPresenter?.cancelLoading()
         }
 
@@ -109,11 +109,11 @@ class ExamActivity : BaseActivity<ExamContract.Presenter>(), ExamContract.View {
     }
 
     override fun showLoading() {
-        progressDialog.show()
+        loadingDialog.show()
     }
 
     override fun hideLoading() {
-        progressDialog.cancel()
+        loadingDialog.cancel()
     }
 
     private fun setSubtitle(year: String, term: String) {

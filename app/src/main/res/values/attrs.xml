@@ -34,4 +34,9 @@
         <attr name="text_size" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="RecyclerView" parent="AdapterView">
+        <attr name="layoutManager" format="reference" />
+        <attr name="adapter" format="reference" />
+    </declare-styleable>
+
 </resources>

@@ -10,9 +10,7 @@ class SyllabusSettingModel(context: Context) : BaseZFModel(context), SyllabusSet
         return repository.getSyllabusSetting()
     }
 
-    override fun save(setting: SyllabusSetting) {
-        Thread {
-            repository.saveSyllabusSetting(setting)
-        }.start()
+    override suspend fun save(setting: SyllabusSetting) {
+        repository.saveSyllabusSetting(setting)
     }
 }

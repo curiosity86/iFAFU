@@ -2,8 +2,8 @@ package cn.ifafu.ifafu.base;
 
 import android.content.Context;
 
-import cn.ifafu.ifafu.data.RepositoryImpl;
 import cn.ifafu.ifafu.data.Repository;
+import cn.ifafu.ifafu.data.local.LocalDataSource;
 import cn.ifafu.ifafu.base.i.IModel;
 
 public abstract class BaseModel implements IModel {
@@ -12,11 +12,11 @@ public abstract class BaseModel implements IModel {
 
     protected final Context mContext;
 
-    protected Repository repository;
+    protected LocalDataSource repository;
 
     public BaseModel(Context context) {
         mContext = context;
-        repository = RepositoryImpl.INSTANCE;
+        repository = Repository.INSTANCE;
     }
 
     @Override

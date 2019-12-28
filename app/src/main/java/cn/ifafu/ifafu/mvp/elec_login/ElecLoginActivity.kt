@@ -1,64 +1,68 @@
 package cn.ifafu.ifafu.mvp.elec_login
 
-import android.graphics.Bitmap
+import android.content.Intent
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.base.BaseActivity
-import cn.ifafu.ifafu.view.dialog.ProgressDialog
+import cn.ifafu.ifafu.app.ViewModelFactory
+import cn.ifafu.ifafu.base.mvvm.BaseActivity
+import cn.ifafu.ifafu.databinding.ElecLoginActivityBinding
+import cn.ifafu.ifafu.mvp.elec_main.ElecMainActivity
+import cn.ifafu.ifafu.view.dialog.LoadingDialog
 import com.jaeger.library.StatusBarUtil
-import kotlinx.android.synthetic.main.elec_login_activity.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-class ElecLoginActivity : BaseActivity<ElecLoginContract.Presenter>(), ElecLoginContract.View {
+class ElecLoginActivity : BaseActivity<ElecLoginActivityBinding>() {
 
-    private lateinit var progress: ProgressDialog
-
-    override fun getLayoutId(savedInstanceState: Bundle?): Int {
-        return R.layout.elec_login_activity
+    private val progressDialog by lazy {
+        LoadingDialog(this).apply { setText("登录中") }
     }
 
-    override fun initData(savedInstanceState: Bundle?) {
+    private val viewModel by lazy {
+        ViewModelProvider(this, ViewModelFactory)
+                .get(ElecLoginViewModel::class.java)
+    }
+
+    override fun getLayoutId(): Int = R.layout.elec_login_activity
+
+    override fun initActivity(savedInstanceState: Bundle?) {
         StatusBarUtil.setTransparent(this)
         StatusBarUtil.setLightMode(this)
-
-        mPresenter = ElecLoginPresenter(this)
-
-        verifyIV.setOnClickListener { mPresenter.verify() }
-        loginBtn.setOnClickListener { mPresenter.login() }
-
-        progress = ProgressDialog(this)
-        progress.setText("加载中")
-
+        viewModel.init { account -> mBinding.account = account }
+        refreshVerify()
+        mBinding.verifyIV.setOnClickListener {
+            refreshVerify()
+        }
+        mBinding.loginBtn.setOnClickListener {
+            progressDialog.show()
+            viewModel.login(
+                    account = mBinding.account ?: "",
+                    password = mBinding.password ?: "",
+                    verify = mBinding.verify ?: "",
+                    success = {
+                        withContext(Dispatchers.Main) {
+                            progressDialog.show()
+                            startActivity(Intent(this@ElecLoginActivity, ElecMainActivity::class.java))
+                            finish()
+                        }
+                    },
+                    fail = {
+                        withContext(Dispatchers.Main) {
+                            progressDialog.show()
+                            showMessage(it)
+                            refreshVerify()
+                        }
+                    }
+            )
+        }
     }
 
-    override fun setSnoEtText(sno: String?) {
-        accountET.setText(sno)
-    }
-
-    override fun setPasswordText(password: String?) {
-        passwordET.setText(password)
-    }
-
-    override fun getSnoText(): String {
-        return accountET.text.toString()
-    }
-
-    override fun getPasswordText(): String {
-        return passwordET.text.toString()
-    }
-
-    override fun getVerifyText(): String {
-        return verifyET.text.toString()
-    }
-
-    override fun setVerifyBitmap(bitmap: Bitmap) {
-        verifyIV.setImageBitmap(bitmap)
-    }
-
-    override fun showLoading() {
-        progress.show()
-    }
-
-    override fun hideLoading() {
-        progress.cancel()
+    private fun refreshVerify() {
+        viewModel.refreshVerify({
+            withContext(Dispatchers.Main) {
+                mBinding.verifyIV.setImageBitmap(it)
+            }
+        }, this::showMessage)
     }
 }

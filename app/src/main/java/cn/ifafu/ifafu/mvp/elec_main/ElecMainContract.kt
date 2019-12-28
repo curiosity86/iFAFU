@@ -66,7 +66,6 @@ class ElecMainContract {
          */
         fun setSelections(dkName: String, area: String, building: String, floor: String)
 
-        fun openLoginActivity();
     }
 
     interface Presenter : IPresenter {
@@ -77,7 +76,7 @@ class ElecMainContract {
 
         fun onFloorSelect(name: String)
 
-        fun onDKSelect(aid: String)
+        fun onDKSelect(name: String)
 
         /**
          * 查询余额
@@ -103,7 +102,7 @@ class ElecMainContract {
 
     interface Model : IModel {
 
-        fun getSelectionFromJson(): List<Selection>
+        fun getSelection(): List<Selection>
 
         /**
          * @return 查询数据
@@ -115,7 +114,7 @@ class ElecMainContract {
          *
          * @return 是否重新登录
          */
-        fun initCookie(): Observable<Boolean>
+        fun initCookie(): String
 
         fun queryBalance(): Observable<Double>
 

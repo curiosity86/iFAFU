@@ -9,6 +9,7 @@ import retrofit2.Retrofit;
 public class RetrofitFactory {
 
     private static OkHttpClient client = new OkHttpClient.Builder()
+//            .cookieJar(new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(BaseApplication.getAppContext())))
             .addInterceptor(new HeaderInterceptor())
             .addInterceptor(new CookieInterceptor())
             .build();

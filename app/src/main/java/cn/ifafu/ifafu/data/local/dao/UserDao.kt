@@ -18,4 +18,6 @@ interface UserDao {
     @Delete
     fun delete(user: User)
 
+    @Query("DELETE FROM User WHERE account=:account")
+    fun delete(account: String)
 }

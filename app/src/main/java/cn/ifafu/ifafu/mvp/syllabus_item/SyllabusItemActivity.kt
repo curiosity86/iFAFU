@@ -37,8 +37,6 @@ class SyllabusItemActivity : BaseActivity<SyllabusItemContract.Presenter>(), Syl
         rv_course_weeks.layoutManager = GridLayoutManager(this, 6, RecyclerView.VERTICAL, false)
         rv_course_weeks.adapter = weekAdapter
 
-        tb_exam_item.setNavigationOnClickListener { v -> finish() }
-
         timeOPV = OptionsPickerBuilder(this) { options1, options2, options3, v ->
             val op3: Int = if (options2 > options3) options2 else options3
             timeOPV.setSelectOptions(options1, options2, op3)

@@ -6,16 +6,16 @@ import cn.ifafu.ifafu.entity.Score
 @Dao
 interface ScoreDao {
 
-    @Query("SELECT * FROM Score WHERE account=:account")
+    @Query("SELECT * FROM Score WHERE account=:account ORDER BY id")
     fun allScores(account: String): List<Score>
 
-    @Query("SELECT * FROM Score WHERE account=:account AND term=:term AND year=:year")
+    @Query("SELECT * FROM Score WHERE account=:account AND term=:term AND year=:year ORDER BY id")
     fun allScores(account: String, year: String, term: String): List<Score>
 
-    @Query("SELECT * FROM Score WHERE account=:account AND year=:year")
+    @Query("SELECT * FROM Score WHERE account=:account AND year=:year ORDER BY id")
     fun allScoresByYear(account: String, year: String): List<Score>
 
-    @Query("SELECT * FROM Score WHERE account=:account AND term=:term")
+    @Query("SELECT * FROM Score WHERE account=:account AND term=:term ORDER BY id")
     fun allScoresByTerm(account: String, term: String): List<Score>
 
     @Query("SELECT * FROM Score WHERE id=:id")
@@ -32,4 +32,5 @@ interface ScoreDao {
 
     @Query("DELETE FROM Score WHERE term=:term AND year=:year")
     fun delete(year: String, term: String)
+
 }

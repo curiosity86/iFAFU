@@ -16,4 +16,7 @@ interface ExamDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(vararg exam: Exam)
+
+    @Query("DELETE FROM Exam WHERE account=:account")
+    fun delete(account: String)
 }

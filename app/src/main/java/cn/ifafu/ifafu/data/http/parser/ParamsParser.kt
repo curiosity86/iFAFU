@@ -1,6 +1,6 @@
 package cn.ifafu.ifafu.data.http.parser
 
-import cn.ifafu.ifafu.data.exception.NoLogException
+import cn.ifafu.ifafu.entity.exception.NoLogException
 import org.jsoup.Jsoup
 import java.util.*
 import java.util.regex.Pattern

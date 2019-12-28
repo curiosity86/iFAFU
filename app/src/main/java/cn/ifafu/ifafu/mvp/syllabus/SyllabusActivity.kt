@@ -18,7 +18,7 @@ import cn.ifafu.ifafu.mvp.syllabus_item.SyllabusItemActivity
 import cn.ifafu.ifafu.mvp.syllabus_setting.SyllabusSettingActivity
 import cn.ifafu.ifafu.util.ChineseNumbers
 import cn.ifafu.ifafu.view.adapter.SyllabusPageAdapter
-import cn.ifafu.ifafu.view.dialog.ProgressDialog
+import cn.ifafu.ifafu.view.dialog.LoadingDialog
 import cn.ifafu.ifafu.view.syllabus.CourseBase
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.syllabus_activity.*
@@ -31,7 +31,7 @@ class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusCon
 
     private var mCurrentWeek = 1
     private lateinit var mPageAdapter: SyllabusPageAdapter
-    private lateinit var progressDialog: ProgressDialog
+    private lateinit var loadingDialog: LoadingDialog
 
     override fun getLayoutId(savedInstanceState: Bundle?): Int {
         return R.layout.syllabus_activity
@@ -45,9 +45,9 @@ class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusCon
 
         mPresenter = SyllabusPresenter(this)
 
-        progressDialog = ProgressDialog(this)
-        progressDialog.setText("加载中")
-        progressDialog.setOnCancelListener {
+        loadingDialog = LoadingDialog(this)
+        loadingDialog.setText("加载中")
+        loadingDialog.setOnCancelListener {
             mPresenter?.cancelLoading()
         }
 
@@ -124,11 +124,11 @@ class SyllabusActivity : BaseActivity<SyllabusContract.Presenter>(), SyllabusCon
     }
 
     override fun showLoading() {
-        progressDialog.show()
+        loadingDialog.show()
     }
 
     override fun hideLoading() {
-        progressDialog.cancel()
+        loadingDialog.cancel()
     }
 
     override fun onClick(v: View?) {

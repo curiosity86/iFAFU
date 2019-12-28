@@ -15,33 +15,28 @@ import io.reactivex.ObservableEmitter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStreamReader
 import java.net.URLEncoder
 import java.util.*
 
 class ElecMainModel internal constructor(context: Context?) : BaseModel(context), ElecMainContract.Model {
     private val service = RetrofitFactory.obtainService(MainService::class.java, null)
 
-    private var elecUser: ElecUser? =  null
+    private var elecUser: ElecUser? = null
 
     init {
-        GlobalScope.launch(Dispatchers.IO) { elecUser =  repository.getElecUser() }
+        GlobalScope.launch(Dispatchers.IO) { elecUser = repository.getElecUser() }
     }
 
-    override fun initCookie(): Observable<Boolean> {
-        return Observable.fromCallable {
-            val elecCookie = repository.getElecCookie()!!
-            service.default2(elecCookie.rescouseType).execute()
-            service.page(
+    override fun initCookie(): String {
+        val elecCookie = repository.getElecCookie()!!
+        service.default2(elecCookie.rescouseType).execute()
+        return service.page(
                     "31", "3", "2", "", "electricity",
                     URLEncoder.encode("交电费", "gbk"),
                     elecCookie["sourcetypeticket"],
                     SPUtils.get(Constant.SP_ELEC).getString("IMEI"),
                     "0", "1"
-            ).execute().body()!!.string().contains("<title>登录</title>")
-        }
+            ).execute().body()!!.string()
     }
 
     override fun queryElectricity(data: ElecQuery): Observable<String> {
@@ -77,20 +72,49 @@ class ElecMainModel internal constructor(context: Context?) : BaseModel(context)
         }
     }
 
-    override fun getSelectionFromJson(): List<Selection> {
-        return try {
-            val `is` = mContext.assets.open("data.json")
-            val isr = BufferedReader(InputStreamReader(`is`))
-            var str: String?
-            val sb = StringBuilder()
-            while (isr.readLine().also { str = it } != null) {
-                sb.append(str)
-            }
-            JSONObject.parseArray(sb.toString(), Selection::class.java)
-        } catch (e: IOException) {
-            e.printStackTrace()
-            emptyList()
-        }
+    override fun getSelection(): List<Selection> {
+        return listOf(
+                Selection("0030000000002501", "常工电子电控", 1, listOf(
+                        Selection("农林大学", "农林大学", 2, listOf(
+                                Selection("1", "北区1号楼"),
+                                Selection("2", "北区2号楼"),
+                                Selection("953", "南区10号楼"),
+                                Selection("954", "南区3号楼"),
+                                Selection("955", "南区4号楼"),
+                                Selection("956", "桃山3号楼")
+                        ))
+                )),
+                Selection("0030000000008001", "山东科大电子电控", 2, listOf(
+                        Selection("桃山区", "桃山区", 3, listOf(
+                                Selection("7#", "7#"),
+                                Selection("8#", "8#")
+                        ))
+                )),
+                Selection("0030000000008101", "开普电子电控", 1, listOf(
+                        Selection("0", "本校区", 2, listOf(
+                                Selection("7", "下安5号"),
+                                Selection("3", "下安1号"),
+                                Selection("10", "北区4号"),
+                                Selection("1", "南区2号"),
+                                Selection("9", "北区3号"),
+                                Selection("11", "北区5号"),
+                                Selection("6", "下安4号"),
+                                Selection("2", "南区1号"),
+                                Selection("8", "下安6号"),
+                                Selection("5", "下安2号")
+                        ))
+                )),
+                Selection("0030000000008102", "开普电控东苑", 2, listOf(
+                        Selection("1", "东苑1#楼"),
+                        Selection("5", "东苑2#楼"),
+                        Selection("6", "东苑3#楼"),
+                        Selection("7", "东苑4#楼"),
+                        Selection("8", "东苑5#楼"),
+                        Selection("9", "东苑6#楼"),
+                        Selection("10", "东苑7#楼"),
+                        Selection("11", "东苑8#楼")
+                ))
+        )
     }
 
     override fun queryDKInfos(): Observable<Map<String, String>> {

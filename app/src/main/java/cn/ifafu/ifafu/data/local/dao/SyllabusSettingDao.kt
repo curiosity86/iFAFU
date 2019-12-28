@@ -13,4 +13,7 @@ interface SyllabusSettingDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(syllabusSetting: SyllabusSetting)
+
+    @Query("DELETE FROM SyllabusSetting WHERE account=:account")
+    fun delete(account: String)
 }

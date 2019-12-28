@@ -25,6 +25,9 @@ import com.gyf.immersionbar.ImmersionBar
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import kotlinx.android.synthetic.main.syllabus_setting_activity.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import me.drakeet.multitype.MultiTypeAdapter
 
 class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(), SyllabusSettingContract.View {
@@ -104,8 +107,12 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingContract.Presenter>(
     }
 
     override fun finish() {
-        mPresenter.onFinish()
-        super.finish()
+        GlobalScope.launch {
+            mPresenter.onFinish()
+            launch(Dispatchers.Main) {
+                super.finish()
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -8,7 +8,7 @@ import cn.ifafu.ifafu.data.http.parser.LoginParser
 import cn.ifafu.ifafu.data.http.parser.VerifyParser
 import cn.ifafu.ifafu.entity.Response
 import cn.ifafu.ifafu.entity.User
-import cn.ifafu.ifafu.entity.ZhengFang
+import cn.ifafu.ifafu.entity.ZFApiList
 import cn.ifafu.ifafu.mvp.login.LoginContract.Model
 import io.reactivex.Observable
 
@@ -28,8 +28,8 @@ class LoginModel(context: Context) : BaseZFModel(context), Model {
 
     override fun login(user: User): Observable<Response<String>> {
         return innerLogin(
-                School.getUrl(ZhengFang.LOGIN, user),
-                School.getUrl(ZhengFang.VERIFY, user),
+                School.getUrl(ZFApiList.LOGIN, user),
+                School.getUrl(ZFApiList.VERIFY, user),
                 user.account,
                 user.password,
                 LoginParamParser(),
@@ -38,7 +38,7 @@ class LoginModel(context: Context) : BaseZFModel(context), Model {
         )
                 .doOnNext {
                     if (it.isSuccess) {
-                        user.name = it.body
+                        user.name = it.body ?: "佚名"
                         repository.saveUser(user)
                     }
                 }

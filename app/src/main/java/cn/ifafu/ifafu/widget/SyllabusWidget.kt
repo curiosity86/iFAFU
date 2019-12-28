@@ -13,11 +13,14 @@ import android.widget.RemoteViews
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.IFAFU
-import cn.ifafu.ifafu.data.RepositoryImpl
+import cn.ifafu.ifafu.data.Repository
 import cn.ifafu.ifafu.entity.NextCourse
 import cn.ifafu.ifafu.mvp.activity.SplashActivity
-import cn.ifafu.ifafu.mvp.main.main_old.Main2Model
+import cn.ifafu.ifafu.mvp.main.old.Main2Model
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -47,19 +50,22 @@ class SyllabusWidget : AppWidgetProvider() {
                 getPendingIntent(context, R.id.btn_jump))
         val format = SimpleDateFormat("HH:mm:ss", Locale.CHINA)
         remoteViews.setTextViewText(R.id.tv_refresh_time, context.getString(R.string.refresh_time_format, format.format(Date())))
-
-        Main2Model(context).getNextCourse()
-                .subscribe({
-                    updateView(remoteViews, it)
-                }, {
-                    remoteViews.setViewVisibility(R.id.tv_null, View.VISIBLE)
-                    remoteViews.setViewVisibility(R.id.layout_info, View.GONE)
-                    if (it is NullPointerException) {
-                        remoteViews.setTextViewText(R.id.tv_null, "暂无课表信息")
-                    } else {
-                        remoteViews.setTextViewText(R.id.tv_null, it.message)
-                    }
-                })
+        val t = Thread {
+            Main2Model(context).getNextCourse()
+                    .subscribe({
+                        updateView(remoteViews, it)
+                    }, {
+                        remoteViews.setViewVisibility(R.id.tv_null, View.VISIBLE)
+                        remoteViews.setViewVisibility(R.id.layout_info, View.GONE)
+                        if (it is NullPointerException) {
+                            remoteViews.setTextViewText(R.id.tv_null, "暂无课表信息")
+                        } else {
+                            remoteViews.setTextViewText(R.id.tv_null, it.message)
+                        }
+                    })
+        }
+        t.start()
+        t.join()
     }
 
     private fun updateView(remoteViews: RemoteViews, next: NextCourse) {
@@ -109,20 +115,24 @@ class SyllabusWidget : AppWidgetProvider() {
             when (resId) {
                 R.id.tv_refresh -> updateSyllabusWidget(context, remoteViews)
                 R.id.btn_jump -> {
-                    val jumpIntent: Intent
-                    when {
-                        RepositoryImpl.getInUseUser() == null -> {
-                            jumpIntent = Intent(context, SplashActivity::class.java)
+                    GlobalScope.launch {
+                        val jumpIntent: Intent
+                        when {
+                            Repository.getInUseUser() == null -> {
+                                jumpIntent = Intent(context, SplashActivity::class.java)
+                            }
+                            IFAFU.FIRST_START_APP -> {
+                                jumpIntent = Intent(context, SplashActivity::class.java)
+                                jumpIntent.putExtra("jump", Constant.ACTIVITY_SYLLABUS)
+                            }
+                            else -> jumpIntent = Intent(context, SyllabusActivity::class.java)
                         }
-                        IFAFU.FIRST_START_APP -> {
-                            jumpIntent = Intent(context, SplashActivity::class.java)
-                            jumpIntent.putExtra("jump", Constant.ACTIVITY_SYLLABUS)
+                        jumpIntent.putExtra("from", Constant.SYLLABUS_WIDGET)
+                        jumpIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        GlobalScope.launch(Dispatchers.Main) {
+                            context.startActivity(jumpIntent)
                         }
-                        else -> jumpIntent = Intent(context, SyllabusActivity::class.java)
                     }
-                    jumpIntent.putExtra("from", Constant.SYLLABUS_WIDGET)
-                    jumpIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    context.startActivity(jumpIntent)
                 }
             }
             val manger = AppWidgetManager.getInstance(context)

@@ -13,4 +13,7 @@ interface ElecUserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(elecUser: ElecUser)
+
+    @Query("DELETE FROM ElecUser WHERE account=:account")
+    fun delete(account: String)
 }

@@ -118,8 +118,8 @@ class SyllabusModel(context: Context) : BaseZFModel(context), Model {
 
     override fun getCoursesFromNet(): Observable<Response<MutableList<Course>>> {
         return Observable.fromCallable { getUser() }.flatMap { user ->
-            val url: String = School.getUrl(ZhengFang.SYLLABUS, user) ?: ""
-            val referer: String = School.getUrl(ZhengFang.MAIN, user) ?: ""
+            val url: String = School.getUrl(ZFApiList.SYLLABUS, user) ?: ""
+            val referer: String = School.getUrl(ZFApiList.MAIN, user) ?: ""
             initParams(url, referer)
                     .flatMap {
                         val type = repository.getSyllabusSetting().parseType

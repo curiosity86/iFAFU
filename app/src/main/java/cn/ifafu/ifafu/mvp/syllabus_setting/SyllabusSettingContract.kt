@@ -21,14 +21,14 @@ class SyllabusSettingContract {
 
         fun onPictureSelect(uri: String)
 
-        fun onFinish()
+        suspend fun onFinish()
     }
 
     interface Model : IModel {
 
         fun getSetting(): SyllabusSetting
 
-        fun save(setting: SyllabusSetting)
+        suspend fun save(setting: SyllabusSetting)
     }
 
 }

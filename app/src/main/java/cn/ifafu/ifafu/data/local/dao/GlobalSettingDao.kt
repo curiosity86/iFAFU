@@ -14,4 +14,7 @@ interface GlobalSettingDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(setting: GlobalSetting)
+
+    @Query("DELETE FROM GlobalSetting WHERE account=:account")
+    fun delete(account: String)
 }

@@ -12,23 +12,16 @@ class Course : ToCourseBase {
 
     @PrimaryKey
     var id: Long = 0
-
-    var name // 课程名
-            : String = ""
-    var address // 上课地点
-            : String = ""
-    var teacher // 老师名
-            : String = ""
+    var name: String = "" // 课程名
+    var address: String = ""// 上课地点
+    var teacher: String = "" // 老师名
     var weekday = 0 // 星期几 = 0
     var beginNode = 0 // 开始节数 = 0
     var nodeCnt = 0 // 上课节数
-
     var weekSet = TreeSet<Int>() //第几周需要上课
     var color = 0 // 课程颜色
-    var account // 课程归属账号
-            : String = ""
+    var account: String = "" // 课程归属账号
     var local = false // 是否是自定义课程
-
     val endNode: Int
         get() = beginNode + nodeCnt - 1
 

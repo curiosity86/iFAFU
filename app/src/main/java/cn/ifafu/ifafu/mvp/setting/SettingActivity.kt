@@ -1,48 +1,62 @@
 package cn.ifafu.ifafu.mvp.setting
 
+import android.app.Activity
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.base.BaseActivity
+import cn.ifafu.ifafu.app.ViewModelFactory
+import cn.ifafu.ifafu.base.mvvm.BaseActivity
+import cn.ifafu.ifafu.databinding.SettingActivityBinding
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.*
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.setting_activity.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import me.drakeet.multitype.MultiTypeAdapter
 
-class SettingActivity : BaseActivity<SettingContract.Presenter>(), SettingContract.View {
+class SettingActivity : BaseActivity<SettingActivityBinding>() {
 
-    override fun getLayoutId(savedInstanceState: Bundle?): Int {
-        return R.layout.setting_activity
+    private val adapter by lazy {
+        MultiTypeAdapter().apply {
+            register(SeekBarItem::class, SeekBarBinder())
+            register(CheckBoxItem::class, CheckBoxBinder())
+            register(TextViewItem::class, TextViewBinder())
+            register(ColorItem::class, ColorBinder())
+        }
     }
 
-    override fun initData(savedInstanceState: Bundle?) {
+    private val viewModel by lazy {
+        ViewModelProvider(this, ViewModelFactory)
+                .get(SettingViewModel::class.java)
+    }
+
+    override fun getLayoutId(): Int = R.layout.setting_activity
+
+    override fun initActivity(savedInstanceState: Bundle?) {
         ImmersionBar.with(this)
-                .titleBarMarginTop(tv_setting)
+                .titleBarMarginTop(tb_setting)
                 .statusBarDarkFont(true)
                 .statusBarColor("#FFFFFF")
                 .init()
-        mPresenter = SettingPresenter(this)
-    }
-
-    override fun initRecycleView(items: List<Any>) {
-        val adapter = MultiTypeAdapter()
-        adapter.register(SeekBarItem::class, SeekBarBinder())
-        adapter.register(CheckBoxItem::class, CheckBoxBinder())
-        adapter.register(TextViewItem::class, TextViewBinder())
-        adapter.register(ColorItem::class, ColorBinder())
-        adapter.items = items
         val dividerItemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        context.getDrawable(R.drawable.shape_divider)?.let {
-            dividerItemDecoration.setDrawable(it)
+        dividerItemDecoration.setDrawable(getDrawable(R.drawable.shape_divider)!!)
+        mBinding.rvSetting.addItemDecoration(dividerItemDecoration)
+        mBinding.layoutManager = LinearLayoutManager(this)
+        mBinding.adapter = adapter
+        viewModel.initSetting {
+            withContext(Dispatchers.Main) {
+                adapter.items = it
+                adapter.notifyDataSetChanged()
+            }
         }
-        rv_setting.addItemDecoration(dividerItemDecoration)
-        rv_setting.layoutManager = LinearLayoutManager(this)
-        rv_setting.adapter = adapter
     }
 
     override fun finish() {
-        mPresenter.onFinish()
+        viewModel.ifNeedCheckTheme {
+            setResult(Activity.RESULT_OK)
+        }
         super.finish()
     }
 }

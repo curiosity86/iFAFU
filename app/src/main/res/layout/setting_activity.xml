@@ -1,20 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <cn.ifafu.ifafu.view.custom.WToolbar
-        android:id="@+id/tv_setting"
+    <data>
+
+        <variable
+            name="adapter"
+            type="me.drakeet.multitype.MultiTypeAdapter" />
+
+        <variable
+            name="layoutManager"
+            type="androidx.recyclerview.widget.RecyclerView.LayoutManager" />
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        app:title="@string/title_setting"
-        app:elevation="4dp"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_setting"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <cn.ifafu.ifafu.view.custom.WToolbar
+            android:id="@+id/tb_setting"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            app:elevation="4dp"
+            app:title="@string/title_setting" />
 
-</LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_setting"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:adapter="@{adapter}"
+            app:layoutManager="@{layoutManager}" />
+
+    </LinearLayout>
+
+</layout>

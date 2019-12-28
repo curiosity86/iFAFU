@@ -19,4 +19,7 @@ interface CourseDao {
 
     @Delete
     fun delete(vararg course: Course)
+
+    @Query("DELETE FROM Course WHERE account=:account")
+    fun delete(account: String)
 }

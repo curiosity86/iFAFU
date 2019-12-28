@@ -4,9 +4,6 @@ import android.content.Context
 import cn.ifafu.ifafu.app.IFAFU
 import cn.ifafu.ifafu.app.School
 import cn.ifafu.ifafu.base.BaseModel
-import cn.ifafu.ifafu.data.exception.LoginInfoErrorException
-import cn.ifafu.ifafu.data.exception.NoAuthException
-import cn.ifafu.ifafu.data.exception.VerifyException
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.data.http.parser.LoginParamParser
 import cn.ifafu.ifafu.data.http.parser.LoginParser
@@ -14,7 +11,10 @@ import cn.ifafu.ifafu.data.http.parser.ParamsParser
 import cn.ifafu.ifafu.data.http.parser.VerifyParser
 import cn.ifafu.ifafu.entity.Response
 import cn.ifafu.ifafu.entity.User
-import cn.ifafu.ifafu.entity.ZhengFang
+import cn.ifafu.ifafu.entity.ZFApiList
+import cn.ifafu.ifafu.entity.exception.LoginInfoErrorException
+import cn.ifafu.ifafu.entity.exception.NoAuthException
+import cn.ifafu.ifafu.entity.exception.VerifyException
 import io.reactivex.Observable
 import java.net.URLEncoder
 import javax.security.auth.login.LoginException
@@ -53,9 +53,9 @@ abstract class BaseZFModel(context: Context) : BaseModel(context), IZFModel {
     override fun reLogin(): Observable<Response<String>> {
         return Observable.just(true).flatMap { _ ->
             val user = repository.getInUseUser() ?: return@flatMap Observable.empty<Response<String>>()
-            val loginUrl = School.getUrl(ZhengFang.LOGIN, user)
-            val verifyUrl = School.getUrl(ZhengFang.VERIFY, user)
-            val mainUrl = School.getUrl(ZhengFang.MAIN, user)
+            val loginUrl = School.getUrl(ZFApiList.LOGIN, user)
+            val verifyUrl = School.getUrl(ZFApiList.VERIFY, user)
+            val mainUrl = School.getUrl(ZFApiList.MAIN, user)
             val loginParser = LoginParser()
             APIManager.getZhengFangAPI()
                     .getInfo(mainUrl, null)
@@ -88,7 +88,7 @@ abstract class BaseZFModel(context: Context) : BaseModel(context), IZFModel {
                     }
                     .doOnNext { resp ->
                         if (resp.isSuccess) {
-                            user.name = resp.body
+                            user.name = resp.body ?: "佚名"
                             repository.saveUser(user)
                         }
                     }

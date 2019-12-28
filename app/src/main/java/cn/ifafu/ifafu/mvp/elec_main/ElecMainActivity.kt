@@ -1,7 +1,6 @@
 package cn.ifafu.ifafu.mvp.elec_main
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.SparseArray
@@ -13,8 +12,7 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BaseActivity
-import cn.ifafu.ifafu.mvp.elec_login.ElecLoginActivity
-import cn.ifafu.ifafu.view.dialog.ProgressDialog
+import cn.ifafu.ifafu.view.dialog.LoadingDialog
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.checkbox.checkBoxPrompt
 import com.afollestad.materialdialogs.checkbox.isCheckPromptChecked
@@ -22,12 +20,12 @@ import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.view.OptionsPickerView
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.elec_main_activity.*
-import kotlinx.android.synthetic.main.include_elec_main_balance.*
 import kotlinx.android.synthetic.main.elec_main_elec_include.*
+import kotlinx.android.synthetic.main.include_elec_main_balance.*
 
 class ElecMainActivity : BaseActivity<ElecMainContract.Presenter>(), ElecMainContract.View, RadioGroup.OnCheckedChangeListener, View.OnClickListener {
 
-    private lateinit var progress: ProgressDialog
+    private lateinit var loading: LoadingDialog
 
     private var viewIdToNameMap: SparseArray<String> = SparseArray()  //记录RadioButtonId对应的电控名字
 
@@ -58,8 +56,8 @@ class ElecMainActivity : BaseActivity<ElecMainContract.Presenter>(), ElecMainCon
 
         viewIdToNameMap = SparseArray()
 
-        progress = ProgressDialog(this)
-        progress.setText("加载中")
+        loading = LoadingDialog(this)
+        loading.setText("加载中")
 
         radioGroup.setOnCheckedChangeListener(this)
 
@@ -217,7 +215,7 @@ class ElecMainActivity : BaseActivity<ElecMainContract.Presenter>(), ElecMainCon
     }
 
     override fun showLoading() {
-        progress!!.show()
+        loading!!.show()
     }
 
     override fun showPayView() {
@@ -236,7 +234,7 @@ class ElecMainActivity : BaseActivity<ElecMainContract.Presenter>(), ElecMainCon
     }
 
     override fun hideLoading() {
-        progress!!.cancel()
+        loading!!.cancel()
     }
 
     override fun showDKSelection(strings: Collection<String>) {
@@ -312,11 +310,6 @@ class ElecMainActivity : BaseActivity<ElecMainContract.Presenter>(), ElecMainCon
                     && event.y > top && event.y < bottom)
         }
         return false
-    }
-
-    override fun openLoginActivity() {
-        startActivity(Intent(this, ElecLoginActivity::class.java))
-        finish()
     }
 
 }

@@ -14,13 +14,13 @@ import android.webkit.*
 import android.widget.LinearLayout
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BaseActivity
-import cn.ifafu.ifafu.view.dialog.ProgressDialog
+import cn.ifafu.ifafu.view.dialog.LoadingDialog
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.web_activity.*
 
 class WebActivity : BaseActivity<WebContract.Presenter>(), WebContract.View {
 
-    private lateinit var progressDialog: ProgressDialog
+    private lateinit var loadingDialog: LoadingDialog
 
     private lateinit var webView: WebView
 
@@ -42,8 +42,8 @@ class WebActivity : BaseActivity<WebContract.Presenter>(), WebContract.View {
 
         tb_web.setOnClickListener { finish() }
         mPresenter = WebPresenter(this)
-        progressDialog = ProgressDialog(this)
-        progressDialog.setText("加载中")
+        loadingDialog = LoadingDialog(this)
+        loadingDialog.setText("加载中")
         initWebView()
     }
 
@@ -120,13 +120,13 @@ class WebActivity : BaseActivity<WebContract.Presenter>(), WebContract.View {
 
     override fun showLoading() {
         if (!this.isDestroyed) {
-            progressDialog.show()
+            loadingDialog.show()
         }
     }
 
     override fun hideLoading() {
         if (!this.isDestroyed) {
-            progressDialog.cancel()
+            loadingDialog.cancel()
         }
     }
 

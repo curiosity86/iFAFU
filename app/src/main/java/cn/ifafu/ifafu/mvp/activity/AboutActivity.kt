@@ -8,24 +8,20 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import cn.ifafu.ifafu.BuildConfig
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.base.BaseActivity
-import cn.ifafu.ifafu.base.i.IPresenter
-import cn.ifafu.ifafu.util.AppUtils
+import cn.ifafu.ifafu.base.mvvm.BaseActivity
+import cn.ifafu.ifafu.databinding.AboutActivityBinding
 import cn.ifafu.ifafu.util.GlobalLib
 import com.afollestad.materialdialogs.MaterialDialog
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.about_activity.*
-import java.util.*
 
-class AboutActivity : BaseActivity<IPresenter>(), View.OnClickListener {
+class AboutActivity : BaseActivity<AboutActivityBinding>(), View.OnClickListener {
 
-    override fun getLayoutId(savedInstanceState: Bundle?): Int {
-        return R.layout.about_activity
-    }
+    override fun getLayoutId(): Int = R.layout.about_activity
 
-    override fun initData(savedInstanceState: Bundle?) {
-
+    override fun initActivity(savedInstanceState: Bundle?) {
         ImmersionBar.with(this)
                 .titleBarMarginTop(tb_about)
                 .statusBarColor("#FFFFFF")
@@ -34,14 +30,14 @@ class AboutActivity : BaseActivity<IPresenter>(), View.OnClickListener {
 
         tb_about.setNavigationOnClickListener { finish() }
 
-        AppUtils.getMetaValue(context, "APP_ICON_HD")?.run {
-            iv_app_icon.setImageDrawable(getDrawable(this as Int))
-        }
-        aboutAppSubName.text = String.format(
-                Locale.getDefault(), getString(R.string.app_sub_name),
-                GlobalLib.getLocalVersionName(this))
+        mBinding.debug = BuildConfig.DEBUG
+        mBinding.version = GlobalLib.getLocalVersionName(this)
         aboutAppSubName.setOnLongClickListener {
-            showMessage("当前迭代版本号：" + GlobalLib.getLocalVersionCode(this).toString())
+            Toast.makeText(
+                    this,
+                    "当前迭代版本号：" + GlobalLib.getLocalVersionCode(this).toString(),
+                    Toast.LENGTH_SHORT
+            ).show()
             true
         }
 

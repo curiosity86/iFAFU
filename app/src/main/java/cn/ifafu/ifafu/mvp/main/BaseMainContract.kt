@@ -34,7 +34,7 @@ class BaseMainContract {
 
     interface Model : IZFModel {
 
-        fun getSetting(): GlobalSetting
+        suspend fun getSetting(): GlobalSetting
 
         fun getCourses(): Observable<List<Course>>
 
@@ -54,7 +54,7 @@ class BaseMainContract {
 
         fun saveLoginUser(user: User)
 
-        fun deleteAccount(user: User)
+        suspend fun deleteAccount(user: User)
 
         fun getWeather(cityCode: String): Observable<Weather>
     }

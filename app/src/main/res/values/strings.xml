@@ -3,11 +3,12 @@
     <string name="app_name_test">iFAFU测试版</string>
     <string name="base_on_fafu">基于福建农林大学教务管理系统</string>
 
-    <!--MVP Base-->
+    <!--Base-->
     <string name="net_error">网络错误，请检查网络设置</string>
     <string name="net_socket_timeout_error">服务器连接超时</string>
     <string name="net_sql_constraint_error">数据库数据错误</string>
     <string name="confirm">确认</string>
+    <string name="loading">加载中</string>
 
     <!--LoginActivity-->
     <string name="account">学号</string>
@@ -49,6 +50,7 @@
         &#160;&#160;&#160;&#160;&#160;&#160;&#160;5.纳入智育分计算的不及格课程，在依照以上规则计算完毕后，依照不及格课程学分扣除对应智育分。\n
         &#160;&#160;&#160;&#160;&#160;&#160;&#160;6.补/免修课程，仅英语课程程序课根据第4条规则可对对应免修课程予以识别和排除，其他免/补修课程请您点击智育分下方的“调整免/补修课程”添加，添加入“调整免/补修课程”列表中的课程将不被纳入智育分计算。
     </string>
+    <string name="score_data_empty">本学期暂无成绩信息</string>
 
     <string name="comment_1">此评教系统之目的为减少不必要的重复点击操作，不希望因此扰乱教师评教秩序。\n请注意：教师评教对学校维持优秀的教学资源有极其重要的意义，iFAFU希望您以公正的态度来面对此次评教，为了确保一键评教系统不影响教师评教结果，iFAFU仅会帮您完成每个教师的默认评教，默认评教结果为随机一项良好，其余为优秀(相当于提交了默认选项)，之后您可以点击列表中的对应教师修改评价，请您在确定提交您的评价后点击“提交最终评教”，提交后您的评价无法更改！\n若您同意以公正的态度面对此次评教，点击同意使用一键评教功能，否则请点击不同意，退出本页面。</string>
     <string name="comment_2">已自动完成教师评教！\n注意：为了确保一键评教系统不影响教师评教结果，iFAFU仅帮您完成了每个教师的评教，您可以点击列表中的对应教师修改评价，请您在确定提交您的评价后点击下方“提交最终评教”，提交后您的评价无法更改 ，望知悉！！（若出现漏评的情况，请联系开发者。）</string>
@@ -79,7 +81,6 @@
 
     <!--SyllabusItemActivity-->
     <string name="course_detail">课程详情</string>
-    <string name="loading">加载中…</string>
     <string name="course_name">课程名称</string>
     <string name="course_time">上课时间</string>
     <string name="course_address">教室</string>
@@ -118,7 +119,9 @@
     <string name="elec_tos_1">电费充值服务由学付宝提供，充值金直接流向学付宝，学付宝App内可查到消费账单</string>
     <string name="elec_tos_2">电费充值到账有延迟，到账后电费信息更新还有延迟，若太久没到账请联系宿管科（问学付宝充电费为什么还没到账）</string>
     <string name="elec_tos_3">部分宿舍电费查询显示的宿舍信息与输入宿舍号不同\n此为学付宝问题，可用学付宝查询验证</string>
-    
+
+    <string name="elective">选修学分查询</string>
+
     <!--Widget-->
     <string name="refresh_time_format">上次刷新时间：%s</string>
     <string name="next_course_format">下一节课：%s</string>

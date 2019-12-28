@@ -13,4 +13,7 @@ interface ElecCookieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(elecCookie: ElecCookie)
+
+    @Query("DELETE FROM ElecCookie WHERE account=:account")
+    fun delete(account: String)
 }

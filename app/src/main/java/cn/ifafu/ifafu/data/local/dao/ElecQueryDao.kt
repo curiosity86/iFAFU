@@ -13,4 +13,7 @@ interface ElecQueryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(elecQuery: ElecQuery)
+
+    @Query("DELETE FROM ElecQuery WHERE account=:account")
+    fun delete(account: String)
 }

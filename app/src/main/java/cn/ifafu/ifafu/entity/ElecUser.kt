@@ -19,6 +19,6 @@ class ElecUser {
         this.name = name
     }
 
-    constructor() {}
+    constructor()
 
 }

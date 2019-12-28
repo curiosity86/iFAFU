@@ -45,7 +45,7 @@ class CommentPresenter(view: CommentContract.View) : BasePresenter<CommentContra
             response == null -> return
             flag -> { //所有老师都评测完，提交评教
                 addDisposable {
-                    mModel.submit(response!!.hiddenParams)
+                    mModel.submit(response!!.hiddenParams!!)
                             .compose(RxUtils.ioToMain())
                             .compose(showHideLoading())
                             .subscribe({
@@ -62,7 +62,7 @@ class CommentPresenter(view: CommentContract.View) : BasePresenter<CommentContra
             else -> { //一键评教
                 mView.setLoadingText("一键评教中")
                 addDisposable {
-                    response!!.body.toObservable()
+                    response!!.body!!.toObservable()
                             .flatMap { mModel.commentTeacher(it) }
                             .compose(RxUtils.ioToMain())
                             .doOnSubscribe { mView.showLoading() }
@@ -88,10 +88,10 @@ class CommentPresenter(view: CommentContract.View) : BasePresenter<CommentContra
                             mView.killSelf()
                         } else {
                             response = it
-                            mView.setRvData(it.body)
+                            mView.setRvData(it.body!!)
                             //检查是否所有老师都评教完
                             flag = true
-                            for (item in it.body) {
+                            for (item in it.body!!) {
                                 if (!item.isDone) {
                                     flag = false
                                     break

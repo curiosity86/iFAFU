@@ -7,73 +7,35 @@ import androidx.room.PrimaryKey
 class Score {
     @PrimaryKey
     var id: Long = 0L
-    var name //课程名称
-            : String = ""
-    var nature //课程性质
-            : String = ""
-    var attr //课程归属
-            : String = ""
-    var credit //学分
-            : Float = 0F
-    var score //成绩
-            : Float = 0F
-        private set
-    var makeupScore //补考成绩
-            : Float = 0F
+    var name: String = ""//课程名称
+    var nature: String = "" //课程性质
+    var attr: String = "" //课程归属
+    var credit: Float = -1F //学分
+    var score: Float = -1F //成绩
+    var makeupScore: Float = -1F //补考成绩
     var restudy = false //是否重修
-    var institute //开课学院
-            : String = ""
-    var gpa //绩点
-            : Float = -1F
-    var remarks //备注
-            : String = ""
-    var makeupRemarks //补考备注
-            : String = ""
-    var isIESItem //是否记入智育分
-            : Boolean = false
-    var account: String? = null
+    var institute: String = "" //开课学院
+    var gpa: Float = -1F //绩点
+    var remarks: String = "" //备注
+    var makeupRemarks: String = "" //补考备注
+    var isIESItem: Boolean = true //是否记入智育分，仅用于成绩筛选！！
+    var account: String = ""
     var year: String = ""
-    var term: String= ""
+    var term: String = ""
 
-    constructor() {
-    }
-
-    fun setScore(score: Float) { //学分免修课程默认不计入智育分
-        if (score == FREE_COURSE) {
-            isIESItem = false
-        }
-        this.score = score
-    }//及格//补考成绩不及格，以补考成绩计算，并以学分1:1比例扣除相应智育分//补考成绩及格，以60分计算//补考成绩未出，以原成绩计算
-
-    //不及格
+    //实际成绩，用于计算智育分的成绩
     val realScore: Float
-        get() {
-            if (score == -1F) {
-                return 0f
-            } else if (score == FREE_COURSE) {
-                return FREE_COURSE
-            }
-            return if (score < 60) { //不及格
-                if (makeupScore == -1F) { //补考成绩未出，以原成绩计算
-                    score
-                } else if (makeupScore >= 60) { //补考成绩及格，以60分计算
-                    60f
-                } else { //补考成绩不及格，以补考成绩计算，并以学分1:1比例扣除相应智育分
-                    makeupScore
+        get() = when {
+            score == -1F -> 0f
+            score == FREE_COURSE -> FREE_COURSE //免修
+            score < 60 -> { //不及格
+                when {
+                    makeupScore == -1F -> score //补考成绩未出，以原成绩计算
+                    makeupScore >= 60F -> 60f //补考成绩及格，以60分计算
+                    else -> makeupScore //补考成绩不及格，以补考成绩计算，并以学分1:1比例扣除相应智育分
                 }
-            } else { //及格
-                score
             }
-        }
-
-    val calcScore: Float
-        get() {
-            if (score == -1F) {
-                return 0f
-            } else if (score == FREE_COURSE) {
-                return FREE_COURSE
-            }
-            return realScore * credit
+            else -> score //及格，按正常成绩计算
         }
 
     override fun toString(): String {
@@ -98,6 +60,6 @@ class Score {
     }
 
     companion object {
-        const val FREE_COURSE = -99999f //免修课程
+        const val FREE_COURSE = -99999F //免修课程
     }
 }

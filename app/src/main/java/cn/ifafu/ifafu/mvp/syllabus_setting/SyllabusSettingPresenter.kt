@@ -7,17 +7,19 @@ import android.content.Context
 import cn.ifafu.ifafu.app.School
 import cn.ifafu.ifafu.base.BasePresenter
 import cn.ifafu.ifafu.base.addDisposable
-import cn.ifafu.ifafu.data.RepositoryImpl
+import cn.ifafu.ifafu.data.Repository
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.entity.SyllabusSetting
 import cn.ifafu.ifafu.entity.User
-import cn.ifafu.ifafu.entity.ZhengFang
+import cn.ifafu.ifafu.entity.ZFApiList
 import cn.ifafu.ifafu.util.RxUtils
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.CheckBoxItem
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.ColorItem
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.SeekBarItem
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.TextViewItem
 import io.reactivex.Observable
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class SyllabusSettingPresenter(view: SyllabusSettingContract.View)
@@ -66,25 +68,31 @@ class SyllabusSettingPresenter(view: SyllabusSettingContract.View)
                             mView.showColorPicker(setting, ivColor)
                         },
                         TextViewItem("导出测试数据到剪切板", "", {
-                            val user: User? = RepositoryImpl.getInUseUser()
-                            val url: String = School.getUrl(ZhengFang.SYLLABUS, user) ?: ""
-                            val referer: String = School.getUrl(ZhengFang.MAIN, user) ?: ""
-                            addDisposable {
-                                APIManager.getZhengFangAPI()
-                                        .getInfo(url, referer)
-                                        .map { it.string() }
-                                        .compose(RxUtils.ioToMain())
-                                        .subscribe({
-                                            val cm = mView.activity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
-                                            if (cm != null) {
-                                                cm.setPrimaryClip(ClipData.newPlainText("Label", it))
-                                                mView.showMessage("测试数据已复制至剪切板")
-                                            } else {
-                                                mView.showMessage("导出失败")
-                                            }
-                                        }, {
-                                            mView.showMessage(it.message ?: "ERROR")
-                                        })
+                            GlobalScope.launch {
+                                val user: User? = Repository.getInUseUser()
+                                if (user == null) {
+                                    mView.showMessage("用户信息不存在")
+                                    return@launch
+                                }
+                                val url: String = School.getUrl(ZFApiList.SYLLABUS, user)
+                                val referer: String = School.getUrl(ZFApiList.MAIN, user)
+                                addDisposable {
+                                    APIManager.getZhengFangAPI()
+                                            .getInfo(url, referer)
+                                            .map { it.string() }
+                                            .compose(RxUtils.ioToMain())
+                                            .subscribe({
+                                                val cm = mView.activity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
+                                                if (cm != null) {
+                                                    cm.setPrimaryClip(ClipData.newPlainText("Label", it))
+                                                    mView.showMessage("测试数据已复制至剪切板")
+                                                } else {
+                                                    mView.showMessage("导出失败")
+                                                }
+                                            }, {
+                                                mView.showMessage(it.message ?: "ERROR")
+                                            })
+                                }
                             }
                         }, {})
                 )
@@ -100,8 +108,7 @@ class SyllabusSettingPresenter(view: SyllabusSettingContract.View)
         setting.background = uri
     }
 
-    override fun onFinish() {
-        println(com.alibaba.fastjson.JSONObject.toJSONString(setting))
+    override suspend fun onFinish() {
         mModel.save(setting)
         if (setting.hashCode() != settingHash) {
             mView.activity.setResult(Activity.RESULT_OK)

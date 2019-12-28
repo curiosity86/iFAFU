@@ -1,19 +1,18 @@
 package cn.ifafu.ifafu.mvp.elec_main
 
 import android.accounts.NetworkErrorException
+import android.content.Intent
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.base.BasePresenter
-import cn.ifafu.ifafu.data.RepositoryImpl
 import cn.ifafu.ifafu.entity.ElecQuery
 import cn.ifafu.ifafu.entity.Selection
-import cn.ifafu.ifafu.util.AppUtils
+import cn.ifafu.ifafu.mvp.elec_login.ElecLoginActivity
 import cn.ifafu.ifafu.util.RxUtils
-import cn.ifafu.ifafu.util.SPUtils
 import io.reactivex.Observable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 class ElecMainPresenter(view: ElecMainContract.View) :
@@ -25,62 +24,52 @@ class ElecMainPresenter(view: ElecMainContract.View) :
     private var buildingInfos: Selection? = null
     private var floorInfos: Selection? = null
 
-    private val dkInfos = mModel.getSelectionFromJson()
+    private lateinit var dkInfos: List<Selection> //电控选项
     private lateinit var elecQuery: ElecQuery
 
     private var dkNameToAidMap: Map<String, String> = HashMap()
 
     override fun onCreate() {
         GlobalScope.launch(Dispatchers.IO) {
-            mModel.getQueryData().run {
-                GlobalScope.launch(Dispatchers.Main) {
-                    if (this@run == null) {
-                        mView.openLoginActivity()
-                        mView.killSelf()
-                    } else {
-                        elecQuery = this@run
-                        // 检查登录态
-                        mCompDisposable.add(mModel.initCookie()
-                                .compose(RxUtils.ioToMain())
-                                .doOnSubscribe { mView.showLoading() }
-                                .doOnNext { mView.hideLoading() }
-                                .subscribe({ isReLogin ->
-                                    if (isReLogin) {
-                                        mView.showMessage("登录态失效，请重新登录")
-                                        mView.openLoginActivity()
-                                    } else {
-                                        // 查询余额
-                                        queryCardBalance(false)
-                                        // 初始化电控
-                                        intiElecCtrl()
-                                    }
-                                }, {
-                                    if (it !is NullPointerException) {
-                                        this@ElecMainPresenter.onError(it)
-                                    }
-                                })
-                        )
-                    }
-                }
+            dkInfos = mModel.getSelection()
+            showLoading()
+            val query = mModel.getQueryData()
+            if (query == null) {
+                hideLoading()
+                openLoginActivity()
+                return@launch
             }
+            elecQuery = query
+            // 检查登录态
+            if (mModel.initCookie().contains("<title>登录</title>")) {
+                // 若存在 <title>登录</title> 字样，则打开登录界面
+                showMessage("登录态失效，请重新登录")
+                openLoginActivity()
+            } else {
+                // 查询余额
+                queryCardBalance(false)
+                // 初始化电控
+                intiElecCtrl()
+            }
+            hideLoading()
         }
-
     }
 
-    /**
-     * @return true MainActivity
-     * false LoginActivity
-     */
-    private fun jumpJudge(): Boolean {
-        val elecCookie = RepositoryImpl.getElecCookie()
-        val elecUser = RepositoryImpl.getElecUser()
-        if (!SPUtils.get(Constant.SP_ELEC).contain("IMEI")) {
-            SPUtils.get(Constant.SP_ELEC).putString("IMEI", AppUtils.imei())
-        }
-        if (!SPUtils.get(Constant.SP_ELEC).contain("User-Agent")) {
-            SPUtils.get(Constant.SP_ELEC).putString("User-Agent", AppUtils.getUserAgent())
-        }
-        return elecCookie != null && elecUser != null
+    private suspend fun openLoginActivity() = withContext(Dispatchers.Main) {
+        mView.openActivity(Intent(mView.context, ElecLoginActivity::class.java))
+        mView.killSelf()
+    }
+
+    private suspend fun showLoading() = withContext(Dispatchers.Main) {
+        mView.showLoading()
+    }
+
+    private suspend fun hideLoading() = withContext(Dispatchers.Main) {
+        mView.hideLoading()
+    }
+
+    private suspend fun showMessage(message: String) = withContext(Dispatchers.Main) {
+        mView.showMessage(message)
     }
 
     /**
@@ -107,10 +96,10 @@ class ElecMainPresenter(view: ElecMainContract.View) :
         for ((key, value) in dkNameToAidMap) {
             if (value == elecQuery.aid) {
                 mView.setSelections(key, elecQuery.area, elecQuery.building, elecQuery.floor)
-                if (elecQuery.area.isEmpty() && !elecQuery.area.isEmpty()) {
+                if (elecQuery.area.isEmpty() && elecQuery.area.isNotEmpty()) {
                     onAreaSelect(elecQuery.area)
                 }
-                if (elecQuery.building.isEmpty() && !elecQuery.building.isEmpty()) {
+                if (elecQuery.building.isEmpty() && elecQuery.building.isNotEmpty()) {
                     onBuildingSelect(elecQuery.building)
                 }
                 if (elecQuery.floor.isEmpty() && !elecQuery.floor.isEmpty()) {
@@ -149,9 +138,10 @@ class ElecMainPresenter(view: ElecMainContract.View) :
         }
     }
 
-    override fun onDKSelect(aid: String) {
+    override fun onDKSelect(name: String) {
         //如果存在Room，则设置不初始化mView
-        onDKChecked(aid)
+        onDKChecked(name)
+        println("DK name = " + name)
     }
 
     override fun onAreaSelect(name: String) {

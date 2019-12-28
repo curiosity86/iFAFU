@@ -8,13 +8,13 @@ import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.entity.CommentItem
 import cn.ifafu.ifafu.util.SPUtils
 import cn.ifafu.ifafu.view.adapter.CommentRvAdapter
-import cn.ifafu.ifafu.view.dialog.ProgressDialog
+import cn.ifafu.ifafu.view.dialog.LoadingDialog
 import com.afollestad.materialdialogs.MaterialDialog
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.comment_activity.*
 
 class CommentActivity : BaseActivity<CommentContract.Presenter>(), CommentContract.View {
-    private lateinit var progressDialog: ProgressDialog
+    private lateinit var loadingDialog: LoadingDialog
 
     override fun getLayoutId(savedInstanceState: Bundle?): Int {
         return R.layout.comment_activity
@@ -27,7 +27,7 @@ class CommentActivity : BaseActivity<CommentContract.Presenter>(), CommentContra
                 .statusBarDarkFont(true)
                 .init()
         mPresenter = CommentPresenter(this)
-        progressDialog = ProgressDialog(this)
+        loadingDialog = LoadingDialog(this)
         btn_one.setOnClickListener {
             if (btn_one.text.contains("提交最终评教")) {
                 MaterialDialog(this).show {
@@ -63,15 +63,15 @@ class CommentActivity : BaseActivity<CommentContract.Presenter>(), CommentContra
     }
 
     override fun setLoadingText(text: String) {
-        progressDialog.setText(text)
+        loadingDialog.setText(text)
     }
 
     override fun showLoading() {
-        progressDialog.show()
+        loadingDialog.show()
     }
 
     override fun hideLoading() {
-        progressDialog.cancel()
+        loadingDialog.cancel()
     }
 
     override fun setButtonText(text: String) {

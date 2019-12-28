@@ -53,7 +53,7 @@ abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainC
                 }.blockingFirst()
     }
 
-    override fun getSetting(): GlobalSetting {
+    override suspend fun getSetting(): GlobalSetting {
         return repository.getGlobalSetting()
     }
 
@@ -188,8 +188,8 @@ abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainC
         return user
     }
 
-    override fun deleteAccount(user: User) {
-        repository.deleteUser(user)
+    override suspend fun deleteAccount(user: User) {
+        repository.deleteAccount(user.account)
     }
 
     override fun getWeather(cityCode: String): Observable<Weather> {

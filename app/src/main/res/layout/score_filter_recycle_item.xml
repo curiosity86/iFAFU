@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:paddingStart="24dp"
     android:paddingEnd="24dp"
-    android:layout_height="64dp">
+    android:layout_height="64dp"
+    android:background="@color/white">
 
     <TextView
         android:id="@+id/tv_score_name"
@@ -23,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="12dp"
-        android:textColor="@color/red_2"
+        android:textColor="@color/ifafu_blue"
         android:textSize="18sp" />
 
     <cn.ifafu.ifafu.view.custom.SmoothCheckBox

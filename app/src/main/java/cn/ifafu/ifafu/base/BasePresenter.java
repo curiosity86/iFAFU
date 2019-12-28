@@ -10,7 +10,7 @@ import cn.ifafu.ifafu.R;
 import cn.ifafu.ifafu.base.i.IModel;
 import cn.ifafu.ifafu.base.i.IPresenter;
 import cn.ifafu.ifafu.base.i.IView;
-import cn.ifafu.ifafu.data.exception.NoLogException;
+import cn.ifafu.ifafu.entity.exception.NoLogException;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -58,7 +58,7 @@ public abstract class BasePresenter<V extends IView, M extends IModel> implement
         } else if (throwable instanceof SocketTimeoutException) {
             mView.showMessage(R.string.net_socket_timeout_error);
         } else if (throwable instanceof SQLiteConstraintException) {
-            mView.showMessage(R.string.net_sql_constraint_error);
+            mView.showMessage(R.string.net_sql_constraint_error + "，Error："+ throwable.getMessage());
         } else {
             mView.showMessage(throwable.getMessage());
         }

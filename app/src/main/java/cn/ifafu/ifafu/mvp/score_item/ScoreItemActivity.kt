@@ -1,40 +1,43 @@
 package cn.ifafu.ifafu.mvp.score_item
 
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import cn.ifafu.ifafu.R.layout
-import cn.ifafu.ifafu.base.BaseActivity
+import cn.ifafu.ifafu.R
+import cn.ifafu.ifafu.app.ViewModelFactory
+import cn.ifafu.ifafu.base.mvvm.BaseActivity
+import cn.ifafu.ifafu.databinding.ScoreItemActivityBinding
 import cn.ifafu.ifafu.view.adapter.ScoreItemAdapter
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.score_item_activity.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-class ScoreItemActivity : BaseActivity<ScoreItemConstant.Presenter>(), ScoreItemConstant.View {
+class ScoreItemActivity : BaseActivity<ScoreItemActivityBinding>() {
 
-    private var mAdapter: ScoreItemAdapter? = null
-
-    override fun getLayoutId(savedInstanceState: Bundle?): Int {
-        return layout.score_item_activity
+    private val mViewModel: ScoreItemViewModel by lazy {
+        ViewModelProvider(this, ViewModelFactory)
+                .get(ScoreItemViewModel::class.java)
     }
 
-    override fun initData(savedInstanceState: Bundle?) {
+    private val adapter by lazy { ScoreItemAdapter() }
+
+    override fun getLayoutId(): Int = R.layout.score_item_activity
+
+    override fun initActivity(savedInstanceState: Bundle?) {
         ImmersionBar.with(this)
                 .titleBarMarginTop(tb_score_item)
                 .statusBarColor("#FFFFFF")
                 .statusBarDarkFont(true)
                 .init()
-
-        mPresenter = ScoreItemPresenter(this)
+        val layoutManager = GridLayoutManager(this, 2)
+        mBinding.layoutManager = layoutManager
+        mBinding.adapter = adapter
+        mViewModel.init(intent.getLongExtra("id", 0L), {
+            withContext(Dispatchers.Main) {
+                adapter.replaceData(it)
+            }
+        }, this::showMessage)
     }
 
-    override fun setRvData(map: Map<String, String>) {
-        if (mAdapter == null) {
-            mAdapter = ScoreItemAdapter(map)
-            val layoutManager = GridLayoutManager(this, 2)
-            rv_score_item.layoutManager = layoutManager
-            rv_score_item.adapter = mAdapter
-        } else {
-            mAdapter!!.replaceData(map.toList())
-            mAdapter!!.notifyDataSetChanged()
-        }
-    }
 }
