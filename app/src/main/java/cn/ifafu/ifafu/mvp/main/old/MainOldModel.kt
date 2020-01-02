@@ -3,23 +3,23 @@ package cn.ifafu.ifafu.mvp.main.old
 import android.annotation.SuppressLint
 import android.content.Context
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.entity.*
+import cn.ifafu.ifafu.entity.NextExam
+import cn.ifafu.ifafu.entity.Score
+import cn.ifafu.ifafu.entity.SyllabusSetting
+import cn.ifafu.ifafu.entity.YearTerm
 import cn.ifafu.ifafu.mvp.main.BaseMainModel
-import cn.ifafu.ifafu.mvp.score_list.ScoreListModel
 import io.reactivex.Observable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Main2Model(context: Context) : BaseMainModel(context), Main2Contract.Model {
+class MainOldModel(context: Context) : BaseMainModel(context), MainOldContract.Model {
     private lateinit var toYear: String
     private lateinit var toTerm: String
 
-    override fun saveLoginUser(user: User) {
-        repository.saveUser(user)
-    }
-
     override fun getSyllabusSetting(): SyllabusSetting {
-        return repository.getSyllabusSetting()!!
+        return mRepository.getSyllabusSetting()
     }
 
     override fun getFunctionTab(): Map<String, List<Pair<String, Int>>> {
@@ -45,7 +45,7 @@ class Main2Model(context: Context) : BaseMainModel(context), Main2Contract.Model
 
     @SuppressLint("DefaultLocale")
     override fun getYearTermList(): Observable<YearTerm> {
-        return Observable.fromCallable { repository.getNowYearTerm() }
+        return Observable.fromCallable { mRepository.getNowYearTerm() }
     }
 
     @SuppressLint("DefaultLocale")
@@ -106,19 +106,22 @@ class Main2Model(context: Context) : BaseMainModel(context), Main2Contract.Model
         }
     }
 
-    override fun getScore(): Observable<List<Score>> {
-        val scoreModel = ScoreListModel(mContext)
-        val yearTerm: Pair<String, String> by lazy { scoreModel.getYearTerm().blockingFirst() }
-        return Observable
-                .fromCallable {
-                    scoreModel.getScoresFromDB(yearTerm.first, yearTerm.second)
-                }
-                .flatMap { list ->
-                    if (list.isEmpty()) {
-                        scoreModel.getScoresFromNet(yearTerm.first, yearTerm.second)
-                    } else {
-                        Observable.just(list)
-                    }
-                }
+    override suspend fun getScore(): List<Score> = withContext(Dispatchers.IO) {
+        val yearTerm = mRepository.getNowYearTerm()
+        val score = mRepository.fetchScoreList().apply {
+            if (isNotEmpty()) {
+                mRepository.deleteAllScore()
+                mRepository.saveScore(this)
+                val scoreFilter = mRepository.getScoreFilter()
+                scoreFilter.account = mRepository.account
+                scoreFilter.filter(this)
+                mRepository.saveScoreFilter(scoreFilter)
+            }
+        }
+        if (score.isEmpty()) {
+            mRepository.getScores(yearTerm.termStr, yearTerm.yearStr)
+        } else {
+            score.filter { it.term == yearTerm.termStr && it.year == yearTerm.yearStr }
+        }
     }
 }

@@ -25,6 +25,12 @@ public interface ZhengFangService {
     Observable<ResponseBody> initParams(@Url String url, @Header("Referer") String referer);
 
     @GET
+    Call<ResponseBody> getCaptcha2(@Url String url);
+
+    @GET
+    Call<ResponseBody> initParams2(@Url String url);
+
+    @GET
     Call<ResponseBody> initParams2(@Url String url, @Header("Referer") String referer);
 
     @GET
@@ -40,6 +46,12 @@ public interface ZhengFangService {
             @Header("Referer") String referer,
             @FieldMap Map<String, String> fieldMap
     );
+
+    @POST
+    @FormUrlEncoded
+    Call<ResponseBody> login2(
+            @Url String url,
+            @FieldMap(encoded = true) Map<String, String> filedMap);
 
     @POST
     @FormUrlEncoded

@@ -1,34 +1,34 @@
 package cn.ifafu.ifafu.mvp.score_filter
 
 import android.app.Activity
+import android.app.Application
 import cn.ifafu.ifafu.base.mvvm.BaseViewModel
-import cn.ifafu.ifafu.data.local.LocalDataSource
 import cn.ifafu.ifafu.entity.Score
 import cn.ifafu.ifafu.entity.ScoreFilter
-import cn.ifafu.ifafu.util.GlobalLib
+import cn.ifafu.ifafu.util.trimEnd
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class ScoreFilterViewModel(private val repository: LocalDataSource) : BaseViewModel() {
+class ScoreFilterViewModel(application: Application) : BaseViewModel(application) {
 
     private lateinit var filter: ScoreFilter
     private lateinit var scores: List<Score>
 
-    fun init(activity: Activity, success: suspend (scores: List<Score>, ies: String) -> Unit, fail: suspend (String) -> Unit) {
+    fun init(activity: Activity, success: suspend (scores: List<Score>, ies: String) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
             val year: String? = activity.intent.getStringExtra("year")
             val term: String? = activity.intent.getStringExtra("term")
             if (year == null || term == null) {
-                fail("未找到相关学期成绩")
+                event.showMessage("未找到相关学期成绩")
                 return@launch
             }
-            scores = repository.getScores(year, term)
-            filter = repository.getScoreFilter()
+            scores = mRepository.getScores(year, term)
+            filter = mRepository.getScoreFilter()
             scores.forEach {
                 it.isIESItem = it.id !in filter.filterList
             }
-            success(scores, GlobalLib.formatFloat(GlobalLib.getIES(scores, filter), 2))
+            success(scores, filter.calcIES(scores).trimEnd(2))
         }
     }
 
@@ -39,18 +39,18 @@ class ScoreFilterViewModel(private val repository: LocalDataSource) : BaseViewMo
             } else {
                 filter.filterList.removeAll { score.id == it }
             }
-            repository.saveScoreFilter(filter)
-            success(GlobalLib.formatFloat(GlobalLib.getIES(scores, filter), 2))
+            mRepository.saveScoreFilter(filter)
+            success(filter.calcIES(scores).trimEnd(2))
         }
     }
 
     fun allChecked(success: suspend (String) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
             scores.forEach {
-                filter.filterList.add(it.id)
+                filter.filterList.remove(it.id)
             }
-            repository.saveScoreFilter(filter)
-            success(GlobalLib.formatFloat(GlobalLib.getIES(scores, filter), 2))
+            mRepository.saveScoreFilter(filter)
+            success(filter.calcIES(scores).trimEnd(2))
         }
     }
 }

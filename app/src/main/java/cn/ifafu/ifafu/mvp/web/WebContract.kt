@@ -1,12 +1,12 @@
 package cn.ifafu.ifafu.mvp.web
 
-import cn.ifafu.ifafu.base.i.IView
-import cn.ifafu.ifafu.base.ifafu.IZFModel
-import cn.ifafu.ifafu.base.ifafu.IZFPresenter
+import cn.ifafu.ifafu.base.mvp.IModel
+import cn.ifafu.ifafu.base.mvp.IPresenter
+import cn.ifafu.ifafu.base.mvp.IView
 import io.reactivex.Observable
 
 class WebContract {
-    interface Presenter : IZFPresenter
+    interface Presenter: IPresenter
 
     interface View : IView {
         fun loadUrl(url: String)
@@ -14,7 +14,7 @@ class WebContract {
         fun setTitle(title: String? = null, resId: Int? = null)
     }
 
-    interface Model : IZFModel {
+    interface Model: IModel {
         /**
          * 获取首页Url
          *

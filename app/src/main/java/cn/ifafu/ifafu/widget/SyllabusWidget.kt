@@ -16,7 +16,7 @@ import cn.ifafu.ifafu.app.IFAFU
 import cn.ifafu.ifafu.data.Repository
 import cn.ifafu.ifafu.entity.NextCourse
 import cn.ifafu.ifafu.mvp.activity.SplashActivity
-import cn.ifafu.ifafu.mvp.main.old.Main2Model
+import cn.ifafu.ifafu.mvp.main.old.MainOldModel
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -51,7 +51,7 @@ class SyllabusWidget : AppWidgetProvider() {
         val format = SimpleDateFormat("HH:mm:ss", Locale.CHINA)
         remoteViews.setTextViewText(R.id.tv_refresh_time, context.getString(R.string.refresh_time_format, format.format(Date())))
         val t = Thread {
-            Main2Model(context).getNextCourse()
+            MainOldModel(context).getNextCourse()
                     .subscribe({
                         updateView(remoteViews, it)
                     }, {

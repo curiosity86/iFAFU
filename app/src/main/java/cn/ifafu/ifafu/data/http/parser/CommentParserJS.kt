@@ -6,10 +6,10 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.util.*
 
-class CommentParserJS : BaseParser<Response<List<CommentItem>>>() {
+class CommentParserJS : BaseParser<Response<MutableList<CommentItem>>>() {
 
     @Throws(Exception::class)
-    override fun parse(html: String): Response<List<CommentItem>> {
+    override fun parse(html: String): Response<MutableList<CommentItem>> {
         val document = Jsoup.parse(html)
         val table = document.select("li[class=\"top\"]")
         var menu: Element? = null
@@ -26,7 +26,7 @@ class CommentParserJS : BaseParser<Response<List<CommentItem>>>() {
         if (lis.size == 1) {
             return Response.failure("无需评教")
         }
-        val commentItems = ArrayList<CommentItem>()
+        val commentItems: MutableList<CommentItem> = ArrayList()
         for (i in 1 until lis.size) {
             val li = lis[i]
             val item = CommentItem()
@@ -35,10 +35,8 @@ class CommentParserJS : BaseParser<Response<List<CommentItem>>>() {
             item.commentUrl = li.attr("href")
             commentItems.add(item)
         }
-        val response = Response<List<CommentItem>>()
-        response.code = Response.SUCCESS
-        response.body = commentItems
-        response.hiddenParams = ParamsParser().parse(html)
-        return response
+        return Response.success(commentItems).apply {
+            hiddenParams = ParamsParser().parse(html)
+        }
     }
 }

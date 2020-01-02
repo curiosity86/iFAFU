@@ -30,8 +30,8 @@ import kotlinx.android.synthetic.main.main_old_fragment.*
 import kotlinx.android.synthetic.main.main_old_include.*
 import kotlinx.android.synthetic.main.main_old_menu_include.*
 
-class Main2Fragment : BaseMainFragment<Main2Contract.Presenter>(),
-        Main2Contract.View,
+class MainOldFragment : BaseMainFragment<MainOldContract.Presenter>(),
+        MainOldContract.View,
         TabClickListener,
         View.OnClickListener {
 
@@ -40,7 +40,7 @@ class Main2Fragment : BaseMainFragment<Main2Contract.Presenter>(),
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        mPresenter = Main2Presenter(this)
+        mPresenter = MainOldPresenter(this)
         setOnlineStatus(true)
         tv_name.setOnClickListener(this)
         layout_syllabus.setOnClickListener(this)
@@ -158,8 +158,8 @@ class Main2Fragment : BaseMainFragment<Main2Contract.Presenter>(),
         }
     }
 
-    override fun setScoreText(text: String?) {
-        if (text.isNullOrEmpty()) {
+    override fun setScoreText(text: String) {
+        if (text.isEmpty()) {
             layout_score.findViewById<TextView>(R.id.tv_null).visibility = View.VISIBLE
             layout_score.findViewById<TextView>(R.id.tv_score_detail).visibility = View.GONE
         } else {

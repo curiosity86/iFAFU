@@ -1,7 +1,8 @@
 package cn.ifafu.ifafu.entity
 
 class Response<T> {
-    var code = 0
+
+    val code: Int
 
     var message: String = ""
         private set
@@ -10,15 +11,13 @@ class Response<T> {
 
     var hiddenParams: MutableMap<String, String>? = null
 
-    constructor() {}
-
-    constructor(code: Int, message: String = "") {
+    private constructor(code: Int, message: String = "") {
         this.code = code
         this.message = message
         this.body = body
     }
 
-    constructor(code: Int, body: T, message: String = "") {
+    private constructor(code: Int, body: T, message: String = "") {
         this.code = code
         this.message = message
         this.body = body
@@ -31,6 +30,7 @@ class Response<T> {
         const val SUCCESS = 200
         const val FAILURE = 400
         const val ERROR = 500
+
         fun <T> success(body: T): Response<T> {
             return Response(SUCCESS, body)
         }

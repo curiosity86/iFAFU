@@ -3,35 +3,27 @@ package cn.ifafu.ifafu.mvp.elective
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.ViewModelFactory
+import cn.ifafu.ifafu.app.ViewModelProvider
 import cn.ifafu.ifafu.base.mvvm.BaseActivity
 import cn.ifafu.ifafu.databinding.ElectiveActivityBinding
 import cn.ifafu.ifafu.entity.Score
 import cn.ifafu.ifafu.mvp.score_item.ScoreItemActivity
 import cn.ifafu.ifafu.view.adapter.ElectiveAdapter
-import cn.ifafu.ifafu.view.dialog.LoadingDialog
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.elective_activity.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ElectiveActivity : BaseActivity<ElectiveActivityBinding>(), View.OnClickListener {
+class ElectiveActivity : BaseActivity<ElectiveActivityBinding, ElectiveViewModel>(), View.OnClickListener {
 
-    private val mViewModel by lazy {
-        ViewModelProvider(this, ViewModelFactory)
-                .get(ElectiveViewModel::class.java)
+    override fun getLayoutId(): Int {
+        return R.layout.elective_activity
     }
 
-    private val loadingDialog by lazy {
-        LoadingDialog(this).apply {
-            setText("加载中")
-            setCancelable(true)
-        }
+    override fun getViewModel(): ElectiveViewModel {
+       return ViewModelProvider(this)[ElectiveViewModel::class.java]
     }
-
-    override fun getLayoutId(): Int = R.layout.elective_activity
 
     override fun initActivity(savedInstanceState: Bundle?) {
         ImmersionBar.with(this)
@@ -39,7 +31,7 @@ class ElectiveActivity : BaseActivity<ElectiveActivityBinding>(), View.OnClickLi
                 .statusBarColor("#FFFFFF")
                 .statusBarDarkFont(true)
                 .init()
-        mViewModel.init({ total, zrkx, rwsk, ysty, wxsy, cxcy ->
+        mViewModel.init { total, zrkx, rwsk, ysty, wxsy, cxcy ->
             withContext(Dispatchers.Main) {
                 val click = { score: Score ->
                     val intent = Intent(this@ElectiveActivity, ScoreItemActivity::class.java)
@@ -69,7 +61,7 @@ class ElectiveActivity : BaseActivity<ElectiveActivityBinding>(), View.OnClickLi
                     mBinding.cxcyAdapter = ElectiveAdapter(scores, click)
                 }
             }
-        }, this::showMessage, this::showLoading, this::hideLoading)
+        }
         initView()
     }
 
@@ -98,15 +90,4 @@ class ElectiveActivity : BaseActivity<ElectiveActivityBinding>(), View.OnClickLi
         layout_cxcy.setOnClickListener(this)
     }
 
-    private suspend fun showLoading() {
-        withContext(Dispatchers.Main) {
-            loadingDialog.show()
-        }
-    }
-
-    private suspend fun hideLoading() {
-        withContext(Dispatchers.Main) {
-            loadingDialog.cancel()
-        }
-    }
 }

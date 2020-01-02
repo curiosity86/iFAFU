@@ -1,8 +1,8 @@
 package cn.ifafu.ifafu.mvp.exam_list
 
-import cn.ifafu.ifafu.base.i.IPresenter
-import cn.ifafu.ifafu.base.i.IView
-import cn.ifafu.ifafu.base.ifafu.IZFModel
+import cn.ifafu.ifafu.base.mvp.IModel
+import cn.ifafu.ifafu.base.mvp.IPresenter
+import cn.ifafu.ifafu.base.mvp.IView
 import cn.ifafu.ifafu.entity.Exam
 import cn.ifafu.ifafu.entity.YearTerm
 import io.reactivex.Observable
@@ -29,7 +29,7 @@ class ExamContract {
         fun setYearTermData(years: List<String>, terms: List<String>)
     }
 
-    interface Model : IZFModel {
+    interface Model : IModel {
 
         fun getYearTermList(): Observable<YearTerm>
 

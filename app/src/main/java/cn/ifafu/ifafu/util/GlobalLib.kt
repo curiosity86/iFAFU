@@ -6,8 +6,6 @@ import android.content.ContextWrapper
 import android.content.pm.PackageManager
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import cn.ifafu.ifafu.entity.Score
-import cn.ifafu.ifafu.entity.ScoreFilter
 
 object GlobalLib {
     fun trimZero(s: String): String {
@@ -22,30 +20,6 @@ object GlobalLib {
 
     fun formatFloat(num: Float, digit: Int): String {
         return trimZero(String.format("%." + digit + "f", num))
-    }
-
-    fun getIES(scoreList: List<Score>, scoreFilter: ScoreFilter): Float {
-        if (scoreList.isEmpty()) {
-            return 0f
-        }
-        var totalScore = 0f
-        var totalCredit = 0f
-        var totalMinus = 0f
-        for (score in scoreList) {
-            if (score.id !in scoreFilter.filterList && score.realScore != Score.FREE_COURSE) {
-                val realScore = score.realScore
-                totalScore += (realScore * score.credit)
-                totalCredit += score.credit
-                if (realScore < 60) {
-                    totalMinus -= score.credit
-                }
-            }
-        }
-        var result = totalScore / totalCredit - totalMinus
-        if (result.isNaN()) {
-            result = 0F
-        }
-        return result
     }
 
     fun getLocalVersionName(context: Context): String {

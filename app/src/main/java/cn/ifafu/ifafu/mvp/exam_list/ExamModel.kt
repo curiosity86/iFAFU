@@ -2,7 +2,7 @@ package cn.ifafu.ifafu.mvp.exam_list
 
 import android.content.Context
 import cn.ifafu.ifafu.app.School
-import cn.ifafu.ifafu.base.ifafu.BaseZFModel
+import cn.ifafu.ifafu.base.mvp.BaseModel
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.data.http.parser.ExamParser
 import cn.ifafu.ifafu.entity.Exam
@@ -11,7 +11,7 @@ import cn.ifafu.ifafu.entity.YearTerm
 import cn.ifafu.ifafu.entity.ZFApiList
 import io.reactivex.Observable
 
-class ExamModel(context: Context) : BaseZFModel(context), ExamContract.Model {
+class ExamModel(context: Context) : BaseModel(context), ExamContract.Model {
 
     private var yearTerm: Pair<String, String> = getYearTerm()
 
@@ -20,7 +20,7 @@ class ExamModel(context: Context) : BaseZFModel(context), ExamContract.Model {
         var mainUrl = ""
         var user: User? = null
         return Observable.fromCallable {
-            repository.getInUseUser()!!
+            mRepository.getInUseUser()!!
         }.flatMap { it ->
             user = it
             examUrl = School.getUrl(ZFApiList.EXAM, it)
@@ -30,12 +30,12 @@ class ExamModel(context: Context) : BaseZFModel(context), ExamContract.Model {
                 .flatMap { params ->
                     //考试查询特例，查询本学期考试只能通过GET
                     if (year == yearTerm.first && term == yearTerm.second) {
-                        APIManager.getZhengFangAPI()
+                        APIManager.zhengFangAPI
                                 .initParams(examUrl, mainUrl)
                     } else {
                         params["xnd"] = year
                         params["xqd"] = term
-                        APIManager.getZhengFangAPI()
+                        APIManager.zhengFangAPI
                                 .getInfo(examUrl, examUrl, params)
                     }
                 }
@@ -48,20 +48,21 @@ class ExamModel(context: Context) : BaseZFModel(context), ExamContract.Model {
     }
 
     override fun getExamsFromDB(year: String, term: String): Observable<List<Exam>> {
-        return Observable.fromCallable { repository.getExams(year, term) }
+        return Observable.fromCallable { mRepository.getExams(year, term) }
                 .map { sort(it.toMutableList()) }
     }
 
     override fun getYearTermList(): Observable<YearTerm> {
-        return Observable.fromCallable { repository.getNowYearTerm() }
+        return Observable.fromCallable { mRepository.getNowYearTerm() }
     }
 
     override fun getYearTerm(): Pair<String, String> {
-        return repository.getYearTerm()
+        val termYear = mRepository.getNowYearTerm()
+        return Pair(termYear.yearStr, termYear.termStr)
     }
 
     override fun save(list: List<Exam>) {
-        repository.saveExam(list)
+        mRepository.saveExam(list)
     }
 
     private fun sort(it: MutableList<Exam>): MutableList<Exam> {

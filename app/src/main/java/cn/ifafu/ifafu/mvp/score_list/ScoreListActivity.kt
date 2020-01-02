@@ -4,11 +4,10 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
-import cn.ifafu.ifafu.app.ViewModelFactory
+import cn.ifafu.ifafu.app.ViewModelProvider
 import cn.ifafu.ifafu.base.mvvm.BaseActivity
 import cn.ifafu.ifafu.databinding.ScoreListActivityBinding
 import cn.ifafu.ifafu.entity.Score
@@ -16,7 +15,6 @@ import cn.ifafu.ifafu.mvp.score_filter.ScoreFilterActivity
 import cn.ifafu.ifafu.mvp.score_item.ScoreItemActivity
 import cn.ifafu.ifafu.view.adapter.ScoreAdapter
 import cn.ifafu.ifafu.view.custom.RecyclerViewDivider
-import cn.ifafu.ifafu.view.dialog.LoadingDialog
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener
@@ -26,7 +24,7 @@ import kotlinx.android.synthetic.main.score_list_activity.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ScoreListActivity : BaseActivity<ScoreListActivityBinding>(), View.OnClickListener {
+class ScoreListActivity : BaseActivity<ScoreListActivityBinding, ScoreListViewModel>(), View.OnClickListener {
 
     private val mAdapter: ScoreAdapter by lazy {
         ScoreAdapter(this).apply {
@@ -38,16 +36,15 @@ class ScoreListActivity : BaseActivity<ScoreListActivityBinding>(), View.OnClick
         }
     }
 
-    private val loadingDialog: LoadingDialog by lazy {
-        LoadingDialog(this).apply {
-            setText("加载中")
-        }
-    }
-
     private val mYearTermOptionPicker: OptionsPickerView<String> by lazy {
         OptionsPickerBuilder(this,
                 OnOptionsSelectListener { options1, options2, _, _ ->
-                    mViewModel.switchYearAndTerm(options1, options2, this::showScoreInfo)
+                    mViewModel.switchYearAndTerm(options1, options2) { scores, ies, cnt, gpa, title ->
+                        showScoreInfo(scores, ies, cnt, gpa)
+                        withContext(Dispatchers.Main) {
+                            mBinding.title = title
+                        }
+                    }
                 })
                 .setCancelText("取消")
                 .setSubmitText("确定")
@@ -57,8 +54,8 @@ class ScoreListActivity : BaseActivity<ScoreListActivityBinding>(), View.OnClick
                 .build<String>()
     }
 
-    private val mViewModel: ScoreListViewModel by lazy {
-        ViewModelProvider(this, ViewModelFactory).get(ScoreListViewModel::class.java)
+    override fun getViewModel(): ScoreListViewModel {
+        return ViewModelProvider(this).get(ScoreListViewModel::class.java)
     }
 
     override fun getLayoutId(): Int = R.layout.score_list_activity
@@ -69,30 +66,19 @@ class ScoreListActivity : BaseActivity<ScoreListActivityBinding>(), View.OnClick
                 .statusBarColor("#FFFFFF")
                 .statusBarDarkFont(true)
                 .init()
-        mBinding.layoutManager = LinearLayoutManager(this)
         mBinding.rvScore.addItemDecoration(RecyclerViewDivider(
                 this, LinearLayoutManager.VERTICAL, R.drawable.shape_divider))
         mBinding.adapter = mAdapter
 
-        mViewModel.initScoreList({ scores, ies, cnt, gpa, title ->
-            withContext(Dispatchers.Main) {
-                mBinding.tvScoreTitle.setOnClickListener(this@ScoreListActivity)
-            }
-            showScoreInfo(scores, ies, cnt, gpa, title)
-        }, {
-            withContext(Dispatchers.Main) {
-                mBinding.tvScoreTitle.setOnClickListener(null)
-            }
-            showScoreInfo(emptyList(), Pair("0", "分"), Pair("0", "门"), gpa = "0", title = "无信息")
-            showMessage(it)
-        }, this::showLoading, this::hideLoading)
-        mViewModel.initOptionPickerData { yearList: List<String>,
-                                          termList: List<String>,
-                                          yearIndex: Int,
-                                          termIndex: Int ->
+        mViewModel.initScoreList { scores, ies, cnt, gpa ->
+            showScoreInfo(scores, ies, cnt, gpa)
+        }
+        mViewModel.initOptionPickerData { yearList, termList, yearIndex, termIndex, title ->
             withContext(Dispatchers.Main) {
                 mYearTermOptionPicker.setNPicker(yearList, termList, null)
                 mYearTermOptionPicker.setSelectOptions(yearIndex, termIndex)
+                mBinding.tvScoreTitle.setOnClickListener(this@ScoreListActivity)
+                mBinding.title = title
             }
         }
 
@@ -104,16 +90,12 @@ class ScoreListActivity : BaseActivity<ScoreListActivityBinding>(), View.OnClick
     private suspend fun showScoreInfo(scores: List<Score>,
                                       ies: Pair<String, String>,
                                       cnt: Pair<String, String>,
-                                      gpa: String,
-                                      title: String? = null) = withContext(Dispatchers.Main) {
+                                      gpa: String) = withContext(Dispatchers.Main) {
         mBinding.empty = scores.isEmpty()
         mAdapter.scoreList = scores
         mBinding.ies = ies
         mBinding.cnt = cnt
         mBinding.gpa = gpa
-        if (title != null) {
-            mBinding.title = title
-        }
     }
 
     override fun onClick(v: View?) {
@@ -126,13 +108,9 @@ class ScoreListActivity : BaseActivity<ScoreListActivityBinding>(), View.OnClick
                 intent.putExtra("term", term)
                 startActivityForResult(intent, Constant.ACTIVITY_SCORE_FILTER)
             }
-            R.id.btn_refresh -> mViewModel.refreshScoreList({ scores, ies, cnt, gpa ->
-                withContext(Dispatchers.Main) {
-                    mBinding.tvScoreTitle.setOnClickListener(this@ScoreListActivity)
-                }
+            R.id.btn_refresh -> mViewModel.refreshScoreList { scores, ies, cnt, gpa ->
                 showScoreInfo(scores, ies, cnt, gpa)
-                showMessage("刷新成功")
-            }, this::showMessage, this::showLoading, this::hideLoading)
+            }
         }
     }
 
@@ -160,18 +138,6 @@ class ScoreListActivity : BaseActivity<ScoreListActivityBinding>(), View.OnClick
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
-        }
-    }
-
-    private suspend fun showLoading() {
-        withContext(Dispatchers.Main) {
-            loadingDialog.show()
-        }
-    }
-
-    private suspend fun hideLoading() {
-        withContext(Dispatchers.Main) {
-            loadingDialog.cancel()
         }
     }
 }

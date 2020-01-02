@@ -11,13 +11,16 @@ import android.widget.Toast
 import cn.ifafu.ifafu.BuildConfig
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.mvvm.BaseActivity
+import cn.ifafu.ifafu.base.mvvm.BaseViewModel
 import cn.ifafu.ifafu.databinding.AboutActivityBinding
 import cn.ifafu.ifafu.util.GlobalLib
 import com.afollestad.materialdialogs.MaterialDialog
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.about_activity.*
 
-class AboutActivity : BaseActivity<AboutActivityBinding>(), View.OnClickListener {
+class AboutActivity : BaseActivity<AboutActivityBinding, BaseViewModel>(), View.OnClickListener {
+
+    override fun getViewModel(): BaseViewModel? = null
 
     override fun getLayoutId(): Int = R.layout.about_activity
 

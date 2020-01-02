@@ -2,7 +2,7 @@ package cn.ifafu.ifafu.mvp.main
 
 import android.annotation.SuppressLint
 import android.content.Context
-import cn.ifafu.ifafu.base.ifafu.BaseZFModel
+import cn.ifafu.ifafu.base.mvp.BaseModel
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.data.http.service.WeatherService
 import cn.ifafu.ifafu.entity.*
@@ -14,10 +14,10 @@ import io.reactivex.Observable
 import java.text.SimpleDateFormat
 import java.util.*
 
-abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainContract.Model {
+abstract class BaseMainModel(context: Context) : BaseModel(context), BaseMainContract.Model {
 
     override fun getAllUser(): List<User> {
-        return repository.getAllUsers()
+        return mRepository.getAllUsers()
     }
 
     override fun getCourses(): Observable<List<Course>> {
@@ -41,9 +41,17 @@ abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainC
     }
 
     override fun getThisTermExams(): List<Exam> {
-        val yearTerm = repository.getYearTerm()
+        var yearTerm = Pair("", "")
         val model = ExamModel(mContext)
-        return model.getExamsFromDB(yearTerm.first, yearTerm.second)
+        return Observable
+                .fromCallable {
+                    yearTerm = mRepository.getNowYearTerm().run {
+                        Pair(yearStr, termStr)
+                    }
+                    yearTerm
+                }.flatMap {
+                    model.getExamsFromDB(yearTerm.first, yearTerm.second)
+                }
                 .flatMap {
                     if (it.isEmpty()) {
                         model.getExamsFromNet(yearTerm.first, yearTerm.second)
@@ -54,11 +62,12 @@ abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainC
     }
 
     override suspend fun getSetting(): GlobalSetting {
-        return repository.getGlobalSetting()
+        return mRepository.getGlobalSetting()
     }
 
-    override fun saveLoginUser(user: User) {
-        repository.saveUser(user)
+    override fun saveInUseUser(user: User) {
+        mRepository.saveUser(user)
+        mRepository.saveLoginUser(user)
     }
 
     override fun getNextCourse(): Observable<NextCourse> {
@@ -67,17 +76,15 @@ abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainC
                 .map { courses ->
                     val result = NextCourse()
                     val setting = syllabusModel.syllabusSetting
-                    var currentWeek = syllabusModel.currentWeek
+                    var currentWeek = syllabusModel.syllabusSetting.currentWeek
                     var currentWeekday: Int = DateUtils.getCurrentWeekday()
-
                     val date = SimpleDateFormat("MM月dd日", Locale.CHINA).format(Date())
-
                     //计算节假日
                     val holidayFromToMap = syllabusModel.holidayFromToMap
                     if (holidayFromToMap[currentWeek]?.containsKey(currentWeekday) == true) {
                         currentWeek = -1
                     } else {
-                        for1@for ((week, pair) in holidayFromToMap) {
+                        for1@ for ((week, pair) in holidayFromToMap) {
                             for ((weekday, pair2) in pair) {
                                 if (pair2 != null && pair2.first == currentWeek && pair2.second == currentWeekday) {
                                     currentWeek = week
@@ -87,8 +94,7 @@ abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainC
                             }
                         }
                     }
-
-                    if (currentWeek <= 0 || currentWeek > setting.weekCnt) {
+                    if (currentWeek <= 0 || currentWeek > 20) {
                         result.title = "放假了呀！！"
                         result.result = NextCourse.IN_HOLIDAY
                         result.dateText = "放假中 $date ${DateUtils.getWeekdayCN(currentWeekday)}"
@@ -143,7 +149,7 @@ abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainC
                         if (now < intEndTime) {
                             result.name = course.name
                             result.result = NextCourse.HAS_NEXT_COURSE
-                            result.address = course.address ?: "无"
+                            result.address = course.address
                             result.node = node
                             result.timeText = String.format(Locale.CHINA, "%d:%02d-%d:%02d",
                                     intStartTime / 100, intStartTime % 100, intEndTime / 100, intEndTime % 100)
@@ -177,11 +183,11 @@ abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainC
     }
 
     override fun getLoginUser(): User? {
-        var user = repository.getInUseUser()
+        var user = mRepository.getInUseUser()
         if (user == null) {
-            user = repository.getAllUsers().getOrNull(0)
+            user = mRepository.getAllUsers().getOrNull(0)
             if (user != null) {
-                saveLoginUser(user)
+                saveInUseUser(user)
             }
             return user
         }
@@ -189,19 +195,19 @@ abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainC
     }
 
     override suspend fun deleteAccount(user: User) {
-        repository.deleteAccount(user.account)
+        mRepository.deleteAccount(user.account)
     }
 
     override fun getWeather(cityCode: String): Observable<Weather> {
         return Observable.fromCallable {
             val weather = Weather()
             val referer = "http://www.weather.com.cn/weather1d/$cityCode.shtml"
-            val service: WeatherService = APIManager.getWeatherAPI()
+            val service: WeatherService = APIManager.weatherAPI
 
             // 获取城市名和当前温度
             val url1 = "http://d1.weather.com.cn/sk_2d/$cityCode.html"
             val body1 = service.getWeather(url1, referer).execute().body()
-            var jsonStr1: String = Objects.requireNonNull(body1)!!.string()
+            var jsonStr1: String = body1!!.string()
             jsonStr1 = jsonStr1.replace("var dataSK = ", "")
             val jo1: JSONObject = JSONObject.parseObject(jsonStr1)
             weather.cityName = jo1.getString("cityname")
@@ -211,7 +217,7 @@ abstract class BaseMainModel(context: Context) : BaseZFModel(context), BaseMainC
             // 获取白天温度和晚上温度
             val url2 = "http://d1.weather.com.cn/dingzhi/$cityCode.html"
             val body2 = service.getWeather(url2, referer).execute().body()
-            var jsonStr2: String = Objects.requireNonNull(body2)!!.string()
+            var jsonStr2: String = body2!!.string()
             jsonStr2 = jsonStr2.substring(jsonStr2.indexOf('=') + 1, jsonStr2.indexOf(";"))
             var jo2: JSONObject = JSONObject.parseObject(jsonStr2)
             jo2 = jo2.getJSONObject("weatherinfo")

@@ -1,48 +1,53 @@
 package cn.ifafu.ifafu.mvp.elective
 
+import android.app.Application
 import cn.ifafu.ifafu.base.mvvm.BaseViewModel
-import cn.ifafu.ifafu.data.Repository
 import cn.ifafu.ifafu.entity.ElectiveInfo
 import cn.ifafu.ifafu.util.sumByFloat
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class ElectiveViewModel(private val repository: Repository) : BaseViewModel() {
+class ElectiveViewModel(application: Application) : BaseViewModel(application) {
 
     fun init(success: suspend (total: ElectiveInfo,
                                zrkx: ElectiveInfo?,
                                rwsk: ElectiveInfo?,
                                ysty: ElectiveInfo?,
                                wxsy: ElectiveInfo?,
-                               cxcy: ElectiveInfo?) -> Unit,
-             fail: suspend (String) -> Unit,
-             before: suspend () -> Unit,
-             final: suspend () -> Unit) {
+                               cxcy: ElectiveInfo?) -> Unit) {
         GlobalScope.launch {
-            before()
-            val allScores = try {
-                repository.fetchScoreList().apply {
-                    if (this.isNotEmpty()) {
-                        repository.deleteAllScore()
-                        repository.saveScore(this)
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                repository.getAllScores().apply {
-                    if (isEmpty()) {
-                        fail(e.errorMessage())
-                        final()
-                        return@launch
-                    }
+            event.showDialog()
+            val allScores = mRepository.getAllScores().ifEmpty {
+                try {
+                    ensureLoginStatus {
+                        mRepository.fetchScoreList().apply {
+                            if (this.isNotEmpty()) {
+                                mRepository.deleteAllScore()
+                                mRepository.saveScore(this)
+                                val scoreFilter = mRepository.getScoreFilter()
+                                scoreFilter.account = mRepository.account
+                                scoreFilter.filter(this)
+                                mRepository.saveScoreFilter(scoreFilter)
+                            }
+                        }
+                    } ?: return@launch
+                } catch (e: Exception) {
+                    event.showMessage(e.errorMessage())
+                    event.hideDialog()
+                    e.printStackTrace()
+                    return@launch
                 }
             }
-            val electives = try {
-                repository.fetchElectives()
+            val electives = mRepository.getElectives() ?: try {
+                ensureLoginStatus {
+                    mRepository.fetchElectives().apply {
+                        mRepository.saveElectives(this)
+                    }
+                } ?: return@launch
             } catch (e: Exception) {
                 e.printStackTrace()
-                fail(e.errorMessage())
-                final()
+                event.showMessage(e.errorMessage())
+                event.hideDialog()
                 return@launch
             }
             val totalScores = allScores.filter { it.nature == "任意选修课" || it.nature == "公共选修课" }
@@ -88,7 +93,7 @@ class ElectiveViewModel(private val repository: Repository) : BaseViewModel() {
                     ElectiveInfo("创新创业教育类，已修${cxcyScores.size}门",
                             "需修满${electives.cxcy}分，已修${cxcyCredit}分${cxcyDone.isDoneStr()}",
                             cxcyScores, cxcyDone))
-            final()
+            event.hideDialog()
         }
     }
 

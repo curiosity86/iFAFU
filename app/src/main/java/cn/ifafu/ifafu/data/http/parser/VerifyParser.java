@@ -15,6 +15,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
 import okhttp3.ResponseBody;
+import retrofit2.Response;
 
 public class VerifyParser implements ObservableTransformer<ResponseBody, String> {
 
@@ -153,5 +154,12 @@ public class VerifyParser implements ObservableTransformer<ResponseBody, String>
     @Override
     public ObservableSource<String> apply(Observable<ResponseBody> upstream) {
         return upstream.map(responseBody -> todo(BitmapUtil.bytesToBitmap(responseBody.bytes())));
+    }
+
+    public String parse(Response<ResponseBody> response) throws IOException {
+        if (response.code() == 302) {
+            throw new IOException();
+        }
+        return todo(BitmapUtil.bytesToBitmap(response.body().bytes()));
     }
 }

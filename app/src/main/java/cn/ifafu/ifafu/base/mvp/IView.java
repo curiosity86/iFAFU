@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.base.i;
+package cn.ifafu.ifafu.base.mvp;
 
 import android.app.Activity;
 import android.content.Context;

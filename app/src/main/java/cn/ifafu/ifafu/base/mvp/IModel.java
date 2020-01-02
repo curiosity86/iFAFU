@@ -1,11 +1,12 @@
-package cn.ifafu.ifafu.base.ifafu;
+package cn.ifafu.ifafu.base.mvp;
 
-import cn.ifafu.ifafu.base.i.IModel;
 import cn.ifafu.ifafu.entity.Response;
 import cn.ifafu.ifafu.entity.exception.LoginInfoErrorException;
 import io.reactivex.Observable;
 
-public interface IZFModel extends IModel {
+public interface IModel {
+
+    void onDestroy();
 
     /**
      * 重新登录
@@ -15,5 +16,4 @@ public interface IZFModel extends IModel {
      * @throws LoginInfoErrorException 登录信息错误（账号错误，密码错误）
      */
     Observable<Response<String>> reLogin();
-
 }

@@ -11,7 +11,7 @@ class CommentParserJSTest {
     @Throws(Exception::class)
     fun test() {
         val parser = CommentParserJS()
-        parser.parse(FileUtils.read("$path\\002.html")).body.forEach {
+        parser.parse(FileUtils.read("$path\\002.html")).body!!.forEach {
             println(JSONObject.toJSONString(it))
         }
     }

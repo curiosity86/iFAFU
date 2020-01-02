@@ -2,9 +2,8 @@ package cn.ifafu.ifafu.mvp.elec_login
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.ViewModelFactory
+import cn.ifafu.ifafu.app.ViewModelProvider
 import cn.ifafu.ifafu.base.mvvm.BaseActivity
 import cn.ifafu.ifafu.databinding.ElecLoginActivityBinding
 import cn.ifafu.ifafu.mvp.elec_main.ElecMainActivity
@@ -13,45 +12,37 @@ import com.jaeger.library.StatusBarUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ElecLoginActivity : BaseActivity<ElecLoginActivityBinding>() {
+class ElecLoginActivity : BaseActivity<ElecLoginActivityBinding, ElecLoginViewModel>() {
 
-    private val progressDialog by lazy {
-        LoadingDialog(this).apply { setText("登录中") }
+    override val loadingDialog: LoadingDialog by lazy {
+        LoadingDialog(this).apply {
+            setText("登录中")
+            setCancelable(true)
+        }
     }
 
-    private val viewModel by lazy {
-        ViewModelProvider(this, ViewModelFactory)
-                .get(ElecLoginViewModel::class.java)
-    }
+    override fun getViewModel(): ElecLoginViewModel =
+            ViewModelProvider(this).get(ElecLoginViewModel::class.java)
 
     override fun getLayoutId(): Int = R.layout.elec_login_activity
 
     override fun initActivity(savedInstanceState: Bundle?) {
         StatusBarUtil.setTransparent(this)
         StatusBarUtil.setLightMode(this)
-        viewModel.init { account -> mBinding.account = account }
+        mViewModel.init { account -> mBinding.account = account }
         refreshVerify()
         mBinding.verifyIV.setOnClickListener {
             refreshVerify()
         }
         mBinding.loginBtn.setOnClickListener {
-            progressDialog.show()
-            viewModel.login(
+            mViewModel.login(
                     account = mBinding.account ?: "",
                     password = mBinding.password ?: "",
                     verify = mBinding.verify ?: "",
                     success = {
                         withContext(Dispatchers.Main) {
-                            progressDialog.show()
                             startActivity(Intent(this@ElecLoginActivity, ElecMainActivity::class.java))
                             finish()
-                        }
-                    },
-                    fail = {
-                        withContext(Dispatchers.Main) {
-                            progressDialog.show()
-                            showMessage(it)
-                            refreshVerify()
                         }
                     }
             )
@@ -59,10 +50,10 @@ class ElecLoginActivity : BaseActivity<ElecLoginActivityBinding>() {
     }
 
     private fun refreshVerify() {
-        viewModel.refreshVerify({
+        mViewModel.refreshVerify {
             withContext(Dispatchers.Main) {
                 mBinding.verifyIV.setImageBitmap(it)
             }
-        }, this::showMessage)
+        }
     }
 }

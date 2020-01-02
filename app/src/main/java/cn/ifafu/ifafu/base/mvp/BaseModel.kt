@@ -1,9 +1,9 @@
-package cn.ifafu.ifafu.base.ifafu
+package cn.ifafu.ifafu.base.mvp
 
 import android.content.Context
 import cn.ifafu.ifafu.app.IFAFU
 import cn.ifafu.ifafu.app.School
-import cn.ifafu.ifafu.base.BaseModel
+import cn.ifafu.ifafu.data.Repository
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.data.http.parser.LoginParamParser
 import cn.ifafu.ifafu.data.http.parser.LoginParser
@@ -19,7 +19,13 @@ import io.reactivex.Observable
 import java.net.URLEncoder
 import javax.security.auth.login.LoginException
 
-abstract class BaseZFModel(context: Context) : BaseModel(context), IZFModel {
+abstract class BaseModel(protected val mContext: Context) : IModel {
+
+    protected val TAG by lazy { this.javaClass.simpleName }
+
+    protected val mRepository: Repository = Repository
+
+    override fun onDestroy() {}
 
     /**
      * 通过[Observable.retryWhen]捕捉[LoginException]异常后，触发登录账号
@@ -27,7 +33,7 @@ abstract class BaseZFModel(context: Context) : BaseModel(context), IZFModel {
      * Need [LoginException]
      */
     protected fun initParams(url: String, referer: String): Observable<MutableMap<String, String>> {
-        return APIManager.getZhengFangAPI()
+        return APIManager.zhengFangAPI
                 .initParams(url, referer)
                 .compose(ParamsParser())
                 .retryWhen {
@@ -52,17 +58,18 @@ abstract class BaseZFModel(context: Context) : BaseModel(context), IZFModel {
 
     override fun reLogin(): Observable<Response<String>> {
         return Observable.just(true).flatMap { _ ->
-            val user = repository.getInUseUser() ?: return@flatMap Observable.empty<Response<String>>()
+            val user = mRepository.getInUseUser()
+                    ?: return@flatMap Observable.empty<Response<String>>()
             val loginUrl = School.getUrl(ZFApiList.LOGIN, user)
             val verifyUrl = School.getUrl(ZFApiList.VERIFY, user)
             val mainUrl = School.getUrl(ZFApiList.MAIN, user)
             val loginParser = LoginParser()
-            APIManager.getZhengFangAPI()
+            APIManager.zhengFangAPI
                     .getInfo(mainUrl, null)
                     .compose(loginParser)
                     .flatMap<Response<String>> { stringResponse ->
                         if (!stringResponse.isSuccess) {
-                            APIManager.getZhengFangAPI()
+                            APIManager.zhengFangAPI
                                     .getInfo(mainUrl, null)
                                     .compose(loginParser)
                                     .flatMap {
@@ -89,13 +96,13 @@ abstract class BaseZFModel(context: Context) : BaseModel(context), IZFModel {
                     .doOnNext { resp ->
                         if (resp.isSuccess) {
                             user.name = resp.body ?: "佚名"
-                            repository.saveUser(user)
+                            mRepository.saveUser(user)
                         }
                     }
         }
     }
 
-    protected fun getUser(): User? = repository.getInUseUser()
+    protected fun getUser(): User? = mRepository.getInUseUser()
 
     protected fun innerLogin(loginUrl: String,
                              verifyUrl: String,
@@ -104,7 +111,7 @@ abstract class BaseZFModel(context: Context) : BaseModel(context), IZFModel {
                              paramsParser: LoginParamParser,
                              loginParser: LoginParser,
                              verifyParser: VerifyParser): Observable<Response<String>> {
-        return APIManager.getZhengFangAPI()
+        return APIManager.zhengFangAPI
                 .initParams(loginUrl)
                 .compose(paramsParser)
                 .map { params ->
@@ -124,12 +131,12 @@ abstract class BaseZFModel(context: Context) : BaseModel(context), IZFModel {
                     params
                 }
                 .flatMap { params ->
-                    APIManager.getZhengFangAPI()
+                    APIManager.zhengFangAPI
                             .getCaptcha(verifyUrl)
                             .compose(verifyParser)
                             .flatMap { verify ->
                                 params["txtSecretCode"] = verify
-                                APIManager.getZhengFangAPI()
+                                APIManager.zhengFangAPI
                                         .login(loginUrl, params)
                                         .compose(loginParser)
                             }

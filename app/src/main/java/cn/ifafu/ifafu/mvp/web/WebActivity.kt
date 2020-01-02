@@ -13,7 +13,7 @@ import android.view.KeyEvent
 import android.webkit.*
 import android.widget.LinearLayout
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.base.BaseActivity
+import cn.ifafu.ifafu.base.mvp.BaseActivity
 import cn.ifafu.ifafu.view.dialog.LoadingDialog
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.web_activity.*

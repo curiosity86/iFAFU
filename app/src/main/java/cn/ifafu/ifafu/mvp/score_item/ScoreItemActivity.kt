@@ -1,10 +1,9 @@
 package cn.ifafu.ifafu.mvp.score_item
 
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.ViewModelFactory
+import cn.ifafu.ifafu.app.ViewModelProvider
 import cn.ifafu.ifafu.base.mvvm.BaseActivity
 import cn.ifafu.ifafu.databinding.ScoreItemActivityBinding
 import cn.ifafu.ifafu.view.adapter.ScoreItemAdapter
@@ -13,11 +12,10 @@ import kotlinx.android.synthetic.main.score_item_activity.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ScoreItemActivity : BaseActivity<ScoreItemActivityBinding>() {
+class ScoreItemActivity : BaseActivity<ScoreItemActivityBinding, ScoreItemViewModel>() {
 
-    private val mViewModel: ScoreItemViewModel by lazy {
-        ViewModelProvider(this, ViewModelFactory)
-                .get(ScoreItemViewModel::class.java)
+    override fun getViewModel(): ScoreItemViewModel {
+        return ViewModelProvider(this).get(ScoreItemViewModel::class.java)
     }
 
     private val adapter by lazy { ScoreItemAdapter() }
@@ -33,11 +31,11 @@ class ScoreItemActivity : BaseActivity<ScoreItemActivityBinding>() {
         val layoutManager = GridLayoutManager(this, 2)
         mBinding.layoutManager = layoutManager
         mBinding.adapter = adapter
-        mViewModel.init(intent.getLongExtra("id", 0L), {
+        mViewModel.init(intent.getLongExtra("id", 0L)) {
             withContext(Dispatchers.Main) {
                 adapter.replaceData(it)
             }
-        }, this::showMessage)
+        }
     }
 
 }

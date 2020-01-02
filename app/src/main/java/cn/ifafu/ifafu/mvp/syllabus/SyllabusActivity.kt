@@ -10,7 +10,7 @@ import android.view.View
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
-import cn.ifafu.ifafu.base.BaseActivity
+import cn.ifafu.ifafu.base.mvp.BaseActivity
 import cn.ifafu.ifafu.entity.Course
 import cn.ifafu.ifafu.entity.SyllabusSetting
 import cn.ifafu.ifafu.mvp.main.MainActivity

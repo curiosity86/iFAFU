@@ -63,7 +63,7 @@ class SPUtils private constructor(context: Context, fileName: String) {
         @JvmStatic
         operator fun get(fileName: String): SPUtils {
             if (!map.containsKey(fileName)) {
-                map.put(fileName, SPUtils(BaseApplication.getAppContext(), fileName))
+                map.put(fileName, SPUtils(BaseApplication.appContext, fileName))
             }
             return map[fileName]!!
         }

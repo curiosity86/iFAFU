@@ -28,14 +28,14 @@ class LoginParser : BaseParser<Response<String>>() {
         val script = doc.select("script[language=javascript]")
         return if (script.size < 2) {
             if (html.contains("ERROR")) {
-                Response.error("教务系统又双叒崩溃了！")
+                Response.error("教务系统又崩溃了！")
             } else Response.error("网络异常 0x001")
         } else {
             val s = getAlertString(script[1].html())
             if (s.contains("用户名") || s.contains("密码")) {
                 Response.failure(s)
             } else if (doc.text().contains("ERROR")) {
-                Response.error("教务系统又双叒崩溃了！")
+                Response.error("教务系统又崩溃了！")
             } else if (s.contains("验证码")) {
                 throw VerifyException()
             } else {

@@ -16,10 +16,6 @@
             type="Boolean" />
 
         <variable
-            name="layoutManager"
-            type="androidx.recyclerview.widget.RecyclerView.LayoutManager" />
-
-        <variable
             name="gpa"
             type="String" />
 
@@ -61,11 +57,6 @@
                 android:src="@drawable/ic_refresh" />
 
         </cn.ifafu.ifafu.view.custom.WToolbar>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/bg_gray" />
 
         <TextView
             android:id="@+id/tv_score_title"

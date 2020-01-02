@@ -45,13 +45,13 @@ class WeekItemAdapter(private val context: Context) : RecyclerView.Adapter<WeekI
                 holder.textView.setBackgroundResource(R.color.light_gray)
             } else {
                 weekList.add(position + 1)
-                holder.textView.setBackgroundResource(R.color.cyan)
+                holder.textView.setBackgroundResource(R.color.ifafu_blue)
             }
         }
     }
 
     override fun getItemCount(): Int {
-        return 24
+        return 20
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener?) {

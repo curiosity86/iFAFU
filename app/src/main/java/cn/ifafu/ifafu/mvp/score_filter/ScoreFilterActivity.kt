@@ -1,10 +1,9 @@
 package cn.ifafu.ifafu.mvp.score_filter
 
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.ViewModelFactory
+import cn.ifafu.ifafu.app.ViewModelProvider
 import cn.ifafu.ifafu.base.mvvm.BaseActivity
 import cn.ifafu.ifafu.databinding.ScoreFilterActivityBinding
 import cn.ifafu.ifafu.view.adapter.ScoreFilterAdapter
@@ -13,12 +12,12 @@ import com.jaeger.library.StatusBarUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ScoreFilterActivity : BaseActivity<ScoreFilterActivityBinding>() {
+class ScoreFilterActivity : BaseActivity<ScoreFilterActivityBinding, ScoreFilterViewModel>() {
 
     private val mAdapter by lazy { ScoreFilterAdapter(this) }
 
-    private val mViewModel: ScoreFilterViewModel by lazy {
-        ViewModelProvider(this, ViewModelFactory).get(ScoreFilterViewModel::class.java)
+    override fun getViewModel(): ScoreFilterViewModel {
+        return ViewModelProvider(this).get(ScoreFilterViewModel::class.java)
     }
 
     override fun getLayoutId(): Int = R.layout.score_filter_activity
@@ -31,13 +30,12 @@ class ScoreFilterActivity : BaseActivity<ScoreFilterActivityBinding>() {
         mBinding.rvScoreFilter.addItemDecoration(RecyclerViewDivider(
                 this, LinearLayoutManager.VERTICAL, R.drawable.shape_divider))
 
-        mViewModel.init(this, { list, ies ->
+        mViewModel.init(this) { list, ies ->
             withContext(Dispatchers.Main) {
                 mAdapter.data = list
                 mBinding.ies = ies
-                mAdapter.notifyDataSetChanged()
             }
-        }, this::showMessage)
+        }
 
         mBinding.setFilterAllAction {
             mAdapter.setAllChecked()

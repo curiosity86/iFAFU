@@ -1,13 +1,13 @@
 package cn.ifafu.ifafu.mvp.exam_list
 
-import cn.ifafu.ifafu.base.addDisposable
-import cn.ifafu.ifafu.base.ifafu.BaseZFPresenter
+import cn.ifafu.ifafu.base.mvp.BasePresenter
+import cn.ifafu.ifafu.base.mvp.addDisposable
 import cn.ifafu.ifafu.entity.Exam
 import cn.ifafu.ifafu.entity.YearTerm
 import cn.ifafu.ifafu.util.RxUtils
 import io.reactivex.Observable
 
-internal class ExamPresenter(view: ExamContract.View) : BaseZFPresenter<ExamContract.View, ExamContract.Model>(view, ExamModel(view.context)), ExamContract.Presenter {
+internal class ExamPresenter(view: ExamContract.View) : BasePresenter<ExamContract.View, ExamContract.Model>(view, ExamModel(view.context)), ExamContract.Presenter {
 
     private lateinit var yearTerm: YearTerm
 

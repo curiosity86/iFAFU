@@ -6,7 +6,7 @@ import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.base.BaseActivity
+import cn.ifafu.ifafu.base.mvp.BaseActivity
 import cn.ifafu.ifafu.view.adapter.WeekItemAdapter
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.view.OptionsPickerView

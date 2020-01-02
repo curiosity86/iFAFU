@@ -1,8 +1,8 @@
 package cn.ifafu.ifafu.mvp.syllabus_item
 
-import cn.ifafu.ifafu.base.i.IModel
-import cn.ifafu.ifafu.base.i.IPresenter
-import cn.ifafu.ifafu.base.i.IView
+import cn.ifafu.ifafu.base.mvp.IModel
+import cn.ifafu.ifafu.base.mvp.IPresenter
+import cn.ifafu.ifafu.base.mvp.IView
 import cn.ifafu.ifafu.entity.Course
 import cn.ifafu.ifafu.entity.SyllabusSetting
 import java.util.*

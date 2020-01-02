@@ -6,9 +6,9 @@ import org.jsoup.Jsoup
 import java.util.*
 import java.util.regex.Pattern
 
-class CommentParser : BaseParser<Response<List<CommentItem>>>() {
+class CommentParser : BaseParser<Response<MutableList<CommentItem>>>() {
     @Throws(Exception::class)
-    override fun parse(html: String): Response<List<CommentItem>> {
+    override fun parse(html: String): Response<MutableList<CommentItem>> {
         val document = Jsoup.parse(html)
         val table = document.select("table[id=\"Datagrid1\"]") //定位到表格
         if (html.contains("您已经评价过！")) {
@@ -39,10 +39,9 @@ class CommentParser : BaseParser<Response<List<CommentItem>>>() {
                 }
             }
         }
-        val response = Response<List<CommentItem>>()
-        val paramsParser = ParamsParser()
-        response.body = list
-        response.hiddenParams = paramsParser.parse(html)
-        return response
+        Result
+        return Response.success(list).apply {
+            hiddenParams = ParamsParser().parse(html)
+        }
     }
 }

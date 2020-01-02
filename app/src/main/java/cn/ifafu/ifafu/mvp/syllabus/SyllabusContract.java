@@ -1,12 +1,11 @@
 package cn.ifafu.ifafu.mvp.syllabus;
 
-import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
-import cn.ifafu.ifafu.base.i.IView;
-import cn.ifafu.ifafu.base.ifafu.IZFModel;
-import cn.ifafu.ifafu.base.ifafu.IZFPresenter;
+import cn.ifafu.ifafu.base.mvp.IModel;
+import cn.ifafu.ifafu.base.mvp.IPresenter;
+import cn.ifafu.ifafu.base.mvp.IView;
 import cn.ifafu.ifafu.entity.Course;
 import cn.ifafu.ifafu.entity.Holiday;
 import cn.ifafu.ifafu.entity.Response;
@@ -17,7 +16,7 @@ import kotlin.Pair;
 
 public class SyllabusContract {
 
-    public interface Presenter extends IZFPresenter {
+    public interface Presenter extends IPresenter {
 
         void updateSyllabusSetting();
 
@@ -34,11 +33,9 @@ public class SyllabusContract {
         void cancelLoading();
     }
 
-    public interface Model extends IZFModel {
+    public interface Model extends IModel {
 
         SyllabusSetting getSyllabusSetting();
-
-        int getCurrentWeek() throws ParseException;
 
         List<Course> getAllCoursesFromDB();
 

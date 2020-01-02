@@ -1,16 +1,16 @@
 package cn.ifafu.ifafu.mvp.syllabus_setting
 
 import android.content.Context
-import cn.ifafu.ifafu.base.ifafu.BaseZFModel
+import cn.ifafu.ifafu.base.mvp.BaseModel
 import cn.ifafu.ifafu.entity.SyllabusSetting
 
-class SyllabusSettingModel(context: Context) : BaseZFModel(context), SyllabusSettingContract.Model {
+class SyllabusSettingModel(context: Context) : BaseModel(context), SyllabusSettingContract.Model {
 
     override fun getSetting(): SyllabusSetting {
-        return repository.getSyllabusSetting()
+        return mRepository.getSyllabusSetting()
     }
 
     override suspend fun save(setting: SyllabusSetting) {
-        repository.saveSyllabusSetting(setting)
+        mRepository.saveSyllabusSetting(setting)
     }
 }

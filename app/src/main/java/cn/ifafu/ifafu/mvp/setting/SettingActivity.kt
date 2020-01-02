@@ -2,11 +2,10 @@ package cn.ifafu.ifafu.mvp.setting
 
 import android.app.Activity
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.ViewModelFactory
+import cn.ifafu.ifafu.app.ViewModelProvider
 import cn.ifafu.ifafu.base.mvvm.BaseActivity
 import cn.ifafu.ifafu.databinding.SettingActivityBinding
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.*
@@ -16,7 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import me.drakeet.multitype.MultiTypeAdapter
 
-class SettingActivity : BaseActivity<SettingActivityBinding>() {
+class SettingActivity : BaseActivity<SettingActivityBinding, SettingViewModel>() {
 
     private val adapter by lazy {
         MultiTypeAdapter().apply {
@@ -27,9 +26,8 @@ class SettingActivity : BaseActivity<SettingActivityBinding>() {
         }
     }
 
-    private val viewModel by lazy {
-        ViewModelProvider(this, ViewModelFactory)
-                .get(SettingViewModel::class.java)
+    override fun getViewModel(): SettingViewModel {
+        return ViewModelProvider(this).get(SettingViewModel::class.java)
     }
 
     override fun getLayoutId(): Int = R.layout.setting_activity
@@ -45,7 +43,7 @@ class SettingActivity : BaseActivity<SettingActivityBinding>() {
         mBinding.rvSetting.addItemDecoration(dividerItemDecoration)
         mBinding.layoutManager = LinearLayoutManager(this)
         mBinding.adapter = adapter
-        viewModel.initSetting {
+        mViewModel.initSetting {
             withContext(Dispatchers.Main) {
                 adapter.items = it
                 adapter.notifyDataSetChanged()
@@ -54,7 +52,7 @@ class SettingActivity : BaseActivity<SettingActivityBinding>() {
     }
 
     override fun finish() {
-        viewModel.ifNeedCheckTheme {
+        mViewModel.ifNeedCheckTheme {
             setResult(Activity.RESULT_OK)
         }
         super.finish()

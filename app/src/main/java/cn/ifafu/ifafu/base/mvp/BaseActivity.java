@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.base;
+package cn.ifafu.ifafu.base.mvp;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,9 +8,6 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import cn.ifafu.ifafu.base.i.IPresenter;
-import cn.ifafu.ifafu.base.i.IView;
 
 public abstract class BaseActivity<P extends IPresenter> extends AppCompatActivity implements IView {
 

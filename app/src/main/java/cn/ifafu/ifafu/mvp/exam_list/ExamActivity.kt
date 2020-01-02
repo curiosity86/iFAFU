@@ -6,7 +6,7 @@ import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.base.BaseActivity
+import cn.ifafu.ifafu.base.mvp.BaseActivity
 import cn.ifafu.ifafu.entity.Exam
 import cn.ifafu.ifafu.view.adapter.ExamAdapter
 import cn.ifafu.ifafu.view.dialog.LoadingDialog
@@ -62,9 +62,9 @@ class ExamActivity : BaseActivity<ExamContract.Presenter>(), ExamContract.View {
         } else if (data.isNotEmpty()) {
             examAdapter!!.setExamData(data)
             examAdapter!!.notifyDataSetChanged()
+        } else {
+            isShowEmptyView(true)
         }
-
-        isShowEmptyView(data.isEmpty())
     }
 
     override fun setYearTermData(years: List<String>, terms: List<String>) {

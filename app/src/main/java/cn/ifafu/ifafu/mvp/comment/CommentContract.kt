@@ -1,16 +1,16 @@
 package cn.ifafu.ifafu.mvp.comment
 
-import cn.ifafu.ifafu.base.i.IView
-import cn.ifafu.ifafu.base.ifafu.IZFModel
-import cn.ifafu.ifafu.base.ifafu.IZFPresenter
+import cn.ifafu.ifafu.base.mvp.IModel
+import cn.ifafu.ifafu.base.mvp.IPresenter
+import cn.ifafu.ifafu.base.mvp.IView
 import cn.ifafu.ifafu.entity.CommentItem
 import cn.ifafu.ifafu.entity.Response
 import io.reactivex.Observable
 
 class CommentContract {
 
-    interface Model : IZFModel {
-        fun getCommentList(): Observable<Response<List<CommentItem>>>
+    interface Model: IModel  {
+        fun getCommentList(): Observable<Response<MutableList<CommentItem>>>
 
         fun getJumpInfo(item: CommentItem): Map<String, String>
 
@@ -21,7 +21,7 @@ class CommentContract {
         fun getSchoolCode(): String
     }
 
-    interface Presenter : IZFPresenter {
+    interface Presenter: IPresenter {
         fun click(item: CommentItem)
         fun oneButton()
     }

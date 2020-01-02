@@ -1,20 +1,20 @@
 package cn.ifafu.ifafu.mvp.elec_login
 
+import android.app.Application
 import android.graphics.Bitmap
 import cn.ifafu.ifafu.app.School
 import cn.ifafu.ifafu.base.mvvm.BaseViewModel
 import cn.ifafu.ifafu.data.Repository
-import cn.ifafu.ifafu.entity.ElecQuery
 import cn.ifafu.ifafu.entity.ElecUser
 import com.alibaba.fastjson.JSONObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class ElecLoginViewModel(private val repository: Repository) : BaseViewModel() {
+class ElecLoginViewModel(application: Application) : BaseViewModel(application) {
 
     private val elecUser: ElecUser by lazy {
-        repository.getElecUser().run {
+        mRepository.getElecUser().run {
             if (this == null) {
                 val elecUser = ElecUser()
                 val user = Repository.getInUseUser()
@@ -38,39 +38,38 @@ class ElecLoginViewModel(private val repository: Repository) : BaseViewModel() {
         }
     }
 
-    fun login(account: String, password: String, verify: String, success: suspend (String) -> Unit, fail: suspend (String) -> Unit) {
+    fun login(account: String, password: String, verify: String, success: suspend (String) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
-            val json = JSONObject.parseObject(repository.elecLogin(account, password, verify))
+            event.showDialog()
+            val json = JSONObject.parseObject(mRepository.elecLogin(account, password, verify))
             if (json.getBoolean("IsSucceed") == true) {
                 val obj2 = json.getJSONObject("Obj2")
                 elecUser.xfbAccount = account
                 elecUser.password = password
-                repository.saveElecUser(elecUser)
-                val elecCookie = repository.getElecCookie()
+                elecUser.xfbId = json.getString("Obj")
+                mRepository.saveElecUser(elecUser)
+                val elecCookie = mRepository.getElecCookie()
                 elecCookie.account = elecUser.account
                 elecCookie.rescouseType = obj2.getString("RescouseType")
-                repository.saveElecCookie(elecCookie)
-                val elecQuery = repository.getElecQuery() ?: ElecQuery()
-                elecQuery.account = elecUser.account
-                elecQuery.xfbId = obj2.getString("ACCOUNT")
-                repository.saveElecQuery(elecQuery)
+                mRepository.saveElecCookie(elecCookie)
                 success("登录成功")
             } else {
                 if (json.containsKey("Msg")) {
-                    fail(json.getString("Msg"))
+                    event.showMessage(json.getString("Msg"))
                 } else {
-                    fail("未知错误")
+                    event.showMessage("未知错误")
                 }
             }
+            event.hideDialog()
         }
     }
 
-    fun refreshVerify(success: suspend (Bitmap) -> Unit, fail: suspend (String) -> Unit) {
+    fun refreshVerify(success: suspend (Bitmap) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
             try {
-                success(repository.elecVerifyBitmap())
+                success(mRepository.elecVerifyBitmap())
             } catch (e: Exception) {
-                fail(e.message ?: "ERROR")
+                event.showMessage(e.errorMessage())
             }
         }
     }

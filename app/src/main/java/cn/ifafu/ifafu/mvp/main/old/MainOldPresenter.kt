@@ -5,10 +5,14 @@ import cn.ifafu.ifafu.mvp.login.LoginActivity
 import cn.ifafu.ifafu.mvp.main.BaseMainPresenter
 import cn.ifafu.ifafu.util.RxUtils
 import io.reactivex.Observable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class Main2Presenter(view: Main2Contract.View)
-    : BaseMainPresenter<Main2Contract.View, Main2Contract.Model>(view, Main2Model(view.context)),
-        Main2Contract.Presenter {
+class MainOldPresenter(view: MainOldContract.View)
+    : BaseMainPresenter<MainOldContract.View, MainOldContract.Model>(view, MainOldModel(view.context)),
+        MainOldContract.Presenter {
 
     override fun onCreate() {
         super.onCreate()
@@ -73,19 +77,23 @@ class Main2Presenter(view: Main2Contract.View)
     }
 
     override fun updateScoreInfo() {
-        addDisposable {
-            mModel.getScore()
-                    .compose(RxUtils.ioToMain())
-                    .subscribe({
-                        if (it.isEmpty()) {
-                            mView.setScoreText(null)
-                        } else {
-                            mView.setScoreText("已出${it.size}门成绩")
-                        }
-                    }, {
-                        onError(it)
-                        mView.setScoreText("获取成绩信息出错")
-                    })
+        GlobalScope.launch {
+            try {
+                val scores = mModel.getScore()
+                val message = if (scores.isEmpty()) {
+                    "暂无成绩信息"
+                } else {
+                    "已出${scores.size}门成绩"
+                }
+                withContext(Dispatchers.Main) {
+                    mView.setScoreText(message)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    mView.setScoreText("获取成绩信息出错")
+                }
+            }
         }
     }
 

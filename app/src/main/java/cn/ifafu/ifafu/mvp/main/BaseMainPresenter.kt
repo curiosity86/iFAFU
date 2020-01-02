@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.mvp.main
 import android.content.Intent
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.IFAFU
-import cn.ifafu.ifafu.base.BasePresenter
+import cn.ifafu.ifafu.base.mvp.BasePresenter
 import cn.ifafu.ifafu.entity.User
 import cn.ifafu.ifafu.mvp.login.LoginActivity
 import cn.ifafu.ifafu.util.GlobalLib
@@ -106,7 +106,7 @@ abstract class BaseMainPresenter<V : BaseMainContract.View, M : BaseMainContract
     final override fun checkoutTo(user: User) {
         GlobalScope.launch(Dispatchers.IO) {
             if (user.account != mModel.getLoginUser()?.account) {
-                mModel.saveLoginUser(user)
+                mModel.saveInUseUser(user)
                 launch(Dispatchers.Main) {
                     val ld = mModel.reLogin()
                             .compose(RxUtils.ioToMain())

@@ -28,6 +28,7 @@
             android:id="@+id/tb_score_filter"
             android:layout_width="match_parent"
             android:layout_height="56dp"
+            app:elevation="4dp"
             app:title="@string/score_filter_title">
 
             <TextView

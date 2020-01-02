@@ -15,6 +15,10 @@ import cn.ifafu.ifafu.view.custom.SmoothCheckBox
 class ScoreFilterAdapter(context: Context) : RecyclerView.Adapter<ScoreFilterAdapter.ViewHolder>() {
 
     var data: List<Score> = ArrayList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     private val layoutInflater = LayoutInflater.from(context)
     var afterCheckedListener: ((score: Score) -> Unit)? = null

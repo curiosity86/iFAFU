@@ -2,8 +2,8 @@ package cn.ifafu.ifafu.mvp.comment
 
 import android.content.Intent
 import cn.ifafu.ifafu.app.School
-import cn.ifafu.ifafu.base.BasePresenter
-import cn.ifafu.ifafu.base.addDisposable
+import cn.ifafu.ifafu.base.mvp.BasePresenter
+import cn.ifafu.ifafu.base.mvp.addDisposable
 import cn.ifafu.ifafu.entity.CommentItem
 import cn.ifafu.ifafu.entity.Response
 import cn.ifafu.ifafu.mvp.web.WebActivity
@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class CommentPresenter(view: CommentContract.View) : BasePresenter<CommentContract.View, CommentContract.Model>(view, CommentModel(view.context)), CommentContract.Presenter {
 
-    private var response: Response<List<CommentItem>>? = null
+    private var response: Response<MutableList<CommentItem>>? = null
 
     private var flag = false //是否评测完
 

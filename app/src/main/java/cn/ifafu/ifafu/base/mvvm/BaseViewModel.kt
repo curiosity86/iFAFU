@@ -1,12 +1,53 @@
 package cn.ifafu.ifafu.base.mvvm
 
+import android.app.Application
+import android.content.res.Resources
 import android.database.sqlite.SQLiteConstraintException
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
+import cn.ifafu.ifafu.data.Repository
+import cn.ifafu.ifafu.entity.Response
+import cn.ifafu.ifafu.entity.exception.NoAuthException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
-abstract class BaseViewModel : ViewModel() {
+abstract class BaseViewModel(application: Application) : AndroidViewModel(application) {
+
+    protected val mRepository by lazy { Repository }
+
+    lateinit var event: UIEvent
+
+    /**
+     * @return null 重新登录错误
+     */
+    protected suspend fun <T> ensureLoginStatus(callback: suspend () -> T): T? = withContext(Dispatchers.IO) {
+        try {
+            callback()
+        } catch (e: NoAuthException) {
+            val user = mRepository.getInUseUser()
+                    ?: throw Resources.NotFoundException("用户信息不存在")
+            val response = mRepository.login(user.account, user.password)
+            when (response.code) {
+                Response.FAILURE -> {
+                    event.startLoginActivity()
+                    null
+                }
+                Response.ERROR -> {
+                    event.showMessage(response.message)
+                    null
+                }
+                Response.SUCCESS -> {
+                    callback()
+                }
+                else -> {
+                    event.showMessage("未知的Response返回码")
+                    null
+                }
+            }
+        }
+    }
 
     protected fun Throwable.errorMessage(): String {
         return when (this) {
@@ -19,6 +60,10 @@ abstract class BaseViewModel : ViewModel() {
             else ->
                 message ?: "ERROR"
         }
+    }
+
+    protected suspend fun runOnMainThread(run: () -> Unit) = withContext(Dispatchers.Main) {
+        run()
     }
 
 }

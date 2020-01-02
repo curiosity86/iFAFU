@@ -5,8 +5,8 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import cn.ifafu.ifafu.app.School
-import cn.ifafu.ifafu.base.BasePresenter
-import cn.ifafu.ifafu.base.addDisposable
+import cn.ifafu.ifafu.base.mvp.BasePresenter
+import cn.ifafu.ifafu.base.mvp.addDisposable
 import cn.ifafu.ifafu.data.Repository
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.entity.SyllabusSetting
@@ -40,9 +40,9 @@ class SyllabusSettingPresenter(view: SyllabusSettingContract.View)
                         SeekBarItem("一天课程的节数", setting.totalNode, "节", 8, 12) {
                             setting.totalNode = it
                         },
-                        SeekBarItem("总共周数", setting.weekCnt, "周", 18, 24) {
-                            setting.weekCnt = it
-                        },
+//                        SeekBarItem("总共周数", setting.weekCnt, "周", 18, 24) {
+//                            setting.weekCnt = it
+//                        },
                         SeekBarItem("课程字体大小", setting.textSize, "sp", 8, 18) {
                             setting.textSize = it
                         },
@@ -77,7 +77,7 @@ class SyllabusSettingPresenter(view: SyllabusSettingContract.View)
                                 val url: String = School.getUrl(ZFApiList.SYLLABUS, user)
                                 val referer: String = School.getUrl(ZFApiList.MAIN, user)
                                 addDisposable {
-                                    APIManager.getZhengFangAPI()
+                                    APIManager.zhengFangAPI
                                             .getInfo(url, referer)
                                             .map { it.string() }
                                             .compose(RxUtils.ioToMain())

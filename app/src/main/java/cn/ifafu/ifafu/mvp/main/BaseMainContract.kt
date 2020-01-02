@@ -1,8 +1,8 @@
 package cn.ifafu.ifafu.mvp.main
 
-import cn.ifafu.ifafu.base.i.IPresenter
-import cn.ifafu.ifafu.base.i.IView
-import cn.ifafu.ifafu.base.ifafu.IZFModel
+import cn.ifafu.ifafu.base.mvp.IModel
+import cn.ifafu.ifafu.base.mvp.IPresenter
+import cn.ifafu.ifafu.base.mvp.IView
 import cn.ifafu.ifafu.entity.*
 import io.reactivex.Observable
 
@@ -32,7 +32,7 @@ class BaseMainContract {
         fun checkoutTo(user: User)
     }
 
-    interface Model : IZFModel {
+    interface Model: IModel {
 
         suspend fun getSetting(): GlobalSetting
 
@@ -52,7 +52,7 @@ class BaseMainContract {
 
         fun getLoginUser(): User?
 
-        fun saveLoginUser(user: User)
+        fun saveInUseUser(user: User)
 
         suspend fun deleteAccount(user: User)
 

@@ -41,7 +41,6 @@ interface LocalDataSource {
     fun saveToken(token: Token)
     //学年学期查询
     fun getNowYearTerm(): YearTerm
-    fun getYearTerm(): Pair<String, String>
     //电费查询
     fun getElecQuery(): ElecQuery?
     fun saveElecQuery(elecQuery: ElecQuery)
@@ -49,8 +48,11 @@ interface LocalDataSource {
     fun saveElecCookie(cookie: ElecCookie)
     fun getElecUser(): ElecUser?
     fun saveElecUser(elecUser: ElecUser)
+    fun getSelectionList(): List<ElecSelection>
     //全局设置查询
     suspend fun getGlobalSetting(): GlobalSetting
     suspend fun saveGlobalSetting(setting: GlobalSetting)
-
+    //选修学分要求
+    suspend fun getElectives(): Electives?
+    suspend fun saveElectives(electives: Electives)
 }

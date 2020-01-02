@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.mvp.web
 import android.webkit.CookieManager
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
-import cn.ifafu.ifafu.base.ifafu.BaseZFPresenter
+import cn.ifafu.ifafu.base.mvp.BasePresenter
 import cn.ifafu.ifafu.mvp.web.WebContract.Presenter
 import cn.ifafu.ifafu.mvp.web.WebContract.View
 import cn.ifafu.ifafu.util.RxUtils
@@ -12,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-internal class WebPresenter(view: View) : BaseZFPresenter<View, WebContract.Model>(view, WebModel(view.context)), Presenter {
+internal class WebPresenter(view: View) : BasePresenter<View, WebContract.Model>(view, WebModel(view.context)), Presenter {
 
     override fun onCreate() {
 

@@ -9,7 +9,9 @@ import java.util.*
 class ScoreParser(user: User) : BaseParser<List<Score>>() {
     private val account: String = user.account
     private val schoolCode: String = user.schoolCode
+
     override fun parse(html: String): List<Score> {
+        check(html)
         val list: MutableList<Score> = ArrayList()
         val document = Jsoup.parse(html)
         val elementsTemp = document.select("table[id=\"Datagrid1\"]")
@@ -17,21 +19,18 @@ class ScoreParser(user: User) : BaseParser<List<Score>>() {
             return emptyList()
         }
         val elements = elementsTemp[0].getElementsByTag("tr")
-        when (schoolCode) {
-            School.FAFU -> {
-                var i = 1
-                while (i < elements.size) {
-                    list.add(paresToScoreFAFU(elements[i].children().eachText()))
-                    i++
-                }
-            }
-            School.FAFU_JS -> {
-                var i = 1
-                while (i < elements.size) {
-                    list.add(paresToScoreFAFUJS(elements[i].children().eachText()))
-                    i++
-                }
-            }
+        val parse = when (schoolCode) {
+            School.FAFU ->
+                this::paresToScoreFAFU
+            School.FAFU_JS ->
+                this::paresToScoreFAFUJS
+            else ->
+                throw UnknownError("未知学校ID")
+        }
+        elements.drop(1).forEach {
+            //Element.eachText会去除空字符串
+            val eachText = it.children().text().split(" ")
+            list.add(parse(eachText))
         }
         for (score in list) {
             score.account = account
@@ -82,12 +81,8 @@ class ScoreParser(user: User) : BaseParser<List<Score>>() {
         score.score = eles[8].toFloatOrNull() ?: -1F
         score.makeupScore = eles[10].toFloatOrNull() ?: -1F
         score.institute = eles[12]
-        try {
-            score.remarks = eles[13]
-            score.makeupRemarks = eles[14]
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        score.remarks = eles[13]
+        score.makeupRemarks = eles[14]
         return score
     }
 

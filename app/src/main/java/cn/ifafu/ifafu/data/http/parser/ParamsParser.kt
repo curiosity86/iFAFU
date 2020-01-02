@@ -9,6 +9,7 @@ open class ParamsParser : BaseParser<MutableMap<String, String>>() {
 
     @Throws(Exception::class)
     override fun parse(html: String): MutableMap<String, String> {
+//        println(html)
         val p = Pattern.compile("alert\\('.*'\\);")
         val m = p.matcher(html)
         if (m.find()) {

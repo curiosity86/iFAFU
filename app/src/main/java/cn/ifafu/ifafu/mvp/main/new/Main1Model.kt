@@ -28,14 +28,14 @@ class Main1Model(context: Context) : BaseMainModel(context), Main1Contract.Model
                     Menu(drawable(R.drawable.main_menu_tabs_syllabus), "课程表", intent(SyllabusActivity::class.java)),
                     Menu(drawable(R.drawable.main_menu_tabs_exam), "考试计划", intent(ExamActivity::class.java)),
                     Menu(drawable(R.drawable.main_menu_tabs_score), "成绩查询", intent(ScoreListActivity::class.java)),
+                    Menu(drawable(R.drawable.menu_elective), "选修学分查询", intent(ElectiveActivity::class.java)),
                     Menu(drawable(R.drawable.main_menu_tabs_web), "网页模式", intent(WebActivity::class.java)),
                     Menu(drawable(R.drawable.main_menu_tabs_electricity), "电费查询", intent(ElecMainActivity::class.java)),
+                    Menu(drawable(R.drawable.main_menu_tabs_comment), "一键评教", intent(CommentActivity::class.java)),
                     Menu(drawable(R.drawable.main_menu_tabs_repair), "报修服务", intent(WebActivity::class.java).apply {
                         putExtra("title", "报修服务")
                         putExtra("url", Constant.REPAIR_URL)
-                    }),
-                    Menu(drawable(R.drawable.main_menu_tabs_comment), "一键评教", intent(CommentActivity::class.java)),
-                    Menu(drawable(R.drawable.menu_elective), "选修学分查询", intent(ElectiveActivity::class.java))
+                    })
             )
         }
     }
@@ -45,7 +45,7 @@ class Main1Model(context: Context) : BaseMainModel(context), Main1Contract.Model
     private fun intent(cls: Class<*>): Intent = Intent(mContext, cls)
 
     override fun getSchoolIcon(): Drawable {
-        return when (repository.getInUseUser()?.schoolCode) {
+        return when (mRepository.getInUseUser()?.schoolCode) {
             School.FAFU -> drawable(R.drawable.fafu_bb_icon_white)
             School.FAFU_JS -> drawable(R.drawable.fafu_js_icon_white)
             else -> drawable(R.mipmap.ic_launcher_round)

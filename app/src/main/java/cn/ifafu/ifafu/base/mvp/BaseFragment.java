@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.base;
+package cn.ifafu.ifafu.base.mvp;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,9 +10,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-import cn.ifafu.ifafu.base.i.IPresenter;
-import cn.ifafu.ifafu.base.i.IView;
 
 public abstract class BaseFragment<P extends IPresenter> extends Fragment implements IView {
 

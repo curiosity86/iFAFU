@@ -14,6 +14,7 @@ class ElectivesParser(val user: User) : BaseParser<Electives>() {
         val doc = Jsoup.parse(html)
         when (user.schoolCode) {
             School.FAFU -> {
+                println(html)
                 val ele = doc.select("table[id=\"DataGrid5\"]")[0].children()[0].children()
                 for (element in ele) {
                     val ts = element.text().trim().split(" ")

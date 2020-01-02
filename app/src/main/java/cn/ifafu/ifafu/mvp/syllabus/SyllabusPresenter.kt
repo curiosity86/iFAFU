@@ -3,8 +3,8 @@ package cn.ifafu.ifafu.mvp.syllabus
 import android.annotation.SuppressLint
 import android.content.Intent
 import cn.ifafu.ifafu.R.string
-import cn.ifafu.ifafu.base.addDisposable
-import cn.ifafu.ifafu.base.ifafu.BaseZFPresenter
+import cn.ifafu.ifafu.base.mvp.BasePresenter
+import cn.ifafu.ifafu.base.mvp.addDisposable
 import cn.ifafu.ifafu.entity.Course
 import cn.ifafu.ifafu.entity.Response
 import cn.ifafu.ifafu.entity.SyllabusSetting
@@ -15,7 +15,7 @@ import io.reactivex.Observable
 import java.text.ParseException
 
 class SyllabusPresenter(view: SyllabusContract.View)
-    : BaseZFPresenter<SyllabusContract.View, SyllabusContract.Model>(view, SyllabusModel(view.context)),
+    : BasePresenter<SyllabusContract.View, SyllabusContract.Model>(view, SyllabusModel(view.context)),
         SyllabusContract.Presenter {
 
     @SuppressLint("DefaultLocale")

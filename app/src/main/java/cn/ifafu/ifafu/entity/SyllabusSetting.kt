@@ -11,7 +11,7 @@ import kotlin.collections.ArrayList
 class SyllabusSetting {
     @PrimaryKey
     var account: String = ""
-    var weekCnt = 24 //总共周数
+    var weekCnt = 20 //总共周数
     var totalNode = 12 //每日课程节数
     var showSaturday = true //显示周六
     var showSunday = true //显示周日
@@ -46,21 +46,27 @@ class SyllabusSetting {
 
     val currentWeek: Int
         get() = try {
-            val format = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
-            val firstStudyDate = format.parse(openingDay)
             val calendar = Calendar.getInstance()
-            calendar.firstDayOfWeek = firstDayOfWeek
-            val currentYearWeek = calendar[Calendar.WEEK_OF_YEAR]
-            calendar.time = firstStudyDate
+            calendar.firstDayOfWeek = Calendar.SUNDAY
+            val currentWeekOfYear = calendar[Calendar.WEEK_OF_YEAR]
+            if (calendar.get(Calendar.MONTH) in 1..5) {
+                calendar.time = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).parse("2020-02-16")
+            } else {
+                calendar.time = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).parse("2019-09-01")
+            }
             val firstYearWeek = calendar[Calendar.WEEK_OF_YEAR]
-            val nowWeek = currentYearWeek - firstYearWeek + 1
-            println("now week = $nowWeek")
-            if (nowWeek > 0) nowWeek else -1
+            val nowWeek = currentWeekOfYear - firstYearWeek + 1
+            when {
+                nowWeek > 0 -> nowWeek
+                nowWeek >= -2 -> 1
+                else -> nowWeek + 52
+            }
         } catch (e: Exception) {
             -1
         }
 
     override fun equals(other: Any?): Boolean {
+
         if (this === other) return true
         if (other == null || javaClass != other.javaClass) return false
         val that = other as SyllabusSetting

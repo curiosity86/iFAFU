@@ -10,6 +10,7 @@ import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.IFAFU
 import cn.ifafu.ifafu.base.mvvm.BaseActivity
+import cn.ifafu.ifafu.base.mvvm.BaseViewModel
 import cn.ifafu.ifafu.data.Repository
 import cn.ifafu.ifafu.databinding.SplashActivityBinding
 import cn.ifafu.ifafu.entity.User
@@ -21,7 +22,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class SplashActivity : BaseActivity<SplashActivityBinding>() {
+class SplashActivity : BaseActivity<SplashActivityBinding, BaseViewModel>() {
+
+    override fun getViewModel(): BaseViewModel? = null
+
     override fun getLayoutId(): Int {
         //去掉窗口标题
         requestWindowFeature(Window.FEATURE_NO_TITLE)

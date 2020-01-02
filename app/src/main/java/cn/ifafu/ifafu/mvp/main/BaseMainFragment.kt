@@ -1,6 +1,8 @@
 package cn.ifafu.ifafu.mvp.main
 
 import android.app.Activity
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.EditText
@@ -8,7 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.BuildConfig
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
-import cn.ifafu.ifafu.base.BaseFragment
+import cn.ifafu.ifafu.base.mvp.BaseFragment
+import cn.ifafu.ifafu.data.Repository
 import cn.ifafu.ifafu.entity.User
 import cn.ifafu.ifafu.mvp.login.LoginActivity
 import cn.ifafu.ifafu.view.adapter.AccountAdapter
@@ -17,6 +20,11 @@ import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
 import com.alibaba.fastjson.JSONObject
 import kotlinx.android.synthetic.main.account_dialog.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 
 abstract class BaseMainFragment<T : BaseMainContract.Presenter> : BaseFragment<T>(), BaseMainContract.View {
 
@@ -35,6 +43,28 @@ abstract class BaseMainFragment<T : BaseMainContract.Presenter> : BaseFragment<T
                 title(text = "多账号管理")
                 negativeButton(text = "添加账号") {
                     openLoginActivity()
+                }
+                if (BuildConfig.DEBUG) {
+                    neutralButton(text = "导入账号") {
+                        GlobalScope.launch(Dispatchers.IO) {
+                            try {
+                                val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                val data = cm.primaryClip
+                                val item = data!!.getItemAt(0)
+                                val content = item.text.toString()
+                                val list = JSONObject.parseArray(content, User::class.java)
+                                list.forEach {
+                                    Repository.saveUser(it)
+                                }
+                                withContext(Dispatchers.Main) {
+                                    mAccountAdapter?.replaceData(users)
+                                }
+                                showMessage("导入成功")
+                            } catch (e: Exception) {
+                                showMessage("导入失败")
+                            }
+                        }
+                    }
                 }
             }
             mAccountAdapter = AccountAdapter(users) {

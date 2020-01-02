@@ -2,7 +2,7 @@ package cn.ifafu.ifafu.mvp.syllabus_item
 
 import android.app.Activity
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.base.BasePresenter
+import cn.ifafu.ifafu.base.mvp.BasePresenter
 import cn.ifafu.ifafu.entity.Course
 import cn.ifafu.ifafu.mvp.syllabus.SyllabusActivity
 import cn.ifafu.ifafu.util.RxUtils

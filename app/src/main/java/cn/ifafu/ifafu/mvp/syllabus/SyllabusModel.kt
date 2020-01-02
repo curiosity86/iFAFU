@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.mvp.syllabus
 import android.annotation.SuppressLint
 import android.content.Context
 import cn.ifafu.ifafu.app.School
-import cn.ifafu.ifafu.base.ifafu.BaseZFModel
+import cn.ifafu.ifafu.base.mvp.BaseModel
 import cn.ifafu.ifafu.data.http.APIManager
 import cn.ifafu.ifafu.data.http.parser.SyllabusParser
 import cn.ifafu.ifafu.data.http.parser.SyllabusParser2
@@ -15,48 +15,28 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class SyllabusModel(context: Context) : BaseZFModel(context), Model {
+class SyllabusModel(context: Context) : BaseModel(context), Model {
 
     override fun getSyllabusSetting(): SyllabusSetting {
-        return repository.getSyllabusSetting()
-    }
-
-    override fun getCurrentWeek(): Int {
-        return try {
-            val setting = syllabusSetting
-            val format = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
-            val firstStudyDate: Date = format.parse(setting.openingDay)
-            val calendar: Calendar = Calendar.getInstance()
-            calendar.firstDayOfWeek = setting.firstDayOfWeek
-            val currentYearWeek = calendar.get(Calendar.WEEK_OF_YEAR)
-            calendar.time = firstStudyDate
-            val firstYearWeek = calendar.get(Calendar.WEEK_OF_YEAR)
-            val nowWeek = currentYearWeek - firstYearWeek + 1
-            if (nowWeek > 0) nowWeek else -1
-        } catch (e: Exception) {
-            -1
-        }
+        return mRepository.getSyllabusSetting()
     }
 
     override fun getAllCoursesFromDB(): List<Course> {
-        return repository.getAllCourses()
+        return mRepository.getAllCourses()
     }
 
     override fun getHolidays(): List<Holiday> {
         return listOf(
-                Holiday("教师节", "2019-09-10", 0),
-                Holiday("中秋节", "2019-09-13", 3).apply {
-                },
-                Holiday("国庆节", "2019-10-01", 7).apply {
-                    addFromTo("2019-10-04", "2019-09-29")
-                    addFromTo("2019-10-07", "2019-10-12")
-                },
-                Holiday("双十一", "2019-11-11", 0),
-                Holiday("圣诞节", "2019-12-25", 0),
-                Holiday("元旦", "2020-01-01", 3),
+                Holiday("元旦", "2020-01-01", 1),
                 Holiday("春节", "2020-01-25", 0),
+                Holiday("开始上课", "2020-02-17", 0),
                 Holiday("清明节", "2020-04-04", 3),
-                Holiday("劳动节", "2020-05-01", 3)
+                Holiday("劳动节", "2020-05-01", 5).apply {
+                    addFromTo("2020-05-05", "2019-05-09")
+                },
+                Holiday("端午节", "2020-06-25", 3).apply {
+                    addFromTo("2020-06-26", "2019-06-28")
+                }
         )
     }
 
@@ -122,14 +102,14 @@ class SyllabusModel(context: Context) : BaseZFModel(context), Model {
             val referer: String = School.getUrl(ZFApiList.MAIN, user) ?: ""
             initParams(url, referer)
                     .flatMap {
-                        val type = repository.getSyllabusSetting().parseType
+                        val type = mRepository.getSyllabusSetting().parseType
                         if (type == 1) {
-                            APIManager.getZhengFangAPI()
+                            APIManager.zhengFangAPI
                                     .getInfo(url, referer)
                                     .compose(SyllabusParser(user))
                         } else {
-                            val html = APIManager.getZhengFangAPI().getInfo(url, referer).blockingFirst().string()
-                            APIManager.getZhengFangAPI()
+                            val html = APIManager.zhengFangAPI.getInfo(url, referer).blockingFirst().string()
+                            APIManager.zhengFangAPI
                                     .parse("http://woolsen.cn:8080/syllabus", html)
                                     .compose(SyllabusParser2(user))
                                     .map { Response.success(it) }
@@ -139,23 +119,23 @@ class SyllabusModel(context: Context) : BaseZFModel(context), Model {
                 .doOnNext { response ->
                     val courses = response.body ?: ArrayList()
                     if (courses.isNotEmpty()) {
-                        repository.deleteAllOnlineCourse()
-                        repository.saveCourse(courses)
+                        mRepository.deleteAllOnlineCourse()
+                        mRepository.saveCourse(courses)
                         //获取校区信息（影响上课时间）
-                        val setting = repository.getSyllabusSetting()
+                        val setting = mRepository.getSyllabusSetting()
                         var qs = false
-                        for (course in repository.getAllCourses()) {
+                        for (course in mRepository.getAllCourses()) {
                             if (course.address.contains("旗教")) {
                                 qs = true
                                 break
                             }
                         }
                         setting.beginTime = (if (qs) SyllabusSetting.intBeginTime[1] else SyllabusSetting.intBeginTime[0]).toList()
-                        repository.saveSyllabusSetting(setting)
-                        courses.addAll(repository.getCourses(true))
+                        mRepository.saveSyllabusSetting(setting)
+                        courses.addAll(mRepository.getCourses(true))
                     } else {
                         //获取课表为空则调取数据库完整课表
-                        courses.addAll(repository.getAllCourses())
+                        courses.addAll(mRepository.getAllCourses())
                     }
                 }
     }

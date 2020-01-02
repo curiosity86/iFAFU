@@ -4,7 +4,7 @@ import cn.ifafu.ifafu.entity.*
 import cn.ifafu.ifafu.mvp.main.BaseMainContract
 import io.reactivex.Observable
 
-class Main2Contract {
+class MainOldContract {
     interface View : BaseMainContract.View {
 
         fun setAccountText(account: String)
@@ -21,7 +21,7 @@ class Main2Contract {
 
         fun setNextCourse(nextCourse: NextCourse)
 
-        fun setScoreText(text: String?)
+        fun setScoreText(text: String)
 
         fun setExamData(data: List<NextExam>)
     }
@@ -48,6 +48,6 @@ class Main2Contract {
 
         fun getNextExams(): Observable<List<NextExam>>
 
-        fun getScore(): Observable<List<Score>>
+        suspend fun getScore(): List<Score>
     }
 }

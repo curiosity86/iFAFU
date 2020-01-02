@@ -2,14 +2,16 @@ package cn.ifafu.ifafu.mvp.main
 
 import android.os.Bundle
 import android.view.KeyEvent
+import android.widget.Toast
 import androidx.core.view.GravityCompat
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.base.BaseActivity
-import cn.ifafu.ifafu.base.i.IPresenter
+import cn.ifafu.ifafu.base.mvvm.BaseActivity
+import cn.ifafu.ifafu.base.mvvm.BaseViewModel
 import cn.ifafu.ifafu.data.Repository
+import cn.ifafu.ifafu.databinding.MainActivityBinding
 import cn.ifafu.ifafu.entity.GlobalSetting
 import cn.ifafu.ifafu.mvp.main.new.Main1Fragment
-import cn.ifafu.ifafu.mvp.main.old.Main2Fragment
+import cn.ifafu.ifafu.mvp.main.old.MainOldFragment
 import cn.ifafu.ifafu.util.ButtonUtils
 import cn.ifafu.ifafu.view.custom.DragLayout
 import com.gyf.immersionbar.ImmersionBar
@@ -20,15 +22,15 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MainActivity : BaseActivity<IPresenter>() {
+class MainActivity : BaseActivity<MainActivityBinding, BaseViewModel>() {
 
     private var nowTheme = -999
 
-    override fun getLayoutId(savedInstanceState: Bundle?): Int {
-        return R.layout.main_activity
-    }
+    override fun getViewModel(): BaseViewModel? = null
 
-    override fun initData(savedInstanceState: Bundle?) {
+    override fun getLayoutId(): Int = R.layout.main_activity
+
+    override fun initActivity(savedInstanceState: Bundle?) {
         ImmersionBar.with(this).init()
         checkoutFragment()
     }
@@ -36,15 +38,14 @@ class MainActivity : BaseActivity<IPresenter>() {
     private fun checkoutFragment() {
         GlobalScope.launch {
             val setting = Repository.getGlobalSetting()
-            // MobclickAgent.onProfileSignIn(account)
+            nowTheme = setting.theme
             withContext(Dispatchers.Main) {
                 supportFragmentManager.beginTransaction().apply {
-                    if (setting.theme == GlobalSetting.THEME_NEW) {
-                        replace(R.id.view_content, Main1Fragment())
-                    } else {
-                        replace(R.id.view_content, Main2Fragment())
+                    when (setting.theme) {
+                        GlobalSetting.THEME_NEW -> replace(R.id.view_content, Main1Fragment())
+                        GlobalSetting.THEME_OLD -> replace(R.id.view_content, MainOldFragment())
                     }
-                }.commit()
+                }.commitAllowingStateLoss()
             }
         }
     }
@@ -58,7 +59,7 @@ class MainActivity : BaseActivity<IPresenter>() {
             } else if (ButtonUtils.isFastDoubleClick()) {
                 finish()
             } else {
-                showMessage(R.string.back_again)
+                Toast.makeText(this, R.string.back_again, Toast.LENGTH_SHORT).show()
             }
             return true
         }

@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.base.BaseActivity
+import cn.ifafu.ifafu.base.mvp.BaseActivity
 import cn.ifafu.ifafu.entity.CommentItem
 import cn.ifafu.ifafu.util.SPUtils
 import cn.ifafu.ifafu.view.adapter.CommentRvAdapter

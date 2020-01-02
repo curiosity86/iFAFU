@@ -38,4 +38,10 @@ abstract class BaseParser<T> : ObservableTransformer<ResponseBody, T> {
             parse(html.toString())
         }
     }
+
+    protected fun check(html: String) {
+        if (html.contains("请登录") || html.contains("请重新登陆") || html.contains("302 Found")) {
+            throw NoAuthException()
+        }
+    }
 }
