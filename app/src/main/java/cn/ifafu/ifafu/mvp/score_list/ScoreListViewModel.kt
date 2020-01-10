@@ -91,23 +91,19 @@ class ScoreListViewModel(application: Application) : BaseViewModel(application) 
                 event.showDialog()
             }
             try {
-                scoreList = ensureLoginStatus {
-                    mRepository.fetchScoreList().apply {
-                        if (isNotEmpty()) {
-                            mRepository.deleteAllScore()
-                            mRepository.saveScore(this)
-                            val scoreFilter = mRepository.getScoreFilter()
-                            scoreFilter.account = mRepository.account
-                            scoreFilter.filter(this)
-                            mRepository.saveScoreFilter(scoreFilter)
-                        }
-                    }.filter {
-                        it.year == yearTerm.yearStr && it.term == yearTerm.termStr
-                    }
+                val scoreResponse = ensureLoginStatus {
+                    mRepository.fetchScoreList(yearTerm.yearStr, yearTerm.termStr)
                 } ?: kotlin.run {
                     event.hideDialog()
                     return@launch
                 }
+                if (scoreResponse.isSuccess) {
+                    scoreList = scoreResponse.body!!
+                } else {
+                    event.hideDialog()
+                    return@launch
+                }
+
                 //筛选不计入智育分的成绩的id并保存
                 scoreFilter = mRepository.getScoreFilter()
                 scoreFilter.filter(scoreList)

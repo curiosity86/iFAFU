@@ -9,6 +9,7 @@ import cn.ifafu.ifafu.entity.Response
 import cn.ifafu.ifafu.entity.exception.NoAuthException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -54,9 +55,15 @@ abstract class BaseViewModel(application: Application) : AndroidViewModel(applic
             is UnknownHostException, is ConnectException ->
                 "网络错误，请检查网络设置"
             is SocketTimeoutException ->
-                "服务器连接超时"
+                "服务器连接超时（可能原因：学校服务器崩溃）"
             is SQLiteConstraintException ->
                 "数据库数据错误（错误信息：${message}）"
+            is IOException ->
+                if (this.message?.contains("unexpected") == true) {
+                    "正方教务系统又崩溃了！"
+                } else {
+                    message ?: "ERROR"
+                }
             else ->
                 message ?: "ERROR"
         }

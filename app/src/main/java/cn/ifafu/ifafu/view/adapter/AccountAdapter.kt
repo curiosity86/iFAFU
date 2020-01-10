@@ -7,8 +7,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 
 class AccountAdapter(
-        data: List<User>,
-        val onClick: (user: User) -> Unit
+        data: List<User> = ArrayList(),
+        var onClick: ((user: User) -> Unit) ? = null
 ) : BaseQuickAdapter<User, BaseViewHolder>(R.layout.main_account_recycle_item, data) {
 
     override fun convert(helper: BaseViewHolder, item: User?) {
@@ -20,7 +20,7 @@ class AccountAdapter(
                     else -> R.drawable.icon_ifafu_round
                 })
         helper.itemView.setOnClickListener {
-            this.onClick.invoke(item)
+            this.onClick?.invoke(item)
         }
     }
 

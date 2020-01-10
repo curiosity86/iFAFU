@@ -27,7 +27,6 @@ import cn.ifafu.ifafu.view.custom.LeftMenu
 import cn.ifafu.ifafu.view.listener.ScrollDrawerListener
 import cn.ifafu.ifafu.view.listener.TabClickListener
 import kotlinx.android.synthetic.main.main_old_fragment.*
-import kotlinx.android.synthetic.main.main_old_include.*
 import kotlinx.android.synthetic.main.main_old_menu_include.*
 
 class MainOldFragment : BaseMainFragment<MainOldContract.Presenter>(),

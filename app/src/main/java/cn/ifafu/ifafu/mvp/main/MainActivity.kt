@@ -51,19 +51,24 @@ class MainActivity : BaseActivity<MainActivityBinding, BaseViewModel>() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_DOWN) {
-            if (nowTheme == GlobalSetting.THEME_NEW && drawer_main.status == DragLayout.Status.Open) {
-                drawer_main.close(true)
-            } else if (nowTheme == GlobalSetting.THEME_OLD && layout_drawer.isDrawerOpen(GravityCompat.START)) {
-                layout_drawer.closeDrawer(GravityCompat.START)
-            } else if (ButtonUtils.isFastDoubleClick()) {
-                finish()
-            } else {
-                Toast.makeText(this, R.string.back_again, Toast.LENGTH_SHORT).show()
+        try {
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_DOWN) {
+                if (nowTheme == GlobalSetting.THEME_NEW && drawer_main.status == DragLayout.Status.Open) {
+                    drawer_main.close(true)
+                } else if (nowTheme == GlobalSetting.THEME_OLD && layout_drawer.isDrawerOpen(GravityCompat.START)) {
+                    layout_drawer.closeDrawer(GravityCompat.START)
+                } else if (ButtonUtils.isFastDoubleClick()) {
+                    finish()
+                } else {
+                    Toast.makeText(this, R.string.back_again, Toast.LENGTH_SHORT).show()
+                }
+                return true
             }
-            return true
+            return super.onKeyDown(keyCode, event)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return super.onKeyDown(keyCode, event)
         }
-        return super.onKeyDown(keyCode, event)
     }
 
 }

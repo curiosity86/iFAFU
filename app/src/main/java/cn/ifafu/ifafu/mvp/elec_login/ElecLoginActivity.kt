@@ -1,6 +1,7 @@
 package cn.ifafu.ifafu.mvp.elec_login
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.ViewModelProvider
@@ -12,7 +13,7 @@ import com.jaeger.library.StatusBarUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ElecLoginActivity : BaseActivity<ElecLoginActivityBinding, ElecLoginViewModel>() {
+class ElecLoginActivity : BaseActivity<ElecLoginActivityBinding, ElecLoginViewModel>(), UIEvent {
 
     override val loadingDialog: LoadingDialog by lazy {
         LoadingDialog(this).apply {
@@ -30,9 +31,11 @@ class ElecLoginActivity : BaseActivity<ElecLoginActivityBinding, ElecLoginViewMo
         StatusBarUtil.setTransparent(this)
         StatusBarUtil.setLightMode(this)
         mViewModel.init { account -> mBinding.account = account }
-        refreshVerify()
+        mViewModel.uiEvent = this
+
+        mViewModel.refreshVerify()
         mBinding.verifyIV.setOnClickListener {
-            refreshVerify()
+            mViewModel.refreshVerify()
         }
         mBinding.loginBtn.setOnClickListener {
             mViewModel.login(
@@ -49,11 +52,7 @@ class ElecLoginActivity : BaseActivity<ElecLoginActivityBinding, ElecLoginViewMo
         }
     }
 
-    private fun refreshVerify() {
-        mViewModel.refreshVerify {
-            withContext(Dispatchers.Main) {
-                mBinding.verifyIV.setImageBitmap(it)
-            }
-        }
+    override suspend fun refreshVerify(bitmap: Bitmap) = withContext(Dispatchers.Main) {
+        mBinding.verifyIV.setImageBitmap(bitmap)
     }
 }

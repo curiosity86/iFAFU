@@ -31,46 +31,47 @@ abstract class BaseMainFragment<T : BaseMainContract.Presenter> : BaseFragment<T
 
     private var mAccountAdapter: AccountAdapter? = null
 
-    private var checkoutDialog: MaterialDialog? = null
+    private val checkoutDialog: MaterialDialog by lazy {
+        MaterialDialog(requireContext()).apply {
+            customView(viewRes = R.layout.account_dialog)
+            title(text = "多账号管理")
+            negativeButton(text = "添加账号") {
+                openLoginActivity()
+            }
+            if (BuildConfig.DEBUG) {
+                neutralButton(text = "导入账号") {
+                    GlobalScope.launch(Dispatchers.IO) {
+                        try {
+                            val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                            val data = cm.primaryClip
+                            val item = data!!.getItemAt(0)
+                            val content = item.text.toString()
+                            val list = JSONObject.parseArray(content, User::class.java)
+                            list.forEach {
+                                Repository.saveUser(it)
+                            }
+                            withContext(Dispatchers.Main) {
+                                mAccountAdapter?.replaceData(list)
+                            }
+                            showMessage("导入成功")
+                        } catch (e: Exception) {
+                            showMessage("导入失败")
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     override fun setCheckoutDialogData(users: List<User>) {
         if (BuildConfig.DEBUG) {
             Log.d("User", JSONObject.toJSONString(users))
         }
         if (mAccountAdapter == null) {
-            checkoutDialog = MaterialDialog(context!!).apply {
-                customView(viewRes = R.layout.account_dialog)
-                title(text = "多账号管理")
-                negativeButton(text = "添加账号") {
-                    openLoginActivity()
-                }
-                if (BuildConfig.DEBUG) {
-                    neutralButton(text = "导入账号") {
-                        GlobalScope.launch(Dispatchers.IO) {
-                            try {
-                                val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                                val data = cm.primaryClip
-                                val item = data!!.getItemAt(0)
-                                val content = item.text.toString()
-                                val list = JSONObject.parseArray(content, User::class.java)
-                                list.forEach {
-                                    Repository.saveUser(it)
-                                }
-                                withContext(Dispatchers.Main) {
-                                    mAccountAdapter?.replaceData(users)
-                                }
-                                showMessage("导入成功")
-                            } catch (e: Exception) {
-                                showMessage("导入失败")
-                            }
-                        }
-                    }
-                }
-            }
             mAccountAdapter = AccountAdapter(users) {
                 showAccountDetail(it)
             }
-            val rvAccount = checkoutDialog!!.getCustomView().rv_account
+            val rvAccount = checkoutDialog.getCustomView().rv_account
             rvAccount.adapter = mAccountAdapter
             rvAccount.layoutManager = LinearLayoutManager(context)
         } else {
@@ -79,11 +80,11 @@ abstract class BaseMainFragment<T : BaseMainContract.Presenter> : BaseFragment<T
     }
 
     override fun showCheckoutDialog() {
-        checkoutDialog?.show()
+        checkoutDialog.show()
     }
 
     override fun hideCheckoutDialog() {
-        checkoutDialog?.hide()
+        checkoutDialog.hide()
     }
 
     private fun openLoginActivity() {

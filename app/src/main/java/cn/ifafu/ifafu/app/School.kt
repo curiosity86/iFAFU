@@ -40,7 +40,7 @@ object School {
                 mapOf(
                         ZFApiList.SYLLABUS to ZFApi("xskbcx.aspx", "N121602"),
                         ZFApiList.EXAM to ZFApi("xskscx.aspx", "N121603"),
-                        ZFApiList.SCORE to ZFApi("Xscjcx.aspx", "N121613"),
+                        ZFApiList.SCORE to ZFApi("xscjcx_dq.aspx", "N121613"),
                         ZFApiList.ELECTIVES to ZFApi("pyjh.aspx", "N121606")
                 )
         )

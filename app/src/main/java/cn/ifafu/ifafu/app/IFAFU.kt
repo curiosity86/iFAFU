@@ -15,6 +15,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.plugins.RxJavaPlugins
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class IFAFU : BaseApplication() {
@@ -27,7 +28,7 @@ class IFAFU : BaseApplication() {
         UMConfigure.init(this, "5d4082673fc1955041000408", "web", UMConfigure.DEVICE_TYPE_PHONE, "1a446c1ae0455153aa502937a87e5634")
         MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
 
-        GlobalScope.launch(Dispatchers.IO) {
+        loginJob = GlobalScope.launch(Dispatchers.IO) {
             val user = Repository.getInUseUser() ?: return@launch
             kotlin.runCatching {
                 val response = Repository.login(user.account, user.password)
@@ -41,6 +42,8 @@ class IFAFU : BaseApplication() {
 
     companion object {
 
+        var loginJob: Job? = null
+
         var FIRST_START_APP = true
 
         var loginDisposable: Disposable? = null
@@ -51,7 +54,7 @@ class IFAFU : BaseApplication() {
                 val strategy = CrashReport.UserStrategy(context)
                 strategy.setCrashHandleCallback(object : CrashReport.CrashHandleCallback() {
                     override fun onCrashHandleStart(crashType: Int, errorType: String?, errorMessage: String?, errorStack: String?): MutableMap<String, String> {
-                        val map = super.onCrashHandleStart(crashType, errorType, errorMessage, errorStack)
+                        val map = super.onCrashHandleStart(crashType, errorType, errorMessage, errorStack) ?: HashMap()
                         map["account"] = Repository.account
                         return map
                     }

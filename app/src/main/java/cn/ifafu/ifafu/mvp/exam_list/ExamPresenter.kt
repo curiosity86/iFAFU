@@ -45,7 +45,9 @@ internal class ExamPresenter(view: ExamContract.View) : BasePresenter<ExamContra
         mCompDisposable.add(mModel.getExamsFromNet(mCurrentYear, mCurrentTerm)
                 .compose(RxUtils.ioToMain())
                 .compose(showHideLoading())
-                .subscribe({ list -> mView.setExamAdapterData(list) }, this::onError)
+                .subscribe({ list ->
+                    mView.setExamAdapterData(list)
+                }, this::onError)
         )
     }
 
@@ -80,7 +82,6 @@ internal class ExamPresenter(view: ExamContract.View) : BasePresenter<ExamContra
         mView.setYearTermOptions(
                 yearTerm.yearIndexOf(mCurrentYear),
                 yearTerm.termIndexOf(mCurrentTerm))
-        mView.showEmptyView()
         super.onError(throwable)
     }
 }

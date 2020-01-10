@@ -17,27 +17,31 @@ class ElectiveViewModel(application: Application) : BaseViewModel(application) {
                                cxcy: ElectiveInfo?) -> Unit) {
         GlobalScope.launch {
             event.showDialog()
-            val allScores = mRepository.getAllScores().ifEmpty {
-                try {
-                    ensureLoginStatus {
-                        mRepository.fetchScoreList().apply {
-                            if (this.isNotEmpty()) {
-                                mRepository.deleteAllScore()
-                                mRepository.saveScore(this)
-                                val scoreFilter = mRepository.getScoreFilter()
-                                scoreFilter.account = mRepository.account
-                                scoreFilter.filter(this)
-                                mRepository.saveScoreFilter(scoreFilter)
-                            }
-                        }
-                    } ?: return@launch
-                } catch (e: Exception) {
-                    event.showMessage(e.errorMessage())
+            val allScores = try {
+                val scoreResponse = ensureLoginStatus {
+                    mRepository.fetchScoreList()
+                } ?: kotlin.run {
                     event.hideDialog()
-                    e.printStackTrace()
                     return@launch
                 }
+                scoreResponse.run {
+                    if (isSuccess) {
+                        body!!.filter {
+                            !it.name.contains("英语")
+                        }
+                    } else {
+                        event.showMessage(this.message)
+                        event.hideDialog()
+                        return@launch
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                event.showMessage(e.errorMessage())
+                event.hideDialog()
+                return@launch
             }
+            //获取选修学分要求
             val electives = mRepository.getElectives() ?: try {
                 ensureLoginStatus {
                     mRepository.fetchElectives().apply {

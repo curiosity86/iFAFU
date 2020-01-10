@@ -49,11 +49,12 @@ class SyllabusSetting {
             val calendar = Calendar.getInstance()
             calendar.firstDayOfWeek = Calendar.SUNDAY
             val currentWeekOfYear = calendar[Calendar.WEEK_OF_YEAR]
-            if (calendar.get(Calendar.MONTH) in 1..5) {
-                calendar.time = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).parse("2020-02-16")
-            } else {
-                calendar.time = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).parse("2019-09-01")
-            }
+            calendar.time = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).parse(
+                    if (calendar.get(Calendar.MONTH) in 1..5) {
+                        "2020-02-16"
+                    } else {
+                        "2019-09-01"
+                    })!!
             val firstYearWeek = calendar[Calendar.WEEK_OF_YEAR]
             val nowWeek = currentWeekOfYear - firstYearWeek + 1
             when {

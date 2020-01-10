@@ -52,6 +52,12 @@ abstract class BaseActivity<VDB : ViewDataBinding, VM : BaseViewModel> : AppComp
         Toast.makeText(this@BaseActivity, message, Toast.LENGTH_SHORT).show()
     }
 
+    override suspend fun showMessage(msgId: Int) {
+        withContext(Dispatchers.Main) {
+            Toast.makeText(this@BaseActivity, msgId, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override suspend fun showDialog() = withContext(Dispatchers.Main) {
         loadingDialog.show()
     }

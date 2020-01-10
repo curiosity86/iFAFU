@@ -9,6 +9,7 @@ class ElectivesParser(val user: User) : BaseParser<Electives>() {
 
     @Throws(Exception::class)
     override fun parse(html: String): Electives {
+        check(html)
         val info = Electives()
         info.account = user.account
         val doc = Jsoup.parse(html)

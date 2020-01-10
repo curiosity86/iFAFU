@@ -67,13 +67,13 @@ class ElecMainViewModel(application: Application) : BaseViewModel(application) {
                 val job2 = innerQueryCardBalance(true, showCardBalance)
                 job1.join()
                 job2.join()
-                event.hideDialog()
+                event?.hideDialog()
             } else {
                 if (elecUser != null) {
-                    event.showMessage("登录态失效，请重新登录")
+                    event?.showMessage("登录态失效，请重新登录")
                 }
-                event.hideDialog()
-                event.startLoginActivity()
+                event?.hideDialog()
+                event?.startLoginActivity()
             }
         }
     }

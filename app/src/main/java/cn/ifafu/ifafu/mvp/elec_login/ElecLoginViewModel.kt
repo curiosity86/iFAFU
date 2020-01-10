@@ -1,7 +1,6 @@
 package cn.ifafu.ifafu.mvp.elec_login
 
 import android.app.Application
-import android.graphics.Bitmap
 import cn.ifafu.ifafu.app.School
 import cn.ifafu.ifafu.base.mvvm.BaseViewModel
 import cn.ifafu.ifafu.data.Repository
@@ -12,6 +11,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class ElecLoginViewModel(application: Application) : BaseViewModel(application) {
+
+    lateinit var uiEvent: UIEvent
 
     private val elecUser: ElecUser by lazy {
         mRepository.getElecUser().run {
@@ -34,17 +35,16 @@ class ElecLoginViewModel(application: Application) : BaseViewModel(application) 
 
     fun init(callback: suspend (account: String) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
-            callback(elecUser.account)
+            callback(elecUser.xfbAccount)
         }
     }
 
     fun login(account: String, password: String, verify: String, success: suspend (String) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
-            event.showDialog()
+            event?.showDialog()
             val json = JSONObject.parseObject(mRepository.elecLogin(account, password, verify))
             if (json.getBoolean("IsSucceed") == true) {
                 val obj2 = json.getJSONObject("Obj2")
-                elecUser.xfbAccount = account
                 elecUser.password = password
                 elecUser.xfbId = json.getString("Obj")
                 mRepository.saveElecUser(elecUser)
@@ -59,17 +59,18 @@ class ElecLoginViewModel(application: Application) : BaseViewModel(application) 
                 } else {
                     event.showMessage("未知错误")
                 }
+                uiEvent.refreshVerify(mRepository.elecVerifyBitmap())
             }
-            event.hideDialog()
+            event?.hideDialog()
         }
     }
 
-    fun refreshVerify(success: suspend (Bitmap) -> Unit) {
+    fun refreshVerify() {
         GlobalScope.launch(Dispatchers.IO) {
             try {
-                success(mRepository.elecVerifyBitmap())
+                uiEvent.refreshVerify(mRepository.elecVerifyBitmap())
             } catch (e: Exception) {
-                event.showMessage(e.errorMessage())
+                event?.showMessage(e.errorMessage())
             }
         }
     }

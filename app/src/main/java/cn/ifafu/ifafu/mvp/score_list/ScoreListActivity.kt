@@ -92,10 +92,11 @@ class ScoreListActivity : BaseActivity<ScoreListActivityBinding, ScoreListViewMo
                                       cnt: Pair<String, String>,
                                       gpa: String) = withContext(Dispatchers.Main) {
         mBinding.empty = scores.isEmpty()
-        mAdapter.scoreList = scores
         mBinding.ies = ies
         mBinding.cnt = cnt
         mBinding.gpa = gpa
+        mAdapter.scoreList = scores
+        mAdapter.notifyDataSetChanged()
     }
 
     override fun onClick(v: View?) {

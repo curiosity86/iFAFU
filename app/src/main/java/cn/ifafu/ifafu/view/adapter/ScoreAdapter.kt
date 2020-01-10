@@ -16,10 +16,6 @@ import cn.ifafu.ifafu.view.adapter.ScoreAdapter.ScoreViewHolder
 class ScoreAdapter(private val mContext: Context) : RecyclerView.Adapter<ScoreViewHolder>() {
 
     var scoreList: List<Score> = ArrayList()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
 
     private var mClickListener: ((Score) -> Unit)? = null
 
@@ -33,24 +29,29 @@ class ScoreAdapter(private val mContext: Context) : RecyclerView.Adapter<ScoreVi
         val score = scoreList[position]
         holder.tvName.text = score.name
         val calcScore = score.realScore
-        if (calcScore == Score.FREE_COURSE) {
-            holder.tvScore.text = "免修"
-        } else {
-            holder.tvScore.text = GlobalLib.formatFloat(calcScore, 2)
-            if (calcScore >= 60) {
-                holder.tvScore.setTextColor(mContext.resources.getColor(R.color.ifafu_blue))
-            } else {
-                holder.tvScore.setTextColor(mContext.resources.getColor(R.color.red))
-            }
+        when (calcScore) {
+            Score.FREE_COURSE ->
+                holder.tvScore.text = "免修"
+            else ->
+                holder.tvScore.text = GlobalLib.formatFloat(calcScore, 2)
         }
-        if (calcScore == Score.FREE_COURSE) {
-            holder.ivTip.setImageResource(R.drawable.ic_score_mian)
-        } else if (score.name.contains("体育")) {
-            holder.ivTip.setImageResource(R.drawable.ic_score_ti)
-        } else if (score.nature.contains("任意选修") || score.nature.contains("公共选修")) {
-            holder.ivTip.setImageResource(R.drawable.ic_score_xuan)
-        } else if (calcScore < 60) {
-            holder.ivTip.setImageResource(R.drawable.ic_score_warm)
+        when {
+            calcScore >= 60 || calcScore == Score.FREE_COURSE ->
+                holder.tvScore.setTextColor(mContext.resources.getColor(R.color.ifafu_blue))
+            else ->
+                holder.tvScore.setTextColor(mContext.resources.getColor(R.color.red))
+        }
+        when {
+            calcScore == Score.FREE_COURSE ->
+                holder.ivTip.setImageResource(R.drawable.ic_score_mian)
+            score.name.contains("体育") ->
+                holder.ivTip.setImageResource(R.drawable.ic_score_ti)
+            score.nature.contains("任意选修") || score.nature.contains("公共选修") ->
+                holder.ivTip.setImageResource(R.drawable.ic_score_xuan)
+            calcScore < 60 ->
+                holder.ivTip.setImageResource(R.drawable.ic_score_warm)
+            else ->
+                holder.ivTip.setImageDrawable(null)
         }
         holder.itemView.setOnClickListener { v: View? ->
             mClickListener?.invoke(score)

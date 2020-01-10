@@ -6,7 +6,7 @@ import cn.ifafu.ifafu.entity.User
 @Dao
 interface UserDao {
 
-    @Query("SELECT * FROM User ORDER BY schoolCode, name")
+    @Query("SELECT * FROM User ORDER BY account")
     fun allUser(): List<User>
 
     @Query("SELECT * FROM User WHERE account=:account")

@@ -235,34 +235,38 @@ object Repository : LocalDataSource, HttpDataSource {
         ElectivesParser(user).parse(html)
     }
 
-    override suspend fun fetchScoreList(): List<Score> = withContext(Dispatchers.IO) {
+    /**
+     * 获取成绩信息后自动保存
+     */
+    override suspend fun fetchScoreList(): Response<List<Score>> = withContext(Dispatchers.IO) {
         val user = getInUseUser() ?: throw Exception("用户信息不存在")
         val scoreUrl = School.getUrl(ZFApiList.SCORE, user)
         val mainUrl = School.getUrl(ZFApiList.MAIN, user)
         val params = fetchParams(scoreUrl, mainUrl)
-        when (user.schoolCode) {
-            School.FAFU -> {
-                params["ddlxn"] = "全部"
-                params["ddlxq"] = "全部"
-                params["btnCx"] = ""
-            }
-            School.FAFU_JS -> {
-                params["ddlXN"] = ""
-                params["ddlXQ"] = ""
-                params["ddl_kcxz"] = ""
-                params["btn_zcj"] = ""
-            }
-        }
+        params["ddlxn"] = "全部"
+        params["ddlxq"] = "全部"
+        params["btnCx"] = ""
         val html = APIManager.zhengFangAPI
                 .getInfo2(scoreUrl, scoreUrl, params).execute()
                 .body()!!.string()
         val parser = ScoreParser(user)
-        parser.parse(html).sortedBy { it.id }
+        parser.parse(html).apply {
+            val list = body
+            if (list != null && list.isNotEmpty()) {
+                deleteAllScore()
+                saveScore(list)
+                val scoreFilter = getScoreFilter()
+                scoreFilter.account = account
+                scoreFilter.filter(list)
+                saveScoreFilter(scoreFilter)
+            }
+        }
     }
 
-    override suspend fun fetchScoreList(year: String, term: String): List<Score> = withContext(Dispatchers.IO) {
-        val scores = fetchScoreList()
-        scores.filter { it.year == year && it.term == term }
+    override suspend fun fetchScoreList(year: String, term: String): Response<List<Score>> = withContext(Dispatchers.IO) {
+        fetchScoreList().apply {
+            body = body?.filter { it.year == year && it.term == term }
+        }
     }
 
     override fun getAllScores(): List<Score> {

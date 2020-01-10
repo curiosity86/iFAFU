@@ -24,9 +24,9 @@ interface HttpDataSource {
     suspend fun fetchElectives(): Electives
 
     //成绩查询
-    suspend fun fetchScoreList(): List<Score>
+    suspend fun fetchScoreList(): Response<List<Score>>
 
-    suspend fun fetchScoreList(year: String, term: String): List<Score>
+    suspend fun fetchScoreList(year: String, term: String): Response<List<Score>>
 
     //电费查询
     suspend fun elecCookieInit()

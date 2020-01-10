@@ -68,7 +68,7 @@ class MainOldModel(context: Context) : BaseMainModel(context), MainOldContract.M
                     val list = ArrayList<NextExam>()
                     val max = if (thisTermExams.size < 2) thisTermExams.size else 2
                     val dateFormat = SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA)
-                    val timeFormat = SimpleDateFormat("hh:mm", Locale.CHINA)
+                    val timeFormat = SimpleDateFormat("HH:mm", Locale.CHINA)
                     for (i in 0 until max) {
                         var time: String
                         var last: Pair<String, String>
@@ -108,16 +108,8 @@ class MainOldModel(context: Context) : BaseMainModel(context), MainOldContract.M
 
     override suspend fun getScore(): List<Score> = withContext(Dispatchers.IO) {
         val yearTerm = mRepository.getNowYearTerm()
-        val score = mRepository.fetchScoreList().apply {
-            if (isNotEmpty()) {
-                mRepository.deleteAllScore()
-                mRepository.saveScore(this)
-                val scoreFilter = mRepository.getScoreFilter()
-                scoreFilter.account = mRepository.account
-                scoreFilter.filter(this)
-                mRepository.saveScoreFilter(scoreFilter)
-            }
-        }
+        val scoreResponse = mRepository.fetchScoreList()
+        val score = scoreResponse.body!!
         if (score.isEmpty()) {
             mRepository.getScores(yearTerm.termStr, yearTerm.yearStr)
         } else {
