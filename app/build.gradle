@@ -13,8 +13,8 @@ android {
         applicationId "cn.ifafu.ifafu"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 60
-        versionName "1.0.19"
+        versionCode 61
+        versionName "1.1.0"
         resConfigs "zh"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -161,6 +161,7 @@ dependencies {
     testImplementation 'junit:junit:4.13-beta-3'
     androidTestImplementation 'androidx.test:runner:1.3.0-alpha03'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha03'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 }
 
 repositories {

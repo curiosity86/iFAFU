@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import cn.ifafu.ifafu.entity.ScoreFilter
+import cn.ifafu.ifafu.data.entity.ScoreFilter
 
 @Dao
 interface ScoreFilterDao {

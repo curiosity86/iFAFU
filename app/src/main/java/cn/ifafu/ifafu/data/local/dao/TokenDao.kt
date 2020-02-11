@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import cn.ifafu.ifafu.entity.Token
+import cn.ifafu.ifafu.data.entity.Token
 
 @Dao
 interface TokenDao {

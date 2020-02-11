@@ -2,7 +2,7 @@ package cn.ifafu.ifafu.view.adapter
 
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.School
-import cn.ifafu.ifafu.entity.User
+import cn.ifafu.ifafu.data.entity.User
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 

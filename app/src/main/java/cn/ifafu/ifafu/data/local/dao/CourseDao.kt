@@ -1,15 +1,15 @@
 package cn.ifafu.ifafu.data.local.dao
 
 import androidx.room.*
-import cn.ifafu.ifafu.entity.Course
+import cn.ifafu.ifafu.data.entity.Course
 
 @Dao
 interface CourseDao {
     @Query("SELECT * FROM Course WHERE account=:account")
-    fun allCourses(account: String): List<Course>
+    fun getAll(account: String): List<Course>
 
     @Query("SELECT * FROM Course WHERE account=:account AND local=:local")
-    fun allCourses(account: String, local: Boolean): List<Course>
+    fun getAll(account: String, local: Boolean): List<Course>
 
     @Query("SELECT * FROM Course WHERE id=:id")
     fun course(id: Long): Course?
@@ -22,4 +22,7 @@ interface CourseDao {
 
     @Query("DELETE FROM Course WHERE account=:account")
     fun delete(account: String)
+
+    @Query("DELETE FROM Course WHERE account=:account AND local=:local")
+    fun delete(account: String, local: Boolean)
 }

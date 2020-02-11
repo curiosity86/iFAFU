@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.entity.Menu
+import cn.ifafu.ifafu.data.entity.Menu
 import cn.ifafu.ifafu.view.adapter.MenuAdapter.MenuViewHolder
 
 class MenuAdapter(context: Context, menuList: List<Menu>) : RecyclerView.Adapter<MenuViewHolder>() {

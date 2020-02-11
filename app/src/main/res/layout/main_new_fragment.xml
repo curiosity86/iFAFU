@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <cn.ifafu.ifafu.view.custom.DragLayout
+        android:id="@+id/drawer_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/main_left_bg"
+        android:orientation="vertical">
+
+        <include layout="@layout/main_menu_include" />
+
+        <cn.ifafu.ifafu.view.custom.MyLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bg_gray"
+            android:orientation="vertical">
+
+            <include layout="@layout/main_include" />
+
+        </cn.ifafu.ifafu.view.custom.MyLinearLayout>
+
+    </cn.ifafu.ifafu.view.custom.DragLayout>
+</layout>

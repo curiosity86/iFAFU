@@ -19,7 +19,7 @@ class LeftMenu(private val content: LinearLayout) : View.OnClickListener {
 
     private var tabClickListener: TabClickListener? = null
 
-    fun make(tabs: Map<String, List<Pair<String, Int>>>): LeftMenu {
+    fun make(tabs: List<Pair<String, List<Pair<String, Int>>>>): LeftMenu {
         for ((key, value) in tabs) {
             val u = Unit(key, content)
             for (v in value) {

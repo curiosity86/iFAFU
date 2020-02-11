@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.entity.Score
+import cn.ifafu.ifafu.data.entity.Score
 import cn.ifafu.ifafu.util.GlobalLib
 import cn.ifafu.ifafu.view.adapter.ScoreAdapter.ScoreViewHolder
 

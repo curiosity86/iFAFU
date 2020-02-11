@@ -7,14 +7,15 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.entity.Exam
+import cn.ifafu.ifafu.data.entity.Exam
 import cn.ifafu.ifafu.util.DateUtils
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class ExamAdapter(
         private val mContext: Context,
-        var data: List<Exam>) : RecyclerView.Adapter<ExamAdapter.ExamViewHolder>() {
+        var data: List<Exam> = emptyList()) : RecyclerView.Adapter<ExamAdapter.ExamViewHolder>() {
 
     private val format = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
     private val format2 = SimpleDateFormat("HH:mm", Locale.CHINA)
@@ -31,7 +32,7 @@ class ExamAdapter(
         val weekday = DateUtils.getWeekdayCN(start.get(Calendar.DAY_OF_WEEK))
 
         holder.tvExamTime.text = if (exam.endTime == 0L) {
-            "未出考试时间"
+            "暂无考试时间"
         } else {
             String.format("%s (%s %s~%s)",
                     format.format(Date(exam.startTime)),
@@ -58,10 +59,6 @@ class ExamAdapter(
 
     override fun getItemCount(): Int {
         return this.data.size
-    }
-
-    fun setExamData(data: List<Exam>) {
-        this.data = data
     }
 
     inner class ExamViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

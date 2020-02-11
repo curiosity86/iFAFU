@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.test;
 import org.junit.Test;
 
 import cn.ifafu.ifafu.FileUtils;
-import cn.ifafu.ifafu.data.http.parser.CommentParser2;
+import cn.ifafu.ifafu.data.network.parser.CommentParser2;
 
 public class CommentParser2Test {
 

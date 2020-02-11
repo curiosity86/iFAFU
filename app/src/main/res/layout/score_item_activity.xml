@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".mvp.score_item.ScoreItemActivity">
+        tools:context=".ui.score_item.ScoreItemActivity">
 
         <cn.ifafu.ifafu.view.custom.WToolbar
             android:id="@+id/tb_score_item"

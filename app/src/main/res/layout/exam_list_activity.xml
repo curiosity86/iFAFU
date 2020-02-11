@@ -1,60 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <cn.ifafu.ifafu.view.custom.WToolbar
-        android:id="@+id/tb_exam"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        app:title="@string/exam"
-        app:navigationIcon="@drawable/ic_back">
+    <data>
 
-        <ImageButton
-            android:id="@+id/btn_refresh"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="8dp"
-            android:padding="4dp"
-            android:src="@drawable/ic_refresh" />
-
-    </cn.ifafu.ifafu.view.custom.WToolbar>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:background="#DDFFFF"
-        android:gravity="center"
-        android:text="@string/exam_hint"
-        android:textColor="#1dcbdb"
-        android:textSize="12sp" />
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:gravity="center"
         android:orientation="vertical">
 
-        <cn.ifafu.ifafu.view.custom.EmptyView
-            android:id="@+id/view_exam_empty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            app:message="@string/exam_data_empty"
-            android:visibility="gone"/>
+        <cn.ifafu.ifafu.view.custom.WToolbar
+            android:id="@+id/tb_exam"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            app:title="@string/exam"
+            app:navigationIcon="@drawable/ic_back">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_exam"
+            <ImageButton
+                android:id="@+id/btn_refresh"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="8dp"
+                android:padding="4dp"
+                android:src="@drawable/ic_refresh" />
+
+        </cn.ifafu.ifafu.view.custom.WToolbar>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="#DDFFFF"
+            android:gravity="center"
+            android:text="@string/exam_hint"
+            android:textColor="#1dcbdb"
+            android:textSize="12sp" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#EEEEEE"
-            tools:listitem="@layout/exam_info_recycle_item"/>
+            android:background="@color/white"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <cn.ifafu.ifafu.view.custom.EmptyView
+                android:id="@+id/view_exam_empty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:message="@string/exam_data_empty"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_exam"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#EEEEEE"
+                tools:listitem="@layout/exam_info_recycle_item" />
+
+        </LinearLayout>
 
     </LinearLayout>
-
-</LinearLayout>
+</layout>

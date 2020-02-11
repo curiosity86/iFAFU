@@ -10,7 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import cn.ifafu.ifafu.app.Constant
-import cn.ifafu.ifafu.mvp.login.LoginActivity
+import cn.ifafu.ifafu.ui.login.LoginActivity
 import cn.ifafu.ifafu.view.dialog.LoadingDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -29,23 +29,22 @@ abstract class BaseFragment<VDB : ViewDataBinding, VM : BaseViewModel> : Fragmen
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mBinding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false)
-        return super.onCreateView(inflater, container, savedInstanceState)
+        return mBinding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         mBinding.lifecycleOwner = this
-        initFragment(view, savedInstanceState)
         mViewModel = getViewModel()
         mViewModel.event = this
-
+        initFragment(savedInstanceState)
     }
 
     protected abstract fun getLayoutId(): Int
 
     protected abstract fun getViewModel(): VM
 
-    protected abstract fun initFragment(view: View, savedInstanceState: Bundle?)
+    protected abstract fun initFragment(savedInstanceState: Bundle?)
 
     override suspend fun showMessage(message: String) {
         withContext(Dispatchers.Main) {

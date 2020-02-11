@@ -9,7 +9,7 @@
 
         <variable
             name="info"
-            type="cn.ifafu.ifafu.entity.ElectiveInfo" />
+            type="cn.ifafu.ifafu.data.entity.ElectiveInfo" />
 
         <variable
             name="show"

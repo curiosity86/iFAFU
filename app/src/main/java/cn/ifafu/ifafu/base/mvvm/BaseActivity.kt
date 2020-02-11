@@ -7,14 +7,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import cn.ifafu.ifafu.app.Constant
-import cn.ifafu.ifafu.mvp.login.LoginActivity
+import cn.ifafu.ifafu.ui.login.LoginActivity
 import cn.ifafu.ifafu.view.dialog.LoadingDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 abstract class BaseActivity<VDB : ViewDataBinding, VM : BaseViewModel> : AppCompatActivity(), UIEvent {
 
-    protected open val loadingDialog by lazy {
+    protected open val mLoadingDialog by lazy {
         LoadingDialog(this).apply {
             setText("加载中")
             setCancelable(true)
@@ -59,11 +59,11 @@ abstract class BaseActivity<VDB : ViewDataBinding, VM : BaseViewModel> : AppComp
     }
 
     override suspend fun showDialog() = withContext(Dispatchers.Main) {
-        loadingDialog.show()
+        mLoadingDialog.show()
     }
 
     override suspend fun hideDialog() = withContext(Dispatchers.Main) {
-        loadingDialog.cancel()
+        mLoadingDialog.cancel()
     }
 
     override suspend fun startLoginActivity() = withContext(Dispatchers.Main) {
@@ -71,7 +71,7 @@ abstract class BaseActivity<VDB : ViewDataBinding, VM : BaseViewModel> : AppComp
         finish()
     }
 
-    override suspend fun finishIt() = withContext(Dispatchers.IO) {
+    override suspend fun finishIt() = withContext(Dispatchers.Main) {
         finish()
     }
 

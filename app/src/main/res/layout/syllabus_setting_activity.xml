@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <cn.ifafu.ifafu.view.custom.WToolbar
-        android:id="@+id/tb_syllabus_setting"
+    <data>
+
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/white"
-        app:navigationIcon="@drawable/ic_back"
-        app:elevation="4dp"
-        app:title="@string/title_syllabus_setting" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_syllabus_setting"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        <cn.ifafu.ifafu.view.custom.WToolbar
+            android:id="@+id/tb_syllabus_setting"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@color/white"
+            app:navigationIcon="@drawable/ic_back"
+            app:elevation="4dp"
+            app:title="@string/title_syllabus_setting" />
 
-</LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_syllabus_setting"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+</layout>

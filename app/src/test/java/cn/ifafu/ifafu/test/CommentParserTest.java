@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.junit.Test;
 
 import cn.ifafu.ifafu.FileUtils;
-import cn.ifafu.ifafu.data.http.parser.CommentParser;
+import cn.ifafu.ifafu.data.network.parser.CommentParser;
 
 public class CommentParserTest {
 
@@ -14,7 +14,7 @@ public class CommentParserTest {
     @Test
     public void test() throws Exception {
         CommentParser parser = new CommentParser();
-        parser.parse(FileUtils.read(path + "\\001.html")).getBody().forEach(item -> {
+        parser.parse(FileUtils.read(path + "\\001.html")).getData().forEach(item -> {
             System.out.println(JSONObject.toJSONString(item));
         });
     }

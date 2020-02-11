@@ -1,7 +1,7 @@
 package cn.ifafu.ifafu.test
 
 import cn.ifafu.ifafu.FileUtils
-import cn.ifafu.ifafu.data.http.parser.CommentParserJS
+import cn.ifafu.ifafu.data.network.parser.CommentParserJS
 import com.alibaba.fastjson.JSONObject
 import org.junit.Test
 
@@ -11,7 +11,7 @@ class CommentParserJSTest {
     @Throws(Exception::class)
     fun test() {
         val parser = CommentParserJS()
-        parser.parse(FileUtils.read("$path\\002.html")).body!!.forEach {
+        parser.parse(FileUtils.read("$path\\002.html")).data!!.forEach {
             println(JSONObject.toJSONString(it))
         }
     }

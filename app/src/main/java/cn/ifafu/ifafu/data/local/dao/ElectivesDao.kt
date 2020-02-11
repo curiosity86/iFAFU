@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import cn.ifafu.ifafu.entity.Electives
+import cn.ifafu.ifafu.data.entity.Electives
 
 @Dao
 interface ElectivesDao {

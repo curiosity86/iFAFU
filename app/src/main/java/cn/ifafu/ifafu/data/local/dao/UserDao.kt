@@ -1,7 +1,7 @@
 package cn.ifafu.ifafu.data.local.dao
 
 import androidx.room.*
-import cn.ifafu.ifafu.entity.User
+import cn.ifafu.ifafu.data.entity.User
 
 @Dao
 interface UserDao {

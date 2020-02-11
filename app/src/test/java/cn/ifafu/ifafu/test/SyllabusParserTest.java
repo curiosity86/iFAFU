@@ -14,8 +14,8 @@ import java.util.Collection;
 import java.util.List;
 
 import cn.ifafu.ifafu.FileUtils;
-import cn.ifafu.ifafu.entity.Course;
-import cn.ifafu.ifafu.data.http.parser.SyllabusParser;
+import cn.ifafu.ifafu.data.entity.Course;
+import cn.ifafu.ifafu.data.network.parser.SyllabusParser;
 
 @RunWith(Parameterized.class)
 public class SyllabusParserTest {
@@ -43,7 +43,7 @@ public class SyllabusParserTest {
 //        SimplePropertyPreFilter filter = new SimplePropertyPreFilter("name", "weekday", "teacher", "address", "weekSet", "beginNode", "nodeLength");
 //        System.out.println(JSONObject.toJSONString(actual, filter));
         String html = FileUtils.read(path + "\\in\\" + in, "gb2312");
-        List<Course> actual = parser.parse(html).getBody();
+        List<Course> actual = parser.parse(html).getData();
         String json = FileUtils.read(path + "\\out\\" + out);
         List<Course> except = JSONObject.parseArray(json, Course.class);
         System.out.println("except:" + except);

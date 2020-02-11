@@ -168,7 +168,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="@{empty ? View.VISIBLE: View.GONE}"
-            app:message="@string/exam_data_empty" />
+            app:message="@string/score_data_empty" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_score"

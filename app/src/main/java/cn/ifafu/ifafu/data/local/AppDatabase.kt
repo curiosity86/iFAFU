@@ -9,7 +9,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import cn.ifafu.ifafu.data.local.converter.*
 import cn.ifafu.ifafu.data.local.dao.*
-import cn.ifafu.ifafu.entity.*
+import cn.ifafu.ifafu.data.entity.*
 
 @Database(
         entities = [
@@ -51,11 +51,15 @@ abstract class AppDatabase : RoomDatabase() {
     abstract val electivesDao: ElectivesDao
 
     companion object {
+        private var INSTANCE: AppDatabase? = null
 
         fun getInstance(context: Context): AppDatabase {
-            return Room.databaseBuilder(context, AppDatabase::class.java, "ifafu_db")
-                    .addMigrations(MIRGRATIONS_1_2, MIRGRATIONS_2_3, MIRGRATIONS_3_4, MIGRATIONS_4_5)
-                    .build()
+            if (INSTANCE == null) {
+                INSTANCE = Room.databaseBuilder(context, AppDatabase::class.java, "ifafu_db")
+                        .addMigrations(MIRGRATIONS_1_2, MIRGRATIONS_2_3, MIRGRATIONS_3_4, MIGRATIONS_4_5)
+                        .build()
+            }
+            return INSTANCE!!
         }
 
         private val MIRGRATIONS_1_2 = object : Migration(1, 2) {

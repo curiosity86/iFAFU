@@ -27,14 +27,15 @@ class IFAFU : BaseApplication() {
         }
         UMConfigure.init(this, "5d4082673fc1955041000408", "web", UMConfigure.DEVICE_TYPE_PHONE, "1a446c1ae0455153aa502937a87e5634")
         MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
-
-        loginJob = GlobalScope.launch(Dispatchers.IO) {
-            val user = Repository.getInUseUser() ?: return@launch
+        //后台自动登录
+        loginJob = GlobalScope.launch {
+            val user = Repository.user.getInUse() ?: return@launch
             kotlin.runCatching {
-                val response = Repository.login(user.account, user.password)
-                if (user.name.isEmpty()) {
-                    user.name = response.body!!
-                    Repository.saveUser(user)
+                Repository.user.login(user).run {
+                    if (user.name.isBlank()) {
+                        user.name = this.data ?: ""
+                        Repository.user.save(user)
+                    }
                 }
             }
         }
@@ -46,22 +47,24 @@ class IFAFU : BaseApplication() {
 
         var FIRST_START_APP = true
 
-        var loginDisposable: Disposable? = null
-
+        /**
+         * 启动界面时调用，防止长时间白屏
+         */
         fun initConfig(context: Context) {
             if (FIRST_START_APP) {
                 //初始化Bugly
                 val strategy = CrashReport.UserStrategy(context)
                 strategy.setCrashHandleCallback(object : CrashReport.CrashHandleCallback() {
                     override fun onCrashHandleStart(crashType: Int, errorType: String?, errorMessage: String?, errorStack: String?): MutableMap<String, String> {
-                        val map = super.onCrashHandleStart(crashType, errorType, errorMessage, errorStack) ?: HashMap()
-                        map["account"] = Repository.account
+                        val map = super.onCrashHandleStart(crashType, errorType, errorMessage, errorStack)
+                                ?: HashMap()
+                        map["account"] = Repository.user.getInUseAccount()
                         return map
                     }
                 })
                 strategy.appVersion = AppUtils.getVersionName(context) + "-" + AppUtils.getVersionCode(context)
                 Bugly.init(context, "46836c4eaa", BuildConfig.DEBUG, strategy)
-                Repository.account.run {
+                Repository.user.getInUseAccount().run {
                     if (this.isNotEmpty()) {
                         Bugly.setUserId(context, this)
                     }

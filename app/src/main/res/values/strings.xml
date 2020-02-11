@@ -122,7 +122,7 @@
     <string name="balance">校园卡余额：%s元</string>
     <string name="confirm_pay">确认缴费</string>
     <string name="hint_sno">请输入学号</string>
-    <string name="hint_password">请输入密码（身份证后六位）</string>
+    <string name="hint_password">学付宝密码（默认为身份证后六位数字）</string>
     <string name="hint_verify">验证码</string>
     <string name="announce">电费充值为实验性功能！！\n只保证电费查询和校园卡查询功能有效性！！\n服务提供：学付宝</string>
     <string name="elec_tos_1">电费充值服务由学付宝提供，充值金直接流向学付宝，学付宝App内可查到消费账单</string>

@@ -1,22 +1,22 @@
 package cn.ifafu.ifafu.data.local.dao
 
 import androidx.room.*
-import cn.ifafu.ifafu.entity.Score
+import cn.ifafu.ifafu.data.entity.Score
 
 @Dao
 interface ScoreDao {
 
     @Query("SELECT * FROM Score WHERE account=:account ORDER BY id")
-    fun allScores(account: String): List<Score>
+    fun getAll(account: String): List<Score>
 
     @Query("SELECT * FROM Score WHERE account=:account AND term=:term AND year=:year ORDER BY id")
-    fun allScores(account: String, year: String, term: String): List<Score>
+    fun getAll(account: String, year: String, term: String): List<Score>
 
     @Query("SELECT * FROM Score WHERE account=:account AND year=:year ORDER BY id")
-    fun allScoresByYear(account: String, year: String): List<Score>
+    fun getAllByYear(account: String, year: String): List<Score>
 
     @Query("SELECT * FROM Score WHERE account=:account AND term=:term ORDER BY id")
-    fun allScoresByTerm(account: String, term: String): List<Score>
+    fun getAllByTerm(account: String, term: String): List<Score>
 
     @Query("SELECT * FROM Score WHERE id=:id")
     fun getScoreById(id: Long): Score

@@ -2,7 +2,7 @@ package cn.ifafu.ifafu.view.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import cn.ifafu.ifafu.entity.SyllabusSetting
+import cn.ifafu.ifafu.data.entity.SyllabusSetting
 import cn.ifafu.ifafu.util.DateUtils
 import cn.ifafu.ifafu.view.syllabus.CourseBase
 import cn.ifafu.ifafu.view.syllabus.SyllabusView
@@ -14,19 +14,7 @@ class SyllabusPageAdapter(var setting: SyllabusSetting,
                           var onCourseClick: (course: CourseBase) -> Unit)
     : RecyclerView.Adapter<SyllabusPageAdapter.SyllabusViewHolder>() {
 
-    private val mCurrentWeek by lazy {
-        val format = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
-        DateUtils.getCurrentWeek(format.parse(setting.openingDay), setting.firstDayOfWeek)
-    }
-    private val mCurrentWeekday by lazy {
-        DateUtils.getCurrentWeekday()
-    }
-
-    var courses : MutableList<MutableList<CourseBase>?> = courses
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+    var courses : List<List<CourseBase>?> = courses
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SyllabusViewHolder {
         val context = parent.context
@@ -49,8 +37,19 @@ class SyllabusPageAdapter(var setting: SyllabusSetting,
     }
 
     override fun onBindViewHolder(holder: SyllabusViewHolder, position: Int) {
+//        val c = Calendar.getInstance()
+//        c.time = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).parse(setting.openingDay)
+//        c.add(Calendar.WEEK_OF_YEAR, position)
+//        val monthInCN = "${c[Calendar.MONTH] + 1}\n月"
+//        val dates = Array<String?>(7) {""}
+//        val format = SimpleDateFormat("MM-dd", Locale.CHINA)
+//        for (i in 0 until 7) {
+//            dates[i] = format.format(c.time)
+//            c.add(Calendar.DAY_OF_YEAR, 1)
+//        }
         val dates = DateUtils.getWeekDates(setting.openingDay, position, setting.firstDayOfWeek, "MM-dd")
         holder.setCourseData(courses.getOrNull(position))
+//                .setCornerText(monthInCN)
                 .setCornerText(dates[0].substring(if (dates[0][0] == '0') 1 else 0, 2) + "\n月")
 //                .setToday(if (position + 1 == mCurrentWeek) mCurrentWeekday else -1 )
                 .setBeginTimeTexts(setting.beginTimeText.copyOfRange(1, setting.beginTimeText.size))

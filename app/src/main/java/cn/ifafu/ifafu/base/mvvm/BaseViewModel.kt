@@ -5,46 +5,46 @@ import android.content.res.Resources
 import android.database.sqlite.SQLiteConstraintException
 import androidx.lifecycle.AndroidViewModel
 import cn.ifafu.ifafu.data.Repository
-import cn.ifafu.ifafu.entity.Response
-import cn.ifafu.ifafu.entity.exception.NoAuthException
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import cn.ifafu.ifafu.data.entity.Response
+import cn.ifafu.ifafu.data.entity.exception.NoAuthException
+import kotlinx.coroutines.*
 import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import javax.security.auth.login.LoginException
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 abstract class BaseViewModel(application: Application) : AndroidViewModel(application) {
-
-    protected val mRepository by lazy { Repository }
 
     lateinit var event: UIEvent
 
     /**
+     * 登录态失效时自动重新登录，成功后重新执行代码块，否则提示错误
      * @return null 重新登录错误
      */
-    protected suspend fun <T> ensureLoginStatus(callback: suspend () -> T): T? = withContext(Dispatchers.IO) {
+    protected suspend fun <T> ensureLoginStatus(block: suspend () -> T): T {
         try {
-            callback()
+            return block()
         } catch (e: NoAuthException) {
-            val user = mRepository.getInUseUser()
+            val user = Repository.user.getInUse()
                     ?: throw Resources.NotFoundException("用户信息不存在")
-            val response = mRepository.login(user.account, user.password)
-            when (response.code) {
-                Response.FAILURE -> {
-                    event.startLoginActivity()
-                    null
-                }
-                Response.ERROR -> {
-                    event.showMessage(response.message)
-                    null
-                }
-                Response.SUCCESS -> {
-                    callback()
-                }
-                else -> {
-                    event.showMessage("未知的Response返回码")
-                    null
+            return Repository.user.login(user).run {
+                when (code) {
+                    Response.FAILURE -> {
+                        event.startLoginActivity()
+                        throw LoginException(message)
+                    }
+                    Response.ERROR -> {
+                        throw LoginException(message)
+                    }
+                    Response.SUCCESS -> {
+                        block()
+                    }
+                    else -> {
+                        throw UnknownError()
+                    }
                 }
             }
         }
@@ -73,4 +73,27 @@ abstract class BaseViewModel(application: Application) : AndroidViewModel(applic
         run()
     }
 
+    protected fun safeLaunch(
+            context: CoroutineContext = EmptyCoroutineContext,
+            start: CoroutineStart = CoroutineStart.DEFAULT,
+            block: suspend CoroutineScope.() -> Unit): Job {
+        return safeLaunch(context, start, block) {
+            event.showMessage(it.errorMessage())
+        }
+    }
+
+    protected fun safeLaunch(
+            context: CoroutineContext = EmptyCoroutineContext,
+            start: CoroutineStart = CoroutineStart.DEFAULT,
+            block: suspend CoroutineScope.() -> Unit,
+            error: suspend (Exception) -> Unit): Job {
+        return GlobalScope.launch(context, start) {
+            try {
+                block()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                error(e)
+            }
+        }
+    }
 }

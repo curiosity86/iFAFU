@@ -22,7 +22,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="ExportedService,GoogleAppIndexingWarning,UnusedAttribute">
 
-        <activity android:name=".mvp.activity.SplashActivity"
+        <activity android:name=".ui.activity.SplashActivity"
             android:theme="@style/AppTheme.Launch">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,25 +30,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".mvp.main.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:launchMode="singleTask" />
         <activity
-            android:name=".mvp.login.LoginActivity"
+            android:name=".ui.login.LoginActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".mvp.syllabus.SyllabusActivity" />
-        <activity android:name=".mvp.syllabus_item.SyllabusItemActivity" />
-        <activity android:name=".mvp.syllabus_setting.SyllabusSettingActivity" />
-        <activity android:name=".mvp.score_list.ScoreListActivity" />
-        <activity android:name=".mvp.score_item.ScoreItemActivity" />
-        <activity android:name=".mvp.score_filter.ScoreFilterActivity" />
-        <activity android:name=".mvp.exam_list.ExamActivity" />
-        <activity android:name=".mvp.web.WebActivity" />
-        <activity android:name=".mvp.activity.AboutActivity" />
-        <activity android:name=".mvp.elec_login.ElecLoginActivity" />
-        <activity android:name=".mvp.elec_main.ElecMainActivity" />
-        <activity android:name=".mvp.setting.SettingActivity" />
-        <activity android:name=".mvp.comment.CommentActivity" />
-        <activity android:name=".mvp.elective.ElectiveActivity" />
+        <activity android:name=".ui.syllabus.SyllabusActivity" />
+        <activity android:name=".ui.syllabus_item.SyllabusItemActivity" />
+        <activity android:name=".ui.syllabus_setting.SyllabusSettingActivity" />
+        <activity android:name=".ui.score_list.ScoreListActivity" />
+        <activity android:name=".ui.score_item.ScoreItemActivity" />
+        <activity android:name=".ui.score_filter.ScoreFilterActivity" />
+        <activity android:name=".ui.exam_list.ExamListActivity" />
+        <activity android:name=".ui.web.WebActivity" />
+        <activity android:name=".ui.activity.AboutActivity" />
+        <activity android:name=".ui.electricity.ElectricityActivity" />
+        <activity android:name=".ui.setting.SettingActivity" />
+        <activity android:name=".ui.comment.CommentActivity" />
+        <activity android:name=".ui.elective.ElectiveActivity" />
 
         <meta-data
             android:name="BUGLY_APP_CHANNEL"

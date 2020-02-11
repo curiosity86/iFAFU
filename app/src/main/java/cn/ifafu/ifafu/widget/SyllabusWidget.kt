@@ -14,10 +14,9 @@ import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.IFAFU
 import cn.ifafu.ifafu.data.Repository
-import cn.ifafu.ifafu.entity.NextCourse
-import cn.ifafu.ifafu.mvp.activity.SplashActivity
-import cn.ifafu.ifafu.mvp.main.old.MainOldModel
-import cn.ifafu.ifafu.mvp.syllabus.SyllabusActivity
+import cn.ifafu.ifafu.data.entity.NextCourse
+import cn.ifafu.ifafu.ui.activity.SplashActivity
+import cn.ifafu.ifafu.ui.syllabus.SyllabusActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -51,18 +50,18 @@ class SyllabusWidget : AppWidgetProvider() {
         val format = SimpleDateFormat("HH:mm:ss", Locale.CHINA)
         remoteViews.setTextViewText(R.id.tv_refresh_time, context.getString(R.string.refresh_time_format, format.format(Date())))
         val t = Thread {
-            MainOldModel(context).getNextCourse()
-                    .subscribe({
-                        updateView(remoteViews, it)
-                    }, {
-                        remoteViews.setViewVisibility(R.id.tv_null, View.VISIBLE)
-                        remoteViews.setViewVisibility(R.id.layout_info, View.GONE)
-                        if (it is NullPointerException) {
-                            remoteViews.setTextViewText(R.id.tv_null, "暂无课表信息")
-                        } else {
-                            remoteViews.setTextViewText(R.id.tv_null, it.message)
-                        }
-                    })
+//            MainOldModel(context).getNextCourse()
+//                    .subscribe({
+//                        updateView(remoteViews, it)
+//                    }, {
+//                        remoteViews.setViewVisibility(R.id.tv_null, View.VISIBLE)
+//                        remoteViews.setViewVisibility(R.id.layout_info, View.GONE)
+//                        if (it is NullPointerException) {
+//                            remoteViews.setTextViewText(R.id.tv_null, "暂无课表信息")
+//                        } else {
+//                            remoteViews.setTextViewText(R.id.tv_null, it.message)
+//                        }
+//                    })
         }
         t.start()
         t.join()
@@ -118,7 +117,7 @@ class SyllabusWidget : AppWidgetProvider() {
                     GlobalScope.launch {
                         val jumpIntent: Intent
                         when {
-                            Repository.getInUseUser() == null -> {
+                            Repository.user.getInUse() == null -> {
                                 jumpIntent = Intent(context, SplashActivity::class.java)
                             }
                             IFAFU.FIRST_START_APP -> {

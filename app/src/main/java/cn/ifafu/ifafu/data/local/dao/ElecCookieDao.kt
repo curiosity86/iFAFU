@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import cn.ifafu.ifafu.entity.ElecCookie
+import cn.ifafu.ifafu.data.entity.ElecCookie
 
 @Dao
 interface ElecCookieDao {

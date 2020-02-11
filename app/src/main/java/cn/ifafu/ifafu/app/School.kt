@@ -1,8 +1,8 @@
 package cn.ifafu.ifafu.app
 
-import cn.ifafu.ifafu.entity.User
-import cn.ifafu.ifafu.entity.ZFApi
-import cn.ifafu.ifafu.entity.ZFApiList
+import cn.ifafu.ifafu.data.entity.User
+import cn.ifafu.ifafu.data.entity.ZFApi
+import cn.ifafu.ifafu.data.entity.ZFApiList
 import java.util.*
 
 object School {
