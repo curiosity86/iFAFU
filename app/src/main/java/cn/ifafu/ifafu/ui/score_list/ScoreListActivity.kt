@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.VMProvider
-import cn.ifafu.ifafu.base.mvvm.BaseActivity
+import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.databinding.ScoreListActivityBinding
 import cn.ifafu.ifafu.data.entity.Score
 import cn.ifafu.ifafu.ui.score_filter.ScoreFilterActivity
@@ -23,8 +23,6 @@ import com.bigkoo.pickerview.listener.OnOptionsSelectListener
 import com.bigkoo.pickerview.view.OptionsPickerView
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.score_list_activity.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 class ScoreListActivity : BaseActivity<ScoreListActivityBinding, ScoreListViewModel>(), View.OnClickListener {
 

@@ -14,13 +14,13 @@ import cn.ifafu.ifafu.BuildConfig
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.VMProvider
-import cn.ifafu.ifafu.base.mvvm.BaseActivity
+import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.data.entity.GlobalSetting
 import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.databinding.MainActivityBinding
 import cn.ifafu.ifafu.ui.login.LoginActivity
-import cn.ifafu.ifafu.ui.main.fragment.MainNewFragment
-import cn.ifafu.ifafu.ui.main.fragment.MainOldFragment
+import cn.ifafu.ifafu.ui.main.neww.MainNewFragment
+import cn.ifafu.ifafu.ui.main.oldTheme.MainOldThemeFragment
 import cn.ifafu.ifafu.util.ButtonUtils
 import cn.ifafu.ifafu.view.adapter.AccountAdapter
 import cn.ifafu.ifafu.view.custom.DragLayout
@@ -29,10 +29,9 @@ import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.account_dialog.view.*
+import kotlinx.android.synthetic.main.fragment_main_old_theme.*
 import kotlinx.android.synthetic.main.main_new_fragment.*
-import kotlinx.android.synthetic.main.main_old_fragment.*
 
-//TODO 修改主题自动切换
 class MainActivity : BaseActivity<MainActivityBinding, MainViewModel>() {
 
     private var nowTheme = -999
@@ -76,9 +75,9 @@ class MainActivity : BaseActivity<MainActivityBinding, MainViewModel>() {
             supportFragmentManager.beginTransaction().apply {
                 when (it) {
                     GlobalSetting.THEME_NEW -> replace(R.id.view_content, MainNewFragment())
-                    GlobalSetting.THEME_OLD -> replace(R.id.view_content, MainOldFragment())
+                    GlobalSetting.THEME_OLD -> replace(R.id.view_content, MainOldThemeFragment())
                 }
-            }.commitNow()
+            }.commitNowAllowingStateLoss()
         })
         mViewModel.users.observe(this, Observer {
             mAccountAdapter.replaceData(it)

@@ -2,9 +2,9 @@ package cn.ifafu.ifafu.ui.elective
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import cn.ifafu.ifafu.base.mvvm.BaseViewModel
-import cn.ifafu.ifafu.data.Repository
-import cn.ifafu.ifafu.data.entity.ElectiveInfo
+import cn.ifafu.ifafu.base.BaseViewModel
+import cn.ifafu.ifafu.data.repository.Repository
+import cn.ifafu.ifafu.data.bean.ElectiveInfo
 import cn.ifafu.ifafu.util.sumByFloat
 
 class ElectiveViewModel(application: Application) : BaseViewModel(application) {

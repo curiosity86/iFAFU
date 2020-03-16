@@ -67,7 +67,19 @@ class SyllabusSetting {
         if (this === other) return true
         if (other == null || javaClass != other.javaClass) return false
         val that = other as SyllabusSetting
-        return weekCnt == that.weekCnt && totalNode == that.totalNode && showSaturday == that.showSaturday && showSunday == that.showSunday && showBeginTimeText == that.showBeginTimeText && showHorizontalLine == that.showHorizontalLine && showVerticalLine == that.showVerticalLine && nodeLength == that.nodeLength && firstDayOfWeek == that.firstDayOfWeek && textSize == that.textSize && themeColor == that.themeColor && statusDartFont == that.statusDartFont && isForceRefresh == that.isForceRefresh &&
+        return weekCnt == that.weekCnt &&
+                totalNode == that.totalNode &&
+                showSaturday == that.showSaturday &&
+                showSunday == that.showSunday &&
+                showBeginTimeText == that.showBeginTimeText &&
+                showHorizontalLine == that.showHorizontalLine &&
+                showVerticalLine == that.showVerticalLine &&
+                nodeLength == that.nodeLength &&
+                firstDayOfWeek == that.firstDayOfWeek &&
+                textSize == that.textSize &&
+                themeColor == that.themeColor &&
+                statusDartFont == that.statusDartFont &&
+                isForceRefresh == that.isForceRefresh &&
                 account == that.account &&
                 openingDay == that.openingDay &&
                 background == that.background &&

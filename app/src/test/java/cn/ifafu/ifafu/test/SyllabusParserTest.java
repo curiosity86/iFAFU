@@ -15,7 +15,7 @@ import java.util.List;
 
 import cn.ifafu.ifafu.FileUtils;
 import cn.ifafu.ifafu.data.entity.Course;
-import cn.ifafu.ifafu.data.network.parser.SyllabusParser;
+import cn.ifafu.ifafu.data.retrofit.parser.SyllabusParser;
 
 @RunWith(Parameterized.class)
 public class SyllabusParserTest {

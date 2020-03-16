@@ -9,11 +9,10 @@ import cn.ifafu.ifafu.BuildConfig
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.IFAFU
-import cn.ifafu.ifafu.base.mvvm.BaseActivity
-import cn.ifafu.ifafu.base.mvvm.BaseViewModel
-import cn.ifafu.ifafu.data.Repository
+import cn.ifafu.ifafu.base.BaseActivity
+import cn.ifafu.ifafu.base.BaseViewModel
+import cn.ifafu.ifafu.data.repository.Repository
 import cn.ifafu.ifafu.databinding.SplashActivityBinding
-import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.ui.exam_list.ExamListActivity
 import cn.ifafu.ifafu.ui.login.LoginActivity
 import cn.ifafu.ifafu.ui.main.MainActivity

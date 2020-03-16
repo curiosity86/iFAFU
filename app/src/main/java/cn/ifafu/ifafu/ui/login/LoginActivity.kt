@@ -4,14 +4,15 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
 import androidx.annotation.DrawableRes
-import androidx.core.widget.addTextChangedListener
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.VMProvider
-import cn.ifafu.ifafu.base.mvvm.BaseActivity
+import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.databinding.LoginActivityBinding
 import cn.ifafu.ifafu.ui.main.MainActivity
 import cn.ifafu.ifafu.util.GlobalLib
@@ -47,16 +48,22 @@ class LoginActivity : BaseActivity<LoginActivityBinding, LoginViewModel>(), View
         StatusBarUtil.setTransparent(this)
         btn_close.setOnClickListener(this)
         btn_login.setOnClickListener(this)
-        et_account.addTextChangedListener(
-                onTextChanged = { account, _, _, _ ->
-                    if (account.isNullOrEmpty() || account.length < 9) return@addTextChangedListener
-                    if (account[0] == '0' || account.length == 9) {
-                        setBackgroundLogo(R.drawable.fafu_js_icon)
-                    } else {
-                        setBackgroundLogo(R.drawable.fafu_bb_icon)
-                    }
+        et_account.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (s.isNullOrEmpty() || s.length < 9) return
+                if (s[0] == '0' || s.length == 9) {
+                    setBackgroundLogo(R.drawable.fafu_js_icon)
+                } else {
+                    setBackgroundLogo(R.drawable.fafu_bb_icon)
                 }
-        )
+            }
+        })
         et_password.setOnEditorActionListener { v, actionId, event ->
             if (actionId == KeyEvent.ACTION_DOWN || actionId == KeyEvent.KEYCODE_ENDCALL) {
                 GlobalLib.hideSoftKeyboard(this)
@@ -75,7 +82,7 @@ class LoginActivity : BaseActivity<LoginActivityBinding, LoginViewModel>(), View
         mViewModel.login(mBinding.account ?: "", mBinding.password ?: "") {
             withContext(Dispatchers.Main) {
                 when (startByWhichActivity) {
-                    0 -> {
+                    0, Constant.ACTIVITY_SPLASH -> {
                         showMessage("登录成功")
                         val intent = Intent(this@LoginActivity, MainActivity::class.java)
                         startActivity(intent)

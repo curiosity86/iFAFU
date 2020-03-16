@@ -22,7 +22,8 @@
         android:theme="@style/AppTheme"
         tools:ignore="ExportedService,GoogleAppIndexingWarning,UnusedAttribute">
 
-        <activity android:name=".ui.activity.SplashActivity"
+        <activity
+            android:name=".ui.activity.SplashActivity"
             android:theme="@style/AppTheme.Launch">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -46,8 +47,15 @@
         <activity android:name=".ui.activity.AboutActivity" />
         <activity android:name=".ui.electricity.ElectricityActivity" />
         <activity android:name=".ui.setting.SettingActivity" />
-        <activity android:name=".ui.comment.CommentActivity" />
         <activity android:name=".ui.elective.ElectiveActivity" />
+        <activity android:name=".ui.feedback.FeedbackActivity" />
+        <activity android:name=".ui.activity.TestActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <meta-data
             android:name="BUGLY_APP_CHANNEL"
@@ -64,6 +72,7 @@
         <meta-data
             android:name="notch.config"
             android:value="portrait|landscape" />
+
         <receiver
             android:name=".widget.SyllabusWidget"
             android:exported="false">

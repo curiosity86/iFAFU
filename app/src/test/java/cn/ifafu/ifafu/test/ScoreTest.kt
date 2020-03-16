@@ -1,7 +1,7 @@
 package cn.ifafu.ifafu.test
 
 import cn.ifafu.ifafu.FileUtils
-import cn.ifafu.ifafu.data.network.parser.ScoreParser
+import cn.ifafu.ifafu.data.retrofit.parser.ScoreParser
 import cn.ifafu.ifafu.data.entity.User
 
 class ScoreTest {

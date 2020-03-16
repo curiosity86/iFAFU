@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.VMProvider
-import cn.ifafu.ifafu.base.mvvm.BaseActivity
+import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.databinding.SettingActivityBinding
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.*
 import com.gyf.immersionbar.ImmersionBar

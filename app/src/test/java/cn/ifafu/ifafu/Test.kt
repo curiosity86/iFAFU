@@ -10,10 +10,6 @@ import java.util.*
 class Test {
     @Test
     fun test() {
-        val openingDay = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).parse("2020-03-16")!!.time
-        for (i in 16..30) {
-            val now = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).parse("2020-03-${i}")!!.time
-            println("2020-03-${i}    " + ((now - openingDay) / 1000 / 60 / 60 / 24 / 7 + 1))
-        }
+        SimpleDateFormat("yyyy/MM/dd hh:mm:ss", Locale.CHINA).parse("2019/01/10 1:10:10")
     }
 }

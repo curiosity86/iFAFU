@@ -6,6 +6,7 @@ object Constant {
     const val DB_NAME = "ifafu"
     const val IFAFU_BASE_URL = "https://api.ifafu.cn"
     const val REPAIR_URL = "http://hq.fafu.edu.cn/agent/app/index.php?i=144&c=entry&do=index&m=maihu_repair"
+    const val XFB_URL = "http://cardapp.fafu.edu.cn:8088"
     const val SP_USER_INFO = "user_info"
     const val SP_COOKIE = "cookie"
     const val SP_ELEC = "elec"

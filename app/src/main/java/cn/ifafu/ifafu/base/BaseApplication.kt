@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import cn.ifafu.ifafu.app.VMProvider
-import cn.ifafu.ifafu.data.Repository
+import cn.ifafu.ifafu.data.repository.Repository
 
 @SuppressLint("Registered")
 open class BaseApplication : Application() {

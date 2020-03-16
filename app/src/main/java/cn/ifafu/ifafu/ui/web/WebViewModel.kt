@@ -6,9 +6,9 @@ import android.webkit.CookieManager
 import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.School
-import cn.ifafu.ifafu.base.mvvm.BaseViewModel
-import cn.ifafu.ifafu.data.Repository
-import cn.ifafu.ifafu.data.entity.ZFApiList
+import cn.ifafu.ifafu.base.BaseViewModel
+import cn.ifafu.ifafu.data.repository.Repository
+import cn.ifafu.ifafu.data.bean.ZFApiList
 import cn.ifafu.ifafu.util.SPUtils
 
 class WebViewModel(application: Application) : BaseViewModel(application) {
@@ -17,7 +17,7 @@ class WebViewModel(application: Application) : BaseViewModel(application) {
     val title by lazy { MutableLiveData<String>() }
 
     fun init(intent: Intent) {
-        safeLaunch {
+        safeLaunchWithMessage {
             val title: String? = intent.getStringExtra("title")
             var url: String? = intent.getStringExtra("url")
             if (url == null) {

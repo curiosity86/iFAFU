@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import cn.ifafu.ifafu.R
+import cn.ifafu.ifafu.ui.main.oldTheme.bean.Menu
 import cn.ifafu.ifafu.util.DensityUtils
 import cn.ifafu.ifafu.view.listener.TabClickListener
 import java.util.*
@@ -19,8 +20,14 @@ class LeftMenu(private val content: LinearLayout) : View.OnClickListener {
 
     private var tabClickListener: TabClickListener? = null
 
-    fun make(tabs: List<Pair<String, List<Pair<String, Int>>>>): LeftMenu {
-        for ((key, value) in tabs) {
+    override fun onClick(v: View?) {
+        tabMap[v?.id]?.run {
+            tabClickListener?.onTabClick(this)
+        }
+    }
+
+    fun make(menu: cn.ifafu.ifafu.ui.main.oldTheme.bean.Menu): LeftMenu {
+        for ((key, value) in menu.map.entries) {
             val u = Unit(key, content)
             for (v in value) {
                 u.addTab(v)
@@ -28,10 +35,6 @@ class LeftMenu(private val content: LinearLayout) : View.OnClickListener {
             u.draw()
         }
         return this
-    }
-
-    fun getTabClickListener(): TabClickListener? {
-        return tabClickListener
     }
 
     fun setTabClickListener(listener: TabClickListener): LeftMenu {
@@ -42,9 +45,9 @@ class LeftMenu(private val content: LinearLayout) : View.OnClickListener {
     inner class Unit(private val unitName: String, private val rootView: LinearLayout) {
 
         //First:Name  Second:IconRes
-        private val tabList: MutableList<Pair<String, Int>> = ArrayList()
+        private val tabList: MutableList<Menu.Item> = ArrayList()
 
-        fun addTab(pair: Pair<String, Int>) {
+        fun addTab(pair: Menu.Item) {
             tabList.add(pair)
         }
 
@@ -111,7 +114,7 @@ class LeftMenu(private val content: LinearLayout) : View.OnClickListener {
             }
         }
 
-        private fun drawTab(pair: Pair<String, Int>): View {
+        private fun drawTab(pair: Menu.Item): View {
             //绘制Tab根布局
             val tabView = LinearLayout(context)
             tabView.orientation = LinearLayout.HORIZONTAL
@@ -121,7 +124,7 @@ class LeftMenu(private val content: LinearLayout) : View.OnClickListener {
             iconView.layoutParams = LinearLayout.LayoutParams(
                     DensityUtils.dp2px(context, 30F),
                     DensityUtils.dp2px(context, 30F))
-            iconView.setImageResource(pair.second)
+            iconView.setImageResource(pair.icon)
             tabView.addView(iconView)
 
             //标题文本
@@ -133,7 +136,7 @@ class LeftMenu(private val content: LinearLayout) : View.OnClickListener {
                 weight = 1F
             }
             nameTv.layoutParams = tabNameViewParams
-            nameTv.text = pair.first
+            nameTv.text = pair.title
             nameTv.setTextColor(Color.WHITE)
             nameTv.textSize = 18F
             nameTv.gravity = Gravity.CENTER_VERTICAL or Gravity.START
@@ -149,7 +152,7 @@ class LeftMenu(private val content: LinearLayout) : View.OnClickListener {
 
             val newId = View.generateViewId()
             tabView.id = newId
-            tabMap[newId] = pair.first
+            tabMap[newId] = pair.title
             tabView.setOnClickListener(this@LeftMenu)
 
             return tabView
@@ -170,9 +173,4 @@ class LeftMenu(private val content: LinearLayout) : View.OnClickListener {
 
     }
 
-    override fun onClick(v: View?) {
-        tabMap[v?.id]?.run {
-            tabClickListener?.onTabClick(this)
-        }
-    }
 }

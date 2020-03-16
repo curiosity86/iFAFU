@@ -12,7 +12,7 @@ import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.VMProvider
-import cn.ifafu.ifafu.base.mvvm.BaseActivity
+import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.data.entity.Course
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
 import cn.ifafu.ifafu.databinding.SyllabusActivityBinding
@@ -22,12 +22,10 @@ import cn.ifafu.ifafu.ui.syllabus_setting.SyllabusSettingActivity
 import cn.ifafu.ifafu.util.ChineseNumbers
 import cn.ifafu.ifafu.view.adapter.SyllabusPageAdapter
 import cn.ifafu.ifafu.view.dialog.LoadingDialog
-import cn.ifafu.ifafu.view.syllabus.CourseBase
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.syllabus_activity.*
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 class SyllabusActivity : BaseActivity<SyllabusActivityBinding, SyllabusViewModel>(),
         View.OnClickListener, View.OnLongClickListener {
@@ -63,7 +61,8 @@ class SyllabusActivity : BaseActivity<SyllabusActivityBinding, SyllabusViewModel
             setSyllabusSetting(it)
         })
         mViewModel.courses.observe(this, Observer {
-            setSyllabusData(it)
+            mPageAdapter.courses = it
+            mPageAdapter.notifyDataSetChanged()
         })
         mViewModel.initData()
     }
@@ -80,7 +79,7 @@ class SyllabusActivity : BaseActivity<SyllabusActivityBinding, SyllabusViewModel
         ImmersionBar.with(this)
                 .statusBarDarkFont(setting.statusDartFont)
                 .init()
-        mPageAdapter = SyllabusPageAdapter(setting, ArrayList()) {
+        mPageAdapter = SyllabusPageAdapter(setting) {
             val intent = Intent(this, SyllabusItemActivity::class.java)
             intent.putExtra("course_id", (it.getOther() as Course).id)
             startActivityForResult(intent, Constant.ACTIVITY_SYLLABUS_ITEM)
@@ -103,7 +102,7 @@ class SyllabusActivity : BaseActivity<SyllabusActivityBinding, SyllabusViewModel
                 val weekInChinese = "第${ChineseNumbers.englishNumberToChinese((position + 1).toString())}周"
                 if (mCurrentWeek <= 0) {
                     if (position == 0) {
-                        tv_subtitle.text = weekInChinese
+                        tv_subtitle.text = "$weekInChinese(放假中)"
                     } else {
                         tv_subtitle.text = "$weekInChinese 长按返回第一周"
                     }
@@ -117,11 +116,6 @@ class SyllabusActivity : BaseActivity<SyllabusActivityBinding, SyllabusViewModel
             }
         })
         view_pager.setCurrentItem(currentWeek - 1, false)
-    }
-
-    private fun setSyllabusData(courses: List<List<CourseBase>?>) {
-        mPageAdapter.courses = courses
-        mPageAdapter.notifyDataSetChanged()
     }
 
     override fun onClick(v: View?) {

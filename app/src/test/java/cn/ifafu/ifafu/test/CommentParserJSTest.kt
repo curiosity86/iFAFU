@@ -1,7 +1,7 @@
 package cn.ifafu.ifafu.test
 
 import cn.ifafu.ifafu.FileUtils
-import cn.ifafu.ifafu.data.network.parser.CommentParserJS
+import cn.ifafu.ifafu.data.retrofit.parser.CommentParserJS
 import com.alibaba.fastjson.JSONObject
 import org.junit.Test
 

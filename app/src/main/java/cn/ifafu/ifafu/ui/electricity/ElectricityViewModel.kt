@@ -4,10 +4,10 @@ import android.app.Application
 import android.graphics.Bitmap
 import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.app.School
-import cn.ifafu.ifafu.base.mvvm.BaseViewModel
-import cn.ifafu.ifafu.data.Repository
+import cn.ifafu.ifafu.base.BaseViewModel
+import cn.ifafu.ifafu.data.repository.Repository
 import cn.ifafu.ifafu.data.entity.ElecQuery
-import cn.ifafu.ifafu.data.entity.ElecSelection
+import cn.ifafu.ifafu.data.bean.ElecSelection
 import cn.ifafu.ifafu.data.entity.ElecUser
 import cn.ifafu.ifafu.util.ifFalse
 import cn.ifafu.ifafu.util.trimEnd

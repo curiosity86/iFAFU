@@ -11,7 +11,6 @@ import cn.ifafu.ifafu.data.entity.Exam
 import cn.ifafu.ifafu.util.DateUtils
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 class ExamAdapter(
         private val mContext: Context,

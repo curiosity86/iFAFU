@@ -10,9 +10,10 @@ import android.view.View
 import android.widget.Toast
 import cn.ifafu.ifafu.BuildConfig
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.base.mvvm.BaseActivity
-import cn.ifafu.ifafu.base.mvvm.BaseViewModel
+import cn.ifafu.ifafu.base.BaseActivity
+import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.databinding.AboutActivityBinding
+import cn.ifafu.ifafu.ui.feedback.FeedbackActivity
 import cn.ifafu.ifafu.util.GlobalLib
 import com.afollestad.materialdialogs.MaterialDialog
 import com.gyf.immersionbar.ImmersionBar
@@ -38,7 +39,7 @@ class AboutActivity : BaseActivity<AboutActivityBinding, BaseViewModel>(), View.
         aboutAppSubName.setOnLongClickListener {
             Toast.makeText(
                     this,
-                    "当前迭代版本号：" + GlobalLib.getLocalVersionCode(this).toString(),
+                    "当前迭代版本号：${GlobalLib.getLocalVersionCode(this)}",
                     Toast.LENGTH_SHORT
             ).show()
             true
@@ -48,6 +49,7 @@ class AboutActivity : BaseActivity<AboutActivityBinding, BaseViewModel>(), View.
         btn_goto_qq_group.setOnClickListener(this)
         btn_goto_weibo.setOnClickListener(this)
         btn_goto_email.setOnClickListener(this)
+        btn_feedback.setOnClickListener(this)
     }
 
     private fun linkTo(url: String) {
@@ -70,6 +72,9 @@ class AboutActivity : BaseActivity<AboutActivityBinding, BaseViewModel>(), View.
                 }
                 val intent = Intent(Intent.ACTION_SENDTO, Uri.parse(email))
                 startActivity(Intent.createChooser(intent, "选择发送应用"))
+            }
+            R.id.btn_feedback -> {
+                startActivity(Intent(this, FeedbackActivity::class.java))
             }
             R.id.btn_feed -> {
                 MaterialDialog(this).show {

@@ -1,8 +1,9 @@
 package cn.ifafu.ifafu.ui.score_item
 
 import android.app.Application
-import cn.ifafu.ifafu.base.mvvm.BaseViewModel
-import cn.ifafu.ifafu.data.Repository
+import androidx.lifecycle.MutableLiveData
+import cn.ifafu.ifafu.base.BaseViewModel
+import cn.ifafu.ifafu.data.repository.Repository
 import cn.ifafu.ifafu.util.GlobalLib
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -10,7 +11,9 @@ import kotlinx.coroutines.launch
 
 class ScoreItemViewModel(application: Application) : BaseViewModel(application) {
 
-    fun init(id: Long, success: suspend (List<Pair<String, String>>) -> Unit) {
+    val score by lazy { MutableLiveData<List<Pair<String, String>>>() }
+
+    fun init(id: Long) {
         GlobalScope.launch(Dispatchers.IO) {
             if (id == 0L) {
                 event.showMessage("查询成绩出错（无法找到ID）")
@@ -32,7 +35,7 @@ class ScoreItemViewModel(application: Application) : BaseViewModel(application) 
                 map["学年"] = score.year
                 map["学期"] = score.term
                 map["备注"] = score.remarks
-                success(map.toList())
+                this@ScoreItemViewModel.score.postValue(map.toList())
             }
         }
     }

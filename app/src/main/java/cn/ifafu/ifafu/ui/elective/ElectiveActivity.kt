@@ -6,7 +6,7 @@ import android.view.View
 import androidx.lifecycle.Observer
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.VMProvider
-import cn.ifafu.ifafu.base.mvvm.BaseActivity
+import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.databinding.ElectiveActivityBinding
 import cn.ifafu.ifafu.data.entity.Score
 import cn.ifafu.ifafu.ui.score_item.ScoreItemActivity

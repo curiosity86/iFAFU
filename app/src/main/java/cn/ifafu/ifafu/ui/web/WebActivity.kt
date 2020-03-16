@@ -14,7 +14,7 @@ import android.widget.LinearLayout
 import androidx.lifecycle.Observer
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.VMProvider
-import cn.ifafu.ifafu.base.mvvm.BaseActivity
+import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.databinding.WebActivityBinding
 import cn.ifafu.ifafu.view.dialog.LoadingDialog
 import com.gyf.immersionbar.ImmersionBar

@@ -4,8 +4,8 @@ import android.app.Activity
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.base.mvvm.BaseViewModel
-import cn.ifafu.ifafu.data.Repository
+import cn.ifafu.ifafu.base.BaseViewModel
+import cn.ifafu.ifafu.data.repository.Repository
 import cn.ifafu.ifafu.data.entity.Course
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
 
@@ -19,7 +19,7 @@ class SyllabusItemViewModel(application: Application) : BaseViewModel(applicatio
     private var isNewCourse = false
 
     fun init(id: Long) {
-        safeLaunch {
+        safeLaunchWithMessage {
             setting.postValue(Repository.syllabus.getSetting())
             // 获取跳转课程id
             if (id != -1L) {
@@ -36,7 +36,7 @@ class SyllabusItemViewModel(application: Application) : BaseViewModel(applicatio
     }
 
     fun delete() {
-        safeLaunch {
+        safeLaunchWithMessage {
             course.value?.run {
                 Repository.syllabus.delete(this)
                 event.showMessage("删除成功")
@@ -49,7 +49,7 @@ class SyllabusItemViewModel(application: Application) : BaseViewModel(applicatio
     }
 
     fun save(course: Course) {
-        safeLaunch {
+        safeLaunchWithMessage {
             when {
                 course.name.isEmpty() -> {
                     event.showMessage(R.string.input_course_name)

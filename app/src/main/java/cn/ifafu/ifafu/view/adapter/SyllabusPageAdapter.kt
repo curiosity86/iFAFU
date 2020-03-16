@@ -6,15 +6,13 @@ import cn.ifafu.ifafu.data.entity.SyllabusSetting
 import cn.ifafu.ifafu.util.DateUtils
 import cn.ifafu.ifafu.view.syllabus.CourseBase
 import cn.ifafu.ifafu.view.syllabus.SyllabusView
-import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class SyllabusPageAdapter(var setting: SyllabusSetting,
-                          courses: MutableList<MutableList<CourseBase>?>,
+                          var courses: List<List<CourseBase>?> = ArrayList(),
                           var onCourseClick: (course: CourseBase) -> Unit)
     : RecyclerView.Adapter<SyllabusPageAdapter.SyllabusViewHolder>() {
-
-    var courses : List<List<CourseBase>?> = courses
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SyllabusViewHolder {
         val context = parent.context

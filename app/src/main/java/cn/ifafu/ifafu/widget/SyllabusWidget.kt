@@ -13,8 +13,8 @@ import android.widget.RemoteViews
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.IFAFU
-import cn.ifafu.ifafu.data.Repository
-import cn.ifafu.ifafu.data.entity.NextCourse
+import cn.ifafu.ifafu.data.repository.Repository
+import cn.ifafu.ifafu.data.bean.NextCourse
 import cn.ifafu.ifafu.ui.activity.SplashActivity
 import cn.ifafu.ifafu.ui.syllabus.SyllabusActivity
 import kotlinx.coroutines.Dispatchers
@@ -71,12 +71,12 @@ class SyllabusWidget : AppWidgetProvider() {
         remoteViews.setTextViewText(R.id.tv_week_time, next.dateText)
         when (next.result) {
             NextCourse.HAS_NEXT_COURSE, NextCourse.IN_COURSE -> {
-                remoteViews.setViewVisibility(R.id.tv_null, View.GONE)
+                remoteViews.setViewVisibility(R.id.message, View.GONE)
                 remoteViews.setViewVisibility(R.id.layout_info, View.VISIBLE)
                 remoteViews.setTextViewText(R.id.tv_next, next.title + next.name)
-                remoteViews.setTextViewText(R.id.tv_location, next.address)
+                remoteViews.setTextViewText(R.id.location, next.address)
                 remoteViews.setTextViewText(R.id.tv_time, "第${next.node}节 ${next.timeText}")
-                remoteViews.setTextViewText(R.id.tv_last, next.lastText)
+                remoteViews.setTextViewText(R.id.timeLeft, next.lastText)
                 remoteViews.setTextViewText(R.id.tv_total, "今日:第${next.node}/${next.totalNode}节")
                 if (next.result == NextCourse.IN_COURSE) {
                     remoteViews.setTextViewText(R.id.tv_status, "上课中")
@@ -87,9 +87,9 @@ class SyllabusWidget : AppWidgetProvider() {
                 }
             }
             else -> {
-                remoteViews.setViewVisibility(R.id.tv_null, View.VISIBLE)
+                remoteViews.setViewVisibility(R.id.message, View.VISIBLE)
                 remoteViews.setViewVisibility(R.id.layout_info, View.GONE)
-                remoteViews.setTextViewText(R.id.tv_null, next.title)
+                remoteViews.setTextViewText(R.id.message, next.title)
             }
         }
     }

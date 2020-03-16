@@ -10,6 +10,12 @@
     <string name="confirm">确认</string>
     <string name="loading">加载中</string>
 
+    <string name="in_lesson">上课中</string>
+    <string name="out_lesson">未上课</string>
+    <string name="node_format">今日：第%d/%d节</string>
+    <string name="now_lesson_format">当前：%s</string>
+    <string name="next_lesson_format">下一节课：%s</string>
+
     <!--LoginActivity-->
     <string name="account">学号</string>
     <string name="password">密码</string>
@@ -20,16 +26,16 @@
     <string name="empty_account">账号不能为空！！</string>
     <string name="empty_password">密码不能为空！！</string>
 
-    <!--MainActivity-->
-    <string name="woolsen">woolsen</string>
     <string name="online">在线</string>
     <string name="offline">离线</string>
     <string name="online2">● 在线</string>
     <string name="offline2">● 离线</string>
+
+    <!--MainActivity-->
+    <string name="woolsen">woolsen</string>
     <string name="in_course">上课中</string>
     <string name="wait_course">未上课</string>
     <string name="time_format">第%d节 %s</string>
-    <string name="node_format">今日:第%d/%d节</string>
     <string name="back_again">再次按下返回键退出程序</string>
     <string name="is_last_version">当前已经是最新版了</string>
 
@@ -146,4 +152,7 @@
     <string name="customactivityoncrash_error_activity_error_details_copy">复制到剪贴板</string>
     <string name="customactivityoncrash_error_activity_error_details_copied">复制到剪贴板</string>
     <string name="customactivityoncrash_error_activity_error_details_clipboard_label">错误信息</string>
+    <string name="no_exam_info">暂无待考信息</string>
+    <string name="no_score_info">暂无成绩信息</string>
+    <string name="vip">VIP</string>
 </resources>

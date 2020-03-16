@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.VMProvider
-import cn.ifafu.ifafu.base.mvvm.BaseActivity
+import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.databinding.ScoreFilterActivityBinding
 import cn.ifafu.ifafu.view.adapter.ScoreFilterAdapter
 import cn.ifafu.ifafu.view.custom.RecyclerViewDivider

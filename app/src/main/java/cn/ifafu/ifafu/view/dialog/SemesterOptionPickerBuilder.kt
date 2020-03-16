@@ -2,7 +2,7 @@ package cn.ifafu.ifafu.view.dialog
 
 import android.content.Context
 import android.graphics.Color
-import cn.ifafu.ifafu.data.entity.Semester
+import cn.ifafu.ifafu.data.bean.Semester
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.view.OptionsPickerView
 

@@ -2,16 +2,16 @@ package cn.ifafu.ifafu.ui.login
 
 import android.app.Application
 import cn.ifafu.ifafu.app.School
-import cn.ifafu.ifafu.base.mvvm.BaseViewModel
-import cn.ifafu.ifafu.data.Repository
+import cn.ifafu.ifafu.base.BaseViewModel
+import cn.ifafu.ifafu.data.repository.Repository
 import cn.ifafu.ifafu.data.entity.User
 
 class LoginViewModel(application: Application) : BaseViewModel(application) {
 
     fun login(account: String, password: String, success: suspend () -> Unit) {
-        safeLaunch {
+        safeLaunchWithMessage {
             if (!checkFormatIsOK(account, password)) {
-                return@safeLaunch
+                return@safeLaunchWithMessage
             }
             event.showDialog()
             val account2 = if (account.length == 10 && account.getOrNull(0) == '0') {

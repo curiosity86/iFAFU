@@ -6,25 +6,25 @@ import android.content.ClipboardManager
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.app.School
-import cn.ifafu.ifafu.base.mvvm.BaseViewModel
-import cn.ifafu.ifafu.data.Repository
+import cn.ifafu.ifafu.base.BaseViewModel
+import cn.ifafu.ifafu.data.repository.Repository
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
 import cn.ifafu.ifafu.data.entity.User
-import cn.ifafu.ifafu.data.entity.ZFApiList
-import cn.ifafu.ifafu.data.network.APIManager
+import cn.ifafu.ifafu.data.bean.ZFApiList
+import cn.ifafu.ifafu.data.retrofit.APIManager
 
 class SyllabusSettingViewModel(application: Application) : BaseViewModel(application) {
 
     val setting = MutableLiveData<SyllabusSetting>()
 
     fun init() {
-        safeLaunch {
+        safeLaunchWithMessage {
             setting.postValue(Repository.syllabus.getSetting())
         }
     }
 
     fun save() {
-        safeLaunch {
+        safeLaunchWithMessage {
             setting.value?.run {
                 Repository.syllabus.saveSetting(this)
             }

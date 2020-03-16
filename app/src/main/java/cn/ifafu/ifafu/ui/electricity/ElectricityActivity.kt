@@ -12,8 +12,7 @@ import android.widget.ImageView
 import androidx.lifecycle.Observer
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.VMProvider
-import cn.ifafu.ifafu.base.mvvm.BaseActivity
-import cn.ifafu.ifafu.databinding.ElectiveActivityBinding
+import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.databinding.ElectricityActivityBinding
 import cn.ifafu.ifafu.view.dialog.LoadingDialog
 import com.afollestad.materialdialogs.MaterialDialog

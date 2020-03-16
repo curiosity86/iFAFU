@@ -9,8 +9,12 @@ import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.IFAFU
 import cn.ifafu.ifafu.app.School
-import cn.ifafu.ifafu.base.mvvm.BaseViewModel
-import cn.ifafu.ifafu.data.Repository
+import cn.ifafu.ifafu.base.BaseViewModel
+import cn.ifafu.ifafu.data.bean.Menu
+import cn.ifafu.ifafu.data.bean.NextCourse
+import cn.ifafu.ifafu.data.bean.NextExam
+import cn.ifafu.ifafu.data.bean.Weather
+import cn.ifafu.ifafu.data.repository.Repository
 import cn.ifafu.ifafu.data.entity.*
 import cn.ifafu.ifafu.ui.electricity.ElectricityActivity
 import cn.ifafu.ifafu.ui.elective.ElectiveActivity
@@ -39,16 +43,7 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
 
     val nextCourse by lazy { MutableLiveData<NextCourse>() }
     val weather by lazy { MutableLiveData<Weather>() }
-    val nextExam by lazy { MutableLiveData<List<NextExam>>() }
-
-    /**
-     * 旧版主题
-     */
     val inUseUser by lazy { MutableLiveData<User>() }
-    val oldThemeMenu by lazy { MutableLiveData<List<Pair<String, List<Pair<String, Int>>>>>() }
-    val onlineStatus by lazy { MutableLiveData<Boolean>() }
-    val semesterTitle by lazy { MutableLiveData<String>() }
-    val scores by lazy { MutableLiveData<List<Score>>() } //post null value 则出错
 
     /**
      * 新版主题
@@ -65,7 +60,7 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun initFragmentData() {
-        safeLaunch {
+        safeLaunchWithMessage {
             val user = Repository.user.getInUse()
             withContext(Dispatchers.Main) {
                 inUseUser.value = user
@@ -74,26 +69,25 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
                 GlobalSetting.THEME_NEW -> {
                     initNewTabMenu()
                 }
-                GlobalSetting.THEME_OLD -> {
-                    initOldTabMenu()
-                    safeLaunch {
-                        val semester = Repository.getNowSemester()
-                        semesterTitle.postValue("${semester.yearStr}学年第${semester.termStr}学期")
-                        onlineStatus.postValue(true)
-                    }
+            }
+            if (user == null) return@safeLaunchWithMessage
+            Repository.user.login(user).run {
+                if (isSuccess) {
+                    user.name = data ?: ""
+                    inUseUser.postValue(user)
                 }
             }
         }
     }
 
     private fun initNewTabMenu() {
-        safeLaunch {
+        safeLaunchWithMessage {
             newThemeMenu.postValue(
                     listOf(
                             Menu(getApplication<Application>().getDrawable(R.drawable.main_menu_tabs_syllabus)!!, "课程表", SyllabusActivity::class.java),
                             Menu(getApplication<Application>().getDrawable(R.drawable.main_menu_tabs_exam)!!, "考试计划", ExamListActivity::class.java),
                             Menu(getApplication<Application>().getDrawable(R.drawable.main_menu_tabs_score)!!, "成绩查询", ScoreListActivity::class.java),
-                            Menu(getApplication<Application>().getDrawable(R.drawable.menu_elective)!!, "选修学分查询", ElectiveActivity::class.java),
+                            Menu(getApplication<Application>().getDrawable(R.drawable.menu_elective)!!, "选修查询", ElectiveActivity::class.java),
                             Menu(getApplication<Application>().getDrawable(R.drawable.main_menu_tabs_web)!!, "网页模式", WebActivity::class.java),
                             Menu(getApplication<Application>().getDrawable(R.drawable.main_menu_tabs_electricity)!!, "电费查询", ElectricityActivity::class.java),
 //                            Menu(getApplication<Application>().getDrawable(R.drawable.main_menu_tabs_comment)!!, "一键评教", ::class.java),
@@ -108,36 +102,14 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
         }
     }
 
-    private fun initOldTabMenu() {
-        safeLaunch {
-            oldThemeMenu.postValue(listOf(
-                    Pair("信息查询", listOf(
-                            Pair("成绩查询", R.drawable.menu_score_white),
-                            Pair("学生考试查询", R.drawable.menu_exam_white),
-                            Pair("电费查询", R.drawable.menu_elec_white),
-                            Pair("选修学分查询", R.drawable.menu_elective_white))),
-                    Pair("实用工具", listOf(
-                            Pair("我的课表", R.drawable.menu_syllabus_white),
-                            Pair("网页模式", R.drawable.menu_web_white),
-                            Pair("报修服务", R.drawable.main_old_tabs_repair),
-                            Pair("一键评教", R.drawable.main_old_tabs_comment))),
-                    Pair("软件设置", listOf(
-                            Pair("软件设置", R.drawable.menu_setting_white),
-                            Pair("账号管理", R.drawable.main_old_tabs_manage))),
-                    Pair("关于软件", listOf(
-                            Pair("检查更新", R.drawable.menu_update_white),
-                            Pair("关于iFAFU", R.drawable.main_old_tabs_about)))))
-        }
-    }
-
     fun updateNextCourse() {
-        safeLaunch {
+        safeLaunchWithMessage {
             nextCourse.postValue(getNextCourse())
         }
     }
 
     fun updateTimeAxis() {
-        safeLaunch {
+        safeLaunchWithMessage {
             val list = ArrayList<TimeAxis>()
             val now = Date()
             val holidays = Repository.syllabus.getHoliday()
@@ -286,66 +258,8 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
                 (if (last % 60 != 0) "${last % 60}分钟" else "")
     }
 
-    fun updateExamInfo() {
-        safeLaunch {
-            val now = System.currentTimeMillis()
-            val semester = Repository.getNowSemester()
-            val thisTermExams = Repository.exam.getAll(semester.yearStr, semester.termStr)
-                    .filter { it.startTime > now || it.startTime == 0L }
-            val list = ArrayList<NextExam>()
-            val max = if (thisTermExams.size < 2) thisTermExams.size else 2
-            val dateFormat = SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA)
-            val timeFormat = SimpleDateFormat("HH:mm", Locale.CHINA)
-            for (i in 0 until max) {
-                var time: String
-                var last: Pair<String, String>
-                if (thisTermExams[i].startTime == 0L) {
-                    time = "暂无考试时间"
-                    last = Pair("", "")
-                } else {
-                    time = dateFormat.format(Date(thisTermExams[i].startTime)) +
-                            "(${timeFormat.format(Date(thisTermExams[i].startTime))}" +
-                            "-" +
-                            "${timeFormat.format(Date(thisTermExams[i].endTime))})"
-                    last = calcExamIntervalTime(now, thisTermExams[i].startTime)
-                }
-                list.add(NextExam(
-                        name = thisTermExams[i].name,
-                        time = time,
-                        address = thisTermExams[i].address,
-                        seatNum = thisTermExams[i].seatNumber,
-                        last = last
-                ))
-            }
-            nextExam.postValue(list)
-        }
-
-    }
-
-    private fun calcExamIntervalTime(start: Long, end: Long): Pair<String, String> {
-        val intervalSec = (end - start) / 1000
-        return when {
-            intervalSec >= (24 * 60 * 60) ->
-                Pair("${intervalSec / (24 * 60 * 60)}", "天")
-            intervalSec >= 60 * 60 ->
-                Pair("${intervalSec / (60 * 60)}", "小时")
-            else ->
-                Pair("${intervalSec / 60}", "分钟")
-        }
-    }
-
-    fun updateScoreInfo() {
-        safeLaunch {
-            //先使用数据库数据，再在后台更新成绩信息
-            this@MainViewModel.scores.postValue(Repository.ScoreRt.getNow())
-            Repository.ScoreRt.fetchNow().data?.run {
-                this@MainViewModel.scores.postValue(this)
-            }
-        }
-    }
-
     fun updateWeather() {
-        safeLaunch {
+        safeLaunchWithMessage {
             Repository.WeatherRt.fetch("101230101").data?.run {
                 this@MainViewModel.weather.postValue(this)
             }
@@ -371,13 +285,13 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun checkTheme() {
-        safeLaunch {
+        safeLaunchWithMessage {
             theme.postValue(Repository.GlobalSettingRt.get().theme)
         }
     }
 
     fun upgradeApp() {
-        safeLaunch {
+        safeLaunchWithMessage {
             val upgradeInfo = Beta.getUpgradeInfo()
             if (upgradeInfo != null && upgradeInfo.versionCode > GlobalLib.getLocalVersionCode(getApplication())) {
                 Beta.checkUpgrade()
@@ -388,14 +302,14 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun switchAccount() {
-        safeLaunch {
+        safeLaunchWithMessage {
             users.postValue(Repository.user.getAll())
             isShowSwitchAccountDialog.postValue(true)
         }
     }
 
     fun addAccountSuccess() {
-        safeLaunch {
+        safeLaunchWithMessage {
             val user = Repository.user.getInUse()
             initActivityData()
             event.showMessage("已切换到${user?.account}")
@@ -403,29 +317,31 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun deleteUser(user: User) {
-        safeLaunch {
-            if (user.account != inUseUser.value?.account) {
-                Repository.user.delete(user.account)
+        safeLaunchWithMessage {
+            Repository.user.delete(user.account)
+            if (user.account == inUseUser.value?.account) {
                 Repository.user.getInUse().run {
                     if (this@run == null) {
                         event.startLoginActivity()
                     } else {
-                        event.showMessage("已切换到${account}")
+                        event.showMessage("删除成功，已切换到${account}")
                         isShowSwitchAccountDialog.postValue(false)
                         //重新初始化数据
                         initActivityData()
                     }
                 }
+            } else {
+                event.showMessage("删除成功")
             }
         }
     }
 
     fun checkoutTo(user: User) {
-        safeLaunch {
+        safeLaunchWithMessage {
             if (user.account != Repository.user.getInUseAccount()) {
                 event.showDialog()
                 Repository.user.saveLoginOnly(user)
-                val job = safeLaunch {
+                val job = safeLaunchWithMessage {
                     Repository.user.login(user)
                 }
                 IFAFU.loginJob = job

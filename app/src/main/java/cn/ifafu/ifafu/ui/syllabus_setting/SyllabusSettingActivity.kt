@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.VMProvider
-import cn.ifafu.ifafu.base.mvvm.BaseActivity
+import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
 import cn.ifafu.ifafu.databinding.SyllabusSettingActivityBinding
 import cn.ifafu.ifafu.util.DensityUtils
@@ -80,10 +80,10 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingActivityBinding, Syl
         rv_syllabus_setting.adapter = mAdapter
         mViewModel.setting.observe(this, Observer { setting ->
             mAdapter.items = listOf(
-                    CheckBoxItem("是否使用网络解析", "通过服务器解析，课表出问题就选它，然后刷新课表", setting.parseType == 2) {
-                        setting.parseType = if (it) 2 else 1
-                        mViewModel.save()
-                    },
+//                    CheckBoxItem("是否使用网络解析", "通过服务器解析，课表出问题就选它，然后刷新课表", setting.parseType == 2) {
+//                        setting.parseType = if (it) 2 else 1
+//                        mViewModel.save()
+//                    },
                     SeekBarItem("一天课程的节数", setting.totalNode, "节", 8, 12) {
                         setting.totalNode = it
                         mViewModel.save()
@@ -124,7 +124,7 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingActivityBinding, Syl
                         mViewModel.outputHtml()
                     }, {})
             )
-
+            mAdapter.notifyDataSetChanged()
         })
         mViewModel.init()
     }

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.VMProvider
-import cn.ifafu.ifafu.base.mvvm.BaseActivity
+import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.data.entity.Course
 import cn.ifafu.ifafu.databinding.SyllabusItemActivityBinding
 import cn.ifafu.ifafu.ui.syllabus.SyllabusActivity

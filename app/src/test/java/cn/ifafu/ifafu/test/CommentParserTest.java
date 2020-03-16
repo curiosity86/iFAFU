@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.junit.Test;
 
 import cn.ifafu.ifafu.FileUtils;
-import cn.ifafu.ifafu.data.network.parser.CommentParser;
+import cn.ifafu.ifafu.data.retrofit.parser.CommentParser;
 
 public class CommentParserTest {
 

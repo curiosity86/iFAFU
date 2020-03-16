@@ -2,11 +2,11 @@ package cn.ifafu.ifafu.ui.score_list
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import cn.ifafu.ifafu.base.mvvm.BaseViewModel
-import cn.ifafu.ifafu.data.Repository
+import cn.ifafu.ifafu.base.BaseViewModel
+import cn.ifafu.ifafu.data.repository.Repository
 import cn.ifafu.ifafu.data.entity.Score
 import cn.ifafu.ifafu.data.entity.ScoreFilter
-import cn.ifafu.ifafu.data.entity.Semester
+import cn.ifafu.ifafu.data.bean.Semester
 import cn.ifafu.ifafu.util.trimEnd
 import kotlinx.coroutines.*
 
@@ -22,7 +22,7 @@ class ScoreListViewModel(application: Application) : BaseViewModel(application) 
     private lateinit var scoreFilter: ScoreFilter
 
     fun initData() {
-        safeLaunch {
+        safeLaunchWithMessage {
             event.showDialog()
             val semester = Repository.getNowSemester()
             withContext(Dispatchers.Main) {
@@ -51,7 +51,7 @@ class ScoreListViewModel(application: Application) : BaseViewModel(application) 
     }
 
     fun switchYearAndTerm(yearIndex: Int, termIndex: Int) {
-        safeLaunch {
+        safeLaunchWithMessage {
             val semester = semester.value!!
             semester.setYearTermIndex(yearIndex, termIndex)
             val scores = Repository.ScoreRt.getAll(semester.yearStr, semester.termStr)
@@ -68,7 +68,7 @@ class ScoreListViewModel(application: Application) : BaseViewModel(application) 
     }
 
     private fun fetchScoreList(isRunOnBackGround: Boolean): Job {
-        return safeLaunch {
+        return safeLaunchWithMessage {
             if (!isRunOnBackGround) {
                 event.showDialog()
             }
@@ -78,7 +78,7 @@ class ScoreListViewModel(application: Application) : BaseViewModel(application) 
             } ?: kotlin.run {
                 event.hideDialog()
                 event.showMessage("获取成绩出错")
-                return@safeLaunch
+                return@safeLaunchWithMessage
             }
             this@ScoreListViewModel.scoreList.postValue(scores)
             this@ScoreListViewModel.ies.postValue(getIESPair(scores, scoreFilter))
@@ -92,14 +92,14 @@ class ScoreListViewModel(application: Application) : BaseViewModel(application) 
     }
 
     fun updateIES() {
-        safeLaunch {
+        safeLaunchWithMessage {
             scoreFilter = Repository.ScoreRt.getFilter()
             this@ScoreListViewModel.ies.postValue(getIESPair(scoreList.value!!, scoreFilter))
         }
     }
 
     fun iesCalculationDetail() {
-        safeLaunch {
+        safeLaunchWithMessage {
             val all = scoreList.value!!
             val passingList = ArrayList<Score>()
             val failList = ArrayList<Score>()

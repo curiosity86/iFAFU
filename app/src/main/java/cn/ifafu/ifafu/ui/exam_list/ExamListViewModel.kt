@@ -2,10 +2,10 @@ package cn.ifafu.ifafu.ui.exam_list
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import cn.ifafu.ifafu.base.mvvm.BaseViewModel
-import cn.ifafu.ifafu.data.Repository
+import cn.ifafu.ifafu.base.BaseViewModel
+import cn.ifafu.ifafu.data.repository.Repository
 import cn.ifafu.ifafu.data.entity.Exam
-import cn.ifafu.ifafu.data.entity.Semester
+import cn.ifafu.ifafu.data.bean.Semester
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
@@ -52,12 +52,12 @@ class ExamListViewModel(application: Application) : BaseViewModel(application) {
     }
 
     private fun innerFetch(): Job {
-        return safeLaunch {
+        return safeLaunchWithMessage {
             val semester = semester.value!!
             val response = Repository.exam.fetch(semester.yearStr, semester.termStr)
             if (!response.isSuccess) {
                 event.showMessage(response.message)
-                return@safeLaunch
+                return@safeLaunchWithMessage
             }
             examList.postValue(response.data)
         }
