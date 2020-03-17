@@ -20,7 +20,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/semester"
+            android:id="@+id/semester_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{semester}"
@@ -44,7 +44,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/semester" />
+            app:layout_constraintTop_toBottomOf="@+id/semester_title" />
 
         <TextView
             android:id="@+id/message"
@@ -58,7 +58,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/semester"
+            app:layout_constraintTop_toBottomOf="@+id/semester_title"
             tools:text="暂无成绩信息" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

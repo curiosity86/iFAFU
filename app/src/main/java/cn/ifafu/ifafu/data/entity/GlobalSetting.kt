@@ -1,6 +1,7 @@
 package cn.ifafu.ifafu.data.entity
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import java.util.*
 
@@ -10,11 +11,7 @@ class GlobalSetting {
     var account: String = ""
     var theme = THEME_NEW
 
-    constructor(account: String, theme: Int) {
-        this.account = account
-        this.theme = theme
-    }
-
+    @Ignore
     constructor(account: String) {
         this.account = account
     }

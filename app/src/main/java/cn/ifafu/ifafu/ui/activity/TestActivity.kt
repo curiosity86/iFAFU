@@ -4,25 +4,19 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import cn.ifafu.ifafu.R
+import cn.ifafu.ifafu.data.entity.Score
 import cn.ifafu.ifafu.databinding.ActivityTestBinding
-import cn.ifafu.ifafu.ui.main.oldTheme.bean.ClassPreview
+import cn.ifafu.ifafu.ui.elective.Elective
 
 class TestActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding: ActivityTestBinding = DataBindingUtil.setContentView(this, R.layout.activity_test)
-        binding.semester = "2020-2021学年第1学期课表"
-        binding.date = "第1周 5月5日 周三"
-        binding.lesson = ClassPreview(
-                hasInfo = false,
-                nextClassName = "计算机操作系统",
-                address = "福建农林大学",
-                numberOfClasses = arrayOf(1, 5),
-                classTime = "第1节 11:15-12:00",
-                timeLeft = "剩余365天上课",
-                dateText = "放假中"
-        )
+        val totalScores = listOf(Score())
+        binding.elective = Elective("全部选修课，已修${totalScores.size}门",
+                "需修满2分，已修2分(已完成)",
+                totalScores, true)
     }
 
 }

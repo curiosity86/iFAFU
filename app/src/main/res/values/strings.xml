@@ -155,4 +155,6 @@
     <string name="no_exam_info">暂无待考信息</string>
     <string name="no_score_info">暂无成绩信息</string>
     <string name="vip">VIP</string>
+    <string name="empty">空空如也~</string>
+    <string name="more">更多</string>
 </resources>

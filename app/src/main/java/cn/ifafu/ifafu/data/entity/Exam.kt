@@ -1,6 +1,7 @@
 package cn.ifafu.ifafu.data.entity
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import java.text.SimpleDateFormat
 import java.util.*
@@ -18,6 +19,7 @@ class Exam {
     var year: String = ""
     var term: String = ""
 
+    @Ignore
     constructor(id: Long, name: String, startTime: Long, endTime: Long, address: String,
                 seatNumber: String, account: String, year: String, term: String) {
         this.id = id
@@ -31,7 +33,7 @@ class Exam {
         this.term = term
     }
 
-    constructor() {}
+    constructor()
 
     override fun toString(): String {
         val format = SimpleDateFormat("yyyy-MM-dd HH-mm-ss", Locale.CHINA)

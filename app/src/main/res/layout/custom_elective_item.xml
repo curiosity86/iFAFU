@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="6dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginEnd="6dp"
+    android:layout_marginBottom="4dp"
+    android:orientation="vertical"
+    app:cardElevation="2dp"
+    app:cardCornerRadius="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:animateLayoutChanges="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="4dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/label_category"
+                android:layout_width="28dp"
+                android:layout_height="16dp"
+                android:background="@drawable/shape_elective_text"
+                android:gravity="center"
+                android:text="类别"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toTopOf="@+id/label_statistics"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@id/label_category"
+                app:layout_constraintStart_toEndOf="@id/label_category"
+                app:layout_constraintTop_toTopOf="@id/label_category"
+                tools:text="自然科学类，已修2门" />
+
+            <TextView
+                android:id="@+id/label_statistics"
+                android:layout_width="28dp"
+                android:layout_height="16dp"
+                android:background="@drawable/shape_elective_text"
+                android:gravity="center"
+                android:text="统计"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/label_category" />
+
+            <TextView
+                android:id="@+id/statistics"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/label_statistics"
+                app:layout_constraintStart_toEndOf="@+id/label_statistics"
+                app:layout_constraintTop_toTopOf="@+id/label_statistics"
+                tools:text="需修满2分，已修2.0分（未修满）"
+                tools:textColor="@color/red_2" />
+
+            <ImageButton
+                android:id="@+id/btn_sign"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_expand"
+                android:background="@null"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            tools:itemCount="2"
+            tools:listitem="@layout/elective_recycle_item" />
+
+        <TextView
+            android:id="@+id/tv_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"
+            android:text="@string/empty" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

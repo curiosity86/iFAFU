@@ -10,9 +10,9 @@ import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.School
 import cn.ifafu.ifafu.base.BaseApplication
 import cn.ifafu.ifafu.data.bean.*
+import cn.ifafu.ifafu.data.db.AppDatabase
 import cn.ifafu.ifafu.data.entity.*
 import cn.ifafu.ifafu.data.exception.VerifyException
-import cn.ifafu.ifafu.data.db.AppDatabase
 import cn.ifafu.ifafu.data.retrofit.APIManager
 import cn.ifafu.ifafu.data.retrofit.parser.*
 import cn.ifafu.ifafu.data.retrofit.service.WeatherService
@@ -29,7 +29,6 @@ import java.net.URLEncoder
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 
 object Repository {
 
@@ -114,8 +113,9 @@ object Repository {
                     deleteNetwork()
                     save(data)
                     //更新原有课表设置，注意与getSetting的区别
-                    val course = settingDao.syllabusSetting(account) ?: SyllabusSetting(account)
-                    saveSetting(course.apply {
+                    val syllabusSetting = settingDao.syllabusSetting(account)
+                            ?: SyllabusSetting(account)
+                    saveSetting(syllabusSetting.apply {
                         //若教室存在旗教字样，则为旗山校区
                         val isJS = data.find { it.address.contains("旗教") } == null
                         val times = ArrayList<Int>()

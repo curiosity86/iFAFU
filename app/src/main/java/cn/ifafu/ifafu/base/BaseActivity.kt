@@ -35,11 +35,11 @@ abstract class BaseActivity<VDB : ViewDataBinding, VM : BaseViewModel> : AppComp
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBinding.lifecycleOwner = this
         getViewModel()?.run {
             this.event = this@BaseActivity
             mViewModel = this
         }
+        mBinding.lifecycleOwner = this
         initActivity(savedInstanceState)
     }
 

@@ -6,31 +6,21 @@
 
     <data>
         <variable
-            name="semester"
-            type="String" />
-        <variable
-            name="weather"
-            type="cn.ifafu.ifafu.data.bean.Weather" />
-        <variable
-            name="date"
-            type="String" />
-        <variable
-            name="lesson"
-            type="cn.ifafu.ifafu.ui.main.oldTheme.bean.ClassPreview" />
+            name="elective"
+            type="cn.ifafu.ifafu.ui.elective.Elective" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
-            layout="@layout/include_main_old_theme_syllabus"
+        <cn.ifafu.ifafu.ui.elective.ElectiveView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            bind:semester="@{semester}"
-            bind:weather="@{weather}"
-            bind:lesson="@{lesson}"/>
+            elective="@{elective}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

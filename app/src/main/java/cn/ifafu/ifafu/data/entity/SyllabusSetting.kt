@@ -2,6 +2,7 @@ package cn.ifafu.ifafu.data.entity
 
 import android.graphics.Color
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,6 +32,7 @@ class SyllabusSetting {
 
     var beginTime: List<Int> = ArrayList()
 
+    @Ignore
     constructor(account: String) {
         this.account = account
     }

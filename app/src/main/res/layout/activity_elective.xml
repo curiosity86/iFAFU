@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="cn.ifafu.ifafu.ui.elective.ElectiveViewModel" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <cn.ifafu.ifafu.view.custom.WToolbar
+            android:id="@+id/tb_elective"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            app:elevation="4dp"
+            app:title="@string/elective" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="4dp"
+                android:animateLayoutChanges="true">
+
+                <cn.ifafu.ifafu.ui.elective.ElectiveView
+                    elective="@{vm.total}"
+                    viewGoneWhen="@{vm.total == null}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <cn.ifafu.ifafu.ui.elective.ElectiveView
+                    elective="@{vm.zrkx}"
+                    viewGoneWhen="@{vm.zrkx == null}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <cn.ifafu.ifafu.ui.elective.ElectiveView
+                    elective="@{vm.rwsk}"
+                    viewGoneWhen="@{vm.rwsk == null}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <cn.ifafu.ifafu.ui.elective.ElectiveView
+                    elective="@{vm.wxsy}"
+                    viewGoneWhen="@{vm.wxsy == null}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <cn.ifafu.ifafu.ui.elective.ElectiveView
+                    elective="@{vm.cxcy}"
+                    viewGoneWhen="@{vm.cxcy == null}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <cn.ifafu.ifafu.ui.elective.ElectiveView
+                    elective="@{vm.ysty}"
+                    viewGoneWhen="@{vm.ysty == null}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</layout>
