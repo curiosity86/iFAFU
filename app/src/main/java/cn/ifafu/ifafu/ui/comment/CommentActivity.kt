@@ -8,7 +8,7 @@
 //import cn.ifafu.ifafu.data.entity.CommentItem
 //import cn.ifafu.ifafu.util.SPUtils
 //import cn.ifafu.ifafu.view.adapter.CommentRvAdapter
-//import cn.ifafu.ifafu.view.dialog.LoadingDialog
+//import cn.ifafu.ifafu.ui.view.LoadingDialog
 //import com.afollestad.materialdialogs.MaterialDialog
 //import com.gyf.immersionbar.ImmersionBar
 //import kotlinx.android.synthetic.main.comment_activity.*

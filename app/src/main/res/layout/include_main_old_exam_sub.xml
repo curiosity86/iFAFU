@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="i"
+            type="String" />
+
+        <variable
+            name="exam"
+            type="cn.ifafu.ifafu.ui.main.bean.ExamPreview.Item" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp">
+
+        <TextView
+            android:id="@+id/tv_num"
+            android:layout_width="16dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="2dp"
+            android:background="@drawable/shape_exam_item2"
+            android:gravity="center"
+            android:text="@{i}"
+            android:textColor="@color/blue1"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1" />
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:drawableStart="@drawable/ic_book"
+            android:gravity="center"
+            android:text="@{exam.examName}"
+            android:textColor="@color/blue1"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@id/tv_time"
+            app:layout_constraintStart_toEndOf="@+id/tv_num"
+            app:layout_constraintTop_toTopOf="@+id/tv_num"
+            tools:text="计算机网络" />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:drawableStart="@drawable/ic_time"
+            android:gravity="center"
+            android:text="@{exam.examTime}"
+            android:textColor="@color/blue1"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@id/seat"
+            app:layout_constraintStart_toStartOf="@+id/tv_name"
+            app:layout_constraintTop_toBottomOf="@+id/tv_name"
+            tools:text="2020年01月03日(14:30-16:30)" />
+
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:drawableStart="@drawable/ic_location"
+            android:gravity="center"
+            android:text="@{exam.address}"
+            android:textColor="@color/blue1"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_num"
+            app:layout_constraintStart_toStartOf="@+id/tv_time"
+            app:layout_constraintTop_toBottomOf="@+id/tv_time"
+            tools:text="田205" />
+
+        <TextView
+            android:id="@+id/seat"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="80dp"
+            android:drawableStart="@drawable/ic_seatting"
+            android:gravity="center"
+            android:text="@{exam.seatNumber}"
+            android:textColor="@color/blue1"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/location"
+            app:layout_constraintStart_toStartOf="@+id/location"
+            app:layout_constraintTop_toBottomOf="@+id/tv_time"
+            tools:text="9号" />
+
+        <TextView
+            android:id="@+id/timeLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@{exam.timeLeftAndUnit[0]}"
+            android:textColor="@color/blue1"
+            android:textSize="40sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/unit"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="2" />
+
+        <TextView
+            android:id="@+id/unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@{exam.timeLeftAndUnit[1]}"
+            android:textColor="@color/blue1"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/timeLeft"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/timeLeft"
+            tools:text="天" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

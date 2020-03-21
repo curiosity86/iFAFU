@@ -2,24 +2,16 @@ package cn.ifafu.ifafu.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import cn.ifafu.ifafu.app.School
+import cn.ifafu.ifafu.app.Constant
 import java.util.*
 
 @Entity
 class User {
     @PrimaryKey
-    var account // 学号
-            : String = ""
-    var password // 密码
-            : String = ""
-    var name // 名字
-            : String = ""
-    /**
-     * [School.FAFU]
-     * [School.FAFU_JS]
-     */
-    var schoolCode = School.FAFU
-
+    var account: String = "" // 学号
+    var password: String = "" // 密码
+    var name: String = ""// 名字
+    var schoolCode: String = Constant.FAFU
     var token: String = generateToken()
 
     private fun generateToken(): String {

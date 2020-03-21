@@ -10,11 +10,11 @@
     <string name="confirm">确认</string>
     <string name="loading">加载中</string>
 
-    <string name="in_lesson">上课中</string>
-    <string name="out_lesson">未上课</string>
+    <string name="in_class">上课中</string>
+    <string name="out_class">未上课</string>
     <string name="node_format">今日：第%d/%d节</string>
-    <string name="now_lesson_format">当前：%s</string>
-    <string name="next_lesson_format">下一节课：%s</string>
+    <string name="now_class_format">当前：%s</string>
+    <string name="next_class_format">下一节课：%s</string>
 
     <!--LoginActivity-->
     <string name="account">学号</string>
@@ -32,10 +32,6 @@
     <string name="offline2">● 离线</string>
 
     <!--MainActivity-->
-    <string name="woolsen">woolsen</string>
-    <string name="in_course">上课中</string>
-    <string name="wait_course">未上课</string>
-    <string name="time_format">第%d节 %s</string>
     <string name="back_again">再次按下返回键退出程序</string>
     <string name="is_last_version">当前已经是最新版了</string>
 
@@ -82,7 +78,7 @@
     <string name="text_email">&#160;发送邮件</string>
     <string name="success_copy_email">收件人信息已复制至剪切板</string>
     <string name="menu_update">检查更新</string>
-    <string name="menu_share">分享应用</string>
+    <string name="feedback">反馈问题</string>
     <string name="menu_logout">切换用户</string>
     <string name="menu_about">关于应用</string>
     <string name="menu_setting">软件设置</string>
@@ -128,8 +124,8 @@
     <string name="balance">校园卡余额：%s元</string>
     <string name="confirm_pay">确认缴费</string>
     <string name="hint_sno">请输入学号</string>
-    <string name="hint_password">学付宝密码（默认为身份证后六位数字）</string>
-    <string name="hint_verify">验证码</string>
+    <string name="xfb_password_hint">密码（默认为身份证后六位数）</string>
+    <string name="verify">验证码</string>
     <string name="announce">电费充值为实验性功能！！\n只保证电费查询和校园卡查询功能有效性！！\n服务提供：学付宝</string>
     <string name="elec_tos_1">电费充值服务由学付宝提供，充值金直接流向学付宝，学付宝App内可查到消费账单</string>
     <string name="elec_tos_2">电费充值到账有延迟，到账后电费信息更新还有延迟，若太久没到账请联系宿管科（问学付宝充电费为什么还没到账）</string>
@@ -157,4 +153,9 @@
     <string name="vip">VIP</string>
     <string name="empty">空空如也~</string>
     <string name="more">更多</string>
+    <string name="submit">提交</string>
+    <string name="contact">联系方式</string>
+    <string name="contact_optional">联系方式（选填）:</string>
+    <string name="enter_content">请输入反馈内容</string>
+    <string name="contact_required">* 内容描述:</string>
 </resources>

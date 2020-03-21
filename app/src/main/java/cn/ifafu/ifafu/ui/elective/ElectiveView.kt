@@ -39,7 +39,7 @@ class ElectiveView : LinearLayout {
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
         val inflater = LayoutInflater.from(getContext())
-        view = inflater.inflate(R.layout.custom_elective_item, this)
+        view = inflater.inflate(R.layout.view_elective_item, this)
         btnSign = view.findViewById(R.id.btn_sign)
         tvCategory = view.findViewById(R.id.category)
         tvStatistics = view.findViewById(R.id.statistics)

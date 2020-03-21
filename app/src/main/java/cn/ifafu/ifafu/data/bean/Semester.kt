@@ -30,4 +30,13 @@ data class Semester(
         this.termIndex = termIndex
     }
 
+    override fun toString(): String {
+        return if (termStr == "全部" && yearStr == "全部") {
+            "全部"
+        } else if (termStr == "全部") {
+            "${yearStr}学年全部"
+        } else {
+            "${yearStr}学年第${termStr}学期"
+        }
+    }
 }

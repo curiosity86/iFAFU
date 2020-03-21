@@ -1,15 +1,49 @@
 package cn.ifafu.ifafu
 
-import cn.ifafu.ifafu.util.HttpUtils
-import cn.ifafu.ifafu.util.encode
+import cn.ifafu.ifafu.data.newly.HttpSourceImpl
+import cn.ifafu.ifafu.util.HttpClient
 import com.alibaba.fastjson.JSONObject
+import kotlinx.coroutines.*
 import org.junit.Test
-import java.text.SimpleDateFormat
-import java.util.*
 
 class Test {
+    data class User(val name: String)
+
     @Test
-    fun test() {
-        SimpleDateFormat("yyyy/MM/dd hh:mm:ss", Locale.CHINA).parse("2019/01/10 1:10:10")
+    fun test() = runBlocking {
+        HttpSourceImpl().getOpeningDay().run {
+            println(this.getOrNull())
+        }
+    }
+
+    private fun testCo() = runBlocking {
+        GlobalScope.launch(Dispatchers.Main) {
+            println("Main:        " + Thread.currentThread().name)
+        }
+        GlobalScope.launch(Dispatchers.Main) {
+            println("Main:        " + Thread.currentThread().name)
+        }
+        println("Fefault:     " + Thread.currentThread().name)
+        println("Fefault:     " + Thread.currentThread().name)
+        println("Fefault:     " + Thread.currentThread().name)
+        GlobalScope.launch(Dispatchers.Default) {
+            println("Default:     " + Thread.currentThread().name)
+        }
+        GlobalScope.launch(Dispatchers.Default) {
+            println("Default:     " + Thread.currentThread().name)
+        }
+        GlobalScope.launch(Dispatchers.Unconfined) {
+            println("Unconfined:  " + Thread.currentThread().name)
+        }
+        GlobalScope.launch(Dispatchers.Unconfined) {
+            println("Unconfined:  " + Thread.currentThread().name)
+        }
+        GlobalScope.launch(Dispatchers.IO) {
+            println("IO:          " + Thread.currentThread().name)
+        }
+        GlobalScope.launch(Dispatchers.IO) {
+            println("IO:          " + Thread.currentThread().name)
+        }
+        delay(1000L)
     }
 }

@@ -12,18 +12,18 @@ import cn.ifafu.ifafu.BuildConfig
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.base.BaseViewModel
-import cn.ifafu.ifafu.databinding.AboutActivityBinding
+import cn.ifafu.ifafu.databinding.ActivityAboutBinding
 import cn.ifafu.ifafu.ui.feedback.FeedbackActivity
 import cn.ifafu.ifafu.util.GlobalLib
 import com.afollestad.materialdialogs.MaterialDialog
 import com.gyf.immersionbar.ImmersionBar
-import kotlinx.android.synthetic.main.about_activity.*
+import kotlinx.android.synthetic.main.activity_about.*
 
-class AboutActivity : BaseActivity<AboutActivityBinding, BaseViewModel>(), View.OnClickListener {
+class AboutActivity : BaseActivity<ActivityAboutBinding, BaseViewModel>(), View.OnClickListener {
 
     override fun getViewModel(): BaseViewModel? = null
 
-    override fun getLayoutId(): Int = R.layout.about_activity
+    override fun getLayoutId(): Int = R.layout.activity_about
 
     override fun initActivity(savedInstanceState: Bundle?) {
         ImmersionBar.with(this)

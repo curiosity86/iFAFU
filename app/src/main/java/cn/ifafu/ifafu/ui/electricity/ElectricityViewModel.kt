@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.ui.electricity
 import android.app.Application
 import android.graphics.Bitmap
 import androidx.lifecycle.MutableLiveData
-import cn.ifafu.ifafu.app.School
+import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.repository.Repository
 import cn.ifafu.ifafu.data.entity.ElecQuery
@@ -43,7 +43,7 @@ class ElectricityViewModel(application: Application) : BaseViewModel(application
                         val user = Repository.user.getInUse()
                         account = user!!.account
                         val account = user.account
-                        xfbAccount = if (user.schoolCode == School.FAFU_JS) "0$account" else account
+                        xfbAccount = if (user.schoolCode == Constant.FAFU_JS) "0$account" else account
                     }
                     loginStatus.postValue(false)
                 }

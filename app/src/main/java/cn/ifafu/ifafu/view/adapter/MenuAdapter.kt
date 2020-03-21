@@ -24,7 +24,7 @@ class MenuAdapter(context: Context, menuList: List<Menu>) : RecyclerView.Adapter
     override fun onBindViewHolder(holder: MenuViewHolder, position: Int) {
         val menu = mMenuList[position]
         holder.titleTV.text = menu.title
-        holder.iconIV.setImageDrawable(menu.icon)
+        holder.iconIV.setImageResource(menu.icon)
         holder.itemView.setOnClickListener { v: View? ->
             mItemClickListener?.invoke(v, menu)
         }

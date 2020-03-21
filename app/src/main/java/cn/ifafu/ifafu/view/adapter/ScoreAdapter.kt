@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.data.entity.Score
+import cn.ifafu.ifafu.util.ColorUtils
 import cn.ifafu.ifafu.util.GlobalLib
 import cn.ifafu.ifafu.view.adapter.ScoreAdapter.ScoreViewHolder
 
@@ -29,17 +30,15 @@ class ScoreAdapter(private val mContext: Context) : RecyclerView.Adapter<ScoreVi
         val score = scoreList[position]
         holder.tvName.text = score.name
         val calcScore = score.realScore
-        when (calcScore) {
-            Score.FREE_COURSE ->
-                holder.tvScore.text = "免修"
-            else ->
-                holder.tvScore.text = GlobalLib.formatFloat(calcScore, 2)
+        if (calcScore == Score.FREE_COURSE) {
+            holder.tvScore.text = "免修"
+        } else {
+            holder.tvScore.text = GlobalLib.formatFloat(calcScore, 2)
         }
-        when {
-            calcScore >= 60 || calcScore == Score.FREE_COURSE ->
-                holder.tvScore.setTextColor(mContext.resources.getColor(R.color.ifafu_blue))
-            else ->
-                holder.tvScore.setTextColor(mContext.resources.getColor(R.color.red))
+        if (calcScore >= 60 || calcScore == Score.FREE_COURSE) {
+            holder.tvScore.setTextColor(ColorUtils.getColor(mContext, R.color.ifafu_blue))
+        } else {
+            holder.tvScore.setTextColor(ColorUtils.getColor(mContext, R.color.red))
         }
         when {
             calcScore == Score.FREE_COURSE ->

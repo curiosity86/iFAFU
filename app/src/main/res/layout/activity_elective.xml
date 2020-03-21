@@ -20,7 +20,20 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             app:elevation="4dp"
-            app:title="@string/elective" />
+            app:title="@string/elective">
+
+            <TextView
+                android:id="@+id/btn_feedback"
+                android:layout_width="48dp"
+                android:layout_height="32dp"
+                android:text="反馈"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/about_feed_btn" />
+
+        </cn.ifafu.ifafu.view.custom.WToolbar>
 
         <ScrollView
             android:layout_width="match_parent"
@@ -35,37 +48,37 @@
 
                 <cn.ifafu.ifafu.ui.elective.ElectiveView
                     elective="@{vm.total}"
-                    viewGoneWhen="@{vm.total == null}"
+                    visibleGoneWhen="@{vm.total == null}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <cn.ifafu.ifafu.ui.elective.ElectiveView
                     elective="@{vm.zrkx}"
-                    viewGoneWhen="@{vm.zrkx == null}"
+                    visibleGoneWhen="@{vm.zrkx == null}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <cn.ifafu.ifafu.ui.elective.ElectiveView
                     elective="@{vm.rwsk}"
-                    viewGoneWhen="@{vm.rwsk == null}"
+                    visibleGoneWhen="@{vm.rwsk == null}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <cn.ifafu.ifafu.ui.elective.ElectiveView
                     elective="@{vm.wxsy}"
-                    viewGoneWhen="@{vm.wxsy == null}"
+                    visibleGoneWhen="@{vm.wxsy == null}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <cn.ifafu.ifafu.ui.elective.ElectiveView
                     elective="@{vm.cxcy}"
-                    viewGoneWhen="@{vm.cxcy == null}"
+                    visibleGoneWhen="@{vm.cxcy == null}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <cn.ifafu.ifafu.ui.elective.ElectiveView
                     elective="@{vm.ysty}"
-                    viewGoneWhen="@{vm.ysty == null}"
+                    visibleGoneWhen="@{vm.ysty == null}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 

@@ -11,7 +11,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.ui.login.LoginActivity
-import cn.ifafu.ifafu.view.dialog.LoadingDialog
+import cn.ifafu.ifafu.ui.view.LoadingDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

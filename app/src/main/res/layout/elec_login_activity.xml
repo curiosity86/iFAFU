@@ -37,7 +37,7 @@
             <androidx.appcompat.widget.AppCompatEditText
                 android:layout_width="280dp"
                 android:layout_height="60dp"
-                android:hint="@string/hint_password"
+                android:hint="@string/xfb_password_hint"
                 android:inputType="numberPassword"
                 android:maxLines="1"
                 android:text="@={password}"
@@ -51,7 +51,7 @@
                 <androidx.appcompat.widget.AppCompatEditText
                     android:layout_width="120dp"
                     android:layout_height="60dp"
-                    android:hint="@string/hint_verify"
+                    android:hint="@string/verify"
                     android:inputType="number"
                     android:maxLines="1"
                     android:textSize="15sp"

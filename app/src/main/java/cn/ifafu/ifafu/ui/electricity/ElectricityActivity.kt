@@ -14,7 +14,7 @@ import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.VMProvider
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.databinding.ElectricityActivityBinding
-import cn.ifafu.ifafu.view.dialog.LoadingDialog
+import cn.ifafu.ifafu.ui.view.LoadingDialog
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
@@ -41,8 +41,13 @@ class ElectricityActivity : BaseActivity<ElectricityActivityBinding, Electricity
     private val loginDialog by lazy {
         MaterialDialog(this).apply {
             title(text = "学付宝登录")
-            customView(R.layout.elec_login_dialog)
-            getCustomView().findViewById<Button>(R.id.btn_login).setOnClickListener(this@ElectricityActivity)
+            customView(R.layout.dialog_xfb_login)
+            val pwdEt = getCustomView().findViewById<EditText>(R.id.et_password)
+            val verifyEt = getCustomView().findViewById<EditText>(R.id.et_verify)
+            getCustomView().findViewById<Button>(R.id.btn_login).setOnClickListener {
+                mViewModel.login(pwdEt.text.toString(), verifyEt.text.toString())
+            }
+            pwdEt.requestFocus()
             setOnCancelListener {
                 this@ElectricityActivity.finish()
             }
@@ -112,11 +117,6 @@ class ElectricityActivity : BaseActivity<ElectricityActivityBinding, Electricity
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.iv_verify -> mViewModel.refreshVerify()
-            R.id.btn_login -> {
-                val pwdEt = loginDialog.getCustomView().findViewById<EditText>(R.id.et_password)
-                val verifyEt = loginDialog.getCustomView().findViewById<EditText>(R.id.et_verify)
-                mViewModel.login(pwdEt.text.toString(), verifyEt.text.toString())
-            }
             R.id.btn_balance -> mViewModel.queryCardBalance()
             R.id.layout_building -> optionPicker.show()
             R.id.tv_fee -> mViewModel.queryElecBalance(mBinding.room ?: "")

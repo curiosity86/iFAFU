@@ -1,29 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:gravity="center_vertical"
-    android:layout_width="match_parent"
-    android:layout_height="56dp"
-    android:padding="8dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:id="@+id/iv_school"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:gravity="center"
-        android:textSize="18sp"
-        android:textColor="@color/black"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:src="@drawable/fafu_bb_icon_white" />
+    <data>
 
-    <TextView
-        android:id="@+id/tv_text"
+        <variable
+            name="data"
+            type="cn.ifafu.ifafu.ui.main.view.MultiUserDialog.ItemBindView" />
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_height="56dp"
         android:gravity="center_vertical"
-        android:textSize="18sp"
-        android:textColor="@color/black"/>
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:onClick="@{() -> data.onClick()}"
+        tools:ignore="UseCompoundDrawables">
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/iv_school"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:src="@{context.getDrawable(data.schoolIcon)}"
+            tools:src="@drawable/fafu_bb_icon_white" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:gravity="center_vertical"
+            android:text='@{data.name + "  " + data.account}'
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            tools:text="雾深  3170000000" />
+
+    </LinearLayout>
+</layout>

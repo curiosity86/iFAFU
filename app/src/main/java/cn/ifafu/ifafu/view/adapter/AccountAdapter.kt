@@ -1,7 +1,7 @@
 package cn.ifafu.ifafu.view.adapter
 
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.School
+import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.data.entity.User
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
@@ -15,8 +15,8 @@ class AccountAdapter(
         if (item == null) return
         helper.setText(R.id.tv_text, "${item.name}   ${item.account}")
                 .setImageResource(R.id.iv_school, when (item.schoolCode) {
-                    School.FAFU -> R.drawable.fafu_bb_icon_white
-                    School.FAFU_JS -> R.drawable.fafu_js_icon_white
+                    Constant.FAFU -> R.drawable.fafu_bb_icon_white
+                    Constant.FAFU_JS -> R.drawable.fafu_js_icon_white
                     else -> R.drawable.icon_ifafu_round
                 })
         helper.itemView.setOnClickListener {

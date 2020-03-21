@@ -2,9 +2,6 @@ package cn.ifafu.ifafu.data.retrofit.parser
 
 import cn.ifafu.ifafu.data.bean.Response
 import cn.ifafu.ifafu.data.exception.VerifyException
-import io.reactivex.Observable
-import io.reactivex.ObservableSource
-import okhttp3.ResponseBody
 import org.jsoup.Jsoup
 import java.util.regex.Pattern
 
@@ -42,10 +39,6 @@ class LoginParser : BaseParser<Response<String>>() {
                 Response.error("网络异常 0x002")
             }
         }
-    }
-
-    override fun apply(upstream: Observable<ResponseBody>): ObservableSource<Response<String>> {
-        return upstream.map { responseBody: ResponseBody -> parse(responseBody.string()) }
     }
 
     private fun getAlertString(text: String): String {

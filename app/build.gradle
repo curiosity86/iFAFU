@@ -12,8 +12,8 @@ android {
         applicationId "cn.ifafu.ifafu"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 65
-        versionName "1.2.1"
+        versionCode 66
+        versionName "1.2.2"
         resConfigs "zh"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -37,10 +37,10 @@ android {
     buildTypes {
         debug {
             //为debug版本的包名添加.debug后缀
-            applicationIdSuffix ".debug2"
+            applicationIdSuffix ".debug"
             manifestPlaceholders = [
-                    app_name: "iFAFU测试版2",
-                    app_icon: "@mipmap/ic_launcher_debug",
+                    app_name      : "iFAFU测试版",
+                    app_icon      : "@mipmap/ic_launcher_debug",
                     app_icon_round: "@mipmap/ic_launcher_round_debug",
             ]
         }
@@ -50,8 +50,8 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [
-                    app_name: "@string/app_name",
-                    app_icon: "@mipmap/ic_launcher",
+                    app_name      : "@string/app_name",
+                    app_icon      : "@mipmap/ic_launcher",
                     app_icon_round: "@mipmap/ic_launcher_round",
             ]
         }
@@ -59,15 +59,8 @@ android {
 
     flavorDimensions "default"
     productFlavors {
-
-        web {
-
-        }
-
-        coolapk {
-
-        }
-
+        web {}
+        coolapk {}
         productFlavors.all { flavor ->
             flavor.manifestPlaceholders = [channel: name]
         }
@@ -86,14 +79,12 @@ android {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 
     dataBinding {
         enabled = true
-    }
-
-    lintOptions {
-        checkReleaseBuilds false
-        abortOnError false
     }
 
 }
@@ -101,17 +92,19 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
-    implementation 'androidx.core:core:1.3.0-alpha01'
-    implementation 'com.google.android.material:material:1.2.0-alpha04'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
+    implementation 'androidx.core:core:1.3.0-alpha02'
+    implementation 'com.google.android.material:material:1.2.0-alpha05'
     //Kotlin
     implementation "androidx.core:core-ktx:1.2.0"
     implementation "androidx.fragment:fragment-ktx:1.2.2"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinx_version"
+    //Timber https://github.com/JakeWharton/timber
+    implementation 'com.jakewharton.timber:timber:4.7.1'
     //选择器
     implementation 'com.contrarywind:Android-PickerView:4.1.7'
     implementation 'com.zhihu.android:matisse:0.5.3-beta3'
@@ -124,17 +117,17 @@ dependencies {
     implementation 'com.jaeger.statusbarutil:library:1.5.1'
     implementation 'com.gyf.immersionbar:immersionbar:3.0.0-beta05'
     //RxJava
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.12'
-    implementation 'com.github.ReactiveX:RxKotlin:2.4.0'
+//    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+//    implementation 'io.reactivex.rxjava2:rxjava:2.2.19'
+//    implementation 'com.github.ReactiveX:RxKotlin:2.4.0'
     //Http框架
-    implementation 'com.squareup.retrofit2:retrofit:2.6.1'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.1'
-    implementation 'org.jsoup:jsoup:1.12.1'
-    implementation 'com.alibaba:fastjson:1.2.60'
+    implementation 'com.squareup.retrofit2:retrofit:2.7.2'
+//    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.7.2'
+    implementation 'org.jsoup:jsoup:1.13.1'
+    implementation 'com.alibaba:fastjson:1.2.66'
     //Glide
-    implementation 'com.github.bumptech.glide:glide:4.10.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     //动画低版本支持
     implementation 'com.nineoldandroids:library:2.4.0'
     //ViewAdapter
@@ -145,36 +138,35 @@ dependencies {
     annotationProcessor "org.permissionsdispatcher:permissionsdispatcher-processor:4.5.0"
     //Material Dialogs: https://github.com/afollestad/material-dialogs
     implementation 'com.orhanobut:dialogplus:1.11@aar'
-    implementation 'com.afollestad.material-dialogs:core:3.1.1'
-    implementation 'com.afollestad.material-dialogs:color:3.1.1'
-    implementation 'com.afollestad.material-dialogs:datetime:3.1.0'
-    implementation 'com.afollestad.material-dialogs:bottomsheets:3.1.1'
+    implementation "com.afollestad.material-dialogs:core:$material_dialogs_verison"
+    implementation "com.afollestad.material-dialogs:color:$material_dialogs_verison"
+    implementation "com.afollestad.material-dialogs:datetime:$material_dialogs_verison"
+    implementation "com.afollestad.material-dialogs:bottomsheets:$material_dialogs_verison"
     //本地异常捕捉框架: https://github.com/Ereza/CustomActivityOnCrash
-    implementation 'cat.ereza:customactivityoncrash:2.2.0'
+    implementation 'cat.ereza:customactivityoncrash:2.3.0'
     //CircleImageView: https://github.com/hdodenhof/CircleImageView
-    implementation 'de.hdodenhof:circleimageview:3.0.1'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
     //U-App移动统计: https://developer.umeng.com/docs/119267/detail/118584
     implementation 'com.umeng.umsdk:analytics:8.0.0'
     implementation 'com.umeng.umsdk:common:2.0.0'
     //Room数据库框架
-    def room_version = "2.2.0-rc01"
     implementation "android.arch.persistence.room:runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
-    implementation "androidx.room:room-rxjava2:$room_version"
     kapt "android.arch.persistence.room:compiler:$room_version"
     //Dagger2
-    implementation"com.google.dagger:dagger:2.14.1"
-    kapt"com.google.dagger:dagger-compiler:2.14.1"
-    def koin_version = "2.1.0"
+//    implementation 'com.google.dagger:dagger:2.27'
+//    kapt 'com.google.dagger:dagger-compiler:2.27'
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-android-scope:$koin_version"
     implementation "org.koin:koin-android-viewmodel:$koin_version"
     implementation "org.koin:koin-android-viewmodel:$koin_version"
 
-    testImplementation 'junit:junit:4.13-beta-3'
-    androidTestImplementation 'androidx.test:runner:1.3.0-alpha03'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha03'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation project(path: ':easymvvm')
+
+    testImplementation 'junit:junit:4.13'
+    androidTestImplementation 'androidx.test:runner:1.3.0-alpha04'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha04'
 }
 
 repositories {

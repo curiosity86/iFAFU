@@ -21,7 +21,7 @@ import cn.ifafu.ifafu.ui.syllabus_item.SyllabusItemActivity
 import cn.ifafu.ifafu.ui.syllabus_setting.SyllabusSettingActivity
 import cn.ifafu.ifafu.util.ChineseNumbers
 import cn.ifafu.ifafu.view.adapter.SyllabusPageAdapter
-import cn.ifafu.ifafu.view.dialog.LoadingDialog
+import cn.ifafu.ifafu.ui.view.LoadingDialog
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.syllabus_activity.*
 import java.text.SimpleDateFormat

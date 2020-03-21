@@ -11,7 +11,7 @@ import cn.ifafu.ifafu.app.VMProvider
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.databinding.ExamListActivityBinding
 import cn.ifafu.ifafu.view.adapter.ExamAdapter
-import cn.ifafu.ifafu.view.dialog.LoadingDialog
+import cn.ifafu.ifafu.ui.view.LoadingDialog
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener
 import com.bigkoo.pickerview.view.OptionsPickerView

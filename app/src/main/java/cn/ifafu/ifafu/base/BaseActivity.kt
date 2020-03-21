@@ -3,16 +3,16 @@ package cn.ifafu.ifafu.base
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.ui.login.LoginActivity
-import cn.ifafu.ifafu.view.dialog.LoadingDialog
+import cn.ifafu.ifafu.ui.view.LoadingDialog
+import cn.woolsen.easymvvm.base.BaseActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-abstract class BaseActivity<VDB : ViewDataBinding, VM : BaseViewModel> : AppCompatActivity(), UIEvent {
+abstract class BaseActivity<VDB : ViewDataBinding, VM : BaseViewModel> : BaseActivity(), UIEvent {
 
     protected open val mLoadingDialog by lazy {
         LoadingDialog(this).apply {
@@ -35,6 +35,7 @@ abstract class BaseActivity<VDB : ViewDataBinding, VM : BaseViewModel> : AppComp
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setLightUiBar()
         getViewModel()?.run {
             this.event = this@BaseActivity
             mViewModel = this

@@ -1,24 +1,24 @@
 package cn.ifafu.ifafu.ui.feedback
 
 import android.os.Bundle
+import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.VMProvider
-import cn.ifafu.ifafu.base.BaseActivity
-import cn.ifafu.ifafu.databinding.FeedbackActivityBinding
+import cn.ifafu.ifafu.app.getViewModelFactory
+import cn.ifafu.ifafu.databinding.ActivityFeedbackBinding
+import cn.woolsen.easymvvm.base.BaseActivity
 
-class FeedbackActivity : BaseActivity<FeedbackActivityBinding, FeedbackViewModel>() {
-    override fun getLayoutId(): Int {
-        return R.layout.feedback_activity;
-    }
+class FeedbackActivity : BaseActivity() {
 
-    override fun getViewModel(): FeedbackViewModel? {
-        return VMProvider(this)[FeedbackViewModel::class.java]
-    }
+    private val viewModel by viewModels<FeedbackViewModel> { getViewModelFactory() }
 
-    override fun initActivity(savedInstanceState: Bundle?) {
-        mBinding.btnSubmit.setOnClickListener {
-            mViewModel.submit(mBinding.contact.text.toString(), mBinding.message.text.toString())
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setLightUiBar()
+        bind<ActivityFeedbackBinding>(R.layout.activity_feedback).apply {
+            vm = viewModel
         }
+        viewModel.toastMessage.observe(this, Observer { toast(it) })
     }
-
 }

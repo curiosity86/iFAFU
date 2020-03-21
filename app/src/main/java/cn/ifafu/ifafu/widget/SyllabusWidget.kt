@@ -14,8 +14,8 @@ import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.IFAFU
 import cn.ifafu.ifafu.data.repository.Repository
-import cn.ifafu.ifafu.data.bean.NextCourse
 import cn.ifafu.ifafu.ui.activity.SplashActivity
+import cn.ifafu.ifafu.ui.main.bean.ClassPreview
 import cn.ifafu.ifafu.ui.syllabus.SyllabusActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -27,7 +27,7 @@ class SyllabusWidget : AppWidgetProvider() {
 
     private fun updateSyllabusWidget(context: Context, appWidgetManager: AppWidgetManager,
                                      appWidgetId: Int) {
-        val views = RemoteViews(context.packageName, R.layout.syllabus_widget)
+        val views = RemoteViews(context.packageName, R.layout.widget_syllabus)
         updateSyllabusWidget(context, views)
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
@@ -49,47 +49,38 @@ class SyllabusWidget : AppWidgetProvider() {
                 getPendingIntent(context, R.id.btn_jump))
         val format = SimpleDateFormat("HH:mm:ss", Locale.CHINA)
         remoteViews.setTextViewText(R.id.tv_refresh_time, context.getString(R.string.refresh_time_format, format.format(Date())))
-        val t = Thread {
-//            MainOldModel(context).getNextCourse()
-//                    .subscribe({
-//                        updateView(remoteViews, it)
-//                    }, {
-//                        remoteViews.setViewVisibility(R.id.tv_null, View.VISIBLE)
-//                        remoteViews.setViewVisibility(R.id.layout_info, View.GONE)
-//                        if (it is NullPointerException) {
-//                            remoteViews.setTextViewText(R.id.tv_null, "暂无课表信息")
-//                        } else {
-//                            remoteViews.setTextViewText(R.id.tv_null, it.message)
-//                        }
-//                    })
+        GlobalScope.launch {
+
         }
-        t.start()
-        t.join()
     }
 
-    private fun updateView(remoteViews: RemoteViews, next: NextCourse) {
-        remoteViews.setTextViewText(R.id.tv_week_time, next.dateText)
-        when (next.result) {
-            NextCourse.HAS_NEXT_COURSE, NextCourse.IN_COURSE -> {
-                remoteViews.setViewVisibility(R.id.message, View.GONE)
-                remoteViews.setViewVisibility(R.id.layout_info, View.VISIBLE)
-                remoteViews.setTextViewText(R.id.tv_next, next.title + next.name)
-                remoteViews.setTextViewText(R.id.location, next.address)
-                remoteViews.setTextViewText(R.id.tv_time, "第${next.node}节 ${next.timeText}")
-                remoteViews.setTextViewText(R.id.timeLeft, next.lastText)
-                remoteViews.setTextViewText(R.id.tv_total, "今日:第${next.node}/${next.totalNode}节")
-                if (next.result == NextCourse.IN_COURSE) {
-                    remoteViews.setTextViewText(R.id.tv_status, "上课中")
-                    remoteViews.setTextViewCompoundDrawables(R.id.tv_status, R.drawable.ic_point_blue, 0, 0, 0)
+    private fun updateView(context: Context, remoteViews: RemoteViews, preview: ClassPreview) {
+        remoteViews.setTextViewText(R.id.tv_week_time, preview.dateText)
+        if (preview.hasInfo) {
+            with(remoteViews) {
+                //显示详情信息
+                setViewVisibility(R.id.message, View.GONE)
+                setViewVisibility(R.id.layout_info, View.VISIBLE)
+                setTextViewText(R.id.location, preview.address)
+                setTextViewText(R.id.classTime, preview.classTime)
+                setTextViewText(R.id.timeLeft, preview.timeLeft)
+                val numOfClass = preview.numberOfClasses
+                setTextViewText(R.id.tv_total, context.getString(R.string.node_format, numOfClass[0], numOfClass[1]))
+                if (preview.isInClass) {
+                    setTextViewText(R.id.tv_next, context.getString(R.string.now_class_format, preview.nextClass))
+                    setTextViewText(R.id.tv_status, context.getString(R.string.in_class))
+                    setTextViewCompoundDrawables(R.id.tv_status, R.drawable.ic_point_blue, 0, 0, 0)
                 } else {
-                    remoteViews.setTextViewText(R.id.tv_status, "未上课")
-                    remoteViews.setTextViewCompoundDrawables(R.id.tv_status, R.drawable.ic_point_red, 0, 0, 0)
+                    setTextViewText(R.id.tv_next, context.getString(R.string.next_class_format, preview.nextClass))
+                    setTextViewText(R.id.tv_status, context.getString(R.string.out_class))
+                    setTextViewCompoundDrawables(R.id.tv_status, R.drawable.ic_point_red, 0, 0, 0)
                 }
             }
-            else -> {
-                remoteViews.setViewVisibility(R.id.message, View.VISIBLE)
-                remoteViews.setViewVisibility(R.id.layout_info, View.GONE)
-                remoteViews.setTextViewText(R.id.message, next.title)
+        } else {
+            with(remoteViews) {
+                setViewVisibility(R.id.message, View.VISIBLE)
+                setViewVisibility(R.id.layout_info, View.GONE)
+                setTextViewText(R.id.message, preview.message)
             }
         }
     }
@@ -105,7 +96,7 @@ class SyllabusWidget : AppWidgetProvider() {
             return
         }
         if (intent.action == ACTION_WIDGET_SYLLABUS_CLICK) {
-            val remoteViews = RemoteViews(context.packageName, R.layout.syllabus_widget)
+            val remoteViews = RemoteViews(context.packageName, R.layout.widget_syllabus)
             val data = intent.data
             var resId = -1
             if (data != null) {
@@ -143,8 +134,7 @@ class SyllabusWidget : AppWidgetProvider() {
     }
 
     companion object {
-
-        private val ACTION_WIDGET_SYLLABUS_CLICK = "ifafu.widget.syllabus.REFRESH"
+        private const val ACTION_WIDGET_SYLLABUS_CLICK = "ifafu.widget.syllabus.REFRESH"
     }
 
 }

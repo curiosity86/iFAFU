@@ -1,9 +1,8 @@
 package cn.ifafu.ifafu.data.repository.impl
 
 import cn.ifafu.ifafu.data.repository.ParamsRepository
-import javax.inject.Inject
 
-class ParamsRepositoryImpl @Inject constructor() : ParamsRepository {
+class ParamsRepositoryImpl : ParamsRepository {
     override suspend fun get(url: String): Map<String, String> {
         return emptyMap()
     }

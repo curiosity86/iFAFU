@@ -12,7 +12,10 @@ fun String.getInts(): List<Int> {
     return list
 }
 
-fun String.encode(enc: String): String {
+/**
+ * @param enc gb2312
+ */
+fun String.encode(enc: String = "gb2312"): String {
     return URLEncoder.encode(this, enc)
 }
 

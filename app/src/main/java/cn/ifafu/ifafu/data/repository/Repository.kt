@@ -1,3 +1,5 @@
+@file:Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+
 package cn.ifafu.ifafu.data.repository
 
 import android.annotation.SuppressLint
@@ -5,31 +7,33 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
-import android.util.Log
 import cn.ifafu.ifafu.app.Constant
-import cn.ifafu.ifafu.app.School
 import cn.ifafu.ifafu.base.BaseApplication
+import cn.ifafu.ifafu.data.IFResult
 import cn.ifafu.ifafu.data.bean.*
 import cn.ifafu.ifafu.data.db.AppDatabase
 import cn.ifafu.ifafu.data.entity.*
 import cn.ifafu.ifafu.data.exception.VerifyException
+import cn.ifafu.ifafu.data.newly.HttpSourceImpl
 import cn.ifafu.ifafu.data.retrofit.APIManager
 import cn.ifafu.ifafu.data.retrofit.parser.*
 import cn.ifafu.ifafu.data.retrofit.service.WeatherService
 import cn.ifafu.ifafu.util.DateUtils
-import cn.ifafu.ifafu.util.HttpUtils
+import cn.ifafu.ifafu.util.HttpClient
 import cn.ifafu.ifafu.util.SPUtils
 import cn.ifafu.ifafu.util.encode
 import cn.ifafu.ifafu.view.syllabus.CourseBase
 import com.alibaba.fastjson.JSONObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.io.IOException
 import java.net.URLEncoder
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
+@SuppressLint("SimpleDateFormat")
 object Repository {
 
     private lateinit var context: Context
@@ -55,13 +59,13 @@ object Repository {
     }
 
     private suspend fun fetchParams(url: String): MutableMap<String, String> = withContext(Dispatchers.IO) {
-        val responseBody = APIManager.zhengFangAPI.initParams2(url).execute().body()!!
+        val responseBody = APIManager.zhengFangAPI.get(url).execute().body()!!
         val paramsParser = ParamsParser()
         paramsParser.parse(responseBody.string())
     }
 
     private suspend fun fetchParams(url: String, referer: String): MutableMap<String, String> = withContext(Dispatchers.IO) {
-        val response = APIManager.zhengFangAPI.initParams2(url, referer).execute()
+        val response = APIManager.zhengFangAPI.get(url, referer).execute()
         val paramsParser = ParamsParser2()
         paramsParser.parse(response)
     }
@@ -92,7 +96,8 @@ object Repository {
         private val settingDao = AppDatabase.getInstance(context).syllabusSettingDao
 
         suspend fun getOpeningDay(): String = withContext(Dispatchers.IO) {
-            val json = JSONObject.parseObject(HttpUtils.get("https://api.ifafu.cn/public/text/firstWeek").body()?.string())
+            val http = HttpClient()
+            val json = JSONObject.parseObject(http.get("https://api.ifafu.cn/public/text/firstWeek").body()?.string())
             val content = json["content"].toString().substring(0, 10)
             kotlin.runCatching {
                 SimpleDateFormat("yyyy-MM-dd").parse(content) //确保符合格式
@@ -102,10 +107,10 @@ object Repository {
 
         suspend fun fetchAll(): Response<List<Course>> = withContext(Dispatchers.IO) {
             val user = user.getInUse() ?: throw Exception("用户信息不存在")
-            val url: String = School.getUrl(ZFApiList.SYLLABUS, user)
-            val headerReferer: String = School.getUrl(ZFApiList.MAIN, user)
+            val url: String = Constant.getUrl(ZFApiList.SYLLABUS, user)
+            val headerReferer: String = Constant.getUrl(ZFApiList.MAIN, user)
             val html = APIManager.zhengFangAPI
-                    .getInfo2(url, headerReferer).execute()
+                    .get(url, headerReferer).execute()
                     .body()!!.string()
             SyllabusParser(user).parse(html).apply {
                 //若不为空，则自动保存
@@ -117,10 +122,8 @@ object Repository {
                             ?: SyllabusSetting(account)
                     saveSetting(syllabusSetting.apply {
                         //若教室存在旗教字样，则为旗山校区
-                        val isJS = data.find { it.address.contains("旗教") } == null
-                        val times = ArrayList<Int>()
-                        Collections.addAll(times, *SyllabusSetting.intBeginTime[if (isJS) 1 else 0])
-                        beginTime = times
+                        val isBenBu = getAll().find { it.address.contains("旗教") } == null
+                        beginTime = SyllabusSetting.intBeginTime[if (isBenBu) 0 else 1]
                     })
                 }
             }
@@ -134,17 +137,15 @@ object Repository {
             dao.save(course)
         }
 
-        suspend fun save(courses: List<Course>) = withContext(Dispatchers.Default) {
+        private suspend fun save(courses: List<Course>) = withContext(Dispatchers.Default) {
             dao.save(*courses.toTypedArray())
         }
 
         suspend fun getSetting(): SyllabusSetting = withContext(Dispatchers.Default) {
             settingDao.syllabusSetting(account) ?: SyllabusSetting(account).apply {
                 //若教室存在旗教字样，则为旗山校区
-                val isJS = getAll().find { it.address.contains("旗教") } == null
-                val times = ArrayList<Int>()
-                Collections.addAll(times, *SyllabusSetting.intBeginTime[if (isJS) 1 else 0])
-                beginTime = times
+                val isBenBu = getAll().find { it.address.contains("旗教") } == null
+                beginTime = SyllabusSetting.intBeginTime[if (isBenBu) 0 else 1]
             }
         }
 
@@ -320,18 +321,22 @@ object Repository {
             return login(user.account, user.password)
         }
 
+        suspend fun login2(account: String, password: String): IFResult<User> {
+            return HttpSourceImpl().login(account, password)
+        }
+
         suspend fun login(account: String, password: String): Response<String> = withContext(Dispatchers.IO) {
             val user = User().apply {
                 this.account = if (account.getOrNull(0) == '0') account.drop(1) else account
                 this.password = password
                 if (account.length == 9) {
-                    this.schoolCode = School.FAFU_JS
+                    this.schoolCode = Constant.FAFU_JS.toString()
                 } else if (account.length == 10) {
-                    this.schoolCode = School.FAFU
+                    this.schoolCode = Constant.FAFU.toString()
                 }
             }
-            val loginUrl = School.getUrl(ZFApiList.LOGIN, user)
-            val verifyUrl = School.getUrl(ZFApiList.VERIFY, user)
+            val loginUrl = Constant.getUrl(ZFApiList.LOGIN, user)
+            val verifyUrl = Constant.getUrl(ZFApiList.VERIFY, user)
             val params = fetchParams(loginUrl).apply {
                 put("txtUserName", user.account)
                 put("Textbox1", "")
@@ -355,12 +360,12 @@ object Repository {
                 try {
                     val verifyCode = verifyParser.parse(
                             APIManager.zhengFangAPI
-                                    .getCaptcha2(verifyUrl)
+                                    .get(verifyUrl)
                                     .execute())
                     params["txtSecretCode"] = verifyCode
                     return@withContext loginParser.parse(
                             APIManager.zhengFangAPI
-                                    .login2(loginUrl, params)
+                                    .login(loginUrl, params)
                                     .execute().body()!!
                                     .string()
                     )
@@ -546,7 +551,7 @@ object Repository {
         }
 
         suspend fun elecLogin(account: String, password: String, verify: String): String = withContext(Dispatchers.IO) {
-            Log.d("电费查询", "account:$account   password:$password   verify:$verify")
+            Timber.d("电费查询   account:$account  password:$password   verify:$verify")
             val service = APIManager.xfbAPI
             service.login(
                     "http://cardapp.fafu.edu.cn:8088/Phone/Login?sourcetype=0&IMEI=" +
@@ -570,10 +575,10 @@ object Repository {
 
         suspend fun fetch(): Electives = withContext(Dispatchers.IO) {
             val user = user.getInUse() ?: throw Exception("用户信息不存在")
-            val queryUrl = School.getUrl(ZFApiList.ELECTIVES, user)
-            val mainUrl = School.getUrl(ZFApiList.MAIN, user)
+            val queryUrl = Constant.getUrl(ZFApiList.ELECTIVES, user)
+            val mainUrl = Constant.getUrl(ZFApiList.MAIN, user)
             val html = APIManager.zhengFangAPI
-                    .getInfo2(queryUrl, mainUrl).execute()
+                    .get(queryUrl, mainUrl).execute()
                     .body()!!.string()
             ElectivesParser(user).parse(html)
         }
@@ -594,14 +599,14 @@ object Repository {
          */
         suspend fun fetchAll(): Response<List<Score>> = withContext(Dispatchers.IO) {
             val user = user.getInUse() ?: throw Exception("用户信息不存在")
-            val scoreUrl = School.getUrl(ZFApiList.SCORE, user)
-            val mainUrl = School.getUrl(ZFApiList.MAIN, user)
+            val scoreUrl = Constant.getUrl(ZFApiList.SCORE, user)
+            val mainUrl = Constant.getUrl(ZFApiList.MAIN, user)
             val params = fetchParams(scoreUrl, mainUrl)
             params["ddlxn"] = "全部"
             params["ddlxq"] = "全部"
             params["btnCx"] = ""
             val html = APIManager.zhengFangAPI
-                    .getInfo2(scoreUrl, scoreUrl, params).execute()
+                    .post(scoreUrl, scoreUrl, params).execute()
                     .body()!!.string()
             val parser = ScoreParser(user)
             parser.parse(html).apply {
@@ -699,10 +704,10 @@ object Repository {
          */
         suspend fun fetchNow(): Response<List<Exam>> = withContext(Dispatchers.IO) {
             val user = user.getInUse()!!
-            val examUrl = School.getUrl(ZFApiList.EXAM, user)
-            val mainUrl = School.getUrl(ZFApiList.MAIN, user)
+            val examUrl = Constant.getUrl(ZFApiList.EXAM, user)
+            val mainUrl = Constant.getUrl(ZFApiList.MAIN, user)
             val html = APIManager.zhengFangAPI
-                    .getInfo2(examUrl, mainUrl)
+                    .get(examUrl, mainUrl)
                     .execute().body()!!.string()
             ExamParser(user).parse(html).apply {
                 if (!data.isNullOrEmpty()) {
@@ -713,15 +718,15 @@ object Repository {
 
         suspend fun fetch(year: String, term: String): Response<List<Exam>> = withContext(Dispatchers.IO) {
             val user = user.getInUse()!!
-            val examUrl = School.getUrl(ZFApiList.EXAM, user)
-            val mainUrl = School.getUrl(ZFApiList.MAIN, user)
+            val examUrl = Constant.getUrl(ZFApiList.EXAM, user)
+            val mainUrl = Constant.getUrl(ZFApiList.MAIN, user)
             val params = fetchParams(examUrl, mainUrl).apply {
                 put("xnd", year.encode("gb2312"))
                 put("xqd", term.encode("gb2312"))
                 put("btnCx", " 查  询 ".encode("gb2312"))
             }
             val html = APIManager.zhengFangAPI
-                    .getInfo2(examUrl, mainUrl, params)
+                    .post(examUrl, mainUrl, params)
                     .execute().body()!!.string()
             ExamParser(user).parse(html).apply {
                 if (!data.isNullOrEmpty()) {

@@ -2,22 +2,18 @@ package cn.ifafu.ifafu.data.retrofit.parser;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.Locale;
 import java.util.Scanner;
 
 import cn.ifafu.ifafu.util.BitmapUtil;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.ObservableTransformer;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
+import timber.log.Timber;
 
-public class VerifyParser implements ObservableTransformer<ResponseBody, String> {
+public class VerifyParser {
 
     private BigDecimal[][] weight;
 
@@ -41,16 +37,13 @@ public class VerifyParser implements ObservableTransformer<ResponseBody, String>
         }
     }
 
-    private String todo(Bitmap bitmap) {
+    public String todo(Bitmap bitmap) {
         if (weight == null) {
             init();
         }
-
-
         if (bitmap == null) {
             return "";
         }
-
         long longStart = System.currentTimeMillis();
         int[][] data = prepareData(bitmap);
         /* transpose data to x for linear classifier */
@@ -83,10 +76,7 @@ public class VerifyParser implements ObservableTransformer<ResponseBody, String>
         }
 
         long time = System.currentTimeMillis() - longStart;
-        Log.d("log", String.format(
-                Locale.getDefault(),
-                "Classify verify code use time: %ds%dms",
-                time / 1000, time % 1000));
+        Timber.d("Classify verify code use time: %ds%dms", time / 1000, time % 1000);
         return String.valueOf(chr);
     }
 
@@ -151,15 +141,14 @@ public class VerifyParser implements ObservableTransformer<ResponseBody, String>
         return (red * 30 + green * 59 + blue * 11 + 50) / 100;
     }
 
-    @Override
-    public ObservableSource<String> apply(Observable<ResponseBody> upstream) {
-        return upstream.map(responseBody -> todo(BitmapUtil.bytesToBitmap(responseBody.bytes())));
-    }
-
     public String parse(Response<ResponseBody> response) throws IOException {
         if (response.code() == 302) {
             throw new IOException();
         }
         return todo(BitmapUtil.bytesToBitmap(response.body().bytes()));
+    }
+
+    public String parse2(ResponseBody body) throws IOException {
+        return todo(BitmapUtil.bytesToBitmap(body.bytes()));
     }
 }

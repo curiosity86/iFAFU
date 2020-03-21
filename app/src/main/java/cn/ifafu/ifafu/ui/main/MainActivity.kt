@@ -3,63 +3,52 @@ package cn.ifafu.ifafu.ui.main
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.widget.EditText
 import android.widget.Toast
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
-import cn.ifafu.ifafu.BuildConfig
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.VMProvider
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.data.entity.GlobalSetting
-import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.databinding.MainActivityBinding
 import cn.ifafu.ifafu.ui.login.LoginActivity
-import cn.ifafu.ifafu.ui.main.neww.MainNewFragment
-import cn.ifafu.ifafu.ui.main.oldTheme.MainOldThemeFragment
+import cn.ifafu.ifafu.ui.main.new_theme.MainNewFragment
+import cn.ifafu.ifafu.ui.main.old_theme.MainOldFragment
+import cn.ifafu.ifafu.ui.main.view.MultiUserDialog
 import cn.ifafu.ifafu.util.ButtonUtils
-import cn.ifafu.ifafu.view.adapter.AccountAdapter
 import cn.ifafu.ifafu.view.custom.DragLayout
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
 import com.gyf.immersionbar.ImmersionBar
-import kotlinx.android.synthetic.main.account_dialog.view.*
-import kotlinx.android.synthetic.main.fragment_main_old_theme.*
-import kotlinx.android.synthetic.main.main_new_fragment.*
+import kotlinx.android.synthetic.main.fragment_main_new.*
+import kotlinx.android.synthetic.main.fragment_main_old.*
 
 class MainActivity : BaseActivity<MainActivityBinding, MainViewModel>() {
 
     private var nowTheme = -999
 
-    private val mAccountAdapter: AccountAdapter by lazy {
-        AccountAdapter {
-            showAccountDetailDialog(it)
-        }
-    }
-
-    private val switchAccountDialog: MaterialDialog by lazy {
-        MaterialDialog(this).apply {
-            customView(viewRes = R.layout.account_dialog)
-            val rvAccount = getCustomView().rv_account
-            rvAccount.adapter = mAccountAdapter
-            rvAccount.layoutManager = LinearLayoutManager(this@MainActivity)
-            title(text = "多账号管理")
-            negativeButton(text = "添加账号") {
-                val intent = Intent(context, LoginActivity::class.java)
-                intent.putExtra("from", Constant.ACTIVITY_MAIN)
-                startActivityForResult(intent, Constant.ACTIVITY_LOGIN)
-            }
-            if (BuildConfig.DEBUG) {
-                neutralButton(text = "导入账号") {
-                    mViewModel.importAccount()
+    private val mMultiUserDialog by lazy {
+        MultiUserDialog(this, {
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.putExtra("from", Constant.ACTIVITY_MAIN)
+            startActivityForResult(intent, Constant.ACTIVITY_LOGIN)
+        }, { user ->
+            MaterialDialog(this).show {
+                title(text = "${user.name} ${user.account}")
+                customView(viewRes = R.layout.dialog_user_detail)
+                getCustomView().findViewById<EditText>(R.id.et_password).setText(user.password)
+                negativeButton(text = "删除账号") {
+                    mViewModel.deleteUser(user)
+                }
+                positiveButton(text = "切换账号") {
+                    mViewModel.checkoutTo(user)
                 }
             }
-        }
+        })
     }
 
     override fun getViewModel(): MainViewModel {
@@ -71,39 +60,22 @@ class MainActivity : BaseActivity<MainActivityBinding, MainViewModel>() {
     override fun initActivity(savedInstanceState: Bundle?) {
         ImmersionBar.with(this).init()
         mViewModel.theme.observe(this, Observer {
-            Log.d("THEME", "theme: $it")
             supportFragmentManager.beginTransaction().apply {
                 when (it) {
                     GlobalSetting.THEME_NEW -> replace(R.id.view_content, MainNewFragment())
-                    GlobalSetting.THEME_OLD -> replace(R.id.view_content, MainOldThemeFragment())
+                    GlobalSetting.THEME_OLD -> replace(R.id.view_content, MainOldFragment())
                 }
             }.commitNowAllowingStateLoss()
         })
         mViewModel.users.observe(this, Observer {
-            mAccountAdapter.replaceData(it)
+            mMultiUserDialog.setUsers(it)
         })
         mViewModel.isShowSwitchAccountDialog.observe(this, Observer {
-            if (it) {
-                switchAccountDialog.show()
-            } else {
-                switchAccountDialog.cancel()
+            with(mMultiUserDialog) {
+                if (it) show() else cancel()
             }
         })
         mViewModel.initActivityData()
-    }
-
-    private fun showAccountDetailDialog(user: User) {
-        MaterialDialog(this).show {
-            title(text = "${user.name} ${user.account}")
-            customView(viewRes = R.layout.account_password_dialog)
-            getCustomView().findViewById<EditText>(R.id.et_password).setText(user.password)
-            negativeButton(text = "删除账号") {
-                mViewModel.deleteUser(user)
-            }
-            positiveButton(text = "切换账号") {
-                mViewModel.checkoutTo(user)
-            }
-        }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
@@ -129,16 +101,19 @@ class MainActivity : BaseActivity<MainActivityBinding, MainViewModel>() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == Constant.ACTIVITY_LOGIN) {
-                mViewModel.addAccountSuccess()
-            } else if (requestCode == Constant.ACTIVITY_SETTING) {
-                mViewModel.checkTheme()
-            } else {
-                super.onActivityResult(requestCode, resultCode, data)
+            when (requestCode) {
+                Constant.ACTIVITY_LOGIN -> {
+                    mViewModel.addAccountSuccess()
+                }
+                Constant.ACTIVITY_SETTING -> {
+                    mViewModel.checkTheme()
+                }
+                else -> {
+                    super.onActivityResult(requestCode, resultCode, data)
+                }
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
-        println("request code: ${requestCode}, result code: ${resultCode}")
     }
 }

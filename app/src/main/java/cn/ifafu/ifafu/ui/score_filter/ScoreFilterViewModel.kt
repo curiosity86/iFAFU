@@ -3,9 +3,9 @@ package cn.ifafu.ifafu.ui.score_filter
 import android.app.Activity
 import android.app.Application
 import cn.ifafu.ifafu.base.BaseViewModel
-import cn.ifafu.ifafu.data.repository.Repository
 import cn.ifafu.ifafu.data.entity.Score
 import cn.ifafu.ifafu.data.entity.ScoreFilter
+import cn.ifafu.ifafu.data.repository.Repository
 import cn.ifafu.ifafu.util.trimEnd
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

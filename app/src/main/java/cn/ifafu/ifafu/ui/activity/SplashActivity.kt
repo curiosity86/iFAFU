@@ -5,37 +5,33 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Window
 import android.view.WindowManager.LayoutParams
-import cn.ifafu.ifafu.BuildConfig
+import androidx.appcompat.app.AppCompatActivity
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.IFAFU
-import cn.ifafu.ifafu.base.BaseActivity
+import cn.ifafu.ifafu.base.BaseActivity2
 import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.repository.Repository
-import cn.ifafu.ifafu.databinding.SplashActivityBinding
+import cn.ifafu.ifafu.databinding.ActivitySplashBinding
 import cn.ifafu.ifafu.ui.exam_list.ExamListActivity
 import cn.ifafu.ifafu.ui.login.LoginActivity
 import cn.ifafu.ifafu.ui.main.MainActivity
 import cn.ifafu.ifafu.ui.syllabus.SyllabusActivity
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class SplashActivity : BaseActivity<SplashActivityBinding, BaseViewModel>() {
+class SplashActivity : AppCompatActivity() {
 
-    override fun getViewModel(): BaseViewModel? = null
-
-    override fun getLayoutId(): Int {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         //去掉窗口标题
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         //隐藏顶部状态栏
         window.addFlags(LayoutParams.FLAG_FULLSCREEN)
-        return R.layout.splash_activity
-    }
-
-    override fun initActivity(savedInstanceState: Bundle?) {
-        GlobalScope.launch {
+        setContentView(R.layout.activity_splash)
+        GlobalScope.launch(Dispatchers.IO) {
             IFAFU.initConfig(applicationContext)
-            mBinding.debug = BuildConfig.DEBUG
             val jumpActivityClass = when (intent.getIntExtra("jump", -1)) {
                 Constant.ACTIVITY_SYLLABUS -> SyllabusActivity::class.java
                 Constant.ACTIVITY_EXAM -> ExamListActivity::class.java

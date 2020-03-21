@@ -1,12 +1,16 @@
 package cn.ifafu.ifafu.ui.elective
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import androidx.lifecycle.Observer
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.VMProvider
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.databinding.ActivityElectiveBinding
+import cn.ifafu.ifafu.ui.feedback.FeedbackActivity
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.activity_elective.*
 
@@ -27,6 +31,9 @@ class ElectiveActivity : BaseActivity<ActivityElectiveBinding, ElectiveViewModel
                 .statusBarDarkFont(true)
                 .init()
         mBinding.vm = mViewModel
+        mBinding.btnFeedback.setOnClickListener {
+            startActivity(Intent(this, FeedbackActivity::class.java))
+        }
     }
 
 

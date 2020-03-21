@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="semester"
+            type="String" />
+
+        <variable
+            name="weather"
+            type="cn.ifafu.ifafu.data.bean.Weather" />
+
+        <variable
+            name="lesson"
+            type="cn.ifafu.ifafu.ui.main.bean.ClassPreview" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/CardStyle"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/constraintLayout"
+            layout="@layout/include_main_old_syllabus_sub"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_week_time"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"
+            bind:lesson="@{lesson}" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text='@{semester + "课表"}'
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="2019-2020学年第2学期课表" />
+
+        <TextView
+            android:id="@+id/message"
+            visibleGoneWhen="@{lesson.hasInfo}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/icon_superman"
+            android:gravity="center"
+            android:text="@{lesson.message}"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_week_time"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"
+            tools:text="放假了呀~" />
+
+        <TextView
+            android:id="@+id/tv_week_time"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_weight="1"
+            android:text="@{lesson.dateText}"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="第1周 03月16日 周一" />
+
+        <TextView
+            android:id="@+id/tv_weather"
+            visibleGoneWhen="@{weather == null}"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:drawableStart="@drawable/ic_weather"
+            android:gravity="center"
+            android:text='@{weather.nowTemp + "℃|" + weather.weather}'
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="12℃|晴" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

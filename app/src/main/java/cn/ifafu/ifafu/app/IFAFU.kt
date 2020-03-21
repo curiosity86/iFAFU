@@ -1,7 +1,6 @@
 package cn.ifafu.ifafu.app
 
 import android.content.Context
-import android.util.Log
 import cn.ifafu.ifafu.BuildConfig
 import cn.ifafu.ifafu.base.BaseApplication
 import cn.ifafu.ifafu.data.repository.Repository
@@ -12,20 +11,18 @@ import com.tencent.bugly.beta.Beta
 import com.tencent.bugly.crashreport.CrashReport
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
-import io.reactivex.plugins.RxJavaPlugins
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
+import timber.log.Timber
 
 class IFAFU : BaseApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        RxJavaPlugins.setErrorHandler { throwable ->
-            Log.e("RxJavaError", throwable.message ?: "RxJavaEmptyMessageError")
-        }
+        Timber.plant(Timber.DebugTree())
         startKoin {
             androidContext(this@IFAFU)
             modules(appModule)
@@ -36,12 +33,7 @@ class IFAFU : BaseApplication() {
         loginJob = GlobalScope.launch {
             val user = Repository.user.getInUse() ?: return@launch
             kotlin.runCatching {
-                Repository.user.login(user).run {
-                    if (user.name.isBlank()) {
-                        user.name = this.data ?: ""
-                        Repository.user.save(user)
-                    }
-                }
+                Repository.user.save(Repository.user.login2(user.account, user.password).getOrNull() ?: return@launch)
             }
         }
     }

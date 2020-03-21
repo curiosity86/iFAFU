@@ -3,9 +3,8 @@ package cn.ifafu.ifafu.data.repository.impl
 import cn.ifafu.ifafu.data.entity.Exam
 import cn.ifafu.ifafu.data.repository.ExamRepository
 import cn.ifafu.ifafu.data.repository.ParamsRepository
-import javax.inject.Inject
 
-class ExamRepositoryImpl @Inject constructor(
+class ExamRepositoryImpl constructor(
         private val paramsRepository: ParamsRepository
 ) : ExamRepository {
 

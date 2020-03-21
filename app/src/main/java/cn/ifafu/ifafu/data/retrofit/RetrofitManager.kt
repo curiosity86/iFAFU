@@ -1,11 +1,11 @@
 package cn.ifafu.ifafu.data.retrofit
 
 import cn.ifafu.ifafu.app.Constant
+import cn.ifafu.ifafu.data.retrofit.interceptor.JWCookieInterceptor
 import cn.ifafu.ifafu.util.SPUtils.Companion.get
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -20,7 +20,6 @@ object RetrofitManager {
         Retrofit.Builder()
                 .baseUrl(Constant.IFAFU_BASE_URL)
                 .client(okHttpClient)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.createAsync())
                 .build()
     }
 
@@ -43,27 +42,6 @@ object RetrofitManager {
                 .retryOnConnectionFailure(true)
                 .build()
 
-    private val cookieInterceptor: Interceptor
-        get() = Interceptor { chain: Interceptor.Chain ->
-            val request = if (cookieList.size > 0) {
-                get(Constant.SP_COOKIE).putString("ASP.NET_SessionId", cookieList[0])
-                chain.request().newBuilder()
-                        .addHeader("Cookie", cookieList[0])
-                        .build()
-            } else {
-                chain.request()
-            }
-            val response = chain.proceed(request)
-            val cookieString = response.header("Set-Cookie")
-            if (cookieString != null) {
-                val cookies = cookieString.split(";")
-                for (i in 0 until cookies.size - 1) {
-                    if (cookies[i].isNotEmpty()) {
-                        cookieList.add(cookies[i])
-                    }
-                }
-            }
-            response
-        }
+    private val cookieInterceptor: Interceptor by lazy { JWCookieInterceptor() }
 
 }

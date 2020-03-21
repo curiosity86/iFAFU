@@ -1,5 +1,6 @@
 package cn.ifafu.ifafu.data.entity
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import androidx.room.Entity
 import androidx.room.Ignore
@@ -19,7 +20,15 @@ class SyllabusSetting {
     var showBeginTimeText = true //显示侧边栏时间
     var showHorizontalLine = true //显示水平分割线
     var showVerticalLine = true //显示竖直分割线
-    var openingDay = "2020-03-15" //开学时间
+    var openingDay = "2020-02-16" //开学时间
+        @SuppressLint("SimpleDateFormat")
+        set(value) {
+            if (openingDay != value) {
+                //验证是否合法
+                SimpleDateFormat("yyyy-MM-dd").parse(value)
+                field = value
+            }
+        }
     var nodeLength = 45 //一节课的时间
     var firstDayOfWeek = Calendar.SUNDAY //每周的第一天
     var background //课表背景
@@ -93,10 +102,11 @@ class SyllabusSetting {
     }
 
     companion object {
+        //0:本部上课时间  1:旗山上课时间
         @JvmField
         var intBeginTime = arrayOf(
-                arrayOf(0, 800, 850, 955, 1045, 1135, 1400, 1450, 1550, 1640, 1825, 1915, 2005),
-                arrayOf(0, 830, 920, 1025, 1115, 1205, 1400, 1450, 1545, 1635, 1825, 1915, 2005)
+                listOf(0, 800, 850, 955, 1045, 1135, 1400, 1450, 1550, 1640, 1825, 1915, 2005),
+                listOf(0, 830, 920, 1025, 1115, 1205, 1400, 1450, 1545, 1635, 1825, 1915, 2005)
         )
     }
 }

@@ -49,7 +49,8 @@
         <activity android:name=".ui.setting.SettingActivity" />
         <activity android:name=".ui.elective.ElectiveActivity" />
         <activity android:name=".ui.feedback.FeedbackActivity" />
-        <activity android:name=".ui.activity.TestActivity">
+        <activity android:name=".ui.activity.TestActivity"
+            android:label="测试布局">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -16,7 +16,7 @@ import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.VMProvider
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.databinding.WebActivityBinding
-import cn.ifafu.ifafu.view.dialog.LoadingDialog
+import cn.ifafu.ifafu.ui.view.LoadingDialog
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.web_activity.*
 
