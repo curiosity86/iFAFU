@@ -75,15 +75,12 @@ class ScoreListActivity : BaseActivity<ActivityScoreListBinding, ScoreListViewMo
             vm = mViewModel
             rvScore.addItemDecoration(RecyclerViewDivider(
                     this@ScoreListActivity, LinearLayoutManager.VERTICAL, R.drawable.shape_divider))
-            tvScoreTitle.setOnClickListener(this@ScoreListActivity)
             btnRefresh.setOnClickListener(this@ScoreListActivity)
             layoutIes.setOnClickListener(this@ScoreListActivity)
             layoutCnt.setOnClickListener(this@ScoreListActivity)
         }
         mViewModel.iesDetail.observe(this, Observer {
-            iesDetailDialog.show {
-                message(text = it)
-            }
+            iesDetailDialog.show { message(text = it) }
         })
         mViewModel.scoreList.observe(this, Observer {
             mAdapter.scoreList = it
@@ -95,8 +92,10 @@ class ScoreListActivity : BaseActivity<ActivityScoreListBinding, ScoreListViewMo
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tv_score_title -> {
-                val semester = mViewModel.semester.value ?: return
-                mSemesterOptionPicker.show(semester)
+                mViewModel.semester.value?.run {
+                    mSemesterOptionPicker.setSemester(this)
+                    mSemesterOptionPicker.show()
+                }
             }
             R.id.layout_ies -> mViewModel.iesCalculationDetail()
             R.id.layout_cnt ->  {

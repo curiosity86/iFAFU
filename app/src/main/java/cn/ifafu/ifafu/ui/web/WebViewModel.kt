@@ -22,7 +22,7 @@ class WebViewModel(application: Application) : BaseViewModel(application) {
             if (url == null) {
                 this@WebViewModel.title.postValue("正方教务管理系统")
                 url = Constant.getUrl(ZFApiList.MAIN, Repository.user.getInUse()!!)
-                setCookie(url, SPUtils[Constant.SP_COOKIE].getString("ASP.NET_SessionId"))
+                setCookie(url, SPUtils[Constant.SP_COOKIE].getString("cookie"))
             }
             if (title != null) {
                 this@WebViewModel.title.postValue(title)

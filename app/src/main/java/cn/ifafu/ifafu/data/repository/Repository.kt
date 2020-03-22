@@ -41,7 +41,7 @@ object Repository {
     private val db: AppDatabase by lazy { AppDatabase.getInstance(context) }
     val user by lazy { UserRt(context) }
     val syllabus by lazy { SyllabusRt(context) }
-    val exam by lazy { ExamRt(context) }
+    val exam by lazy { ExamRt() }
 
     private var account: String = ""
         get() {
@@ -109,9 +109,11 @@ object Repository {
             val user = user.getInUse() ?: throw Exception("用户信息不存在")
             val url: String = Constant.getUrl(ZFApiList.SYLLABUS, user)
             val headerReferer: String = Constant.getUrl(ZFApiList.MAIN, user)
-            val html = APIManager.zhengFangAPI
-                    .get(url, headerReferer).execute()
-                    .body()?.string() ?: return@withContext Response.failure<List<Course>>("获取课表失败")
+            val resp = APIManager.zhengFangAPI.get(url, headerReferer).execute()
+            if (resp.code() == 302) {
+                return@withContext Response.failure<List<Course>>("无法获取课表信息")
+            }
+            val html = resp.body()!!.string()
             SyllabusParser(user).parse(html).apply {
                 //若不为空，则自动保存
                 if (!data.isNullOrEmpty()) {
@@ -151,13 +153,13 @@ object Repository {
 
         suspend fun getHoliday() = withContext(Dispatchers.Default) {
             listOf(
-                    Holiday("清明节", "2020-04-04", 3),
-                    Holiday("劳动节", "2020-05-01", 5).apply {
-                        addFromTo("2020-05-05", "2019-05-09")
-                    },
-                    Holiday("端午节", "2020-06-25", 3).apply {
-                        addFromTo("2020-06-26", "2019-06-28")
-                    }
+                    Vocation("清明节", "2020-04-04", 3),
+                    Vocation("劳动节", "2020-05-01", 5,
+                            mapOf("2020-05-05" to "2019-05-09")
+                    ),
+                    Vocation("端午节", "2020-06-25", 3,
+                            mapOf("2020-06-26" to "2019-06-28")
+                    )
             )
         }
 
@@ -179,29 +181,24 @@ object Repository {
             val calendar: Calendar = Calendar.getInstance()
             calendar.firstDayOfWeek = setting.firstDayOfWeek
             for (holiday in holidays) {
-                if (holiday.fromTo != null) { //节假日需要调课
-                    for ((key, value) in holiday.fromTo) {
-                        val fromDate: Date = format.parse(key)
-                        val fromWeek = DateUtils.getCurrentWeek(openingDate, fromDate, setting.firstDayOfWeek)
-                        calendar.time = fromDate
-                        val fromWeekday = calendar.get(Calendar.DAY_OF_WEEK)
-//                    Log.d("Holiday Calc", "from week: $fromWeek, fromWeekday: $fromWeekday")
-                        val toDate: Date = format.parse(value)
-                        val toWeek = DateUtils.getCurrentWeek(openingDate, toDate, setting.firstDayOfWeek)
-                        calendar.time = toDate
-                        val toWeekday = calendar.get(Calendar.DAY_OF_WEEK)
-                        val toPair = Pair(toWeek, toWeekday)
-                        fromToMap.getOrPut(fromWeek, { HashMap() })[fromWeekday] = toPair
-                    }
+                for ((key, value) in holiday.fromTo) {
+                    val fromDate: Date = format.parse(key)
+                    val fromWeek = DateUtils.getCurrentWeek(openingDate, fromDate, setting.firstDayOfWeek)
+                    calendar.time = fromDate
+                    val fromWeekday = calendar.get(Calendar.DAY_OF_WEEK)
+                    val toDate: Date = format.parse(value)
+                    val toWeek = DateUtils.getCurrentWeek(openingDate, toDate, setting.firstDayOfWeek)
+                    calendar.time = toDate
+                    val toWeekday = calendar.get(Calendar.DAY_OF_WEEK)
+                    val toPair = Pair(toWeek, toWeekday)
+                    fromToMap.getOrPut(fromWeek, { HashMap() })[fromWeekday] = toPair
                 }
                 //添加放假日期
                 if (holiday.day != 0) {
                     val holidayDate: Date = format.parse(holiday.date)
                     calendar.time = holidayDate
-//                Log.d("Holiday Calc", "holiday date: ${holiday.date}    day: ${holiday.day}天")
                     for (i in 0 until holiday.day) {
                         val holidayWeek = DateUtils.getCurrentWeek(openingDate, calendar.time, setting.firstDayOfWeek)
-//                    Log.d("Holiday Calc", "holiday week = $holidayWeek    $i")
                         if (holidayWeek <= setting.weekCnt) {
                             fromToMap.getOrPut(holidayWeek, { HashMap() }).run {
                                 val weekday = calendar.get(Calendar.DAY_OF_WEEK)
@@ -209,7 +206,6 @@ object Repository {
                                     this[weekday] = null
                                 }
                             }
-
                             calendar.add(Calendar.DAY_OF_YEAR, 1)
                         }
                     }
@@ -697,7 +693,7 @@ object Repository {
         }
     }
 
-    class ExamRt(context: Context) {
+    class ExamRt {
 
         /**
          * 获取当前学期考试（速度最快）

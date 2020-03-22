@@ -60,7 +60,7 @@ class NetSourceImpl : NetSource {
         try {
             user = http.initToken(user)
             loginLazyAsync(user).await().getOrElse(onGet = {
-                SPUtils["Cookie"].putString("cookie", it.token)
+                SPUtils[Constant.SP_COOKIE].putString("cookie", it.token)
                 checkoutTo(it)
                 IFResult.success(it)
             }, onElse = {
@@ -203,7 +203,7 @@ class NetSourceImpl : NetSource {
                 user.name = ifResp.data ?: "？？？"
                 //TODO 金山Cookie临时过渡方案
                 if (user.school == User.FAFU_JS) {
-                    SPUtils["Cookie"].putString("cookie", user.token)
+                    SPUtils[Constant.SP_COOKIE].putString("cookie", user.token)
                 }
                 return@async IFResponse.success(user)
             }, onElse = {

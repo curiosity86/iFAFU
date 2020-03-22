@@ -9,6 +9,8 @@ import com.bigkoo.pickerview.view.OptionsPickerView
 
 class SemesterOptionPicker(context: Context, onOptionSelectListener: (year: Int, term: Int) -> Unit) {
 
+    private var semester: Semester? = null
+
     private val mOptionPicker: OptionsPickerView<String> by lazy {
         OptionsPickerBuilder(context,
                 OnOptionsSelectListener { options1, options2, _, _ ->
@@ -22,9 +24,12 @@ class SemesterOptionPicker(context: Context, onOptionSelectListener: (year: Int,
                 .build<String>()
     }
 
-    fun show(semester: Semester) {
+    fun setSemester(semester: Semester) {
         mOptionPicker.setNPicker(semester.yearList, semester.termList, null)
         mOptionPicker.setSelectOptions(semester.yearIndex, semester.termIndex)
+    }
+
+    fun show() {
         mOptionPicker.show()
     }
 }

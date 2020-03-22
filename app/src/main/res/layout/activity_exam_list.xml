@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="vm"
+            type="cn.ifafu.ifafu.ui.exam_list.ExamListViewModel" />
     </data>
 
     <LinearLayout
@@ -17,7 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             app:title="@string/exam"
-            app:navigationIcon="@drawable/ic_back">
+            app:subtitle='@{vm.semester.toString() ?? @string/loading}'
+            tools:subtitle="2019-2020学年第2学期">
 
             <ImageButton
                 android:id="@+id/btn_refresh"

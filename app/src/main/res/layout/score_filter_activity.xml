@@ -62,7 +62,8 @@
             android:gravity="center"
             android:text="@{@string/score_filter_now_ies(ies)}"
             android:textColor="#1dcbdb"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            tools:text="当前智育分：91分"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_score_filter"

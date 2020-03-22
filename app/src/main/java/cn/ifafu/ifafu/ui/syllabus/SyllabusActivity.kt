@@ -40,7 +40,7 @@ class SyllabusActivity : BaseActivity<SyllabusActivityBinding, SyllabusViewModel
     }
     override val mLoadingDialog: LoadingDialog by lazy {
         LoadingDialog(this).apply {
-            setText("刷新中")
+            setText("获取中")
         }
     }
 
