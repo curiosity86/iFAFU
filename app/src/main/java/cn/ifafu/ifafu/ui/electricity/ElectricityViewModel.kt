@@ -43,7 +43,7 @@ class ElectricityViewModel(application: Application) : BaseViewModel(application
                         val user = Repository.user.getInUse()
                         account = user!!.account
                         val account = user.account
-                        xfbAccount = if (user.schoolCode == Constant.FAFU_JS) "0$account" else account
+                        xfbAccount = if (user.school == Constant.FAFU_JS) "0$account" else account
                     }
                     loginStatus.postValue(false)
                 }

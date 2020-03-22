@@ -25,8 +25,8 @@
             android:id="@+id/iv_menu_icon"
             android:layout_width="75dp"
             android:layout_height="75dp"
-            android:src="@{Converter.schoolToIconWhite(context, user.schoolCode)}"
-            android:contentDescription="@{Converter.schoolToString(user.schoolCode)}"
+            android:src="@{Converter.schoolToIconWhite(context, user.school)}"
+            android:contentDescription="@{Converter.schoolToString(user.school)}"
             tools:src="@drawable/fafu_bb_icon_white" />
 
         <TextView

@@ -53,7 +53,7 @@ public class SyllabusView extends LinearLayout {
     private int mSideWidth;
     private int mSideTextColor = 0xFF000000;
     private boolean mShowTimeTexts; // 是否显示上课时间
-    private String[] timeTexts; // 上课时间
+    private List<String> timeTexts; // 上课时间
     private String[] dateTexts;
 
     // CourseView
@@ -182,7 +182,7 @@ public class SyllabusView extends LinearLayout {
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mDateHeight);
         mSideLayout.addView(cornerTV, 0, params);
         for (int i = 0; i < mRowCount; i++) {
-            String time = timeTexts != null && i < timeTexts.length ? timeTexts[i] : null;
+            String time = timeTexts != null && i < timeTexts.size() ? timeTexts.get(i) : null;
             realAddSideItemView(String.valueOf(i + 1), time);
         }
     }
@@ -291,7 +291,7 @@ public class SyllabusView extends LinearLayout {
         cornerTV.setText(text);
     }
 
-    public void setBeginTimeTexts(String[] timeTexts) {
+    public void setBeginTimeTexts(List<String> timeTexts) {
         this.timeTexts = timeTexts;
     }
 

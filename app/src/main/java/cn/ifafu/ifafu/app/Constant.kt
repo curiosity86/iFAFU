@@ -67,7 +67,7 @@ object Constant {
      * @return url
      */
     fun getUrl(filed: String, user: User): String {
-        return (URL_MAP[user.schoolCode] ?: error(""))[filed, user]
+        return (URL_MAP[user.school] ?: error(""))[filed, user]
     }
 
     private val urls = mapOf(

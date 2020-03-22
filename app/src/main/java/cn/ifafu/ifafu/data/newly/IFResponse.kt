@@ -7,6 +7,14 @@ class IFResponse<T>(
         val params: Map<String, String>? = null
 ) {
 
+    inline fun <R> getOrElse(onGet: (T) -> R, onElse: (IFResponse<T>) -> R): R {
+        return if (isSuccess && data != null) {
+            onGet(data)
+        } else {
+            onElse(this)
+        }
+    }
+
     val isSuccess: Boolean
         get() = code == SUCCESS
     val isFailure: Boolean

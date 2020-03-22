@@ -14,7 +14,7 @@ import cn.ifafu.ifafu.data.bean.*
 import cn.ifafu.ifafu.data.db.AppDatabase
 import cn.ifafu.ifafu.data.entity.*
 import cn.ifafu.ifafu.data.exception.VerifyException
-import cn.ifafu.ifafu.data.newly.HttpSourceImpl
+import cn.ifafu.ifafu.data.newly.NetSourceImpl
 import cn.ifafu.ifafu.data.retrofit.APIManager
 import cn.ifafu.ifafu.data.retrofit.parser.*
 import cn.ifafu.ifafu.data.retrofit.service.WeatherService
@@ -111,7 +111,7 @@ object Repository {
             val headerReferer: String = Constant.getUrl(ZFApiList.MAIN, user)
             val html = APIManager.zhengFangAPI
                     .get(url, headerReferer).execute()
-                    .body()!!.string()
+                    .body()?.string() ?: return@withContext Response.failure<List<Course>>("获取课表失败")
             SyllabusParser(user).parse(html).apply {
                 //若不为空，则自动保存
                 if (!data.isNullOrEmpty()) {
@@ -322,7 +322,7 @@ object Repository {
         }
 
         suspend fun login2(account: String, password: String): IFResult<User> {
-            return HttpSourceImpl().login(account, password)
+            return NetSourceImpl().login(account, password)
         }
 
         suspend fun login(account: String, password: String): Response<String> = withContext(Dispatchers.IO) {
@@ -330,9 +330,9 @@ object Repository {
                 this.account = if (account.getOrNull(0) == '0') account.drop(1) else account
                 this.password = password
                 if (account.length == 9) {
-                    this.schoolCode = Constant.FAFU_JS.toString()
+                    this.school = Constant.FAFU_JS.toString()
                 } else if (account.length == 10) {
-                    this.schoolCode = Constant.FAFU.toString()
+                    this.school = Constant.FAFU.toString()
                 }
             }
             val loginUrl = Constant.getUrl(ZFApiList.LOGIN, user)

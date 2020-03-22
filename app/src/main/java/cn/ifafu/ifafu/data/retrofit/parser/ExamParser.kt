@@ -12,7 +12,7 @@ import kotlin.collections.ArrayList
 class ExamParser(user: User) : BaseParser<Response<List<Exam>>>() {
 
     private val account: String = user.account
-    private val schoolCode: String = user.schoolCode
+    private val schoolCode: String = user.school
 
     override fun parse(html: String): Response<List<Exam>> {
         val document = Jsoup.parse(html)

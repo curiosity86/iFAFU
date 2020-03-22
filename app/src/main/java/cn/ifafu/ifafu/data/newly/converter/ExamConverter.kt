@@ -15,7 +15,7 @@ import kotlin.collections.ArrayList
 class ExamConverter(user: User) {
 
     private val account: String = user.account
-    private val schoolCode: String = user.schoolCode
+    private val schoolCode: String = user.school
 
     @Throws(NoAuthException::class)
     fun convert(response: Response): IFResult<List<Exam>> {

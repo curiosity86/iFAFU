@@ -1,16 +1,16 @@
 package cn.ifafu.ifafu.data.retrofit.interceptor
 
+import cn.ifafu.ifafu.util.SPUtils
 import okhttp3.Interceptor
 import okhttp3.Response
 
-class JWCookieInterceptor: Interceptor {
-
-    private val mCookies = ArrayList<String>()
+class JWCookieInterceptor : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        val request = if (mCookies.size > 0) {
+        val cookie = SPUtils["Cookie"].getString("cookie")
+        val request = if (cookie.isNotBlank()) {
             chain.request().newBuilder()
-                    .addHeader("Cookie", mCookies[0])
+                    .addHeader("Cookie", cookie)
                     .build()
         } else {
             chain.request()
@@ -18,12 +18,8 @@ class JWCookieInterceptor: Interceptor {
         val response = chain.proceed(request)
         val cookieString = response.header("Set-Cookie")
         if (cookieString != null) {
-            val cookies = cookieString.split(";")
-            for (i in 0 until cookies.size - 1) {
-                if (cookies[i].isNotEmpty()) {
-                    mCookies.add(cookies[i])
-                }
-            }
+            val cookies = cookieString.substringBefore(";")
+            SPUtils["Cookie"].putString("cookie", cookies)
         }
         return response
     }

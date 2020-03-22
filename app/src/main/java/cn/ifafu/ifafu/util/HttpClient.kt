@@ -2,7 +2,7 @@ package cn.ifafu.ifafu.util
 
 import okhttp3.*
 
-class HttpClient {
+open class HttpClient {
 
     private val client by lazy { OkHttpClient() }
 

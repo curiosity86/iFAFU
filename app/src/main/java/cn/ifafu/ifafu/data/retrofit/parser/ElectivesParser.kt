@@ -13,7 +13,7 @@ class ElectivesParser(val user: User) : BaseParser<Electives>() {
         val info = Electives()
         info.account = user.account
         val doc = Jsoup.parse(html)
-        when (user.schoolCode) {
+        when (user.school) {
             Constant.FAFU -> {
                 val ele = doc.select("table[id=\"DataGrid5\"]")[0].children()[0].children()
                 for (element in ele) {

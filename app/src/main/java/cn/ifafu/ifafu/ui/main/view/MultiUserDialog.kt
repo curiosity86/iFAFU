@@ -59,7 +59,7 @@ class MultiUserDialog(
             val bindViews = BindViews()
             users.forEach {
                 bindViews.add(ItemBindView(
-                        when (it.schoolCode) {
+                        when (it.school) {
                             Constant.FAFU -> R.drawable.fafu_bb_icon_white
                             Constant.FAFU_JS -> R.drawable.fafu_js_icon_white
                             else -> R.drawable.icon_ifafu_round

@@ -31,7 +31,13 @@ class SyllabusActivity : BaseActivity<SyllabusActivityBinding, SyllabusViewModel
         View.OnClickListener, View.OnLongClickListener {
 
     private var mCurrentWeek = 1
-    private lateinit var mPageAdapter: SyllabusPageAdapter
+    private val mPageAdapter: SyllabusPageAdapter by lazy {
+        SyllabusPageAdapter {
+            val intent = Intent(this, SyllabusItemActivity::class.java)
+            intent.putExtra("course_id", (it.getOther() as Course).id)
+            startActivityForResult(intent, Constant.ACTIVITY_SYLLABUS_ITEM)
+        }
+    }
     override val mLoadingDialog: LoadingDialog by lazy {
         LoadingDialog(this).apply {
             setText("刷新中")
@@ -55,6 +61,7 @@ class SyllabusActivity : BaseActivity<SyllabusActivityBinding, SyllabusViewModel
         btn_add.setOnClickListener(this)
         btn_refresh.setOnClickListener(this)
         btn_setting.setOnClickListener(this)
+        view_pager.adapter = mPageAdapter
         tv_date.text = SimpleDateFormat("MM月dd日", Locale.CHINA).format(Date())
         tv_subtitle.setOnLongClickListener(this)
         mViewModel.setting.observe(this, Observer {
@@ -79,12 +86,8 @@ class SyllabusActivity : BaseActivity<SyllabusActivityBinding, SyllabusViewModel
         ImmersionBar.with(this)
                 .statusBarDarkFont(setting.statusDartFont)
                 .init()
-        mPageAdapter = SyllabusPageAdapter(setting) {
-            val intent = Intent(this, SyllabusItemActivity::class.java)
-            intent.putExtra("course_id", (it.getOther() as Course).id)
-            startActivityForResult(intent, Constant.ACTIVITY_SYLLABUS_ITEM)
-        }
-        view_pager.adapter = mPageAdapter
+        mPageAdapter.setting = setting
+        mPageAdapter.notifyDataSetChanged()
         setCurrentWeek(setting.getCurrentWeek())
         if (setting.background.isNotEmpty()) {
             iv_background.setImageDrawable(null)

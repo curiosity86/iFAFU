@@ -71,7 +71,7 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
 
     private fun initNewTabMenu() {
         safeLaunchWithMessage {
-            schoolIcon.postValue(when (inUseUser.value?.schoolCode) {
+            schoolIcon.postValue(when (inUseUser.value?.school) {
                 Constant.FAFU -> getApplication<Application>().getDrawable((R.drawable.fafu_bb_icon_white))
                 Constant.FAFU_JS -> getApplication<Application>().getDrawable((R.drawable.fafu_js_icon_white))
                 else -> getApplication<Application>().getDrawable((R.mipmap.ic_launcher_round))

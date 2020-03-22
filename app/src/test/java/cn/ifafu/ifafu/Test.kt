@@ -1,8 +1,6 @@
 package cn.ifafu.ifafu
 
-import cn.ifafu.ifafu.data.newly.HttpSourceImpl
-import cn.ifafu.ifafu.util.HttpClient
-import com.alibaba.fastjson.JSONObject
+import cn.ifafu.ifafu.data.newly.NetSourceImpl
 import kotlinx.coroutines.*
 import org.junit.Test
 
@@ -11,7 +9,7 @@ class Test {
 
     @Test
     fun test() = runBlocking {
-        HttpSourceImpl().getOpeningDay().run {
+        NetSourceImpl().getOpeningDay().run {
             println(this.getOrNull())
         }
     }

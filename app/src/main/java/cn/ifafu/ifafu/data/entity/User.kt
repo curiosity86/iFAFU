@@ -1,5 +1,7 @@
 package cn.ifafu.ifafu.data.entity
 
+import androidx.annotation.StringDef
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import cn.ifafu.ifafu.app.Constant
@@ -11,7 +13,9 @@ class User {
     var account: String = "" // 学号
     var password: String = "" // 密码
     var name: String = ""// 名字
-    var schoolCode: String = Constant.FAFU
+    @School
+    @ColumnInfo(name = "schoolCode")
+    var school: String = Constant.FAFU
     var token: String = generateToken()
 
     private fun generateToken(): String {
@@ -24,4 +28,12 @@ class User {
         return "($token)"
     }
 
+    companion object {
+        const val FAFU = "FAFU"
+        const val FAFU_JS = "FAFU_JS"
+    }
+
+    @MustBeDocumented
+    @StringDef(value = [FAFU, FAFU_JS])
+    annotation class School
 }

@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
-import cn.ifafu.ifafu.data.newly.HttpSourceImpl
+import cn.ifafu.ifafu.data.newly.NetSourceImpl
 import cn.ifafu.ifafu.data.repository.Repository
 import cn.ifafu.ifafu.view.syllabus.CourseBase
 import kotlinx.coroutines.GlobalScope
@@ -23,7 +23,7 @@ class SyllabusViewModel(application: Application) : BaseViewModel(application) {
         GlobalScope.launch {
             updateSyllabusSetting().join()
             updateSyllabusLocal()
-            val openingDay = HttpSourceImpl().getOpeningDay().getOrNull() ?: return@launch
+            val openingDay = NetSourceImpl().getOpeningDay().getOrNull() ?: return@launch
             val setting = repo.syllabus.getSetting()
             if (setting.openingDay != openingDay) {
                 Timber.d("update opening day: ${openingDay}, before: ${setting.openingDay}")

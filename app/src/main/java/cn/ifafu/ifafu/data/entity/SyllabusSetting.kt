@@ -38,8 +38,7 @@ class SyllabusSetting {
     var statusDartFont = true //状态栏深色字体
     var isForceRefresh = false // 每次进入课表，自动刷新课表
     var parseType = 1 //1:本地解析   2：网络解析
-
-    var beginTime: List<Int> = ArrayList()
+    var beginTime: List<Int> = intBeginTime[0]
 
     @Ignore
     constructor(account: String) {
@@ -48,12 +47,11 @@ class SyllabusSetting {
 
     constructor()
 
-    val beginTimeText: Array<String>
-        get() {
-            return beginTime.map {
-                String.format("%d:%02d", it / 100, it % 100)
-            }.toTypedArray()
-        }
+    fun getBeginTimeText(): List<String> {
+        return beginTime.map {
+            String.format("%d:%02d", it / 100, it % 100)
+        }.toList()
+    }
 
     /**
      * @return 小于0则为放假中

@@ -16,7 +16,6 @@ class CookieInterceptor : Interceptor {
         val builder = chain.request().newBuilder()
         if (cookie == null) {
             cookie = Repository.XfbRt.getElecCookie()
-            println(JSONObject.toJSONString(cookie))
         }
         builder.addHeader("Cookie", cookie!!.toCookieString())
         val response = chain.proceed(builder.build())
