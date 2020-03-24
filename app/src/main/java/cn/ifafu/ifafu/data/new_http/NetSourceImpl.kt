@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.data.newly
+package cn.ifafu.ifafu.data.new_http
 
 import android.graphics.Bitmap
 import cn.ifafu.ifafu.app.Constant
@@ -6,13 +6,11 @@ import cn.ifafu.ifafu.base.BaseApplication
 import cn.ifafu.ifafu.data.IFResult
 import cn.ifafu.ifafu.data.bean.URL
 import cn.ifafu.ifafu.data.bean.Weather
-import cn.ifafu.ifafu.data.entity.Course
 import cn.ifafu.ifafu.data.entity.Exam
-import cn.ifafu.ifafu.data.entity.Score
 import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.data.exception.NoAuthException
-import cn.ifafu.ifafu.data.newly.converter.ExamConverter
-import cn.ifafu.ifafu.data.newly.converter.LoginConverter
+import cn.ifafu.ifafu.data.new_http.converter.ExamConverter
+import cn.ifafu.ifafu.data.new_http.converter.LoginConverter
 import cn.ifafu.ifafu.data.retrofit.parser.VerifyParser
 import cn.ifafu.ifafu.util.BitmapUtil
 import cn.ifafu.ifafu.util.SPUtils

@@ -20,9 +20,7 @@ class ExamListActivity : BaseActivity<ActivityExamListBinding, ExamListViewModel
     private val mExamAdapter = ExamAdapter(this)
 
     override val mLoadingDialog: LoadingDialog by lazy {
-        LoadingDialog(this).apply {
-            setText("获取中")
-        }
+        LoadingDialog(this).apply { setText("获取中") }
     }
 
     private val mSemesterOptionPicker by lazy {

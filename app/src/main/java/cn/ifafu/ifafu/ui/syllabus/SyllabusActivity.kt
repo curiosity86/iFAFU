@@ -17,10 +17,11 @@ import cn.ifafu.ifafu.data.entity.Course
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
 import cn.ifafu.ifafu.databinding.SyllabusActivityBinding
 import cn.ifafu.ifafu.ui.main.MainActivity
+import cn.ifafu.ifafu.ui.syllabus.view.CourseItem
+import cn.ifafu.ifafu.ui.syllabus.view.CourseLayout
 import cn.ifafu.ifafu.ui.syllabus_item.SyllabusItemActivity
 import cn.ifafu.ifafu.ui.syllabus_setting.SyllabusSettingActivity
 import cn.ifafu.ifafu.util.ChineseNumbers
-import cn.ifafu.ifafu.view.adapter.SyllabusPageAdapter
 import cn.ifafu.ifafu.ui.view.LoadingDialog
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.syllabus_activity.*
@@ -32,11 +33,13 @@ class SyllabusActivity : BaseActivity<SyllabusActivityBinding, SyllabusViewModel
 
     private var mCurrentWeek = 1
     private val mPageAdapter: SyllabusPageAdapter by lazy {
-        SyllabusPageAdapter {
-            val intent = Intent(this, SyllabusItemActivity::class.java)
-            intent.putExtra("course_id", (it.getOther() as Course).id)
-            startActivityForResult(intent, Constant.ACTIVITY_SYLLABUS_ITEM)
-        }
+        SyllabusPageAdapter(object : CourseLayout.OnCourseClickListener {
+            override fun onClick(course: CourseItem) {
+                val intent = Intent(this@SyllabusActivity, SyllabusItemActivity::class.java)
+                intent.putExtra("course_id", course.id)
+                startActivityForResult(intent, Constant.ACTIVITY_SYLLABUS_ITEM)
+            }
+        })
     }
     override val mLoadingDialog: LoadingDialog by lazy {
         LoadingDialog(this).apply {
@@ -175,7 +178,6 @@ class SyllabusActivity : BaseActivity<SyllabusActivityBinding, SyllabusViewModel
             }
             requestCode == Constant.ACTIVITY_SYLLABUS_SETTING -> {
                 mViewModel.updateSyllabusSetting()
-                mViewModel.updateSyllabusLocal()
             }
             else -> {
                 super.onActivityResult(requestCode, resultCode, data)

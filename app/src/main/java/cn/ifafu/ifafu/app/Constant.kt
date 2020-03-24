@@ -30,11 +30,17 @@ object Constant {
     const val ACTIVITY_REPAIR = 110
     const val ACTIVITY_SETTING = 111
 
+    /**
+     * @see [User.FAFU]
+     * @see [User.FAFU_JS]
+     */
+    @Deprecated("move to user.class")
     const val FAFU = "FAFU"
+    @Deprecated("move to user.class")
     const val FAFU_JS = "FAFU_JS"
 
     private val URL_MAP: Map<String, ZFApiList> = mapOf(
-            Constant.FAFU to ZFApiList(Constant.FAFU, "http://jwgl.fafu.edu.cn/{token}/",
+            User.FAFU to ZFApiList(User.FAFU, "http://jwgl.fafu.edu.cn/{token}/",
                     "default2.aspx",
                     "CheckCode.aspx",
                     "xs_main.aspx",
@@ -46,7 +52,7 @@ object Constant {
                             ZFApiList.ELECTIVES to ZFApi("pyjh.aspx", "N121607")
                     )
             ),
-            Constant.FAFU_JS to ZFApiList(Constant.FAFU_JS, "http://js.ifafu.cn/",
+            User.FAFU_JS to ZFApiList(User.FAFU_JS, "http://js.ifafu.cn/",
                     "default.aspx",
                     "CheckCode.aspx",
                     "xs_main.aspx",
@@ -89,5 +95,5 @@ object Constant {
 
 }
 
-@StringDef(value = [Constant.FAFU, Constant.FAFU_JS])
+@StringDef(value = [User.FAFU, User.FAFU_JS])
 annotation class School

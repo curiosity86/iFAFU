@@ -49,13 +49,14 @@ class IFAFU : BaseApplication() {
          */
         fun initConfig(context: Context) {
             if (FIRST_START_APP) {
-                initBugly(context)
+                if (BuildConfig.DEBUG) {
+                    initBugly(context)
+                }
                 Repository.user.getInUseAccount().run {
                     if (this.isNotEmpty()) {
                         Bugly.setUserId(context, this)
                     }
                 }
-                Beta.enableHotfix = true
                 FIRST_START_APP = false
             }
         }
@@ -70,6 +71,7 @@ class IFAFU : BaseApplication() {
                     return map
                 }
             })
+            Beta.enableHotfix = true
             strategy.appVersion = AppUtils.getVersionName(context) + "-" + AppUtils.getVersionCode(context)
             Bugly.init(context, "46836c4eaa", BuildConfig.DEBUG, strategy)
         }

@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="@string/contact_required"
+            android:text="@string/content_required"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="@string/contact_optional"
+            android:text="@string/contact_require"
             android:textSize="14sp"
             android:textStyle="bold" />
 

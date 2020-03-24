@@ -15,6 +15,8 @@
     <string name="node_format">今日：第%d/%d节</string>
     <string name="now_class_format">当前：%s</string>
     <string name="next_class_format">下一节课：%s</string>
+    <string name="now_class">当前：</string>
+    <string name="next_class">下一节课：</string>
 
     <!--LoginActivity-->
     <string name="account">学号</string>
@@ -154,8 +156,9 @@
     <string name="empty">空空如也~</string>
     <string name="more">更多</string>
     <string name="submit">提交</string>
+
     <string name="contact">联系方式</string>
-    <string name="contact_optional">联系方式（选填）:</string>
+    <string name="contact_require">* 联系方式:</string>
     <string name="enter_content">请输入反馈内容</string>
-    <string name="contact_required">* 内容描述:</string>
+    <string name="content_required">* 内容描述:</string>
 </resources>

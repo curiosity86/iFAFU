@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.data.newly
+package cn.ifafu.ifafu.data.new_http
 
 import androidx.annotation.IntDef
 import cn.ifafu.ifafu.app.Constant

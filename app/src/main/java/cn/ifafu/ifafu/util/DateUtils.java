@@ -8,7 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import cn.ifafu.ifafu.view.syllabus.Weekday;
+import cn.ifafu.ifafu.ui.syllabus.view.DayOfWeek;
 
 /**
  * create by woolsen on 19/7/16
@@ -22,7 +22,7 @@ public class DateUtils {
 
     private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
 
-    public static String getWeekdayCN(@Weekday int weekday) {
+    public static String getWeekdayCN(@DayOfWeek int weekday) {
         return weekdays[weekday - 1];
     }
 
@@ -205,7 +205,7 @@ public class DateUtils {
      * @param firstDayOfWeek 每周第一天是星期几
      * @return 当前周
      */
-    public static int getCurrentWeek(Date firstStudyDate, Date date, @Weekday int firstDayOfWeek) {
+    public static int getCurrentWeek(Date firstStudyDate, Date date, @DayOfWeek int firstDayOfWeek) {
         calendar.setTime(date);
         calendar.setFirstDayOfWeek(firstDayOfWeek);
         int currentYearWeek = calendar.get(Calendar.WEEK_OF_YEAR);
@@ -220,7 +220,7 @@ public class DateUtils {
     /**
      * @see #getCurrentWeek(Date, Date, int)
      */
-    public static int getCurrentWeek(Date firstStudyDate, @Weekday int firstDayOfWeek) {
+    public static int getCurrentWeek(Date firstStudyDate, @DayOfWeek int firstDayOfWeek) {
         return getCurrentWeek(firstStudyDate, new Date(), firstDayOfWeek);
     }
 

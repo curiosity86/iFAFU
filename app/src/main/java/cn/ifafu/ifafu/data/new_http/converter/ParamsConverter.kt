@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.data.newly.converter
+package cn.ifafu.ifafu.data.new_http.converter
 
 import okhttp3.Response
 import org.jsoup.Jsoup

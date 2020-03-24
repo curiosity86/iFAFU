@@ -1,6 +1,6 @@
 package cn.ifafu.ifafu
 
-import cn.ifafu.ifafu.data.newly.NetSourceImpl
+import cn.ifafu.ifafu.data.new_http.NetSourceImpl
 import kotlinx.coroutines.*
 import org.junit.Test
 

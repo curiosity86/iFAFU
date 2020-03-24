@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="tag_course" type="id" />
+    <item name="id_node_textview" type="id" />
+    <item name="id_date_textview" type="id" />
+    <item name="id_week_textview" type="id" />
+    <item name="id_time_textview" type="id" />
+</resources>

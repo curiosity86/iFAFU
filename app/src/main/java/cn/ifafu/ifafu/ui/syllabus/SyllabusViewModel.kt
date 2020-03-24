@@ -4,9 +4,9 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
-import cn.ifafu.ifafu.data.newly.NetSourceImpl
+import cn.ifafu.ifafu.data.new_http.NetSourceImpl
 import cn.ifafu.ifafu.data.repository.Repository
-import cn.ifafu.ifafu.view.syllabus.CourseBase
+import cn.ifafu.ifafu.ui.syllabus.view.CourseItem
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -17,7 +17,7 @@ class SyllabusViewModel(application: Application) : BaseViewModel(application) {
     private val repo = Repository
 
     val setting by lazy { MutableLiveData<SyllabusSetting>() }
-    val courses by lazy { MutableLiveData<List<List<CourseBase>?>>() }
+    val courses by lazy { MutableLiveData<List<List<CourseItem>?>>() }
 
     fun initData() {
         GlobalScope.launch {
@@ -87,6 +87,7 @@ class SyllabusViewModel(application: Application) : BaseViewModel(application) {
 
     fun updateSyllabusSetting() = safeLaunchWithMessage {
         val setting = Repository.syllabus.getSetting()
+        Timber.d("Update Syllabus Setting")
         this@SyllabusViewModel.setting.postValue(setting)
         repo.syllabus.saveSetting(setting)
     }

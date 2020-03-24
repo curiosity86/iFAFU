@@ -2,13 +2,12 @@ package cn.ifafu.ifafu.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import cn.ifafu.ifafu.ui.syllabus.view.CourseItem
 import cn.ifafu.ifafu.util.DateUtils
-import cn.ifafu.ifafu.view.syllabus.CourseBase
-import cn.ifafu.ifafu.view.syllabus.ToCourseBase
 import java.util.*
 
 @Entity
-class Course : ToCourseBase {
+class Course {
 
     @PrimaryKey
     var id: Long = 0
@@ -40,18 +39,15 @@ class Course : ToCourseBase {
         return course
     }
 
-    override fun toCourseBase(): CourseBase {
-        val courseBase = CourseBase()
-        if (address.isEmpty()) {
-            courseBase.text = name
-        } else {
-            courseBase.text = "$name\n@$address"
-        }
-        courseBase.beginNode = beginNode
-        courseBase.weekday = weekday
-        courseBase.nodeCnt = nodeCnt
-        courseBase.setOther(this)
-        return courseBase
+    fun toCourseItem(): CourseItem {
+        return CourseItem(
+                id = id,
+                name = name,
+                address = address,
+                startNode = beginNode,
+                dayOfWeek = weekday,
+                nodeCount = nodeCnt
+        )
     }
 
     override fun toString(): String {

@@ -86,6 +86,7 @@ class ScoreListActivity : BaseActivity<ActivityScoreListBinding, ScoreListViewMo
             mAdapter.scoreList = it
             mAdapter.notifyDataSetChanged()
         })
+        tv_score_title.setOnClickListener(this)
         mViewModel.initData()
     }
 

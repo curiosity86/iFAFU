@@ -80,48 +80,54 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingActivityBinding, Syl
         rv_syllabus_setting.adapter = mAdapter
         mViewModel.setting.observe(this, Observer { setting ->
             mAdapter.items = listOf(
-//                    CheckBoxItem("是否使用网络解析", "通过服务器解析，课表出问题就选它，然后刷新课表", setting.parseType == 2) {
-//                        setting.parseType = if (it) 2 else 1
-//                        mViewModel.save()
-//                    },
                     SeekBarItem("一天课程的节数", setting.totalNode, "节", 8, 12) {
                         setting.totalNode = it
                         mViewModel.save()
+                        setResult(Activity.RESULT_OK)
                     },
                     SeekBarItem("课程字体大小", setting.textSize, "sp", 8, 18) {
                         setting.textSize = it
                         mViewModel.save()
+                        setResult(Activity.RESULT_OK)
                     },
                     CheckBoxItem("显示水平分割线", "", setting.showHorizontalLine) {
                         setting.showHorizontalLine = it
                         mViewModel.save()
+                        setResult(Activity.RESULT_OK)
                     },
                     CheckBoxItem("显示垂直分割线", "", setting.showVerticalLine) {
                         setting.showVerticalLine = it
                         mViewModel.save()
+                        setResult(Activity.RESULT_OK)
                     },
                     CheckBoxItem("显示上课时间", "", setting.showBeginTimeText) {
                         setting.showBeginTimeText = it
                         mViewModel.save()
+                        setResult(Activity.RESULT_OK)
                     },
                     CheckBoxItem("标题栏深色字体", "", setting.statusDartFont) {
                         setting.statusDartFont = it
                         mViewModel.save()
+                        setResult(Activity.RESULT_OK)
                     },
                     TextViewItem("课表背景", "长按重置为默认背景", {
                         showPicturePicker()
+                        setResult(Activity.RESULT_OK)
                     }, {
                         setting.background = ""
                         mViewModel.save()
                         GlobalScope.launch(Dispatchers.Main) {
                             showMessage("课表背景已重置")
                         }
+                        setResult(Activity.RESULT_OK)
                     }),
                     ColorItem("主题颜色", "按钮颜色，文本颜色（除课程文本）", setting.themeColor) { ivColor ->
                         showColorPicker(setting, ivColor)
+                        setResult(Activity.RESULT_OK)
                     },
                     TextViewItem("导出测试数据到剪切板", "", {
                         mViewModel.outputHtml()
+                        setResult(Activity.RESULT_OK)
                     }, {})
             )
             mAdapter.notifyDataSetChanged()

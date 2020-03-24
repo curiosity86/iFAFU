@@ -63,11 +63,11 @@ class MainNewFragment : BaseFragment<FragmentMainNewBinding, MainViewModel>(), V
         mViewModel.nextCourse.observe(this, Observer {
             if (it.hasInfo) {
                 val title = if (it.isInClass) {
-                    getString(R.string.now_class_format, it.nextClass)
+                    getString(R.string.now_class)
                 } else {
-                    getString(R.string.next_class_format, it.nextClass)
+                    getString(R.string.next_class)
                 }
-                setCourseText(it.nextClass, title, it.address + "   " + it.classTime, it.timeLeft)
+                setCourseText(title, it.nextClass, it.address + "   " + it.classTime, it.timeLeft)
             } else {
                 setCourseText(it.message, "", "", "")
             }

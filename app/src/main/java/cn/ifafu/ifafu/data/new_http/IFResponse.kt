@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.data.newly
+package cn.ifafu.ifafu.data.new_http
 
 class IFResponse<T>(
         private var code: Int,

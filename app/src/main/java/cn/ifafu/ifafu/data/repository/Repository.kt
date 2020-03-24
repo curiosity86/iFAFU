@@ -14,15 +14,14 @@ import cn.ifafu.ifafu.data.bean.*
 import cn.ifafu.ifafu.data.db.AppDatabase
 import cn.ifafu.ifafu.data.entity.*
 import cn.ifafu.ifafu.data.exception.VerifyException
-import cn.ifafu.ifafu.data.newly.NetSourceImpl
+import cn.ifafu.ifafu.data.new_http.NetSourceImpl
 import cn.ifafu.ifafu.data.retrofit.APIManager
 import cn.ifafu.ifafu.data.retrofit.parser.*
 import cn.ifafu.ifafu.data.retrofit.service.WeatherService
+import cn.ifafu.ifafu.ui.syllabus.view.CourseItem
 import cn.ifafu.ifafu.util.DateUtils
-import cn.ifafu.ifafu.util.HttpClient
 import cn.ifafu.ifafu.util.SPUtils
 import cn.ifafu.ifafu.util.encode
-import cn.ifafu.ifafu.view.syllabus.CourseBase
 import com.alibaba.fastjson.JSONObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -95,16 +94,6 @@ object Repository {
         private val dao = AppDatabase.getInstance(context).courseDao
         private val settingDao = AppDatabase.getInstance(context).syllabusSettingDao
 
-        suspend fun getOpeningDay(): String = withContext(Dispatchers.IO) {
-            val http = HttpClient()
-            val json = JSONObject.parseObject(http.get("https://api.ifafu.cn/public/text/firstWeek").body()?.string())
-            val content = json["content"].toString().substring(0, 10)
-            kotlin.runCatching {
-                SimpleDateFormat("yyyy-MM-dd").parse(content) //确保符合格式
-            }
-            content
-        }
-
         suspend fun fetchAll(): Response<List<Course>> = withContext(Dispatchers.IO) {
             val user = user.getInUse() ?: throw Exception("用户信息不存在")
             val url: String = Constant.getUrl(ZFApiList.SYLLABUS, user)
@@ -132,7 +121,7 @@ object Repository {
         }
 
         suspend fun get(id: Long): Course? = withContext(Dispatchers.Default) {
-            dao.course(id)
+            dao.get(id)
         }
 
         suspend fun save(course: Course) = withContext(Dispatchers.Default) {
@@ -144,11 +133,11 @@ object Repository {
         }
 
         suspend fun getSetting(): SyllabusSetting = withContext(Dispatchers.Default) {
-            settingDao.syllabusSetting(account) ?: SyllabusSetting(account).apply {
-                //若教室存在旗教字样，则为旗山校区
-                val isBenBu = getAll().find { it.address.contains("旗教") } == null
-                beginTime = SyllabusSetting.intBeginTime[if (isBenBu) 0 else 1]
-            }
+            val setting = settingDao.syllabusSetting(account) ?: SyllabusSetting(account)
+            //若教室存在旗教字样，则为旗山校区
+            val isBenBu = dao.getAll(account).find { it.address.contains("旗教") } == null
+            setting.beginTime = SyllabusSetting.intBeginTime[if (isBenBu) 0 else 1]
+            setting
         }
 
         suspend fun getHoliday() = withContext(Dispatchers.Default) {
@@ -219,11 +208,11 @@ object Repository {
          * @return MutableList<MutableList<CourseBase>?> 分周排列课表
          * @throws ParseException
          */
-        suspend fun holidayChange(oldCourses: List<Course>): MutableList<MutableList<CourseBase>?> = withContext(Dispatchers.Default) {
+        suspend fun holidayChange(oldCourses: List<Course>): MutableList<MutableList<CourseItem>?> = withContext(Dispatchers.Default) {
             //MutableMap<fromWeek, MutableMap<fromWeekday, Pair<toWeek, toWeekday>>>
             val fromTo = syllabus.getAdjustmentInfo()
             //按周排列课程
-            val courseArray: MutableList<MutableList<CourseBase>?> = ArrayList()
+            val courseArray: MutableList<MutableList<CourseItem>?> = ArrayList()
             for (i in 0 until 24) {
                 courseArray.add(null)
             }
@@ -235,9 +224,9 @@ object Repository {
                         for ((weekday, weekAndWeekday) in h) {
                             if (weekday == course.weekday) {
                                 if (weekAndWeekday != null) {
-                                    val c = course.toCourseBase()
-                                    c.text += "\n[补课]"
-                                    c.weekday = weekAndWeekday.second
+                                    val c = course.toCourseItem()
+                                    c.address += "\n[补课]"
+                                    c.dayOfWeek = weekAndWeekday.second
                                     if (courseArray[week - 1] == null) {
                                         courseArray[week - 1] = ArrayList()
                                     }
@@ -252,7 +241,7 @@ object Repository {
                         if (courseArray[week - 1] == null) {
                             courseArray[week - 1] = ArrayList()
                         }
-                        courseArray[week - 1]!!.add(course.toCourseBase())
+                        courseArray[week - 1]!!.add(course.toCourseItem())
                     }
                 }
             }
@@ -326,9 +315,9 @@ object Repository {
                 this.account = if (account.getOrNull(0) == '0') account.drop(1) else account
                 this.password = password
                 if (account.length == 9) {
-                    this.school = Constant.FAFU_JS.toString()
+                    this.school = User.FAFU_JS
                 } else if (account.length == 10) {
-                    this.school = Constant.FAFU.toString()
+                    this.school = User.FAFU
                 }
             }
             val loginUrl = Constant.getUrl(ZFApiList.LOGIN, user)

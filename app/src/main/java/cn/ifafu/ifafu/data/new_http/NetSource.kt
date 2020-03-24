@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.data.newly
+package cn.ifafu.ifafu.data.new_http
 
 import cn.ifafu.ifafu.data.IFResult
 import cn.ifafu.ifafu.data.bean.Weather
@@ -14,6 +14,7 @@ interface NetSource {
      * @return 2020-02-16
      */
     suspend fun getOpeningDay(): IFResult<String>
+
     suspend fun getExams(): IFResult<List<Exam>>
 
     suspend fun getWeather(code: String): IFResult<Weather>
