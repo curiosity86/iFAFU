@@ -45,7 +45,7 @@ class ExamListActivity : BaseActivity<ActivityExamListBinding, ExamListViewModel
                 .statusBarColor("#FFFFFF")
                 .statusBarDarkFont(true)
                 .init()
-        btn_refresh.setOnClickListener { mViewModel.update() }
+        btn_refresh.setOnClickListener { mViewModel.refresh() }
         tb_exam.setNavigationOnClickListener { finish() }
         tb_exam.setSubtitleClickListener { v ->
             mViewModel.semester.value?.run {
@@ -63,12 +63,17 @@ class ExamListActivity : BaseActivity<ActivityExamListBinding, ExamListViewModel
         mBinding.vm = mViewModel
         rv_exam.addItemDecoration(dividerItemDecoration)
         rv_exam.adapter = mExamAdapter
-        mViewModel.examList.observe(this, Observer {
+        mViewModel.exams.observe(this, Observer {
             isShowEmptyView(it.isEmpty())
             mExamAdapter.data = it
             mExamAdapter.notifyDataSetChanged()
         })
-        mViewModel.initData()
+        mViewModel.toastMessage.observe(this, Observer { toast(it) })
+        mViewModel.loading.observe(this, Observer {
+            with(mLoadingDialog) {
+                if (it) show() else cancel()
+            }
+        })
     }
 
     private fun isShowEmptyView(show: Boolean) {

@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.base.BaseViewModel
-import cn.ifafu.ifafu.data.repository.Repository
+import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.data.entity.ElecQuery
 import cn.ifafu.ifafu.data.bean.ElecSelection
 import cn.ifafu.ifafu.data.entity.ElecUser
@@ -36,20 +36,20 @@ class ElectricityViewModel(application: Application) : BaseViewModel(application
     fun init() {
         GlobalScope.launch {
             event.showDialog()
-            var elecUser = Repository.XfbRt.getElecUser()
+            var elecUser = RepositoryImpl.XfbRt.getElecUser()
             when {
                 elecUser == null -> { //首次登录
                     elecUser = ElecUser().apply {
-                        val user = Repository.user.getInUse()
+                        val user = RepositoryImpl.user.getInUse()
                         account = user!!.account
                         val account = user.account
                         xfbAccount = if (user.school == Constant.FAFU_JS) "0$account" else account
                     }
                     loginStatus.postValue(false)
                 }
-                Repository.XfbRt.checkLoginStatus() -> {
+                RepositoryImpl.XfbRt.checkLoginStatus() -> {
                     val job1 = GlobalScope.launch(Dispatchers.IO) {
-                        selections = Repository.XfbRt.getSelectionList()
+                        selections = RepositoryImpl.XfbRt.getSelectionList()
                         val group = selections
                                 .groupBy { it.group1 }
                                 .mapValues { entry ->
@@ -59,7 +59,7 @@ class ElectricityViewModel(application: Application) : BaseViewModel(application
                         groupList = group.values.toList()
                         buildingSelectionList.postValue(Pair(group.keys.toList(), groupList))
                         //初始化电费查询信息
-                        elecQuery = Repository.XfbRt.getElecQuery().run {
+                        elecQuery = RepositoryImpl.XfbRt.getElecQuery().run {
                             if (this != null) {
                                 //若数据库存在历史查询信息，则自动填充
                                 val selection = selections.find { selection ->
@@ -72,7 +72,7 @@ class ElectricityViewModel(application: Application) : BaseViewModel(application
                                     val secondIndex = groupList[firstIndex].indexOf(selection.group2)
                                     buildingSelected.postValue(Pair(firstIndex, secondIndex))
                                     roomData.postValue(this.room)
-                                    val response = Repository.XfbRt.fetchElectricityInfo(this)
+                                    val response = RepositoryImpl.XfbRt.fetchElectricityInfo(this)
                                     if (response.isSuccess) {
                                         elecBalance.postValue(response.data)
                                     }
@@ -124,12 +124,12 @@ class ElectricityViewModel(application: Application) : BaseViewModel(application
             elecQuery.floor = select.floor
             elecQuery.floorId = select.floorId
             elecQuery.room = room
-            val response = Repository.XfbRt.fetchElectricityInfo(elecQuery)
+            val response = RepositoryImpl.XfbRt.fetchElectricityInfo(elecQuery)
             if (response.isSuccess) {
                 elecBalance.postValue(response.data)
                 event.showMessage("查询成功")
-                Repository.XfbRt.saveElecQuery(elecQuery)
-            } else if (!Repository.XfbRt.checkLoginStatus()) {
+                RepositoryImpl.XfbRt.saveElecQuery(elecQuery)
+            } else if (!RepositoryImpl.XfbRt.checkLoginStatus()) {
                 event.showMessage("登录态失效，请重新登录")
             } else {
                 event.showMessage("查询出错")
@@ -140,7 +140,7 @@ class ElectricityViewModel(application: Application) : BaseViewModel(application
 
     private fun innerQueryCardBalance(silent: Boolean): Job {
         return GlobalScope.launch(Dispatchers.IO) {
-            val response = Repository.XfbRt.elecCardBalance()
+            val response = RepositoryImpl.XfbRt.elecCardBalance()
             if (response.isSuccess) {
                 runOnMainThread {
                     cardBalance.postValue(response.data!!.trimEnd(2))
@@ -160,20 +160,20 @@ class ElectricityViewModel(application: Application) : BaseViewModel(application
     fun login(password: String, verify: String) {
         GlobalScope.launch(Dispatchers.IO) {
             event.showDialog()
-            val json = JSONObject.parseObject(Repository.XfbRt.elecLogin(elecUser.value?.account
+            val json = JSONObject.parseObject(RepositoryImpl.XfbRt.elecLogin(elecUser.value?.account
                     ?: "", password, verify))
             if (json.getBoolean("IsSucceed") == true) {
                 val obj2 = json.getJSONObject("Obj2")
                 elecUser.value?.password = password
                 elecUser.value?.xfbId = json.getString("Obj")
                 elecUser.value?.run {
-                    Repository.XfbRt.saveElecUser(this)
+                    RepositoryImpl.XfbRt.saveElecUser(this)
                 }
-                val elecCookie = Repository.XfbRt.getElecCookie().apply {
+                val elecCookie = RepositoryImpl.XfbRt.getElecCookie().apply {
                     account = elecUser.value?.account ?: ""
                     rescouseType = obj2.getString("RescouseType")
                 }
-                Repository.XfbRt.saveElecCookie(elecCookie)
+                RepositoryImpl.XfbRt.saveElecCookie(elecCookie)
                 loginStatus.postValue(true)
             } else {
                 if (json.containsKey("Msg")) {
@@ -190,7 +190,7 @@ class ElectricityViewModel(application: Application) : BaseViewModel(application
     fun refreshVerify() {
         GlobalScope.launch(Dispatchers.IO) {
             try {
-                verifyBitmap.postValue(Repository.XfbRt.elecVerifyBitmap())
+                verifyBitmap.postValue(RepositoryImpl.XfbRt.elecVerifyBitmap())
             } catch (e: Exception) {
                 event.showMessage(e.errorMessage())
             }

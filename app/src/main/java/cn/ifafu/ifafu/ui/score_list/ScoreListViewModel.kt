@@ -6,7 +6,7 @@ import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.bean.Semester
 import cn.ifafu.ifafu.data.entity.Score
 import cn.ifafu.ifafu.data.entity.ScoreFilter
-import cn.ifafu.ifafu.data.repository.Repository
+import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.util.trimEnd
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -26,15 +26,15 @@ class ScoreListViewModel(application: Application) : BaseViewModel(application) 
     fun initData() {
         safeLaunchWithMessage {
             event.showDialog()
-            val semester = Repository.getNowSemester()
+            val semester = RepositoryImpl.getNowSemester()
             this@ScoreListViewModel.semester.postValue(semester)
             //postValue有延迟
             withContext(Dispatchers.Main) {
                 this@ScoreListViewModel.semester.value = semester
             }
             //获取数据库数据
-            val scores = Repository.ScoreRt.getNow()
-            scoreFilter = Repository.ScoreRt.getFilter()
+            val scores = RepositoryImpl.ScoreRt.getNow()
+            scoreFilter = RepositoryImpl.ScoreRt.getFilter()
             //若数据库数据不为空，则先使用数据库数据更新View
             if (scores.isNotEmpty()) {
                 this@ScoreListViewModel.scoreList.postValue(scores)
@@ -57,7 +57,7 @@ class ScoreListViewModel(application: Application) : BaseViewModel(application) 
         safeLaunchWithMessage {
             val semester = semester.value!!
             semester.setYearTermIndex(yearIndex, termIndex)
-            val scores = Repository.ScoreRt.getAll(semester.yearStr, semester.termStr)
+            val scores = RepositoryImpl.ScoreRt.getAll(semester.yearStr, semester.termStr)
             this@ScoreListViewModel.semester.postValue(semester)
             this@ScoreListViewModel.scoreList.postValue(scores)
             this@ScoreListViewModel.ies.postValue(getIESPair(scores, scoreFilter))
@@ -77,7 +77,7 @@ class ScoreListViewModel(application: Application) : BaseViewModel(application) 
             }
             val semester = this@ScoreListViewModel.semester.value!!
             val scores = ensureLoginStatus {
-                Repository.ScoreRt.fetchAll(semester.yearStr, semester.termStr).data
+                RepositoryImpl.ScoreRt.fetchAll(semester.yearStr, semester.termStr).data
             } ?: kotlin.run {
                 event.hideDialog()
                 event.showMessage("获取成绩出错")
@@ -96,7 +96,7 @@ class ScoreListViewModel(application: Application) : BaseViewModel(application) 
 
     fun updateIES() {
         safeLaunchWithMessage {
-            scoreFilter = Repository.ScoreRt.getFilter()
+            scoreFilter = RepositoryImpl.ScoreRt.getFilter()
             this@ScoreListViewModel.ies.postValue(getIESPair(scoreList.value!!, scoreFilter))
         }
     }

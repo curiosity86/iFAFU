@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.app
 import android.content.Context
 import cn.ifafu.ifafu.BuildConfig
 import cn.ifafu.ifafu.base.BaseApplication
-import cn.ifafu.ifafu.data.repository.Repository
+import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.di.appModule
 import cn.ifafu.ifafu.util.AppUtils
 import com.tencent.bugly.Bugly
@@ -31,9 +31,9 @@ class IFAFU : BaseApplication() {
         MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
         //后台自动登录
         loginJob = GlobalScope.launch {
-            val user = Repository.user.getInUse() ?: return@launch
+            val user = RepositoryImpl.user.getInUse() ?: return@launch
             kotlin.runCatching {
-                Repository.user.save(Repository.user.login2(user.account, user.password).getOrNull() ?: return@launch)
+                RepositoryImpl.user.save(RepositoryImpl.user.login2(user.account, user.password).getOrNull() ?: return@launch)
             }
         }
     }
@@ -52,7 +52,7 @@ class IFAFU : BaseApplication() {
                 if (BuildConfig.DEBUG) {
                     initBugly(context)
                 }
-                Repository.user.getInUseAccount().run {
+                RepositoryImpl.user.getInUseAccount().run {
                     if (this.isNotEmpty()) {
                         Bugly.setUserId(context, this)
                     }
@@ -67,7 +67,7 @@ class IFAFU : BaseApplication() {
                 override fun onCrashHandleStart(crashType: Int, errorType: String?, errorMessage: String?, errorStack: String?): MutableMap<String, String> {
                     val map = super.onCrashHandleStart(crashType, errorType, errorMessage, errorStack)
                             ?: HashMap()
-                    map["account"] = Repository.user.getInUseAccount()
+                    map["account"] = RepositoryImpl.user.getInUseAccount()
                     return map
                 }
             })

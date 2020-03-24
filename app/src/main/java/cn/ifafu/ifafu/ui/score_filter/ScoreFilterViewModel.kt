@@ -5,7 +5,7 @@ import android.app.Application
 import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.entity.Score
 import cn.ifafu.ifafu.data.entity.ScoreFilter
-import cn.ifafu.ifafu.data.repository.Repository
+import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.util.trimEnd
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -24,8 +24,8 @@ class ScoreFilterViewModel(application: Application) : BaseViewModel(application
                 event.showMessage("未找到相关学期成绩")
                 return@safeLaunchWithMessage
             }
-            scores = Repository.ScoreRt.getAll(year, term)
-            filter = Repository.ScoreRt.getFilter()
+            scores = RepositoryImpl.ScoreRt.getAll(year, term)
+            filter = RepositoryImpl.ScoreRt.getFilter()
             scores.forEach {
                 it.isIESItem = it.id !in filter.filterList
             }
@@ -40,7 +40,7 @@ class ScoreFilterViewModel(application: Application) : BaseViewModel(application
             } else {
                 filter.filterList.removeAll { score.id == it }
             }
-            Repository.ScoreRt.saveFilter(filter)
+            RepositoryImpl.ScoreRt.saveFilter(filter)
             success(filter.calcIES(scores).trimEnd(2))
         }
     }
@@ -50,7 +50,7 @@ class ScoreFilterViewModel(application: Application) : BaseViewModel(application
             scores.forEach {
                 filter.filterList.remove(it.id)
             }
-            Repository.ScoreRt.saveFilter(filter)
+            RepositoryImpl.ScoreRt.saveFilter(filter)
             success(filter.calcIES(scores).trimEnd(2))
         }
     }

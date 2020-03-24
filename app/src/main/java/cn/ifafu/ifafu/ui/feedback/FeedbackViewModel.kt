@@ -3,9 +3,8 @@ package cn.ifafu.ifafu.ui.feedback
 import android.app.Application
 import android.view.View
 import cn.ifafu.ifafu.base.BaseViewModel
-import cn.ifafu.ifafu.data.repository.Repository
+import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.util.HttpClient
-import cn.ifafu.ifafu.util.encode
 import cn.woolsen.easymvvm.binding.OnClickCommand
 import cn.woolsen.easymvvm.livedata.LiveDataString
 import com.alibaba.fastjson.JSONObject
@@ -34,7 +33,7 @@ class FeedbackViewModel(application: Application) : BaseViewModel(application) {
             }
             try {
                 val resp = HttpClient().post(url = "http://woolsen.cn/feedback", body = mapOf(
-                        "sno" to Repository.user.getInUseAccount(),
+                        "sno" to RepositoryImpl.user.getInUseAccount(),
                         "contact" to (contact.value ?: ""),
                         "message" to message
                 ))

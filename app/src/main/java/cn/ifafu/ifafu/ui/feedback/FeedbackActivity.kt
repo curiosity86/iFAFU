@@ -1,6 +1,7 @@
 package cn.ifafu.ifafu.ui.feedback
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import cn.ifafu.ifafu.R
@@ -19,6 +20,8 @@ class FeedbackActivity : BaseActivity() {
         bind<ActivityFeedbackBinding>(R.layout.activity_feedback).apply {
             vm = viewModel
         }
-        viewModel.toastMessage.observe(this, Observer { toast(it) })
+        viewModel.toastMessage.observe(this, Observer {
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+        })
     }
 }

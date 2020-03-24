@@ -25,7 +25,4 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    fun toast(text: String) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
-    }
 }

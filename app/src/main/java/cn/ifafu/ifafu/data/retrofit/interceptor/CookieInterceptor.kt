@@ -1,8 +1,7 @@
 package cn.ifafu.ifafu.data.retrofit.interceptor
 
-import cn.ifafu.ifafu.data.repository.Repository
+import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.data.entity.ElecCookie
-import com.alibaba.fastjson.JSONObject
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException
@@ -15,7 +14,7 @@ class CookieInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val builder = chain.request().newBuilder()
         if (cookie == null) {
-            cookie = Repository.XfbRt.getElecCookie()
+            cookie = RepositoryImpl.XfbRt.getElecCookie()
         }
         builder.addHeader("Cookie", cookie!!.toCookieString())
         val response = chain.proceed(builder.build())
@@ -30,7 +29,7 @@ class CookieInterceptor : Interceptor {
                     cookie!![kv[0]] = kv[1]
                 }
             }
-            Repository.XfbRt.saveElecCookie(cookie!!)
+            RepositoryImpl.XfbRt.saveElecCookie(cookie!!)
         }
         return response
     }

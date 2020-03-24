@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.ui.score_item
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.base.BaseViewModel
-import cn.ifafu.ifafu.data.repository.Repository
+import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.util.GlobalLib
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -19,7 +19,7 @@ class ScoreItemViewModel(application: Application) : BaseViewModel(application) 
                 event.showMessage("查询成绩出错（无法找到ID）")
                 return@launch
             }
-            val score = Repository.ScoreRt.getById(id)
+            val score = RepositoryImpl.ScoreRt.getById(id)
             if (score == null) {
                 event.showMessage("查询成绩出错，Error：无法找到成绩项")
             } else {

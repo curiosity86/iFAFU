@@ -13,7 +13,7 @@ import cn.ifafu.ifafu.data.bean.Weather
 import cn.ifafu.ifafu.data.entity.Exam
 import cn.ifafu.ifafu.data.entity.GlobalSetting
 import cn.ifafu.ifafu.data.entity.User
-import cn.ifafu.ifafu.data.repository.Repository
+import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.ui.main.bean.ClassPreview
 import cn.ifafu.ifafu.util.DateUtils
 import cn.ifafu.ifafu.util.GlobalLib
@@ -44,7 +44,7 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
     val timeAxis by lazy { MutableLiveData<List<TimeAxis>>() }
     val schoolIcon by lazy { MutableLiveData<Drawable>() }
 
-    private val repo: Repository = Repository
+    private val repo: RepositoryImpl = RepositoryImpl
 
     /**
      * 初始化所有数据
@@ -60,7 +60,7 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
                     initNewTabMenu()
                 }
             }
-            val user = Repository.user.getInUse()
+            val user = RepositoryImpl.user.getInUse()
             withContext(Dispatchers.Main) {
                 inUseUser.value = user
             }
@@ -89,7 +89,7 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
         safeLaunchWithMessage {
             val list = ArrayList<TimeAxis>()
             val now = Date()
-            val holidays = Repository.syllabus.getHoliday()
+            val holidays = RepositoryImpl.syllabus.getHoliday()
             val format = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
             for (holiday in holidays) {
                 val date = format.parse(holiday.date)
@@ -100,7 +100,7 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
                     list.add(axis)
                 }
             }
-            val exams = Repository.exam.getNow()
+            val exams = RepositoryImpl.exam.getNow()
             val toTimeAxis: (List<Exam>) -> List<TimeAxis> = {
                 val timeAxises = ArrayList<TimeAxis>()
                 for (exam in it) {
@@ -120,7 +120,7 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
             list.addAll(toTimeAxis(exams))
             list.sortWith(Comparator { o1, o2 -> o1.day.compareTo(o2.day) })
             timeAxis.postValue(list)
-            Repository.exam.fetchNow().data?.run {
+            RepositoryImpl.exam.fetchNow().data?.run {
                 list.addAll(toTimeAxis(this))
                 timeAxis.postValue(list)
             }
@@ -137,7 +137,7 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
 
     fun updateWeather() {
         safeLaunchWithMessage {
-            Repository.WeatherRt.fetch("101230101").data?.run {
+            RepositoryImpl.WeatherRt.fetch("101230101").data?.run {
                 this@MainViewModel.weather.postValue(this)
             }
         }
@@ -152,18 +152,18 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
                 val content = item.text.toString()
                 val list = JSONObject.parseArray(content, User::class.java)
                 list.forEach {
-                    Repository.user.save(it)
+                    RepositoryImpl.user.save(it)
                 }
-                event.showMessage("导入成功")
+                toast("导入成功")
             } catch (e: Exception) {
-                event.showMessage("导入失败")
+                toast("导入失败")
             }
         }
     }
 
     fun checkTheme() {
         safeLaunchWithMessage {
-            theme.postValue(Repository.GlobalSettingRt.get().theme)
+            theme.postValue(RepositoryImpl.GlobalSettingRt.get().theme)
         }
     }
 
@@ -173,57 +173,57 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
             if (upgradeInfo != null && upgradeInfo.versionCode > GlobalLib.getLocalVersionCode(getApplication())) {
                 Beta.checkUpgrade()
             } else {
-                event.showMessage(R.string.is_last_version)
+                toast(R.string.is_last_version)
             }
         }
     }
 
     fun switchAccount() {
         safeLaunchWithMessage {
-            users.postValue(Repository.user.getAll())
+            users.postValue(RepositoryImpl.user.getAll())
             isShowSwitchAccountDialog.postValue(true)
         }
     }
 
     fun addAccountSuccess() {
         safeLaunchWithMessage {
-            val user = Repository.user.getInUse()
+            val user = RepositoryImpl.user.getInUse()
             initActivityData()
-            event.showMessage("已切换到${user?.account}")
+            toast("已切换到${user?.account}")
         }
     }
 
     fun deleteUser(user: User) {
         safeLaunchWithMessage {
-            Repository.user.delete(user.account)
+            RepositoryImpl.user.delete(user.account)
             if (user.account == inUseUser.value?.account) {
-                Repository.user.getInUse().run {
+                RepositoryImpl.user.getInUse().run {
                     if (this@run == null) {
                         event.startLoginActivity()
                     } else {
-                        event.showMessage("删除成功，已切换到${account}")
+                        toast("删除成功，已切换到${account}")
                         isShowSwitchAccountDialog.postValue(false)
                         //重新初始化数据
                         initActivityData()
                     }
                 }
             } else {
-                event.showMessage("删除成功")
+                toast("删除成功")
             }
         }
     }
 
     fun checkoutTo(user: User) {
         safeLaunchWithMessage {
-            if (user.account != Repository.user.getInUseAccount()) {
+            if (user.account != RepositoryImpl.user.getInUseAccount()) {
                 event.showDialog()
-                Repository.user.saveLoginOnly(user)
+                RepositoryImpl.user.saveLoginOnly(user)
                 val job = safeLaunchWithMessage {
-                    Repository.user.login(user)
+                    RepositoryImpl.user.login(user)
                 }
                 IFAFU.loginJob = job
                 job.join()
-                event.showMessage("成功切换到${user.account}")
+                toast("成功切换到${user.account}")
                 isShowSwitchAccountDialog.postValue(false)
                 //重新初始化Activity
                 initActivityData()

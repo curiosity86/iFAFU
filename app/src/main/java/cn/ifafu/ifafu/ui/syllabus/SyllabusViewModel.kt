@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
 import cn.ifafu.ifafu.data.new_http.NetSourceImpl
-import cn.ifafu.ifafu.data.repository.Repository
+import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.ui.syllabus.view.CourseItem
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -14,7 +14,7 @@ import timber.log.Timber
 
 class SyllabusViewModel(application: Application) : BaseViewModel(application) {
 
-    private val repo = Repository
+    private val repo = RepositoryImpl
 
     val setting by lazy { MutableLiveData<SyllabusSetting>() }
     val courses by lazy { MutableLiveData<List<List<CourseItem>?>>() }
@@ -67,7 +67,7 @@ class SyllabusViewModel(application: Application) : BaseViewModel(application) {
      * 用于增删改课程与修改设置后的界面刷新
      */
     fun updateSyllabusLocal(): Job = safeLaunch(block = {
-        var courses = Repository.syllabus.getAll()
+        var courses = RepositoryImpl.syllabus.getAll()
         //若数据库为空则获取网络数据，并更新课表设置
         if (courses.isEmpty()) {
             val response = repo.syllabus.fetchAll()
@@ -78,7 +78,7 @@ class SyllabusViewModel(application: Application) : BaseViewModel(application) {
             }
         }
         //节假日调课，将课程转化为界面现实格式并按周拆分
-        val afterTiao = Repository.syllabus.holidayChange(courses)
+        val afterTiao = RepositoryImpl.syllabus.holidayChange(courses)
         this@SyllabusViewModel.courses.postValue(afterTiao)
     }, error = {
         this@SyllabusViewModel.courses.postValue(emptyList())
@@ -86,7 +86,7 @@ class SyllabusViewModel(application: Application) : BaseViewModel(application) {
     })
 
     fun updateSyllabusSetting() = safeLaunchWithMessage {
-        val setting = Repository.syllabus.getSetting()
+        val setting = RepositoryImpl.syllabus.getSetting()
         Timber.d("Update Syllabus Setting")
         this@SyllabusViewModel.setting.postValue(setting)
         repo.syllabus.saveSetting(setting)

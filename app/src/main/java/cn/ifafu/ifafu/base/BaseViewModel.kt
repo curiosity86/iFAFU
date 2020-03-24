@@ -3,8 +3,10 @@ package cn.ifafu.ifafu.base
 import android.app.Application
 import android.content.res.Resources
 import android.database.sqlite.SQLiteConstraintException
+import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
-import cn.ifafu.ifafu.data.repository.Repository
+import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.data.bean.Response
 import cn.ifafu.ifafu.data.exception.NoAuthException
 import kotlinx.coroutines.*
@@ -28,9 +30,9 @@ abstract class BaseViewModel(application: Application) : AndroidViewModel(applic
         try {
             return block()
         } catch (e: NoAuthException) {
-            val user = Repository.user.getInUse()
+            val user = RepositoryImpl.user.getInUse()
                     ?: throw Resources.NotFoundException("用户信息不存在")
-            return Repository.user.login(user).run {
+            return RepositoryImpl.user.login(user).run {
                 when (code) {
                     Response.FAILURE -> {
                         event.startLoginActivity()
@@ -62,7 +64,7 @@ abstract class BaseViewModel(application: Application) : AndroidViewModel(applic
                 if (this.message?.contains("unexpected") == true) {
                     "正方教务系统又崩溃了！"
                 } else {
-                    message ?: "ERROR"
+                    message ?: "Net Error"
                 }
             else ->
                 message ?: "ERROR"
@@ -95,5 +97,13 @@ abstract class BaseViewModel(application: Application) : AndroidViewModel(applic
                 error(e)
             }
         }
+    }
+
+    protected fun toast(message: String) {
+        Toast.makeText(getApplication(), message, Toast.LENGTH_SHORT).show()
+    }
+    
+    protected fun toast(@StringRes resId: Int) {
+        Toast.makeText(getApplication(), resId, Toast.LENGTH_SHORT).show()
     }
 }

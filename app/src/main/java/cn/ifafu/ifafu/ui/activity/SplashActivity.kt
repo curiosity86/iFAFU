@@ -9,10 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.IFAFU
-import cn.ifafu.ifafu.base.BaseActivity2
-import cn.ifafu.ifafu.base.BaseViewModel
-import cn.ifafu.ifafu.data.repository.Repository
-import cn.ifafu.ifafu.databinding.ActivitySplashBinding
+import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.ui.exam_list.ExamListActivity
 import cn.ifafu.ifafu.ui.login.LoginActivity
 import cn.ifafu.ifafu.ui.main.MainActivity
@@ -36,7 +33,7 @@ class SplashActivity : AppCompatActivity() {
                 Constant.ACTIVITY_SYLLABUS -> SyllabusActivity::class.java
                 Constant.ACTIVITY_EXAM -> ExamListActivity::class.java
                 else -> {
-                    if (Repository.user.getInUse() == null) {
+                    if (RepositoryImpl.user.getInUse() == null) {
                         LoginActivity::class.java
                     } else {
                         MainActivity::class.java

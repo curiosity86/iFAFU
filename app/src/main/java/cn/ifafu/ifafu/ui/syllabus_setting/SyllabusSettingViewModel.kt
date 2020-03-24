@@ -7,7 +7,7 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.base.BaseViewModel
-import cn.ifafu.ifafu.data.repository.Repository
+import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
 import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.data.bean.ZFApiList
@@ -20,21 +20,21 @@ class SyllabusSettingViewModel(application: Application) : BaseViewModel(applica
 
     fun init() {
         safeLaunchWithMessage {
-            setting.postValue(Repository.syllabus.getSetting())
+            setting.postValue(RepositoryImpl.syllabus.getSetting())
         }
     }
 
     fun save() {
         safeLaunchWithMessage {
             setting.value?.run {
-                Repository.syllabus.saveSetting(this)
+                RepositoryImpl.syllabus.saveSetting(this)
             }
         }
     }
 
     fun outputHtml() {
         safeLaunch(block = {
-            val user: User? = Repository.user.getInUse()
+            val user: User? = RepositoryImpl.user.getInUse()
             if (user == null) {
                 event.showMessage("用户信息不存在")
                 return@safeLaunch

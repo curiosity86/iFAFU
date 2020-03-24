@@ -2,7 +2,7 @@ package cn.ifafu.ifafu.ui.login
 
 import android.app.Application
 import cn.ifafu.ifafu.base.BaseViewModel
-import cn.ifafu.ifafu.data.repository.Repository
+import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.woolsen.easymvvm.livedata.LiveDataBoolean
 import cn.woolsen.easymvvm.livedata.LiveDataString
 import kotlinx.coroutines.GlobalScope
@@ -21,12 +21,12 @@ class LoginViewModel(application: Application) : BaseViewModel(application) {
         val password = checkPasswordFormat(password.value) ?: return@launch
         showLoading.postValue(true)
         try {
-            val response = Repository.user.login2(account, password)
+            val response = RepositoryImpl.user.login2(account, password)
             val user = response.getOrFailure {
                 toastMessage.postValue(it.message)
             } ?: return@launch
-            Repository.user.saveLoginOnly(user)
-            Repository.user.save(user)
+            RepositoryImpl.user.saveLoginOnly(user)
+            RepositoryImpl.user.save(user)
             isLoginSuccessful.postValue(true)
         } catch (e: Exception) {
             toastMessage.postValue(e.errorMessage())

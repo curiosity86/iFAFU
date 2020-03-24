@@ -5,7 +5,7 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BaseViewModel
-import cn.ifafu.ifafu.data.repository.Repository
+import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.data.entity.Course
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
 
@@ -20,12 +20,12 @@ class SyllabusItemViewModel(application: Application) : BaseViewModel(applicatio
 
     fun init(id: Long) {
         safeLaunchWithMessage {
-            setting.postValue(Repository.syllabus.getSetting())
+            setting.postValue(RepositoryImpl.syllabus.getSetting())
             // 获取跳转课程id
             if (id != -1L) {
                 isNewCourse = false
                 editMode.postValue(false)
-                val c = Repository.syllabus.get(id)!!
+                val c = RepositoryImpl.syllabus.get(id)!!
                 course.postValue(c)
             } else {
                 isNewCourse = true
@@ -38,7 +38,7 @@ class SyllabusItemViewModel(application: Application) : BaseViewModel(applicatio
     fun delete() {
         safeLaunchWithMessage {
             course.value?.run {
-                Repository.syllabus.delete(this)
+                RepositoryImpl.syllabus.delete(this)
                 event.showMessage("删除成功")
                 //用于刷新课表界面
                 resultCode.postValue(Activity.RESULT_OK)
@@ -63,10 +63,10 @@ class SyllabusItemViewModel(application: Application) : BaseViewModel(applicatio
                 else -> {
                     if (isNewCourse) {
                         course.id = this.hashCode().toLong()
-                        course.account = Repository.user.getInUseAccount()
+                        course.account = RepositoryImpl.user.getInUseAccount()
                         course.local = true
                     }
-                    Repository.syllabus.save(course)
+                    RepositoryImpl.syllabus.save(course)
                     //取消编辑模式
                     editMode.postValue(false)
                     //用于刷新课表界面

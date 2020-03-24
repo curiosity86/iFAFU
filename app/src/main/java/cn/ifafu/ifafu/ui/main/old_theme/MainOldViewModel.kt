@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cn.ifafu.ifafu.data.bean.Weather
 import cn.ifafu.ifafu.data.entity.User
-import cn.ifafu.ifafu.data.repository.Repository
+import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.ui.main.bean.ClassPreview
 import cn.ifafu.ifafu.ui.main.bean.ExamPreview
 import cn.ifafu.ifafu.ui.main.bean.ScorePreview
@@ -12,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class MainOldViewModel(val repo: Repository) : ViewModel() {
+class MainOldViewModel(val repo: RepositoryImpl) : ViewModel() {
 
     val user = MutableLiveData<User>()
     val online = MutableLiveData<Boolean>()
@@ -25,10 +25,10 @@ class MainOldViewModel(val repo: Repository) : ViewModel() {
     init {
         GlobalScope.launch(Dispatchers.IO) {
             online.postValue(true)
-            val semester = Repository.getNowSemester().toString()
+            val semester = RepositoryImpl.getNowSemester().toString()
             this@MainOldViewModel.semester.postValue(semester)
             updateScorePreviewFromDb()
-            user.postValue(Repository.user.getInUse())
+            user.postValue(RepositoryImpl.user.getInUse())
         }
     }
 
@@ -42,15 +42,15 @@ class MainOldViewModel(val repo: Repository) : ViewModel() {
 
     fun updateExamsPreview() = GlobalScope.launch(Dispatchers.IO) {
         val now = System.currentTimeMillis()
-        val semester = Repository.getNowSemester()
-        val exams = Repository.exam.getAll(semester.yearStr, semester.termStr)
+        val semester = RepositoryImpl.getNowSemester()
+        val exams = RepositoryImpl.exam.getAll(semester.yearStr, semester.termStr)
                 .filter { it.startTime > now || it.startTime == 0L }
         examsPreview.postValue(ExamPreview.convert(exams))
     }
 
     fun updateWeather() = GlobalScope.launch(Dispatchers.IO) {
         kotlin.runCatching {
-            with(Repository.WeatherRt.fetch("101230101").data) {
+            with(RepositoryImpl.WeatherRt.fetch("101230101").data) {
                 this@MainOldViewModel.weather.postValue(this)
             }
         }
@@ -58,14 +58,14 @@ class MainOldViewModel(val repo: Repository) : ViewModel() {
 
     fun updateScorePreview() = GlobalScope.launch(Dispatchers.IO) {
         kotlin.runCatching {
-            val scores = Repository.ScoreRt.fetchNow().data
+            val scores = RepositoryImpl.ScoreRt.fetchNow().data
             scorePreview.postValue(ScorePreview.convert(scores))
         }
     }
 
     private suspend fun updateScorePreviewFromDb() = GlobalScope.launch(Dispatchers.IO) {
         kotlin.runCatching {
-            val db = Repository.ScoreRt.getNow()
+            val db = RepositoryImpl.ScoreRt.getNow()
             scorePreview.postValue(ScorePreview.convert(db))
         }
     }

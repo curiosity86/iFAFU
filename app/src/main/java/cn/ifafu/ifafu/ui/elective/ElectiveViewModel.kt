@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.ui.elective
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.base.BaseViewModel
-import cn.ifafu.ifafu.data.repository.Repository
+import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.util.sumByFloat
 
 class ElectiveViewModel(application: Application) : BaseViewModel(application) {
@@ -19,7 +19,7 @@ class ElectiveViewModel(application: Application) : BaseViewModel(application) {
         safeLaunch(block = {
             event.showDialog()
             val allScores = ensureLoginStatus {
-                Repository.ScoreRt.fetchAll()
+                RepositoryImpl.ScoreRt.fetchAll()
             }.run {
                 if (data != null) {
                     data.filter {
@@ -32,9 +32,9 @@ class ElectiveViewModel(application: Application) : BaseViewModel(application) {
                 }
             }
             //获取选修学分要求
-            val electives = Repository.ElectivesRt.get() ?: ensureLoginStatus {
-                Repository.ElectivesRt.fetch().apply {
-                    Repository.ElectivesRt.save(this)
+            val electives = RepositoryImpl.ElectivesRt.get() ?: ensureLoginStatus {
+                RepositoryImpl.ElectivesRt.fetch().apply {
+                    RepositoryImpl.ElectivesRt.save(this)
                 }
             }
             var totalScores = allScores.filter { it.nature == "任意选修课" || it.nature == "公共选修课" }

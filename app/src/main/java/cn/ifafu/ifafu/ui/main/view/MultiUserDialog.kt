@@ -9,7 +9,7 @@ import cn.ifafu.ifafu.BuildConfig
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.data.entity.User
-import cn.ifafu.ifafu.data.repository.Repository
+import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.databinding.DialogAccountSwitchBinding
 import cn.ifafu.ifafu.util.ToastUtils
 import cn.woolsen.easymvvm.binding.BindView
@@ -84,7 +84,7 @@ class MultiUserDialog(
             val content = item.text.toString()
             val list = JSONObject.parseArray(content, User::class.java)
             list.forEach {
-                Repository.user.save(it)
+                RepositoryImpl.user.save(it)
             }
             ToastUtils.showToastShort("导入成功")
         } catch (e: Exception) {

@@ -76,4 +76,7 @@ abstract class BaseActivity<VDB : ViewDataBinding, VM : BaseViewModel> : BaseAct
         finish()
     }
 
+    protected fun toast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
 }
