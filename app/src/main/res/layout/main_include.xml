@@ -32,17 +32,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <cn.ifafu.ifafu.view.timeline.TimeLine
-                android:id="@+id/view_timeline"
+            <cn.ifafu.ifafu.ui.main.new_theme.view.Timeline
+                android:id="@+id/timeline"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:line_color="@color/white"
-                app:max_count="4"
-                app:text_color="@color/white"
-                app:text_size="10sp" />
+                app:timeline_color="@color/white"
+                app:timeline_textSize="10sp"/>
 
             <include
                 layout="@layout/include_main_new_weather"
@@ -59,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                app:layout_constraintBottom_toTopOf="@+id/view_timeline"
+                app:layout_constraintBottom_toTopOf="@+id/timeline"
                 app:layout_constraintTop_toBottomOf="@+id/btn_menu" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

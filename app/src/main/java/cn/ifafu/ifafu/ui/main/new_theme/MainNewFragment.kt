@@ -1,16 +1,16 @@
 package cn.ifafu.ifafu.ui.main.new_theme
 
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
-import cn.ifafu.ifafu.app.VMProvider
+import cn.ifafu.ifafu.app.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseFragment
 import cn.ifafu.ifafu.data.bean.Menu
 import cn.ifafu.ifafu.databinding.FragmentMainNewBinding
@@ -27,40 +27,34 @@ import cn.ifafu.ifafu.ui.web.WebActivity
 import cn.ifafu.ifafu.util.ButtonUtils
 import cn.ifafu.ifafu.view.adapter.MenuAdapter
 import cn.ifafu.ifafu.view.custom.DragLayout
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_main_new.*
 import kotlinx.android.synthetic.main.include_main_new_left_menu.*
 import kotlinx.android.synthetic.main.main_include.*
 import kotlinx.android.synthetic.main.main_next_course_include.*
+import timber.log.Timber
 
-class MainNewFragment : BaseFragment<FragmentMainNewBinding, MainViewModel>(), View.OnClickListener {
+class MainNewFragment : BaseFragment(), View.OnClickListener {
 
     private var mMenuAdapter: MenuAdapter? = null
 
-    private val mVViewModel: MainNewViewModel by viewModels()
+    private val viewModel: MainNewViewModel by viewModels { getViewModelFactory() }
+    private val activityViewModel: MainViewModel by activityViewModels { getViewModelFactory() }
 
-    override fun getLayoutId(): Int {
-        return R.layout.fragment_main_new
-    }
+    override fun layoutRes(): Int = R.layout.fragment_main_new
 
-    override fun getViewModel(): MainViewModel {
-        return VMProvider(requireActivity())[MainViewModel::class.java]
-    }
-
-    override fun initFragment(savedInstanceState: Bundle?) {
+    override fun afterOnActivityCreated(savedInstanceState: Bundle?) {
         btn_menu.setOnClickListener(this)
         tv_nav_about.setOnClickListener(this)
         tv_nav_feedback.setOnClickListener(this)
         tv_nav_setting.setOnClickListener(this)
         tv_nav_update.setOnClickListener(this)
         tv_nav_checkout.setOnClickListener(this)
-        mBinding.vm = mVViewModel
+        bind<FragmentMainNewBinding>().vm = viewModel
         initMenu()
-        mViewModel.timeAxis.observe(this, Observer {
-            view_timeline.setTimeAxisList(it)
-                    .invalidate()
+        viewModel.timeEvents.observe(this, Observer {
+            timeline.setTimeEvents(it)
         })
-        mViewModel.nextCourse.observe(this, Observer {
+        viewModel.nextCourse.observe(this, Observer {
             if (it.hasInfo) {
                 val title = if (it.isInClass) {
                     getString(R.string.now_class)
@@ -72,14 +66,13 @@ class MainNewFragment : BaseFragment<FragmentMainNewBinding, MainViewModel>(), V
                 setCourseText(it.message, "", "", "")
             }
         })
-        mViewModel.initFragmentData()
     }
 
     override fun onStart() {
         super.onStart()
-        mViewModel.updateNextCourse()
-        mVViewModel.updateWeather()
-        mViewModel.updateTimeAxis()
+        viewModel.updateNextCourse()
+        viewModel.updateWeather()
+        viewModel.updateTimeAxis()
     }
 
     private fun initMenu() {
@@ -112,26 +105,16 @@ class MainNewFragment : BaseFragment<FragmentMainNewBinding, MainViewModel>(), V
         rv_menu.adapter = mMenuAdapter
     }
 
-    private fun setLeftMenuHeadIcon(headIcon: Drawable) {
-        Glide.with(this)
-                .load(headIcon)
-                .into(iv_menu_icon)
-    }
-
-    private fun setLeftMenuHeadName(name: String) {
-        tv_menu_name.text = name
-    }
-
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btn_menu -> drawer_main.open()
-            R.id.tv_nav_update -> mViewModel.upgradeApp()
+            R.id.tv_nav_update -> activityViewModel.upgradeApp()
             R.id.tv_nav_about -> startActivity(Intent(context, AboutActivity::class.java))
             R.id.tv_nav_feedback -> startActivity(Intent(context, FeedbackActivity::class.java))
             R.id.tv_nav_setting -> {
                 requireActivity().startActivityForResult(Intent(context, SettingActivity::class.java), Constant.ACTIVITY_SETTING)
             }
-            R.id.tv_nav_checkout -> mViewModel.switchAccount()
+            R.id.tv_nav_checkout -> activityViewModel.switchAccount()
         }
         if (drawer_main.status == DragLayout.Status.Open) {
             drawer_main.close(true)
@@ -143,6 +126,31 @@ class MainNewFragment : BaseFragment<FragmentMainNewBinding, MainViewModel>(), V
         tv_course_name.text = name
         tv_course_address.text = address
         tv_course_time.text = time
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Timber.d("onDestroy")
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        Timber.d("onDetach")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Timber.d("onDestroyView")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Timber.d("onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Timber.d("onStop")
     }
 
 }
