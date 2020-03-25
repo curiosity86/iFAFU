@@ -12,45 +12,42 @@ class LoginViewModel(application: Application) : BaseViewModel(application) {
 
     val account = LiveDataString()
     val password = LiveDataString()
-    val toastMessage = LiveDataString()
     val showLoading = LiveDataBoolean()
     val isLoginSuccessful = LiveDataBoolean()
+
+    private val repo = RepositoryImpl
 
     fun login() = GlobalScope.launch {
         val account = checkAccountFormat(account.value) ?: return@launch
         val password = checkPasswordFormat(password.value) ?: return@launch
         showLoading.postValue(true)
-        try {
-            val response = RepositoryImpl.user.login2(account, password)
-            val user = response.getOrFailure {
-                toastMessage.postValue(it.message)
-            } ?: return@launch
-            RepositoryImpl.user.saveLoginOnly(user)
-            RepositoryImpl.user.save(user)
+        val response = repo.login(account, password)
+        response.getOrFailure {
+            toast(it.message ?: "登录出错")
+        }?.let {
+            toast("登录成功")
             isLoginSuccessful.postValue(true)
-        } catch (e: Exception) {
-            toastMessage.postValue(e.errorMessage())
         }
         showLoading.postValue(false)
     }
 
-    private fun checkAccountFormat(account: String?): String? {
+    private suspend fun checkAccountFormat(account: String?): String? {
         if (account.isNullOrEmpty()) {
-            toastMessage.postValue("账号不能为空！")
+            toast("账号不能为空！")
             return null
         } else if (account.length != 9 && account.length != 10) {
-            toastMessage.postValue("账号格式错误！")
+            toast("账号格式错误！")
             return null
         }
         return account
     }
 
-    private fun checkPasswordFormat(password: String?): String? {
+    private suspend fun checkPasswordFormat(password: String?): String? {
         if (password.isNullOrEmpty()) {
-            toastMessage.postValue("密码不能为空！")
+            toast("密码不能为空！")
             return null
         } else if (password.length < 6) {
-            toastMessage.postValue("密码格式错误！")
+            toast("密码格式错误！")
             return null
         }
         return password

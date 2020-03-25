@@ -2,12 +2,15 @@ package cn.ifafu.ifafu.ui.main.old_theme
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.data.bean.Weather
 import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.ui.main.bean.ClassPreview
 import cn.ifafu.ifafu.ui.main.bean.ExamPreview
 import cn.ifafu.ifafu.ui.main.bean.ScorePreview
+import cn.ifafu.ifafu.util.GlobalLib
+import com.tencent.bugly.beta.Beta
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -48,11 +51,9 @@ class MainOldViewModel(val repo: RepositoryImpl) : ViewModel() {
         examsPreview.postValue(ExamPreview.convert(exams))
     }
 
-    fun updateWeather() = GlobalScope.launch(Dispatchers.IO) {
-        kotlin.runCatching {
-            with(RepositoryImpl.WeatherRt.fetch("101230101").data) {
-                this@MainOldViewModel.weather.postValue(this)
-            }
+    fun updateWeather() = GlobalScope.launch {
+        repo.getWeather("101230101").getOrNull()?.let {
+            weather.postValue(it)
         }
     }
 

@@ -6,9 +6,11 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
-import cn.ifafu.ifafu.app.VMProvider
+import cn.ifafu.ifafu.app.getViewModelFactory
 import cn.ifafu.ifafu.databinding.FragmentMainOldBinding
 import cn.ifafu.ifafu.ui.activity.AboutActivity
 import cn.ifafu.ifafu.ui.elective.ElectiveActivity
@@ -26,15 +28,13 @@ import cn.ifafu.ifafu.view.custom.MenuMaker
 import cn.ifafu.ifafu.view.listener.ScrollDrawerListener
 import cn.woolsen.easymvvm.base.BaseFragment
 import com.google.android.material.navigation.NavigationView
-import org.koin.android.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class MainOldFragment : BaseFragment(), MenuClickListener, View.OnClickListener {
 
-    private val activityViewModel by lazy {
-        VMProvider(requireActivity())[MainViewModel::class.java]
-    }
+    private val activityViewModel: MainViewModel by activityViewModels { getViewModelFactory() }
 
-    private val mViewModel: MainOldViewModel by viewModel()
+    private val mViewModel: MainOldViewModel by viewModels { getViewModelFactory() }
 
     private lateinit var mDrawerLayout: DrawerLayout
 
@@ -58,7 +58,7 @@ class MainOldFragment : BaseFragment(), MenuClickListener, View.OnClickListener 
         val leftMenuLayout = rootView.findViewById<NavigationView>(R.id.nav_left_menu)
         val contentLayout = rootView.findViewById<LinearLayout>(R.id.layout_content)
         if (leftMenuLayout != null && contentLayout != null) {
-            val drawerListener =  ScrollDrawerListener(leftMenuLayout, contentLayout)
+            val drawerListener = ScrollDrawerListener(leftMenuLayout, contentLayout)
             mDrawerLayout.addDrawerListener(drawerListener)
         }
     }

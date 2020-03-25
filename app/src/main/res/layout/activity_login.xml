@@ -131,7 +131,7 @@
                 android:text="@string/login"
                 android:textColor="@color/white"
                 android:textSize="16sp"
-                android:onClick="@{() -> vm.login()}"/>
+                android:onClick="@{() -> vm.login()}" />
 
         </LinearLayout>
 

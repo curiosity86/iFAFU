@@ -3,6 +3,7 @@ package cn.ifafu.ifafu.ui.login
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
@@ -19,12 +20,7 @@ class LoginActivity : BaseActivity() {
 
     private var fromActivity = 0
 
-    private val mLoadingDialog: LoadingDialog by lazy {
-        LoadingDialog(this).apply {
-            setText("登录中")
-            setCancelable(true)
-        }
-    }
+    private val mLoadingDialog = LoadingDialog(this, "登录中")
 
     private val viewModel by viewModels<LoginViewModel> { getViewModelFactory() }
 
@@ -34,7 +30,7 @@ class LoginActivity : BaseActivity() {
         fromActivity = intent.getIntExtra("from", 0)
         with(bind<ActivityLoginBinding>(R.layout.activity_login)) {
             //LoginActivity是否可以关闭
-            if (fromActivity != Constant.ACTIVITY_SPLASH) {
+            if (fromActivity == Constant.ACTIVITY_MAIN) {
                 btnClose.setOnClickListener {
                     finish()
                 }
@@ -42,10 +38,13 @@ class LoginActivity : BaseActivity() {
                 btnClose.visibility = View.GONE
             }
             vm = viewModel
+            etPassword.setOnEditorActionListener { v, actionId, event ->
+                if (actionId == KeyEvent.ACTION_DOWN) {
+                    viewModel.login()
+                }
+                true
+            }
         }
-        viewModel.toastMessage.observe(this, Observer {
-            ToastUtils.showToastShort(this, it)
-        })
         viewModel.showLoading.observe(this, Observer {
             with(mLoadingDialog) {
                 if (it) show() else cancel()

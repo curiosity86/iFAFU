@@ -3,22 +3,24 @@ package cn.ifafu.ifafu.ui.syllabus_item
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.VMProvider
+import cn.ifafu.ifafu.app.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.data.entity.Course
-import cn.ifafu.ifafu.databinding.SyllabusItemActivityBinding
+import cn.ifafu.ifafu.databinding.ActivityCourseItemBinding
 import cn.ifafu.ifafu.ui.syllabus.SyllabusActivity
 import cn.ifafu.ifafu.view.adapter.WeekItemAdapter
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.view.OptionsPickerView
-import com.gyf.immersionbar.ImmersionBar
-import kotlinx.android.synthetic.main.syllabus_item_activity.*
+import kotlinx.android.synthetic.main.activity_course_item.*
 
-class SyllabusItemActivity : BaseActivity<SyllabusItemActivityBinding, SyllabusItemViewModel>(), View.OnClickListener {
+class CourseItemActivity : BaseActivity(), View.OnClickListener {
+
+    private lateinit var binding: ActivityCourseItemBinding
 
     private val timeOPV: OptionsPickerView<String> by lazy {
         OptionsPickerBuilder(this) { options1, options2, options3, _ ->
@@ -27,7 +29,7 @@ class SyllabusItemActivity : BaseActivity<SyllabusItemActivityBinding, SyllabusI
                 beginNode = options2 + 1
                 nodeCnt = options3 + 1
             }
-            mBinding.time = "${weeks[options1]}  第${options2 + 1}节 ~ 第${options2 + options3 + 1}节"
+            binding.time = "${weeks[options1]}  第${options2 + 1}节 ~ 第${options2 + options3 + 1}节"
         }
                 .setOutSideCancelable(false)
                 .setCancelText("取消")
@@ -45,25 +47,21 @@ class SyllabusItemActivity : BaseActivity<SyllabusItemActivityBinding, SyllabusI
 
     private val mWeekAdapter: WeekItemAdapter by lazy { WeekItemAdapter(this) }
 
-    override fun getLayoutId(): Int {
-        return R.layout.syllabus_item_activity
-    }
+    private val viewModel: CourseItemViewModel by viewModels { getViewModelFactory() }
 
-    override fun getViewModel(): SyllabusItemViewModel? {
-        return VMProvider(this)[SyllabusItemViewModel::class.java]
-    }
-
-    override fun initActivity(savedInstanceState: Bundle?) {
-        ImmersionBar.with(this)
-                .titleBarMarginTop(tb_exam_item)
-                .statusBarColor("#FFFFFF")
-                .statusBarDarkFont(true)
-                .init()
-        //通过点击添加按钮开启页面，则直接进入编辑模式
-        val comeFrom = intent.getIntExtra("come_from", -1)
-        mBinding.layoutManager = GridLayoutManager(this, 6, RecyclerView.VERTICAL, false)
-        mBinding.adapter = mWeekAdapter
-        mViewModel.setting.observe(this, Observer {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setLightUiBar()
+        binding = bind(R.layout.activity_course_item)
+        with(binding) {
+            vm = viewModel
+            layoutManager = GridLayoutManager(
+                    this@CourseItemActivity,
+                    6, RecyclerView.VERTICAL,
+                    false)
+            adapter = mWeekAdapter
+        }
+        viewModel.setting.observe(this, Observer {
             val node1t: MutableList<String> = ArrayList()
             val node2t: MutableList<MutableList<String>> = ArrayList()
             for (i in 1..it.totalNode) {
@@ -86,24 +84,27 @@ class SyllabusItemActivity : BaseActivity<SyllabusItemActivityBinding, SyllabusI
             this.node2 = node2
             timeOPV.setPicker(weeks, node1, node2)
         })
-        mViewModel.course.observe(this, Observer {
+        //通过点击添加按钮开启页面，则直接进入编辑模式
+        val comeFrom = intent.getIntExtra("come_from", -1)
+        viewModel.course.observe(this, Observer {
             if (comeFrom != SyllabusActivity.BUTTON_ADD) {
-                mBinding.time = "${weeks[it.weekday - 1]}  第${it.beginNode}节 ~ 第${it.nodeCnt + it.beginNode - 1}节"
+                binding.time = "${weeks[it.weekday - 1]}  第${it.beginNode}节 ~ 第${it.nodeCnt + it.beginNode - 1}节"
                 timeOPV.setSelectOptions(it.weekday - 1, it.beginNode - 1, it.nodeCnt - 1)
-                mBinding.course = it
+                binding.course = it
                 mWeekAdapter.weekList = it.weekSet
                 mWeekAdapter.notifyDataSetChanged()
             }
             course = it
         })
-        mViewModel.editMode.observe(this, Observer {
+        viewModel.editMode.observe(this, Observer {
             mWeekAdapter.EDIT_MODE = it
-            mBinding.editMode = it
+            binding.editMode = it
         })
-        mViewModel.resultCode.observe(this, Observer {
+        viewModel.resultCode.observe(this, Observer {
             setResult(it)
         })
-        mViewModel.init(intent.getLongExtra("course_id", -1))
+        viewModel.finishActivity.observe(this, Observer { finish() })
+        viewModel.init(intent.getLongExtra("course_id", -1))
         et_course_time.setOnClickListener(this)
         btn_edit.setOnClickListener(this)
         btn_delete.setOnClickListener(this)
@@ -113,10 +114,10 @@ class SyllabusItemActivity : BaseActivity<SyllabusItemActivityBinding, SyllabusI
     override fun onClick(view: View) {
         when (view.id) {
             R.id.et_course_time -> timeOPV.show()
-            R.id.btn_edit -> mBinding.editMode = true
-            R.id.btn_delete -> mViewModel.delete()
+            R.id.btn_edit -> binding.editMode = true
+            R.id.btn_delete -> viewModel.delete()
             R.id.btn_ok -> {
-                mViewModel.save(course.apply {
+                viewModel.save(course.apply {
                     weekSet = mWeekAdapter.weekList
                     name = et_course_name.text.toString()
                     address = et_course_address.text.toString()

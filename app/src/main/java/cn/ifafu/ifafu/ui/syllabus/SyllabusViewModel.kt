@@ -4,9 +4,10 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
-import cn.ifafu.ifafu.data.new_http.NetSourceImpl
+import cn.ifafu.ifafu.data.new_http.impl.JWServiceImpl
 import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.ui.syllabus.view.CourseItem
+import cn.woolsen.easymvvm.livedata.LiveDataString
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -18,12 +19,13 @@ class SyllabusViewModel(application: Application) : BaseViewModel(application) {
 
     val setting by lazy { MutableLiveData<SyllabusSetting>() }
     val courses by lazy { MutableLiveData<List<List<CourseItem>?>>() }
+    val loading = LiveDataString()
 
     fun initData() {
         GlobalScope.launch {
             updateSyllabusSetting().join()
             updateSyllabusLocal()
-            val openingDay = NetSourceImpl().getOpeningDay().getOrNull() ?: return@launch
+            val openingDay = repo.getOpeningDay().getOrNull() ?: return@launch
             val setting = repo.syllabus.getSetting()
             if (setting.openingDay != openingDay) {
                 Timber.d("update opening day: ${openingDay}, before: ${setting.openingDay}")
@@ -40,12 +42,12 @@ class SyllabusViewModel(application: Application) : BaseViewModel(application) {
      */
     fun updateSyllabusNet(): Job {
         return safeLaunch(block = {
-            event.showDialog()
+            loading.postValue("获取中")
             val response = ensureLoginStatus {
                 repo.syllabus.fetchAll()
             }
             if (!response.isSuccess || response.data == null) {
-                event.showMessage(response.message)
+                toast(response.message)
                 return@safeLaunch
             }
             response.data.run {
@@ -54,11 +56,11 @@ class SyllabusViewModel(application: Application) : BaseViewModel(application) {
                     this@SyllabusViewModel.courses.postValue(afterTiao)
                 }
             }
-            event.showMessage("获取课表成功")
-            event.hideDialog()
+            toast("获取课表成功")
+            loading.postValue(null)
         }, error = {
-            event.hideDialog()
-            event.showMessage(it.errorMessage())
+            loading.postValue(null)
+            toast(it.errorMessage())
         })
     }
 
@@ -82,7 +84,7 @@ class SyllabusViewModel(application: Application) : BaseViewModel(application) {
         this@SyllabusViewModel.courses.postValue(afterTiao)
     }, error = {
         this@SyllabusViewModel.courses.postValue(emptyList())
-        event.showMessage(it.errorMessage())
+        toast(it.errorMessage())
     })
 
     fun updateSyllabusSetting() = safeLaunchWithMessage {

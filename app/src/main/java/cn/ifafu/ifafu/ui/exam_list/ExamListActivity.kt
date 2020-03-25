@@ -2,26 +2,24 @@ package cn.ifafu.ifafu.ui.exam_list
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.VMProvider
+import cn.ifafu.ifafu.app.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.databinding.ActivityExamListBinding
 import cn.ifafu.ifafu.view.adapter.ExamAdapter
 import cn.ifafu.ifafu.ui.view.LoadingDialog
 import cn.ifafu.ifafu.ui.view.SemesterOptionPicker
-import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.activity_exam_list.*
 
-class ExamListActivity : BaseActivity<ActivityExamListBinding, ExamListViewModel>() {
+class ExamListActivity : BaseActivity() {
 
     private val mExamAdapter = ExamAdapter(this)
-
-    override val mLoadingDialog: LoadingDialog by lazy {
-        LoadingDialog(this).apply { setText("获取中") }
-    }
+    private val mLoadingDialog = LoadingDialog(this)
+    private val mViewModel: ExamListViewModel by viewModels { getViewModelFactory() }
 
     private val mSemesterOptionPicker by lazy {
         SemesterOptionPicker(this) { year, term ->
@@ -30,21 +28,12 @@ class ExamListActivity : BaseActivity<ActivityExamListBinding, ExamListViewModel
     }
 
     private var first = true
+    private lateinit var mBinding: ActivityExamListBinding
 
-    override fun getLayoutId(): Int {
-        return R.layout.activity_exam_list
-    }
-
-    override fun getViewModel(): ExamListViewModel? {
-        return VMProvider(this)[ExamListViewModel::class.java]
-    }
-
-    override fun initActivity(savedInstanceState: Bundle?) {
-        ImmersionBar.with(this)
-                .titleBarMarginTop(tb_exam)
-                .statusBarColor("#FFFFFF")
-                .statusBarDarkFont(true)
-                .init()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setLightUiBar()
+        mBinding = bind(R.layout.activity_exam_list)
         btn_refresh.setOnClickListener { mViewModel.refresh() }
         tb_exam.setNavigationOnClickListener { finish() }
         tb_exam.setSubtitleClickListener { v ->
@@ -68,12 +57,7 @@ class ExamListActivity : BaseActivity<ActivityExamListBinding, ExamListViewModel
             mExamAdapter.data = it
             mExamAdapter.notifyDataSetChanged()
         })
-        mViewModel.toastMessage.observe(this, Observer { toast(it) })
-        mViewModel.loading.observe(this, Observer {
-            with(mLoadingDialog) {
-                if (it) show() else cancel()
-            }
-        })
+        mLoadingDialog.observe(this, mViewModel.loading)
     }
 
     private fun isShowEmptyView(show: Boolean) {

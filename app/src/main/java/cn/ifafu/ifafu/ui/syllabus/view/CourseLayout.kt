@@ -7,17 +7,16 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.GridLayout
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.TextViewCompat
+import androidx.gridlayout.widget.GridLayout
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.util.ColorUtils
 import cn.ifafu.ifafu.util.DensityUtils
-import java.util.*
 import kotlin.collections.HashMap
 
 class CourseLayout @JvmOverloads constructor(

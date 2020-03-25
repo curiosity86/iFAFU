@@ -1,30 +1,27 @@
 package cn.ifafu.ifafu.ui.score_filter
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.VMProvider
+import cn.ifafu.ifafu.app.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.databinding.ScoreFilterActivityBinding
 import cn.ifafu.ifafu.view.adapter.ScoreFilterAdapter
 import cn.ifafu.ifafu.view.custom.RecyclerViewDivider
-import com.jaeger.library.StatusBarUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ScoreFilterActivity : BaseActivity<ScoreFilterActivityBinding, ScoreFilterViewModel>() {
+class ScoreFilterActivity : BaseActivity() {
 
     private val mAdapter by lazy { ScoreFilterAdapter(this) }
 
-    override fun getViewModel(): ScoreFilterViewModel {
-        return VMProvider(this).get(ScoreFilterViewModel::class.java)
-    }
+    private val mViewModel: ScoreFilterViewModel by viewModels { getViewModelFactory() }
 
-    override fun getLayoutId(): Int = R.layout.score_filter_activity
-
-    override fun initActivity(savedInstanceState: Bundle?) {
-        StatusBarUtil.setTransparent(this)
-        StatusBarUtil.setLightMode(this)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setLightUiBar()
+        val mBinding = bind<ScoreFilterActivityBinding>(R.layout.score_filter_activity)
         mBinding.adapter = mAdapter
         mBinding.layoutManager = LinearLayoutManager(this)
         mBinding.rvScoreFilter.addItemDecoration(RecyclerViewDivider(

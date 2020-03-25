@@ -9,13 +9,14 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.widget.ImageView
+import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.VMProvider
+import cn.ifafu.ifafu.app.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
 import cn.ifafu.ifafu.databinding.SyllabusSettingActivityBinding
@@ -24,7 +25,6 @@ import cn.ifafu.ifafu.util.Glide4Engine
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.*
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.color.colorChooser
-import com.gyf.immersionbar.ImmersionBar
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import kotlinx.android.synthetic.main.syllabus_setting_activity.*
@@ -33,7 +33,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import me.drakeet.multitype.MultiTypeAdapter
 
-class SyllabusSettingActivity : BaseActivity<SyllabusSettingActivityBinding, SyllabusSettingViewModel>() {
+class SyllabusSettingActivity : BaseActivity() {
 
     private val REQUEST_CODE_CHOOSE_ACTIVITY = 23
     private val REQUEST_CODE_PERMISSION = 24
@@ -56,20 +56,12 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingActivityBinding, Syl
         }
     }
 
-    override fun getLayoutId(): Int {
-        return R.layout.syllabus_setting_activity
-    }
+    private val mViewModel: SyllabusSettingViewModel by viewModels { getViewModelFactory() }
 
-    override fun getViewModel(): SyllabusSettingViewModel? {
-        return VMProvider(this)[SyllabusSettingViewModel::class.java]
-    }
-
-    override fun initActivity(savedInstanceState: Bundle?) {
-        ImmersionBar.with(this)
-                .titleBarMarginTop(tb_syllabus_setting)
-                .statusBarDarkFont(true)
-                .statusBarColor("#FFFFFF")
-                .init()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setLightUiBar()
+        bind<SyllabusSettingActivityBinding>(R.layout.syllabus_setting_activity)
         tb_syllabus_setting.setNavigationOnClickListener { finish() }
         val dividerItemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         this.getDrawable(R.drawable.shape_divider)?.let {
@@ -117,7 +109,7 @@ class SyllabusSettingActivity : BaseActivity<SyllabusSettingActivityBinding, Syl
                         setting.background = ""
                         mViewModel.save()
                         GlobalScope.launch(Dispatchers.Main) {
-                            showMessage("课表背景已重置")
+                            toast("课表背景已重置")
                         }
                         setResult(Activity.RESULT_OK)
                     }),

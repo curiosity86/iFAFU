@@ -23,18 +23,13 @@ class IFHttpClient : HttpClient() {
     }
 
     fun getJW(user: User, @Domain domain: Int): Response {
-        val headers: Headers? = if (user.school == User.FAFU_JS && user.token.isNotBlank()) {
-            Headers.of("Cookie", user.token)
-        } else null
-
+        val headers = getHeader(user, domain)
         val url = getUrl(user, domain)
         return get(url, headers)
     }
 
     fun postJW(user: User, @Domain domain: Int, params: Map<String, String>): Response {
-        val headers: Headers? = if (user.school == User.FAFU_JS && user.token.isNotBlank()) {
-            Headers.of("Cookie", user.token)
-        } else null
+        val headers = getHeader(user, domain)
         val url = getUrl(user, domain)
         return post(url, headers, params)
     }
@@ -57,6 +52,17 @@ class IFHttpClient : HttpClient() {
             EXAM -> "${baseUrl}/${urls.exam.first}?xh=${user.account}&xm=${user.name.encode()}&gnmkdm=${urls.exam.second}"
             else -> throw IllegalAccessException("Unknown url domain")
         }
+    }
+
+    private fun getHeader(user: User, @Domain domain: Int): Headers {
+        val builder = Headers.Builder()
+        if (user.school == User.FAFU_JS) {
+            builder["Cookie"] = user.token
+        }
+        when (domain) {
+            EXAM -> builder["Referer"] = getUrl(user, domain)
+        }
+        return builder.build()
     }
 
     companion object {

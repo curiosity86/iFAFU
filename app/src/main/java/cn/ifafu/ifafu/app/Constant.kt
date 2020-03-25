@@ -78,15 +78,15 @@ object Constant {
 
     private val urls = mapOf(
             "FAFU" to URL(host = "http://jwgl.fafu.edu.cn",
-                    login = "/default2.aspx",
-                    verify = "/CheckCode.aspx",
-                    main = "/xs_main.aspx",
-                    exam = Pair("/xskscx.aspx", "N121604")),
+                    login = "default2.aspx",
+                    verify = "CheckCode.aspx",
+                    main = "xs_main.aspx",
+                    exam = Pair("xskscx.aspx", "N121604")),
             "FAFU_JS" to URL(host = "http://js.ifafu.cn",
-                    login = "/default.aspx",
-                    verify = "/CheckCode.aspx",
-                    main = "/xs_main.aspx",
-                    exam = Pair("/xskscx.aspx", "N121603"))
+                    login = "default.aspx",
+                    verify = "CheckCode.aspx",
+                    main = "xs_main.aspx",
+                    exam = Pair("xskscx.aspx", "N121603"))
     )
 
     fun getURL(@School school: String): URL {

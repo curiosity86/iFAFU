@@ -8,20 +8,12 @@
         <import type="android.view.View" />
 
         <variable
-            name="room"
-            type="String" />
-
-        <variable
-            name="cardBalance"
-            type="String" />
-
-        <variable
             name="building"
             type="String" />
 
         <variable
-            name="feeInfo"
-            type="String" />
+            name="vm"
+            type="cn.ifafu.ifafu.ui.electricity.ElectricityViewModel" />
 
     </data>
 
@@ -58,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:gravity="end"
-                    android:text='@{@string/balance(cardBalance ?? "-")}' />
+                    android:text='@{@string/balance(vm.cardBalance ?? "-")}' />
 
                 <ImageView
                     android:id="@+id/btn_balance"
@@ -139,14 +131,16 @@
                         android:background="@color/white"
                         android:gravity="center_vertical|end"
                         android:hint="输入宿舍号"
-                        android:text="@={room}"
-                        android:textSize="14sp" />
+                        android:inputType="number"
+                        android:text="@={vm.room}"
+                        android:textSize="14sp"
+                        android:importantForAutofill="no" />
 
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1sp"
+                    android:layout_height="1dp"
                     android:background="@color/gray" />
 
                 <TextView
@@ -157,8 +151,9 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="24dp"
                     android:gravity="center"
-                    android:hint='@{feeInfo == null ? "点击查询电费" : null, default="点击查询电费"}'
-                    android:text='@{feeInfo}' />
+                    android:hint='@{vm.elecBalance ?? "点击查询电费"}'
+                    android:text='@{vm.elecBalance}'
+                    tools:hint="点击查询电费" />
 
             </LinearLayout>
 
@@ -174,7 +169,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:autoLink="web"
-            android:gravity="start"
+            android:gravity="center"
             android:text="@string/elec_tos_3"
             android:textAlignment="center" />
 

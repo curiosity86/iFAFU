@@ -9,25 +9,26 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.VMProvider
+import cn.ifafu.ifafu.app.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
-import cn.ifafu.ifafu.databinding.ElectricityActivityBinding
+import cn.ifafu.ifafu.databinding.ActivityElectricityBinding
 import cn.ifafu.ifafu.ui.view.LoadingDialog
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.view.OptionsPickerView
-import com.gyf.immersionbar.ImmersionBar
-import kotlinx.android.synthetic.main.electricity_activity.*
+import kotlinx.android.synthetic.main.activity_electricity.*
 
-class ElectricityActivity : BaseActivity<ElectricityActivityBinding, ElectricityViewModel>(), View.OnClickListener {
+class ElectricityActivity : BaseActivity(), View.OnClickListener {
 
+    
     private val optionPicker: OptionsPickerView<String> by lazy {
         OptionsPickerBuilder(this) { options1, options2, _, _ ->
-            mViewModel.buildingSelected.postValue(Pair(options1, options2))
+            viewModel.buildingSelected.postValue(Pair(options1, options2))
         }
                 .setSubmitText("确认")
                 .setSubmitColor(Color.BLACK)
@@ -45,7 +46,7 @@ class ElectricityActivity : BaseActivity<ElectricityActivityBinding, Electricity
             val pwdEt = getCustomView().findViewById<EditText>(R.id.et_password)
             val verifyEt = getCustomView().findViewById<EditText>(R.id.et_verify)
             getCustomView().findViewById<Button>(R.id.btn_login).setOnClickListener {
-                mViewModel.login(pwdEt.text.toString(), verifyEt.text.toString())
+                viewModel.login(pwdEt.text.toString(), verifyEt.text.toString())
             }
             pwdEt.requestFocus()
             setOnCancelListener {
@@ -54,60 +55,49 @@ class ElectricityActivity : BaseActivity<ElectricityActivityBinding, Electricity
         }
     }
 
+    private val viewModel: ElectricityViewModel by viewModels { getViewModelFactory() }
+    private lateinit var binding: ActivityElectricityBinding
     private var init = false
+    private val loadingDialog = LoadingDialog(this)
 
-    override val mLoadingDialog: LoadingDialog by lazy {
-        LoadingDialog(this).apply {
-            setText("查询中")
-        }
-    }
-
-    override fun getLayoutId(): Int {
-        return R.layout.electricity_activity
-    }
-
-    override fun getViewModel(): ElectricityViewModel? {
-        return VMProvider(this)[ElectricityViewModel::class.java]
-    }
-
-    override fun initActivity(savedInstanceState: Bundle?) {
-        ImmersionBar.with(this)
-                .titleBarMarginTop(tb_elec)
-                .statusBarColor("#FFFFFF")
-                .statusBarDarkFont(true)
-                .init()
-        mViewModel.cardBalance.observe(this, Observer { mBinding.cardBalance = it })
-        mViewModel.elecBalance.observe(this, Observer { mBinding.feeInfo = it })
-        mViewModel.roomData.observe(this, Observer { mBinding.room = it })
-        mViewModel.buildingSelected.observe(this, Observer {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setLightUiBar()
+        binding = bind(R.layout.activity_electricity)
+        binding.vm = viewModel
+        viewModel.buildingSelected.observe(this, Observer {
             if (!init) {
                 init = true
                 optionPicker.setSelectOptions(it.first, it.second)
-            } else {
-                mBinding.feeInfo = getString(R.string.query_elec)
             }
-            mBinding.building = mViewModel.buildingSelectionList.value?.second?.get(it.first)?.get(it.second)
+            binding.building = viewModel.buildingSelectionList.value?.second?.get(it.first)?.get(it.second)
         })
-        mViewModel.verifyBitmap.observe(this, Observer {
+        viewModel.verifyBitmap.observe(this, Observer {
             loginDialog.getCustomView().findViewById<ImageView>(R.id.iv_verify).setImageBitmap(it)
         })
-        mViewModel.buildingSelectionList.observe(this, Observer {
+        viewModel.buildingSelectionList.observe(this, Observer {
             optionPicker.setPicker(it.first, it.second)
         })
-        mViewModel.elecUser.observe(this, Observer {
-            val verifyEt = loginDialog.getCustomView().findViewById<EditText>(R.id.et_verify)
-            verifyEt.setText(it.password)
+        viewModel.elecUser.observe(this, Observer { user ->
+            loginDialog.getCustomView().findViewById<EditText>(R.id.et_verify)?.setText(user.password)
         })
-        mViewModel.loginStatus.observe(this, Observer {
+        viewModel.loginStatus.observe(this, Observer {
             if (it) {
                 loginDialog.hide()
-                mViewModel.init()
+                viewModel.init()
             } else {
                 loginDialog.show()
-                mViewModel.refreshVerify()
+                viewModel.refreshVerify()
             }
         })
-        mViewModel.init()
+        viewModel.loading.observe(this, Observer {
+            if (it == null) {
+                loadingDialog.cancel()
+            } else {
+                loadingDialog.show(it)
+            }
+        })
+        viewModel.init()
         btn_balance.setOnClickListener(this)
         layout_building.setOnClickListener(this)
         tv_fee.setOnClickListener(this)
@@ -116,13 +106,12 @@ class ElectricityActivity : BaseActivity<ElectricityActivityBinding, Electricity
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.iv_verify -> mViewModel.refreshVerify()
-            R.id.btn_balance -> mViewModel.queryCardBalance()
+            R.id.iv_verify -> viewModel.refreshVerify()
+            R.id.btn_balance -> viewModel.queryCardBalance()
             R.id.layout_building -> optionPicker.show()
-            R.id.tv_fee -> mViewModel.queryElecBalance(mBinding.room ?: "")
+            R.id.tv_fee -> viewModel.queryElecBalance()
         }
     }
-
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         if (ev.action == MotionEvent.ACTION_DOWN) {

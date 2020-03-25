@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.data.new_http
+package cn.ifafu.ifafu.data.new_http.bean
 
 /**
  * woolsen.cn 返回类

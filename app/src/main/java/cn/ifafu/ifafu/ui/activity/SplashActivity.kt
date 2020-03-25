@@ -1,6 +1,7 @@
 package cn.ifafu.ifafu.ui.activity
 
 import android.R.anim
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Window
@@ -14,7 +15,6 @@ import cn.ifafu.ifafu.ui.exam_list.ExamListActivity
 import cn.ifafu.ifafu.ui.login.LoginActivity
 import cn.ifafu.ifafu.ui.main.MainActivity
 import cn.ifafu.ifafu.ui.syllabus.SyllabusActivity
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -27,23 +27,36 @@ class SplashActivity : AppCompatActivity() {
         //隐藏顶部状态栏
         window.addFlags(LayoutParams.FLAG_FULLSCREEN)
         setContentView(R.layout.activity_splash)
-        GlobalScope.launch(Dispatchers.IO) {
-            IFAFU.initConfig(applicationContext)
-            val jumpActivityClass = when (intent.getIntExtra("jump", -1)) {
-                Constant.ACTIVITY_SYLLABUS -> SyllabusActivity::class.java
-                Constant.ACTIVITY_EXAM -> ExamListActivity::class.java
+    }
+
+    override fun onResume() {
+        super.onResume()
+        GlobalScope.launch {
+            IFAFU.initConfig(application)
+            val activity: Class<out Activity>
+            val jump = intent.getIntExtra("jump", -1)
+            val from = intent.getIntExtra("from", -1)
+            when {
+                jump == Constant.ACTIVITY_SYLLABUS -> {
+                    activity = SyllabusActivity::class.java
+                }
+                jump == Constant.ACTIVITY_EXAM -> {
+                    activity = ExamListActivity::class.java
+                }
+                RepositoryImpl.user.getInUse() == null -> {
+                    activity = LoginActivity::class.java
+                }
+                from == Constant.SYLLABUS_WIDGET -> {
+                    activity = SyllabusActivity::class.java
+                }
                 else -> {
-                    if (RepositoryImpl.user.getInUse() == null) {
-                        LoginActivity::class.java
-                    } else {
-                        MainActivity::class.java
-                    }
+                    activity = MainActivity::class.java
                 }
             }
-            val intent = Intent(this@SplashActivity, jumpActivityClass)
+            val intent = Intent(this@SplashActivity, activity)
             intent.putExtra("from", Constant.ACTIVITY_SPLASH)
-            startActivity(intent)
             overridePendingTransition(anim.fade_in, anim.fade_out)
+            startActivity(intent)
             finish()
         }
     }

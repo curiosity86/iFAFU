@@ -1,79 +1,60 @@
 package cn.ifafu.ifafu.app
 
-import android.content.Context
+import android.app.Application
 import cn.ifafu.ifafu.BuildConfig
 import cn.ifafu.ifafu.base.BaseApplication
 import cn.ifafu.ifafu.data.repository.RepositoryImpl
-import cn.ifafu.ifafu.di.appModule
 import cn.ifafu.ifafu.util.AppUtils
+import cn.ifafu.ifafu.util.SPUtils
 import com.tencent.bugly.Bugly
-import com.tencent.bugly.beta.Beta
 import com.tencent.bugly.crashreport.CrashReport
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.startKoin
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class IFAFU : BaseApplication() {
 
-    override fun onCreate() {
-        super.onCreate()
-        Timber.plant(Timber.DebugTree())
-        startKoin {
-            androidContext(this@IFAFU)
-            modules(appModule)
-        }
-        UMConfigure.init(this, "5d4082673fc1955041000408", "web", UMConfigure.DEVICE_TYPE_PHONE, "1a446c1ae0455153aa502937a87e5634")
-        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
-        //后台自动登录
-        loginJob = GlobalScope.launch {
-            val user = RepositoryImpl.user.getInUse() ?: return@launch
-            kotlin.runCatching {
-                RepositoryImpl.user.save(RepositoryImpl.user.login2(user.account, user.password).getOrNull() ?: return@launch)
+    companion object {
+
+        var isInitConfig = false
+
+        /**
+         * 启动界面时调用，防止长时间白屏
+         * 必须在主线程初始化！！！(已设置Dispatchers.Main)
+         *
+         * @param application Application
+         */
+        suspend fun initConfig(application: Application) = withContext(Dispatchers.Main) {
+            if (!isInitConfig) {
+                isInitConfig = true
+                /* 初始化Timber */
+                Timber.plant(Timber.DebugTree())
+                /* 初始化Repository并于内部自动登录 */
+                RepositoryImpl.init(application)
+                /* 初始化友盟 */
+                UMConfigure.init(application, "5d4082673fc1955041000408", "web", UMConfigure.DEVICE_TYPE_PHONE, "1a446c1ae0455153aa502937a87e5634")
+                MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
+                /* 初始化Bugly */
+                Bugly.setUserId(application, SPUtils[Constant.SP_USER_INFO].getString("account"))
+                val strategy = CrashReport.UserStrategy(application)
+                strategy.setCrashHandleCallback(CrashCallback())
+                strategy.appVersion = AppUtils.getVersionName(application) + "-" + AppUtils.getVersionCode(application)
+                Bugly.init(application, "46836c4eaa", BuildConfig.DEBUG, strategy)
             }
         }
     }
 
-    companion object {
-
-        var loginJob: Job? = null
-
-        var FIRST_START_APP = true
-
-        /**
-         * 启动界面时调用，防止长时间白屏
-         */
-        fun initConfig(context: Context) {
-            if (FIRST_START_APP) {
-                if (BuildConfig.DEBUG) {
-                    initBugly(context)
-                }
-                RepositoryImpl.user.getInUseAccount().run {
-                    if (this.isNotEmpty()) {
-                        Bugly.setUserId(context, this)
-                    }
-                }
-                FIRST_START_APP = false
+    private class CrashCallback : CrashReport.CrashHandleCallback() {
+        override fun onCrashHandleStart(crashType: Int,
+                                        errorType: String?,
+                                        errorMessage: String?,
+                                        errorStack: String?): MutableMap<String, String> {
+            return (super.onCrashHandleStart(crashType, errorType, errorMessage, errorStack)
+                    ?: HashMap()).apply {
+                put("account", SPUtils[Constant.SP_USER_INFO].getString("account"))
             }
-        }
-
-        private fun initBugly(context: Context) {
-            val strategy = CrashReport.UserStrategy(context)
-            strategy.setCrashHandleCallback(object : CrashReport.CrashHandleCallback() {
-                override fun onCrashHandleStart(crashType: Int, errorType: String?, errorMessage: String?, errorStack: String?): MutableMap<String, String> {
-                    val map = super.onCrashHandleStart(crashType, errorType, errorMessage, errorStack)
-                            ?: HashMap()
-                    map["account"] = RepositoryImpl.user.getInUseAccount()
-                    return map
-                }
-            })
-            Beta.enableHotfix = true
-            strategy.appVersion = AppUtils.getVersionName(context) + "-" + AppUtils.getVersionCode(context)
-            Bugly.init(context, "46836c4eaa", BuildConfig.DEBUG, strategy)
         }
     }
 

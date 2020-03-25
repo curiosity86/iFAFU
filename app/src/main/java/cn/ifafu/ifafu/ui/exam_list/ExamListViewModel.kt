@@ -16,8 +16,7 @@ class ExamListViewModel(application: Application) : BaseViewModel(application) {
     val semester = LiveDataField<Semester>()
 
     val exams = LiveDataField<List<Exam>>()
-    val toastMessage = LiveDataString()
-    val loading = LiveDataBoolean()
+    val loading = LiveDataString()
 
     private val now = System.currentTimeMillis()
     private val examTimeComparator = Comparator<Exam> { o1, o2 ->
@@ -36,57 +35,52 @@ class ExamListViewModel(application: Application) : BaseViewModel(application) {
 
     init {
         GlobalScope.launch {
-            loading.postValue(true)
+            loading.postValue("加载中")
             _semester = RepositoryImpl.getNowSemester()
             _semester.yearList.remove("全部")
             _semester.termList.remove("全部")
             semester.postValue(_semester)
-            RepositoryImpl.getExamsFromDbOrNet(_semester.yearStr, _semester.termStr).getOrFailure {
+            RepositoryImpl.getNotExamsFromDbOrNet().getOrFailure {
                 exams.postValue(emptyList())
-                toastMessage.postValue(it.errorMessage())
+                toast(it.errorMessage())
             }?.let {
                 exams.postValue(it.sortedWith(examTimeComparator))
             }
-            loading.postValue(false)
+            loading.postValue(null)
         }
     }
 
     fun refresh() = GlobalScope.launch {
-        loading.postValue(true)
+        loading.postValue("获取中")
         kotlin.runCatching {
             val resp = RepositoryImpl.fetch(_semester.yearStr, _semester.termStr)
             if (resp.isSuccess && resp.data != null) {
                 exams.postValue(resp.data.sortedWith(examTimeComparator))
             } else {
-                toastMessage.postValue(resp.message)
+                toast(resp.message)
             }
         }.onFailure {
-            toastMessage.postValue(it.errorMessage())
+            toast(it.errorMessage())
         }
-        loading.postValue(false)
+        loading.postValue(null)
     }
 
     fun switchYearAndTerm(yearIndex: Int, termIndex: Int) = GlobalScope.launch {
-        event.showDialog()
+        loading.postValue("加载中")
         try {
             _semester.yearIndex = yearIndex
             _semester.termIndex = termIndex
             semester.postValue(_semester)
             RepositoryImpl.getExamsFromDbOrNet(_semester.yearStr, _semester.termStr).getOrFailure {
                 exams.postValue(emptyList())
-                toastMessage.postValue(it.errorMessage())
+                toast(it.errorMessage())
             }?.let {
                 exams.postValue(it.sortedWith(examTimeComparator))
             }
         } catch (e: Exception) {
-            toastMessage.postValue(e.errorMessage())
+            toast(e.errorMessage())
         }
-        event.hideDialog()
+        loading.postValue(null)
     }
-
-    private fun fetchAsync(semester: Semester) = GlobalScope.async {
-        RepositoryImpl.fetch(semester.yearStr, semester.termStr).data
-    }
-
 
 }

@@ -5,16 +5,16 @@ import android.graphics.Bitmap
 import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.base.BaseViewModel
-import cn.ifafu.ifafu.data.repository.RepositoryImpl
-import cn.ifafu.ifafu.data.entity.ElecQuery
 import cn.ifafu.ifafu.data.bean.ElecSelection
+import cn.ifafu.ifafu.data.entity.ElecQuery
 import cn.ifafu.ifafu.data.entity.ElecUser
+import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.util.ifFalse
 import cn.ifafu.ifafu.util.trimEnd
+import cn.woolsen.easymvvm.livedata.LiveDataString
 import com.alibaba.fastjson.JSONObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class ElectricityViewModel(application: Application) : BaseViewModel(application) {
@@ -30,12 +30,14 @@ class ElectricityViewModel(application: Application) : BaseViewModel(application
 
     val buildingSelectionList by lazy { MutableLiveData<Pair<List<String>, List<List<String>>>>() }
     val buildingSelected by lazy { MutableLiveData<Pair<Int, Int>>() }
-    val roomData by lazy { MutableLiveData<String>() }
+    val room by lazy { MutableLiveData<String>() }
     val elecBalance by lazy { MutableLiveData<String>() }
+
+    val loading = LiveDataString()
 
     fun init() {
         GlobalScope.launch {
-            event.showDialog()
+            loading.postValue("查询中")
             var elecUser = RepositoryImpl.XfbRt.getElecUser()
             when {
                 elecUser == null -> { //首次登录
@@ -71,7 +73,7 @@ class ElectricityViewModel(application: Application) : BaseViewModel(application
                                     val firstIndex = first.indexOf(selection.group1)
                                     val secondIndex = groupList[firstIndex].indexOf(selection.group2)
                                     buildingSelected.postValue(Pair(firstIndex, secondIndex))
-                                    roomData.postValue(this.room)
+                                    this@ElectricityViewModel.room.postValue(this.room)
                                     val response = RepositoryImpl.XfbRt.fetchElectricityInfo(this)
                                     if (response.isSuccess) {
                                         elecBalance.postValue(response.data)
@@ -91,28 +93,29 @@ class ElectricityViewModel(application: Application) : BaseViewModel(application
                     job2.join()
                 }
                 else -> { //登录态失效
-                    event.showMessage("登录态失效，请重新登录")
+                    toast("登录态失效，请重新登录")
                     loginStatus.postValue(false)
                 }
             }
             runOnMainThread {
                 this@ElectricityViewModel.elecUser.value = elecUser
             }
-            event.hideDialog()
+            loading.postValue(null)
         }
     }
 
     fun queryCardBalance() {
         GlobalScope.launch {
-            event.showDialog()
+            loading.postValue("查询中")
             innerQueryCardBalance(false).join()
-            event.hideDialog()
+            loading.postValue(null)
         }
     }
 
-    fun queryElecBalance(room: String) {
+    fun queryElecBalance() {
         GlobalScope.launch {
-            event.showDialog()
+            val room = room.value ?: return@launch
+            loading.postValue("查询中")
             val building = groupList[buildingSelected.value?.first
                     ?: 0][buildingSelected.value?.second ?: 0]
             val select = selections.find { it.group2 == building }!!
@@ -127,39 +130,36 @@ class ElectricityViewModel(application: Application) : BaseViewModel(application
             val response = RepositoryImpl.XfbRt.fetchElectricityInfo(elecQuery)
             if (response.isSuccess) {
                 elecBalance.postValue(response.data)
-                event.showMessage("查询成功")
+                toast("查询成功")
                 RepositoryImpl.XfbRt.saveElecQuery(elecQuery)
             } else if (!RepositoryImpl.XfbRt.checkLoginStatus()) {
-                event.showMessage("登录态失效，请重新登录")
+                toast("登录态失效，请重新登录")
             } else {
-                event.showMessage("查询出错")
+                toast("查询出错")
             }
-            event.hideDialog()
+            loading.postValue(null)
         }
     }
 
-    private fun innerQueryCardBalance(silent: Boolean): Job {
-        return GlobalScope.launch(Dispatchers.IO) {
-            val response = RepositoryImpl.XfbRt.elecCardBalance()
-            if (response.isSuccess) {
-                runOnMainThread {
-                    cardBalance.postValue(response.data!!.trimEnd(2))
-                }
-                silent.ifFalse {
-                    event.showMessage("查询成功")
-                }
-            } else {
-                runOnMainThread {
-                    cardBalance.postValue("0")
-                }
-                event.showMessage(response.message)
+    private fun innerQueryCardBalance(silent: Boolean) = GlobalScope.launch(Dispatchers.IO) {
+        val response = RepositoryImpl.XfbRt.elecCardBalance()
+        if (response.isSuccess) {
+            cardBalance.postValue(response.data!!.trimEnd(2))
+            silent.ifFalse {
+                toast("查询成功")
             }
+        } else {
+            runOnMainThread {
+                cardBalance.postValue("0")
+            }
+            toast(response.message)
         }
     }
+
 
     fun login(password: String, verify: String) {
         GlobalScope.launch(Dispatchers.IO) {
-            event.showDialog()
+            loading.postValue("登录中")
             val json = JSONObject.parseObject(RepositoryImpl.XfbRt.elecLogin(elecUser.value?.account
                     ?: "", password, verify))
             if (json.getBoolean("IsSucceed") == true) {
@@ -177,23 +177,22 @@ class ElectricityViewModel(application: Application) : BaseViewModel(application
                 loginStatus.postValue(true)
             } else {
                 if (json.containsKey("Msg")) {
-                    event.showMessage(json.getString("Msg"))
+                    toast(json.getString("Msg"))
                 } else {
-                    event.showMessage("未知错误")
+                    toast("未知错误")
                 }
                 refreshVerify()
             }
-            event.hideDialog()
+            loading.postValue(null)
         }
     }
 
-    fun refreshVerify() {
-        GlobalScope.launch(Dispatchers.IO) {
-            try {
-                verifyBitmap.postValue(RepositoryImpl.XfbRt.elecVerifyBitmap())
-            } catch (e: Exception) {
-                event.showMessage(e.errorMessage())
-            }
+    fun refreshVerify() = GlobalScope.launch(Dispatchers.IO) {
+        try {
+            val verify = RepositoryImpl.XfbRt.elecVerifyBitmap()
+            verifyBitmap.postValue(verify)
+        } catch (e: Exception) {
+            toast(e.errorMessage())
         }
     }
 

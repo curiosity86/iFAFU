@@ -1,6 +1,6 @@
 package cn.ifafu.ifafu
 
-import cn.ifafu.ifafu.data.new_http.NetSourceImpl
+import cn.ifafu.ifafu.data.new_http.impl.JWServiceImpl
 import kotlinx.coroutines.*
 import org.junit.Test
 
@@ -9,7 +9,7 @@ class Test {
 
     @Test
     fun test() = runBlocking {
-        NetSourceImpl().getOpeningDay().run {
+        JWServiceImpl().getOpeningDay().run {
             println(this.getOrNull())
         }
     }

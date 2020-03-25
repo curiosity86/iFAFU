@@ -8,6 +8,7 @@ import cn.ifafu.ifafu.data.entity.Score
 import cn.ifafu.ifafu.data.entity.ScoreFilter
 import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.util.trimEnd
+import cn.woolsen.easymvvm.livedata.LiveDataString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
@@ -20,12 +21,13 @@ class ScoreListViewModel(application: Application) : BaseViewModel(application) 
     val cnt = MutableLiveData<Pair<String, String>>()
     val gpa = MutableLiveData<String>()
     val iesDetail = MutableLiveData<String>()
+    val loading = LiveDataString()
 
     private lateinit var scoreFilter: ScoreFilter
 
     fun initData() {
         safeLaunchWithMessage {
-            event.showDialog()
+            loading.postValue("加载中")
             val semester = RepositoryImpl.getNowSemester()
             this@ScoreListViewModel.semester.postValue(semester)
             //postValue有延迟
@@ -49,7 +51,7 @@ class ScoreListViewModel(application: Application) : BaseViewModel(application) 
             if (scores.isEmpty()) {
                 job.join()
             }
-            event.hideDialog()
+            loading.postValue(null)
         }
     }
 
@@ -73,14 +75,14 @@ class ScoreListViewModel(application: Application) : BaseViewModel(application) 
     private fun fetchScoreList(isRunOnBackGround: Boolean): Job {
         return safeLaunchWithMessage {
             if (!isRunOnBackGround) {
-                event.showDialog()
+                loading.postValue("获取中")
             }
             val semester = this@ScoreListViewModel.semester.value!!
             val scores = ensureLoginStatus {
                 RepositoryImpl.ScoreRt.fetchAll(semester.yearStr, semester.termStr).data
             } ?: kotlin.run {
-                event.hideDialog()
-                event.showMessage("获取成绩出错")
+                loading.postValue(null)
+                toast("获取成绩出错")
                 return@safeLaunchWithMessage
             }
             this@ScoreListViewModel.scoreList.postValue(scores)
@@ -88,8 +90,8 @@ class ScoreListViewModel(application: Application) : BaseViewModel(application) 
             this@ScoreListViewModel.cnt.postValue(getScoreCountPair(scores))
             this@ScoreListViewModel.gpa.postValue(getGPA(scores))
             if (!isRunOnBackGround) {
-                event.showMessage("刷新成功")
-                event.hideDialog()
+                toast("刷新成功")
+                loading.postValue(null)
             }
         }
     }

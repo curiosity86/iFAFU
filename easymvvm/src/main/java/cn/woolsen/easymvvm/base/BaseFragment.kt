@@ -43,4 +43,5 @@ abstract class BaseFragment : Fragment() {
             lifecycleOwner = this@BaseFragment
         }
     }
+
 }

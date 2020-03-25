@@ -1,10 +1,12 @@
 package cn.ifafu.ifafu.ui.elective
 
 import android.app.Application
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.util.sumByFloat
+import cn.woolsen.easymvvm.livedata.LiveDataString
 
 class ElectiveViewModel(application: Application) : BaseViewModel(application) {
 
@@ -15,9 +17,11 @@ class ElectiveViewModel(application: Application) : BaseViewModel(application) {
     val wxsy = MutableLiveData<Elective>()
     val cxcy = MutableLiveData<Elective>()
 
+    val loading = LiveDataString()
+
     init {
         safeLaunch(block = {
-            event.showDialog()
+            loading.postValue("登录中")
             val allScores = ensureLoginStatus {
                 RepositoryImpl.ScoreRt.fetchAll()
             }.run {
@@ -26,8 +30,8 @@ class ElectiveViewModel(application: Application) : BaseViewModel(application) {
                         !it.remarks.contains("英语分级")
                     }
                 } else {
-                    event.showMessage(this.message)
-                    event.hideDialog()
+                    toast(this.message)
+                    loading.postValue(null)
                     return@safeLaunch
                 }
             }
@@ -93,10 +97,10 @@ class ElectiveViewModel(application: Application) : BaseViewModel(application) {
             cxcy.postValue(Elective("创新创业教育类，已修${cxcyScores.size}门",
                     "需修满${electives.cxcy}分，已修${cxcyCredit}分${cxcyDone.isDoneStr()}",
                     cxcyScores, cxcyDone))
-            event.hideDialog()
+            loading.postValue(null)
         }, error = {
-            event.showMessage(it.errorMessage())
-            event.hideDialog()
+            toast(it.errorMessage())
+            loading.postValue(null)
         })
     }
 

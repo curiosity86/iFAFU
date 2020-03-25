@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.data.new_http
+package cn.ifafu.ifafu.data.bean
 
 class SemesterOption(
         val years: List<String>,

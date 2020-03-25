@@ -2,7 +2,7 @@ package cn.ifafu.ifafu.data
 
 /* 数据层统一数据返回类 */
 @Suppress("UNCHECKED_CAST")
-class IFResult<T> private constructor(private val value: Any?) {
+class IFResult<T> private constructor(@PublishedApi internal val value: Any?) {
 
     val isSuccess: Boolean get() = value !is Failure
     val isFailure: Boolean get() = value is Failure
@@ -13,16 +13,12 @@ class IFResult<T> private constructor(private val value: Any?) {
                 else -> value as T
             }
 
-    fun getOrFailure(onFailure: (Exception) -> Unit): T? {
+    inline fun getOrFailure(onFailure: (Exception) -> Unit): T? {
         if (value is Failure) {
             onFailure(value.exception)
             return null
         }
         return value as T
-    }
-
-    fun getOrNot(onGet: (T) -> Unit) {
-        if (isSuccess) onGet(value as T)
     }
 
     override fun toString(): String =
@@ -38,7 +34,8 @@ class IFResult<T> private constructor(private val value: Any?) {
         fun <T> failure(message: String): IFResult<T> = IFResult(Failure(createException(message)))
     }
 
-    internal class Failure(@JvmField val exception: Exception) {
+    @PublishedApi
+    internal class Failure(@PublishedApi internal val exception: Exception) {
         override fun equals(other: Any?): Boolean = other is Failure && exception == other.exception
         override fun hashCode(): Int = exception.hashCode()
         override fun toString(): String = exception.toString()

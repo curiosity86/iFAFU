@@ -8,6 +8,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.databinding.ViewDataBinding
+import androidx.viewbinding.ViewBinding
 import cn.ifafu.ifafu.BuildConfig
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BaseActivity
@@ -19,23 +22,16 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.activity_about.*
 
-class AboutActivity : BaseActivity<ActivityAboutBinding, BaseViewModel>(), View.OnClickListener {
+class AboutActivity : BaseActivity(), View.OnClickListener {
 
-    override fun getViewModel(): BaseViewModel? = null
-
-    override fun getLayoutId(): Int = R.layout.activity_about
-
-    override fun initActivity(savedInstanceState: Bundle?) {
-        ImmersionBar.with(this)
-                .titleBarMarginTop(tb_about)
-                .statusBarColor("#FFFFFF")
-                .statusBarDarkFont(true)
-                .init()
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setLightUiBar()
+        with(bind<ActivityAboutBinding>(R.layout.activity_about)) {
+            debug = BuildConfig.DEBUG
+            version = GlobalLib.getLocalVersionName(this@AboutActivity)
+        }
         tb_about.setNavigationOnClickListener { finish() }
-
-        mBinding.debug = BuildConfig.DEBUG
-        mBinding.version = GlobalLib.getLocalVersionName(this)
         aboutAppSubName.setOnLongClickListener {
             Toast.makeText(
                     this,
@@ -44,7 +40,6 @@ class AboutActivity : BaseActivity<ActivityAboutBinding, BaseViewModel>(), View.
             ).show()
             true
         }
-
         btn_feed.setOnClickListener(this)
         btn_goto_qq_group.setOnClickListener(this)
         btn_goto_weibo.setOnClickListener(this)

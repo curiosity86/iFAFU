@@ -2,39 +2,37 @@ package cn.ifafu.ifafu.ui.elective
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
-import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.VMProvider
+import cn.ifafu.ifafu.app.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.databinding.ActivityElectiveBinding
 import cn.ifafu.ifafu.ui.feedback.FeedbackActivity
-import com.gyf.immersionbar.ImmersionBar
-import kotlinx.android.synthetic.main.activity_elective.*
+import cn.ifafu.ifafu.ui.view.LoadingDialog
 
-class ElectiveActivity : BaseActivity<ActivityElectiveBinding, ElectiveViewModel>() {
+class ElectiveActivity : BaseActivity() {
 
-    override fun getLayoutId(): Int {
-        return R.layout.activity_elective
-    }
+    private val loadingDialog = LoadingDialog(this)
 
-    override fun getViewModel(): ElectiveViewModel {
-       return VMProvider(this)[ElectiveViewModel::class.java]
-    }
+    private val viewModel by viewModels<ElectiveViewModel> { getViewModelFactory() }
 
-    override fun initActivity(savedInstanceState: Bundle?) {
-        ImmersionBar.with(this)
-                .titleBarMarginTop(mBinding.tbElective)
-                .statusBarColor("#FFFFFF")
-                .statusBarDarkFont(true)
-                .init()
-        mBinding.vm = mViewModel
-        mBinding.btnFeedback.setOnClickListener {
-            startActivity(Intent(this, FeedbackActivity::class.java))
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setLightUiBar()
+        with(bind<ActivityElectiveBinding>(R.layout.activity_elective)) {
+            vm = viewModel
+            btnFeedback.setOnClickListener {
+                startActivity(Intent(this@ElectiveActivity, FeedbackActivity::class.java))
+            }
         }
+        viewModel.loading.observe(this, Observer {
+            if (it == null) {
+                loadingDialog.cancel()
+            } else {
+                loadingDialog.show(it)
+            }
+        })
     }
-
 
 }

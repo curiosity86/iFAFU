@@ -16,12 +16,12 @@ class ScoreItemViewModel(application: Application) : BaseViewModel(application) 
     fun init(id: Long) {
         GlobalScope.launch(Dispatchers.IO) {
             if (id == 0L) {
-                event.showMessage("查询成绩出错（无法找到ID）")
+                toast("查询成绩出错（无法找到ID）")
                 return@launch
             }
             val score = RepositoryImpl.ScoreRt.getById(id)
             if (score == null) {
-                event.showMessage("查询成绩出错，Error：无法找到成绩项")
+                toast("查询成绩出错，Error：无法找到成绩项")
             } else {
                 val map: MutableMap<String, String> = LinkedHashMap()
                 map["课程名称"] = score.name

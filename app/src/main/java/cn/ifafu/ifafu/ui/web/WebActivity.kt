@@ -11,22 +11,18 @@ import android.provider.MediaStore
 import android.view.KeyEvent
 import android.webkit.*
 import android.widget.LinearLayout
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.VMProvider
+import cn.ifafu.ifafu.app.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.databinding.WebActivityBinding
 import cn.ifafu.ifafu.ui.view.LoadingDialog
-import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.web_activity.*
 
-class WebActivity : BaseActivity<WebActivityBinding, WebViewModel>() {
+class WebActivity : BaseActivity() {
 
-    override val mLoadingDialog by lazy {
-        LoadingDialog(this).apply {
-            setText("加载中")
-        }
-    }
+    private val mLoadingDialog = LoadingDialog(this, "加载中")
 
     private lateinit var webView: WebView
 
@@ -35,20 +31,12 @@ class WebActivity : BaseActivity<WebActivityBinding, WebViewModel>() {
 
     private var first = true
 
-    override fun getLayoutId(): Int {
-        return R.layout.web_activity
-    }
+    private val mViewModel: WebViewModel by viewModels { getViewModelFactory() }
 
-    override fun getViewModel(): WebViewModel? {
-        return VMProvider(this)[WebViewModel::class.java]
-    }
-
-    override fun initActivity(savedInstanceState: Bundle?) {
-        ImmersionBar.with(this)
-                .titleBarMarginTop(tb_web)
-                .statusBarColor("#FFFFFF")
-                .statusBarDarkFont(true)
-                .init()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setLightUiBar()
+        bind<WebActivityBinding>(R.layout.web_activity)
         initWebView()
         mViewModel.loadUrl.observe(this, Observer {
             webView.loadUrl(it)

@@ -21,7 +21,7 @@ class ScoreFilterViewModel(application: Application) : BaseViewModel(application
             val year: String? = activity.intent.getStringExtra("year")
             val term: String? = activity.intent.getStringExtra("term")
             if (year == null || term == null) {
-                event.showMessage("未找到相关学期成绩")
+                toast("未找到相关学期成绩")
                 return@safeLaunchWithMessage
             }
             scores = RepositoryImpl.ScoreRt.getAll(year, term)

@@ -8,13 +8,15 @@ import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.data.entity.Course
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
+import cn.woolsen.easymvvm.livedata.LiveEvent
 
-class SyllabusItemViewModel(application: Application) : BaseViewModel(application) {
+class CourseItemViewModel(application: Application) : BaseViewModel(application) {
 
-    val course by lazy { MutableLiveData<Course>() }
-    val setting by lazy { MutableLiveData<SyllabusSetting>() }
-    val editMode by lazy { MutableLiveData<Boolean>() }
-    val resultCode by lazy { MutableLiveData<Int>() }
+    val course = MutableLiveData<Course>()
+    val setting = MutableLiveData<SyllabusSetting>()
+    val editMode = MutableLiveData<Boolean>()
+    val resultCode = MutableLiveData<Int>()
+    val finishActivity = LiveEvent()
 
     private var isNewCourse = false
 
@@ -39,11 +41,11 @@ class SyllabusItemViewModel(application: Application) : BaseViewModel(applicatio
         safeLaunchWithMessage {
             course.value?.run {
                 RepositoryImpl.syllabus.delete(this)
-                event.showMessage("删除成功")
+                toast("删除成功")
                 //用于刷新课表界面
                 resultCode.postValue(Activity.RESULT_OK)
                 //删除成功，关闭页面
-                event.finishIt()
+                finishActivity.call()
             }
         }
     }
@@ -52,13 +54,13 @@ class SyllabusItemViewModel(application: Application) : BaseViewModel(applicatio
         safeLaunchWithMessage {
             when {
                 course.name.isEmpty() -> {
-                    event.showMessage(R.string.input_course_name)
+                    toast(R.string.input_course_name)
                 }
                 course.nodeCnt <= 0 -> {
-                    event.showMessage(R.string.select_course_time)
+                    toast(R.string.select_course_time)
                 }
                 course.weekSet.isEmpty() -> {
-                    event.showMessage(R.string.select_course_week)
+                    toast(R.string.select_course_week)
                 }
                 else -> {
                     if (isNewCourse) {
@@ -72,12 +74,12 @@ class SyllabusItemViewModel(application: Application) : BaseViewModel(applicatio
                     //用于刷新课表界面
                     resultCode.postValue(Activity.RESULT_OK)
                     if (isNewCourse) {
-                        event.finishIt()
+                        finishActivity.call()
                     } else {
                         //更新界面
-                        this@SyllabusItemViewModel.course.postValue(course)
+                        this@CourseItemViewModel.course.postValue(course)
                     }
-                    event.showMessage(R.string.save_successful)
+                    toast(R.string.save_successful)
                 }
             }
         }

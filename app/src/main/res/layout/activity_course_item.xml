@@ -7,6 +7,10 @@
         <import type="android.view.View" />
 
         <variable
+            name="vm"
+            type="cn.ifafu.ifafu.ui.syllabus_item.CourseItemViewModel" />
+
+        <variable
             name="course"
             type="cn.ifafu.ifafu.data.entity.Course" />
 

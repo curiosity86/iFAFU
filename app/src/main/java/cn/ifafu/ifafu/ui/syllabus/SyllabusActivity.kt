@@ -7,59 +7,50 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
-import cn.ifafu.ifafu.app.VMProvider
+import cn.ifafu.ifafu.app.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
-import cn.ifafu.ifafu.data.entity.Course
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
 import cn.ifafu.ifafu.databinding.SyllabusActivityBinding
 import cn.ifafu.ifafu.ui.main.MainActivity
 import cn.ifafu.ifafu.ui.syllabus.view.CourseItem
 import cn.ifafu.ifafu.ui.syllabus.view.CourseLayout
-import cn.ifafu.ifafu.ui.syllabus_item.SyllabusItemActivity
+import cn.ifafu.ifafu.ui.syllabus_item.CourseItemActivity
 import cn.ifafu.ifafu.ui.syllabus_setting.SyllabusSettingActivity
-import cn.ifafu.ifafu.util.ChineseNumbers
 import cn.ifafu.ifafu.ui.view.LoadingDialog
+import cn.ifafu.ifafu.util.ChineseNumbers
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.syllabus_activity.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class SyllabusActivity : BaseActivity<SyllabusActivityBinding, SyllabusViewModel>(),
-        View.OnClickListener, View.OnLongClickListener {
+class SyllabusActivity : BaseActivity(), View.OnClickListener, View.OnLongClickListener {
 
     private var mCurrentWeek = 1
     private val mPageAdapter: SyllabusPageAdapter by lazy {
         SyllabusPageAdapter(object : CourseLayout.OnCourseClickListener {
             override fun onClick(course: CourseItem) {
-                val intent = Intent(this@SyllabusActivity, SyllabusItemActivity::class.java)
+                val intent = Intent(this@SyllabusActivity, CourseItemActivity::class.java)
                 intent.putExtra("course_id", course.id)
                 startActivityForResult(intent, Constant.ACTIVITY_SYLLABUS_ITEM)
             }
         })
     }
-    override val mLoadingDialog: LoadingDialog by lazy {
-        LoadingDialog(this).apply {
-            setText("获取中")
-        }
-    }
+    private val loadingDialog = LoadingDialog(this)
 
-    override fun getLayoutId(): Int {
-        return R.layout.syllabus_activity
-    }
+    private val mViewModel: SyllabusViewModel by viewModels { getViewModelFactory() }
 
-    override fun getViewModel(): SyllabusViewModel? {
-        return VMProvider(this)[SyllabusViewModel::class.java]
-    }
-
-    override fun initActivity(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         ImmersionBar.with(this)
                 .titleBarMarginTop(tb_syllabus)
                 .statusBarDarkFont(true)
                 .init()
+        bind<SyllabusActivityBinding>(R.layout.syllabus_activity)
         btn_back.setOnClickListener(this)
         btn_add.setOnClickListener(this)
         btn_refresh.setOnClickListener(this)
@@ -74,6 +65,7 @@ class SyllabusActivity : BaseActivity<SyllabusActivityBinding, SyllabusViewModel
             mPageAdapter.courses = it
             mPageAdapter.notifyDataSetChanged()
         })
+        loadingDialog.observe(this, mViewModel.loading)
         mViewModel.initData()
     }
 
@@ -87,6 +79,7 @@ class SyllabusActivity : BaseActivity<SyllabusActivityBinding, SyllabusViewModel
         btn_refresh.setColorFilter(themeColor)
         btn_setting.setColorFilter(themeColor)
         ImmersionBar.with(this)
+                .titleBarMarginTop(tb_syllabus)
                 .statusBarDarkFont(setting.statusDartFont)
                 .init()
         mPageAdapter.setting = setting
@@ -127,7 +120,7 @@ class SyllabusActivity : BaseActivity<SyllabusActivityBinding, SyllabusViewModel
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btn_add -> {
-                val intent = Intent(this, SyllabusItemActivity::class.java)
+                val intent = Intent(this, CourseItemActivity::class.java)
                 intent.putExtra("come_from", BUTTON_ADD)
                 startActivityForResult(intent, Constant.ACTIVITY_SYLLABUS_ITEM)
             }

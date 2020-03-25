@@ -4,6 +4,7 @@ package cn.ifafu.ifafu.data.repository
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
@@ -14,38 +15,49 @@ import cn.ifafu.ifafu.data.bean.*
 import cn.ifafu.ifafu.data.db.AppDatabase
 import cn.ifafu.ifafu.data.entity.*
 import cn.ifafu.ifafu.data.exception.VerifyException
-import cn.ifafu.ifafu.data.new_http.NetSourceImpl
+import cn.ifafu.ifafu.data.new_http.JWService
+import cn.ifafu.ifafu.data.new_http.WoService
+import cn.ifafu.ifafu.data.new_http.impl.JWServiceImpl
+import cn.ifafu.ifafu.data.new_http.impl.WoServiceImpl
 import cn.ifafu.ifafu.data.retrofit.APIManager
 import cn.ifafu.ifafu.data.retrofit.parser.*
-import cn.ifafu.ifafu.data.retrofit.service.WeatherService
 import cn.ifafu.ifafu.ui.syllabus.view.CourseItem
 import cn.ifafu.ifafu.util.DateUtils
+import cn.ifafu.ifafu.util.HttpClient
 import cn.ifafu.ifafu.util.SPUtils
 import cn.ifafu.ifafu.util.encode
 import com.alibaba.fastjson.JSONObject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.IOException
+import java.net.ConnectException
+import java.net.SocketTimeoutException
 import java.net.URLEncoder
+import java.net.UnknownHostException
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
 @SuppressLint("SimpleDateFormat")
-object RepositoryImpl: Repository {
+object RepositoryImpl : Repository {
 
-    private lateinit var context: Context
+    private var context: Context = BaseApplication.appContext
 
     private val db: AppDatabase by lazy { AppDatabase.getInstance(context) }
     val user by lazy { UserRt(context) }
     val syllabus by lazy { SyllabusRt(context) }
     val exam by lazy { ExamRt() }
 
+    private val woService: WoService = WoServiceImpl()
+    private val jwService: JWService = JWServiceImpl()
+
     private var account: String = ""
         get() {
             return field.ifEmpty {
-                field = SPUtils.get(Constant.SP_USER_INFO).getString("account")
+                field = SPUtils[Constant.SP_USER_INFO].getString("account")
                 field
             }
         }
@@ -55,6 +67,9 @@ object RepositoryImpl: Repository {
      */
     fun init(context: Context) {
         RepositoryImpl.context = context
+        GlobalScope.launch(Dispatchers.IO) {
+            user.getInUse()?.let { jwService.checkoutTo(it) }
+        }
     }
 
     private suspend fun fetchParams(url: String): MutableMap<String, String> = withContext(Dispatchers.IO) {
@@ -204,7 +219,6 @@ object RepositoryImpl: Repository {
         }
 
 
-
         /**
          * 节假日调课，并按周排列课表
          * @return MutableList<MutableList<CourseBase>?> 分周排列课表
@@ -296,6 +310,64 @@ object RepositoryImpl: Repository {
         }
     }
 
+    override suspend fun checkoutTo(user: User) = withContext(Dispatchers.IO) {
+        jwService.checkoutTo(user)
+        user.account = user.account
+        account = user.account
+        this@RepositoryImpl.user.saveLoginOnly(user)
+    }
+
+    override suspend fun login(account: String, password: String): IFResult<User> {
+        return try {
+            jwService.login(account, password).also {
+                val user = it.getOrNull() ?: return@also
+                this.user.save(user)
+                this.user.saveLoginOnly(user)
+            }
+        } catch (e: Exception) {
+            IFResult.failure<User>(e)
+        }
+    }
+
+    override suspend fun getNewVersion(): IFResult<Version> = withContext(Dispatchers.IO) {
+        try {
+            woService.getNewVersion()
+        } catch (e: Exception) {
+            IFResult.failure<Version>(e)
+        }
+    }
+
+    override suspend fun getOpeningDay(): IFResult<String> = withContext(Dispatchers.IO) {
+        try {
+            woService.getOpeningDay()
+        } catch (e: Exception) {
+            IFResult.failure<String>(e.errorMessage())
+        }
+    }
+
+    override suspend fun postFeedback(message: String, contact: String): IFResult<String> = withContext(Dispatchers.IO) {
+        try {
+            val resp = HttpClient().post(url = "http://woolsen.cn/feedback", body = mapOf(
+                    "sno" to user.getInUseAccount(),
+                    "contact" to contact,
+                    "message" to message
+            ))
+            if (resp.isSuccessful && resp.body() != null) {
+                val jo = JSONObject.parseObject(resp.body()?.string())
+                if (jo.getIntValue("code") == 200) {
+                    IFResult.success("感谢小伙伴的反馈~\niFAFU会第一时间处理")
+                } else {
+                    IFResult.failure<String>(jo.getString("message"))
+                }
+            } else {
+                IFResult.failure<String>("反馈提交出错，请加QQ群反馈")
+            }
+        } catch (e: Exception) {
+            IFResult.failure<String>(e)
+        }
+    }
+
+
     class UserRt(context: Context) {
 
         private val userDao = AppDatabase.getInstance(context).userDao
@@ -309,7 +381,7 @@ object RepositoryImpl: Repository {
         }
 
         suspend fun login2(account: String, password: String): IFResult<User> {
-            return NetSourceImpl().login(account, password)
+            return jwService.login(account, password)
         }
 
         suspend fun login(account: String, password: String): Response<String> = withContext(Dispatchers.IO) {
@@ -533,7 +605,7 @@ object RepositoryImpl: Repository {
         suspend fun elecCookieInit() {
             withContext(Dispatchers.IO) {
                 val service = APIManager.xfbAPI
-                service.init("0", SPUtils.get(Constant.SP_ELEC).getString("IMEI"), "0").execute()
+                service.init("0", SPUtils[Constant.SP_ELEC].getString("IMEI"), "0").execute()
             }
         }
 
@@ -686,24 +758,6 @@ object RepositoryImpl: Repository {
 
     class ExamRt {
 
-        /**
-         * 获取当前学期考试（速度最快）
-         */
-        suspend fun fetchNow(): Response<List<Exam>> = withContext(Dispatchers.IO) {
-            val user = user.getInUse()!!
-            val examUrl = Constant.getUrl(ZFApiList.EXAM, user)
-            val mainUrl = Constant.getUrl(ZFApiList.MAIN, user)
-            val html = APIManager.zhengFangAPI
-                    .get(examUrl, mainUrl)
-                    .execute().body()!!.string()
-            ExamParser(user).parse(html).apply {
-                if (!data.isNullOrEmpty()) {
-                    save(data)
-                }
-            }
-        }
-
-
         suspend fun getNow(): List<Exam> = withContext(Dispatchers.Default) {
             val semester = getNowSemester()
             db.examDao.getAll(account, semester.yearStr, semester.termStr)
@@ -749,6 +803,10 @@ object RepositoryImpl: Repository {
         }
     }
 
+    override suspend fun getNotExamsFromDbOrNet(): IFResult<List<Exam>> {
+        return jwService.getNowExams()
+    }
+
     override suspend fun getExamsFromDbOrNet(year: String, term: String): IFResult<List<Exam>> {
         val dbDate = if (year == "全部" && term == "全部") {
             db.examDao.getAll(account)
@@ -789,38 +847,31 @@ object RepositoryImpl: Repository {
 
     }
 
-    object WeatherRt {
 
-        /**
-         * 101230101:福州
-         */
-        suspend fun fetch(cityCode: String): Response<Weather> = withContext(Dispatchers.IO) {
-            val weather = Weather()
-            val referer = "http://www.weather.com.cn/weather1d/$cityCode.shtml"
-            val service: WeatherService = APIManager.weatherAPI
-
-            // 获取城市名和当前温度
-            val url1 = "http://d1.weather.com.cn/sk_2d/$cityCode.html"
-            val body1 = service.getWeather(url1, referer).execute().body()
-            var jsonStr1: String = body1!!.string()
-            jsonStr1 = jsonStr1.replace("var dataSK = ", "")
-            val jo1: JSONObject = JSONObject.parseObject(jsonStr1)
-            weather.cityName = jo1.getString("cityname")
-            weather.nowTemp = jo1.getInteger("temp")
-            weather.weather = jo1.getString("weather")
-
-            // 获取白天温度和晚上温度
-            val url2 = "http://d1.weather.com.cn/dingzhi/$cityCode.html"
-            val body2 = service.getWeather(url2, referer).execute().body()
-            var jsonStr2: String = body2!!.string()
-            jsonStr2 = jsonStr2.substring(jsonStr2.indexOf('=') + 1, jsonStr2.indexOf(";"))
-            var jo2: JSONObject = JSONObject.parseObject(jsonStr2)
-            jo2 = jo2.getJSONObject("weatherinfo")
-            weather.amTemp = Integer.valueOf(jo2.getString("temp").replace("℃", ""))
-            weather.pmTemp = Integer.valueOf(jo2.getString("tempn").replace("℃", ""))
-            Response.success(weather)
+    override suspend fun getWeather(code: String): IFResult<Weather> = withContext(Dispatchers.IO) {
+        try {
+            woService.getWeather(code)
+        } catch (e: Exception) {
+            IFResult.failure<Weather>(e.errorMessage())
         }
     }
 
-
+    private fun Throwable.errorMessage(): String {
+        return when (this) {
+            is UnknownHostException, is ConnectException ->
+                "网络错误，请检查网络设置"
+            is SocketTimeoutException ->
+                "服务器连接超时（可能原因：学校服务器崩溃）"
+            is SQLiteConstraintException ->
+                "数据库数据错误（错误信息：${message}）"
+            is IOException ->
+                if (this.message?.contains("unexpected") == true) {
+                    "正方教务系统又崩溃了！"
+                } else {
+                    message ?: "Net Error"
+                }
+            else ->
+                message ?: "ERROR"
+        }
+    }
 }

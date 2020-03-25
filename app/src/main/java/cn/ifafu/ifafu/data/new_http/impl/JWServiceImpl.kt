@@ -1,30 +1,30 @@
-package cn.ifafu.ifafu.data.new_http
+package cn.ifafu.ifafu.data.new_http.impl
 
 import android.graphics.Bitmap
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.base.BaseApplication
 import cn.ifafu.ifafu.data.IFResult
 import cn.ifafu.ifafu.data.bean.URL
-import cn.ifafu.ifafu.data.bean.Weather
 import cn.ifafu.ifafu.data.entity.Exam
 import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.data.exception.NoAuthException
+import cn.ifafu.ifafu.data.new_http.IFHttpClient
+import cn.ifafu.ifafu.data.new_http.bean.IFResponse
+import cn.ifafu.ifafu.data.new_http.JWService
 import cn.ifafu.ifafu.data.new_http.converter.ExamConverter
 import cn.ifafu.ifafu.data.new_http.converter.LoginConverter
 import cn.ifafu.ifafu.data.retrofit.parser.VerifyParser
 import cn.ifafu.ifafu.util.BitmapUtil
 import cn.ifafu.ifafu.util.SPUtils
 import cn.ifafu.ifafu.util.encode
-import com.alibaba.fastjson.JSONException
-import com.alibaba.fastjson.JSONObject
 import kotlinx.coroutines.*
-import okhttp3.Headers
 import org.jsoup.Jsoup
 import java.io.IOException
 import java.util.regex.Pattern
+import javax.security.auth.login.LoginException
 import kotlin.collections.HashMap
 
-class NetSourceImpl : NetSource {
+class JWServiceImpl : JWService {
 
     private var user: User? = null
 
@@ -44,6 +44,7 @@ class NetSourceImpl : NetSource {
     override suspend fun checkoutTo(user: User) {
         this.user = user
         this.urls = Constant.getURL(user.school)
+        reLogin()
     }
 
     override suspend fun login(
@@ -77,24 +78,15 @@ class NetSourceImpl : NetSource {
         return resp.getOrElse(onGet = {
             IFResult.success(it)
         }, onElse = {
-            IFResult.failure(resp.message ?: "登录出错")
+            if (resp.message?.contains("账号|密码".toRegex()) == true) {
+                IFResult.failure<User>(LoginException(resp.message))
+            } else {
+                IFResult.failure(resp.message ?: "登录出错")
+            }
         })
     }
 
-    override suspend fun getOpeningDay(): IFResult<String> = withContext(Dispatchers.IO) {
-        try {
-            val response = http.get("${Constant.WOOLSEN_BASE_URL}/api/text/OpeningDay")
-            val wResp = JSONObject.parseObject(response.body()?.string()
-                    ?: "", WoResponse::class.java)
-            IFResult.success(wResp.data as String)
-        } catch (e: JSONException) {
-            IFResult.failure<String>("开学时间获取出错")
-        } catch (e: Exception) {
-            IFResult.failure<String>(e)
-        }
-    }
-
-    override suspend fun getExams(): IFResult<List<Exam>> = withContext(Dispatchers.IO) {
+    override suspend fun getNowExams(): IFResult<List<Exam>> = withContext(Dispatchers.IO) {
         try {
             autoReLogin { getExam() }
         } catch (e: Exception) {
@@ -103,31 +95,6 @@ class NetSourceImpl : NetSource {
         }
     }
 
-    override suspend fun getWeather(code: String): IFResult<Weather> {
-        val weather = Weather()
-        val referer = "http://www.weather.com.cn/weather1d/$code.shtml"
-
-        // 获取城市名和当前温度
-        val url1 = "http://d1.weather.com.cn/sk_2d/$code.html"
-        val body1 = http.get(url1, Headers.of("Referer", referer)).body()
-        var jsonStr1: String = body1!!.string()
-        jsonStr1 = jsonStr1.replace("var dataSK = ", "")
-        val jo1: JSONObject = JSONObject.parseObject(jsonStr1)
-        weather.cityName = jo1.getString("cityname")
-        weather.nowTemp = jo1.getInteger("temp")
-        weather.weather = jo1.getString("weather")
-
-        // 获取白天温度和晚上温度
-        val url2 = "http://d1.weather.com.cn/dingzhi/$code.html"
-        val body2 = http.get(url2, Headers.of("Referer", referer)).body()
-        var jsonStr2: String = body2!!.string()
-        jsonStr2 = jsonStr2.substring(jsonStr2.indexOf('=') + 1, jsonStr2.indexOf(";"))
-        var jo2: JSONObject = JSONObject.parseObject(jsonStr2)
-        jo2 = jo2.getJSONObject("weatherinfo")
-        weather.amTemp = Integer.valueOf(jo2.getString("temp").replace("℃", ""))
-        weather.pmTemp = Integer.valueOf(jo2.getString("tempn").replace("℃", ""))
-        return IFResult.success(weather)
-    }
 
     private fun getExam(): IFResult<List<Exam>> {
         val user = inLoginUser
@@ -140,11 +107,16 @@ class NetSourceImpl : NetSource {
         return try {
             block()
         } catch (e: NoAuthException) {
+//            Timber.d("Auto ReLogin:${user?.account}")
             val resp = reLoginInner()
             if (resp.isSuccess) {
                 block()
             } else {
-                IFResult.failure(resp.message ?: "重新登录出错(unknown)")
+                if (resp.message?.contains("账号|密码".toRegex()) == true) {
+                    IFResult.failure(LoginException(resp.message))
+                } else {
+                    IFResult.failure(resp.message ?: "重新登录出错(unknown)")
+                }
             }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -159,7 +131,7 @@ class NetSourceImpl : NetSource {
 
     /* 重新登录 */
     private suspend fun reLoginInner(): IFResponse<User> {
-        val job = reLoginJob?.takeIf { it.isCompleted }
+        val job = reLoginJob?.takeIf { it.isActive }
                 ?: loginLazyAsync(inLoginUser)
         reLoginJob = job
         return job.await()
@@ -203,10 +175,12 @@ class NetSourceImpl : NetSource {
                 if (user.school == User.FAFU_JS) {
                     SPUtils[Constant.SP_COOKIE].putString("cookie", user.token)
                 }
+                this@JWServiceImpl.user = user
                 return@async IFResponse.success(user)
             }, onElse = {
                 if (it.isError) {
-                    return@async IFResponse.failure<User>(ifResp.message ?: "未知错误信息(Empty)")
+                    return@async IFResponse.failure<User>(ifResp.message
+                            ?: "未知错误信息(Empty)")
                 } else if (ifResp.isFailure && ifResp.message?.contains("验证码") == false) {
                     //非验证码错误则return错误信息
                     return@async IFResponse.failure<User>(ifResp.message)

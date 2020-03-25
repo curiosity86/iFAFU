@@ -36,7 +36,7 @@ class SyllabusSettingViewModel(application: Application) : BaseViewModel(applica
         safeLaunch(block = {
             val user: User? = RepositoryImpl.user.getInUse()
             if (user == null) {
-                event.showMessage("用户信息不存在")
+                toast("用户信息不存在")
                 return@safeLaunch
             }
             val url: String = Constant.getUrl(ZFApiList.SYLLABUS, user)
@@ -48,12 +48,12 @@ class SyllabusSettingViewModel(application: Application) : BaseViewModel(applica
             val cm = getApplication<Application>().getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
             if (cm != null) {
                 cm.setPrimaryClip(ClipData.newPlainText("Label", html))
-                event.showMessage("测试数据已复制至剪切板")
+                toast("测试数据已复制至剪切板")
             } else {
-                event.showMessage("获取剪切板失败")
+                toast("获取剪切板失败")
             }
         }, error = {
-            event.showMessage(it.message ?: "ERROR")
+            toast(it.message ?: "ERROR")
         })
     }
 

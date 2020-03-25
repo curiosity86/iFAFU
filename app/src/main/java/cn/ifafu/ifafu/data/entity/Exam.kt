@@ -11,7 +11,7 @@ class Exam {
     @PrimaryKey
     var id: Long = 0L
     var name: String = ""
-    var startTime: Long = 0
+    var startTime: Long = 0  //无时间信息则为0
     var endTime: Long = 0
     var address: String = ""
     var seatNumber: String = ""

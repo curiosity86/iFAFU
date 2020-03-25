@@ -3,25 +3,25 @@ package cn.ifafu.ifafu.ui.score_list
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
-import cn.ifafu.ifafu.app.VMProvider
+import cn.ifafu.ifafu.app.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.data.entity.Score
 import cn.ifafu.ifafu.databinding.ActivityScoreListBinding
 import cn.ifafu.ifafu.ui.score_filter.ScoreFilterActivity
 import cn.ifafu.ifafu.ui.score_item.ScoreItemActivity
+import cn.ifafu.ifafu.ui.view.LoadingDialog
 import cn.ifafu.ifafu.ui.view.SemesterOptionPicker
 import cn.ifafu.ifafu.view.adapter.ScoreAdapter
 import cn.ifafu.ifafu.view.custom.RecyclerViewDivider
-import cn.ifafu.ifafu.ui.view.LoadingDialog
 import com.afollestad.materialdialogs.MaterialDialog
-import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.activity_score_list.*
 
-class ScoreListActivity : BaseActivity<ActivityScoreListBinding, ScoreListViewModel>(), View.OnClickListener {
+class ScoreListActivity : BaseActivity(), View.OnClickListener {
 
     private val mAdapter: ScoreAdapter by lazy {
         ScoreAdapter(this).apply {
@@ -51,26 +51,14 @@ class ScoreListActivity : BaseActivity<ActivityScoreListBinding, ScoreListViewMo
         }
     }
 
-    override val mLoadingDialog by lazy {
-        LoadingDialog(this).apply {
-            setText("获取中")
-            setCancelable(true)
-        }
-    }
+    private val mLoadingDialog = LoadingDialog(this)
 
-    override fun getViewModel(): ScoreListViewModel {
-        return VMProvider(this).get(ScoreListViewModel::class.java)
-    }
+    private val mViewModel: ScoreListViewModel by viewModels { getViewModelFactory() }
 
-    override fun getLayoutId(): Int = R.layout.activity_score_list
-
-    override fun initActivity(savedInstanceState: Bundle?) {
-        ImmersionBar.with(this)
-                .titleBarMarginTop(tb_score)
-                .statusBarColor("#FFFFFF")
-                .statusBarDarkFont(true)
-                .init()
-        with(mBinding) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setLightUiBar()
+        with(bind<ActivityScoreListBinding>(R.layout.activity_score_list)) {
             adapter = mAdapter
             vm = mViewModel
             rvScore.addItemDecoration(RecyclerViewDivider(
@@ -86,6 +74,7 @@ class ScoreListActivity : BaseActivity<ActivityScoreListBinding, ScoreListViewMo
             mAdapter.scoreList = it
             mAdapter.notifyDataSetChanged()
         })
+        mLoadingDialog.observe(this, mViewModel.loading)
         tv_score_title.setOnClickListener(this)
         mViewModel.initData()
     }
@@ -99,7 +88,7 @@ class ScoreListActivity : BaseActivity<ActivityScoreListBinding, ScoreListViewMo
                 }
             }
             R.id.layout_ies -> mViewModel.iesCalculationDetail()
-            R.id.layout_cnt ->  {
+            R.id.layout_cnt -> {
                 val intent = Intent(this@ScoreListActivity, ScoreFilterActivity::class.java)
                 val semester = mViewModel.semester.value ?: return
                 intent.putExtra("year", semester.yearStr)

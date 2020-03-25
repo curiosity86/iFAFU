@@ -9,11 +9,13 @@ import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.data.bean.ZFApiList
 import cn.ifafu.ifafu.util.SPUtils
+import cn.woolsen.easymvvm.livedata.LiveDataString
 
 class WebViewModel(application: Application) : BaseViewModel(application) {
 
     val loadUrl by lazy { MutableLiveData<String>() }
     val title by lazy { MutableLiveData<String>() }
+    val loading = LiveDataString()
 
     fun init(intent: Intent) {
         safeLaunchWithMessage {

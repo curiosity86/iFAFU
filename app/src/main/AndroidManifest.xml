@@ -37,7 +37,7 @@
             android:name=".ui.login.LoginActivity"
             android:launchMode="singleTask" />
         <activity android:name=".ui.syllabus.SyllabusActivity" />
-        <activity android:name=".ui.syllabus_item.SyllabusItemActivity" />
+        <activity android:name=".ui.syllabus_item.CourseItemActivity" />
         <activity android:name=".ui.syllabus_setting.SyllabusSettingActivity" />
         <activity android:name=".ui.score_list.ScoreListActivity" />
         <activity android:name=".ui.score_item.ScoreItemActivity" />

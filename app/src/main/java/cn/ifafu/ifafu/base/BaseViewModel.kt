@@ -1,14 +1,17 @@
 package cn.ifafu.ifafu.base
 
 import android.app.Application
+import android.content.Intent
 import android.content.res.Resources
 import android.database.sqlite.SQLiteConstraintException
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
-import cn.ifafu.ifafu.data.repository.RepositoryImpl
+import cn.ifafu.ifafu.app.IFAFU
 import cn.ifafu.ifafu.data.bean.Response
 import cn.ifafu.ifafu.data.exception.NoAuthException
+import cn.ifafu.ifafu.data.repository.RepositoryImpl
+import cn.ifafu.ifafu.ui.login.LoginActivity
 import kotlinx.coroutines.*
 import java.io.IOException
 import java.net.ConnectException
@@ -20,7 +23,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 
 abstract class BaseViewModel(application: Application) : AndroidViewModel(application) {
 
-    lateinit var event: UIEvent
+    var event: UIEvent? = null
 
     /**
      * 登录态失效时自动重新登录，成功后重新执行代码块，否则提示错误
@@ -35,7 +38,7 @@ abstract class BaseViewModel(application: Application) : AndroidViewModel(applic
             return RepositoryImpl.user.login(user).run {
                 when (code) {
                     Response.FAILURE -> {
-                        event.startLoginActivity()
+                        event?.startLoginActivity()
                         throw LoginException(message)
                     }
                     Response.ERROR -> {
@@ -66,6 +69,11 @@ abstract class BaseViewModel(application: Application) : AndroidViewModel(applic
                 } else {
                     message ?: "Net Error"
                 }
+            is LoginException -> {
+                val app = getApplication<IFAFU>()
+                app.startActivity(Intent(app, LoginActivity::class.java))
+                message ?: "登录出错"
+            }
             else ->
                 message ?: "ERROR"
         }
@@ -80,7 +88,7 @@ abstract class BaseViewModel(application: Application) : AndroidViewModel(applic
             start: CoroutineStart = CoroutineStart.DEFAULT,
             block: suspend CoroutineScope.() -> Unit): Job {
         return safeLaunch(context, start, block) {
-            event.showMessage(it.errorMessage())
+            toast(it.errorMessage())
         }
     }
 
@@ -99,11 +107,11 @@ abstract class BaseViewModel(application: Application) : AndroidViewModel(applic
         }
     }
 
-    protected fun toast(message: String) {
+    protected suspend fun toast(message: String) = withContext(Dispatchers.Main) {
         Toast.makeText(getApplication(), message, Toast.LENGTH_SHORT).show()
     }
-    
-    protected fun toast(@StringRes resId: Int) {
+
+    protected suspend fun toast(@StringRes resId: Int) = withContext(Dispatchers.Main) {
         Toast.makeText(getApplication(), resId, Toast.LENGTH_SHORT).show()
     }
 }

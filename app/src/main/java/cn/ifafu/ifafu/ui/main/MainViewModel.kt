@@ -1,48 +1,27 @@
 package cn.ifafu.ifafu.ui.main
 
 import android.app.Application
-import android.content.ClipboardManager
-import android.content.Context
-import android.graphics.drawable.Drawable
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
-import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.Constant
-import cn.ifafu.ifafu.app.IFAFU
 import cn.ifafu.ifafu.base.BaseViewModel
-import cn.ifafu.ifafu.data.bean.Weather
-import cn.ifafu.ifafu.data.entity.Exam
-import cn.ifafu.ifafu.data.entity.GlobalSetting
 import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.data.repository.RepositoryImpl
-import cn.ifafu.ifafu.ui.main.bean.ClassPreview
-import cn.ifafu.ifafu.util.DateUtils
 import cn.ifafu.ifafu.util.GlobalLib
-import cn.ifafu.ifafu.view.timeline.TimeAxis
-import com.alibaba.fastjson.JSONObject
-import com.tencent.bugly.beta.Beta
-import kotlinx.coroutines.Dispatchers
+import cn.woolsen.easymvvm.livedata.LiveDataString
+import cn.woolsen.easymvvm.livedata.LiveEvent
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.ArrayList
+import timber.log.Timber
+import javax.security.auth.login.LoginException
 
 class MainViewModel(application: Application) : BaseViewModel(application) {
 
-    val users by lazy { MutableLiveData<List<User>>() }
-    val theme by lazy { MutableLiveData<Int>() }
-    val isShowSwitchAccountDialog by lazy { MutableLiveData<Boolean>() }
+    val users = MutableLiveData<List<User>>()
+    val showMultiUserDialog = MutableLiveData<Boolean>()
 
-    val nextCourse by lazy { MutableLiveData<ClassPreview>() }
-    val weather by lazy { MutableLiveData<Weather>() }
-    val inUseUser by lazy { MutableLiveData<User>() }
-
-    /**
-     * 新版主题
-     */
-    val timeAxis by lazy { MutableLiveData<List<TimeAxis>>() }
-    val schoolIcon by lazy { MutableLiveData<Drawable>() }
+    val theme = MutableLiveData<Int>()
+    val loading = LiveDataString()
+    val startLoginActivity = LiveEvent()
 
     private val repo: RepositoryImpl = RepositoryImpl
 
@@ -53,135 +32,10 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
         checkTheme()
     }
 
-    fun initFragmentData() {
-        safeLaunchWithMessage {
-            when (theme.value) {
-                GlobalSetting.THEME_NEW -> {
-                    initNewTabMenu()
-                }
-            }
-            val user = RepositoryImpl.user.getInUse()
-            withContext(Dispatchers.Main) {
-                inUseUser.value = user
-            }
-            if (user == null) return@safeLaunchWithMessage
-            inUseUser.postValue(user)
-        }
-    }
-
-    private fun initNewTabMenu() {
-        safeLaunchWithMessage {
-            schoolIcon.postValue(when (inUseUser.value?.school) {
-                Constant.FAFU -> getApplication<Application>().getDrawable((R.drawable.fafu_bb_icon_white))
-                Constant.FAFU_JS -> getApplication<Application>().getDrawable((R.drawable.fafu_js_icon_white))
-                else -> getApplication<Application>().getDrawable((R.mipmap.ic_launcher_round))
-            })
-        }
-    }
-
-    fun updateNextCourse() {
-        safeLaunchWithMessage {
-            nextCourse.postValue(getNextCourse())
-        }
-    }
-
-    fun updateTimeAxis() {
-        safeLaunchWithMessage {
-            val list = ArrayList<TimeAxis>()
-            val now = Date()
-            val holidays = RepositoryImpl.syllabus.getHoliday()
-            val format = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
-            for (holiday in holidays) {
-                val date = format.parse(holiday.date)
-                val day = DateUtils.calcLastDays(now, date)
-                if (day >= 0) {
-                    val axis = TimeAxis(
-                            holiday.name, holiday.date, day)
-                    list.add(axis)
-                }
-            }
-            val exams = RepositoryImpl.exam.getNow()
-            val toTimeAxis: (List<Exam>) -> List<TimeAxis> = {
-                val timeAxises = ArrayList<TimeAxis>()
-                for (exam in it) {
-                    if (exam.startTime == 0L) { //暂无时间信息
-                        continue
-                    }
-                    val date = Date(exam.startTime)
-                    val day = DateUtils.calcLastDays(now, date)
-                    if (day >= 0) {
-                        val axis = TimeAxis(
-                                exam.name, format.format(Date(exam.startTime)), day)
-                        timeAxises.add(axis)
-                    }
-                }
-                timeAxises
-            }
-            list.addAll(toTimeAxis(exams))
-            list.sortWith(Comparator { o1, o2 -> o1.day.compareTo(o2.day) })
-            timeAxis.postValue(list)
-            RepositoryImpl.exam.fetchNow().data?.run {
-                list.addAll(toTimeAxis(this))
-                timeAxis.postValue(list)
-            }
-        }
-    }
-
-    private suspend fun getNextCourse(): ClassPreview {
-        val courses = this.repo.syllabus.getAll()
-        val setting = this.repo.syllabus.getSetting()
-        //调课信息
-        val holidayFromToMap = this.repo.syllabus.getAdjustmentInfo()
-        return ClassPreview.convert(courses, holidayFromToMap, setting)
-    }
-
-    fun updateWeather() {
-        safeLaunchWithMessage {
-            RepositoryImpl.WeatherRt.fetch("101230101").data?.run {
-                this@MainViewModel.weather.postValue(this)
-            }
-        }
-    }
-
-    fun importAccount() {
-        GlobalScope.launch {
-            try {
-                val cm = getApplication<Application>().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val data = cm.primaryClip
-                val item = data!!.getItemAt(0)
-                val content = item.text.toString()
-                val list = JSONObject.parseArray(content, User::class.java)
-                list.forEach {
-                    RepositoryImpl.user.save(it)
-                }
-                toast("导入成功")
-            } catch (e: Exception) {
-                toast("导入失败")
-            }
-        }
-    }
-
-    fun checkTheme() {
-        safeLaunchWithMessage {
-            theme.postValue(RepositoryImpl.GlobalSettingRt.get().theme)
-        }
-    }
-
-    fun upgradeApp() {
-        safeLaunchWithMessage {
-            val upgradeInfo = Beta.getUpgradeInfo()
-            if (upgradeInfo != null && upgradeInfo.versionCode > GlobalLib.getLocalVersionCode(getApplication())) {
-                Beta.checkUpgrade()
-            } else {
-                toast(R.string.is_last_version)
-            }
-        }
-    }
-
     fun switchAccount() {
         safeLaunchWithMessage {
             users.postValue(RepositoryImpl.user.getAll())
-            isShowSwitchAccountDialog.postValue(true)
+            showMultiUserDialog.postValue(true)
         }
     }
 
@@ -193,41 +47,60 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
         }
     }
 
-    fun deleteUser(user: User) {
-        safeLaunchWithMessage {
-            RepositoryImpl.user.delete(user.account)
-            if (user.account == inUseUser.value?.account) {
-                RepositoryImpl.user.getInUse().run {
-                    if (this@run == null) {
-                        event.startLoginActivity()
-                    } else {
-                        toast("删除成功，已切换到${account}")
-                        isShowSwitchAccountDialog.postValue(false)
-                        //重新初始化数据
-                        initActivityData()
-                    }
+    fun deleteUser(user: User) = safeLaunchWithMessage {
+        RepositoryImpl.user.delete(user.account)
+        if (user.account == repo.user.getInUseAccount()) {
+            RepositoryImpl.user.getInUse().let {
+                if (it == null) {
+                    startLoginActivity.call()
+                } else {
+                    toast("删除成功，已切换到${it.account}")
+                    showMultiUserDialog.postValue(false)
+                    //重新初始化数据
+                    initActivityData()
                 }
-            } else {
-                toast("删除成功")
             }
+        } else {
+            toast("删除成功")
         }
     }
 
-    fun checkoutTo(user: User) {
-        safeLaunchWithMessage {
-            if (user.account != RepositoryImpl.user.getInUseAccount()) {
-                event.showDialog()
-                RepositoryImpl.user.saveLoginOnly(user)
-                val job = safeLaunchWithMessage {
-                    RepositoryImpl.user.login(user)
-                }
-                IFAFU.loginJob = job
-                job.join()
+    private fun checkTheme() = safeLaunchWithMessage {
+        theme.postValue(RepositoryImpl.GlobalSettingRt.get().theme)
+    }
+
+    fun checkoutTo(user: User) = GlobalScope.launch {
+        if (user.account != RepositoryImpl.user.getInUseAccount()) {
+            loading.postValue("切换中")
+            kotlin.runCatching {
+                repo.checkoutTo(user)
                 toast("成功切换到${user.account}")
-                isShowSwitchAccountDialog.postValue(false)
-                //重新初始化Activity
-                initActivityData()
-                event.hideDialog()
+            }.onFailure {
+                if (it is LoginException) {
+                    startLoginActivity.call()
+                } else {
+                    toast(it.errorMessage())
+                }
+            }
+            showMultiUserDialog.postValue(false)
+            //重新初始化Activity
+            initActivityData()
+            loading.postValue(null)
+        } else {
+            toast("正在使用:${user.account}，无需切换")
+            showMultiUserDialog.postValue(false)
+        }
+    }
+
+    fun upgradeApp() = GlobalScope.launch {
+        repo.getNewVersion().getOrFailure {
+            toast(it.message ?: "Unknown Error")
+        }?.let {
+            Timber.d("Version: ${it}")
+            if (it.versionCode <= GlobalLib.getLocalVersionCode(getApplication())) {
+                toast("当前为最新版本")
+            } else {
+                toast("有更新！最新版本为:${it.versionName}\n若未自动更新，请前往ifafu官网手动更新")
             }
         }
     }

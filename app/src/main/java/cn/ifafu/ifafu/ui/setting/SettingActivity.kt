@@ -2,21 +2,20 @@ package cn.ifafu.ifafu.ui.setting
 
 import android.app.Activity
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.VMProvider
+import cn.ifafu.ifafu.app.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.databinding.SettingActivityBinding
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.*
-import com.gyf.immersionbar.ImmersionBar
-import kotlinx.android.synthetic.main.setting_activity.*
 import me.drakeet.multitype.MultiTypeAdapter
 
-class SettingActivity : BaseActivity<SettingActivityBinding, SettingViewModel>() {
+class SettingActivity : BaseActivity() {
 
-    private val adapter by lazy {
+    private val mAdapter by lazy {
         MultiTypeAdapter().apply {
             register(SeekBarItem::class, SeekBarBinder())
             register(CheckBoxItem::class, CheckBoxBinder())
@@ -25,26 +24,21 @@ class SettingActivity : BaseActivity<SettingActivityBinding, SettingViewModel>()
         }
     }
 
-    override fun getViewModel(): SettingViewModel {
-        return VMProvider(this).get(SettingViewModel::class.java)
-    }
+    private val mViewModel: SettingViewModel by viewModels { getViewModelFactory() }
 
-    override fun getLayoutId(): Int = R.layout.setting_activity
-
-    override fun initActivity(savedInstanceState: Bundle?) {
-        ImmersionBar.with(this)
-                .titleBarMarginTop(tb_setting)
-                .statusBarDarkFont(true)
-                .statusBarColor("#FFFFFF")
-                .init()
-        val dividerItemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        dividerItemDecoration.setDrawable(getDrawable(R.drawable.shape_divider)!!)
-        mBinding.rvSetting.addItemDecoration(dividerItemDecoration)
-        mBinding.layoutManager = LinearLayoutManager(this)
-        mBinding.adapter = adapter
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setLightUiBar()
+        with(bind<SettingActivityBinding>(R.layout.setting_activity)) {
+            val dividerItemDecoration = DividerItemDecoration(this@SettingActivity, DividerItemDecoration.VERTICAL)
+            dividerItemDecoration.setDrawable(getDrawable(R.drawable.shape_divider)!!)
+            rvSetting.addItemDecoration(dividerItemDecoration)
+            layoutManager = LinearLayoutManager(this@SettingActivity)
+            adapter = mAdapter
+        }
         mViewModel.settings.observe(this, Observer {
-            adapter.items = it
-            adapter.notifyDataSetChanged()
+            mAdapter.items = it
+            mAdapter.notifyDataSetChanged()
         })
         mViewModel.needCheckTheme.observe(this, Observer {
             if (it) {

@@ -110,9 +110,6 @@ class ElectiveView : LinearLayout {
         })
         return animation
     }
+
 }
 
-@BindingAdapter("elective")
-fun setElective(view: ElectiveView, elective: Elective?) {
-    view.setElective(elective)
-}
