@@ -4,31 +4,31 @@ import android.app.Application
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import androidx.lifecycle.MutableLiveData
+import android.net.Uri
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.liveData
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.base.BaseViewModel
-import cn.ifafu.ifafu.data.repository.RepositoryImpl
+import cn.ifafu.ifafu.data.bean.ZFApiList
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
 import cn.ifafu.ifafu.data.entity.User
-import cn.ifafu.ifafu.data.bean.ZFApiList
+import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.data.retrofit.APIManager
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import retrofit2.awaitResponse
 
 class SyllabusSettingViewModel(application: Application) : BaseViewModel(application) {
 
-    val setting = MutableLiveData<SyllabusSetting>()
+    private val repo = RepositoryImpl
 
-    fun init() {
-        safeLaunchWithMessage {
-            setting.postValue(RepositoryImpl.syllabus.getSetting())
-        }
+    val setting: LiveData<SyllabusSetting> = liveData {
+        emit(RepositoryImpl.syllabus.getSetting())
     }
 
-    fun save() {
-        safeLaunchWithMessage {
-            setting.value?.run {
-                RepositoryImpl.syllabus.saveSetting(this)
-            }
+    fun save() = GlobalScope.launch {
+        setting.value?.run {
+            RepositoryImpl.syllabus.saveSetting(this)
         }
     }
 

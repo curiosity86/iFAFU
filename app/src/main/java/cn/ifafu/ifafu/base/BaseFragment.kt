@@ -24,10 +24,4 @@ abstract class BaseFragment : BaseFragment(), UIEvent {
             activity?.finish()
         }
     }
-
-    override suspend fun finishIt() {
-        withContext(Dispatchers.IO) {
-            activity?.finish()
-        }
-    }
 }

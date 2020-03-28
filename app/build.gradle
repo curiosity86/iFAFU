@@ -11,8 +11,8 @@ android {
         applicationId "cn.ifafu.ifafu"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 78
-        versionName "1.2.4"
+        versionCode 81
+        versionName "1.2.5"
         resConfigs "zh"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -111,10 +111,10 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
     //选择器
     implementation 'com.contrarywind:Android-PickerView:4.1.7'
-    implementation 'com.zhihu.android:matisse:0.5.3-beta3'
+//    implementation 'com.zhihu.android:matisse:0.5.3-beta3'
     //刷新库
     implementation 'com.github.ybq:Android-SpinKit:1.2.0'
-    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0'
+//    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0'
     //Bugly
     implementation 'com.tencent.bugly:crashreport_upgrade:1.4.2'
     //沉浸状态栏
@@ -125,19 +125,19 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'com.alibaba:fastjson:1.2.66'
     //Glide
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+//    implementation 'com.github.bumptech.glide:glide:4.11.0'
+//    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     //动画低版本支持
     implementation 'com.nineoldandroids:library:2.4.0'
     //ViewAdapter
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50'
     implementation 'me.drakeet.multitype:multitype:4.0.0-alpha3'
     //Material Dialogs: https://github.com/afollestad/material-dialogs
-    implementation 'com.orhanobut:dialogplus:1.11@aar'
+//    implementation 'com.orhanobut:dialogplus:1.11@aar'
     implementation "com.afollestad.material-dialogs:core:$material_dialogs_verison"
     implementation "com.afollestad.material-dialogs:color:$material_dialogs_verison"
     implementation "com.afollestad.material-dialogs:datetime:$material_dialogs_verison"
-    implementation "com.afollestad.material-dialogs:bottomsheets:$material_dialogs_verison"
+//    implementation "com.afollestad.material-dialogs:bottomsheets:$material_dialogs_verison"
     //本地异常捕捉框架: https://github.com/Ereza/CustomActivityOnCrash
     implementation 'cat.ereza:customactivityoncrash:2.3.0'
     //U-App移动统计: https://developer.umeng.com/docs/119267/detail/118584

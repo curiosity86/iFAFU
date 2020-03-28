@@ -7,13 +7,6 @@ import org.junit.Test
 class Test {
     data class User(val name: String)
 
-    @Test
-    fun test() = runBlocking {
-        JWServiceImpl().getOpeningDay().run {
-            println(this.getOrNull())
-        }
-    }
-
     private fun testCo() = runBlocking {
         GlobalScope.launch(Dispatchers.Main) {
             println("Main:        " + Thread.currentThread().name)

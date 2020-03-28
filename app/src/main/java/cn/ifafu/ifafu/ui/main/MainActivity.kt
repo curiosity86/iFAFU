@@ -27,6 +27,7 @@ import com.afollestad.materialdialogs.customview.getCustomView
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.fragment_main_new.*
 import kotlinx.android.synthetic.main.fragment_main_old.*
+import timber.log.Timber
 
 class MainActivity : BaseActivity() {
 

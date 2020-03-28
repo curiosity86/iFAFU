@@ -6,7 +6,7 @@
 
         <variable
             name="weather"
-            type="cn.ifafu.ifafu.data.bean.Weather" />
+            type="cn.ifafu.ifafu.ui.main.bean.Weather" />
     </data>
 
     <LinearLayout

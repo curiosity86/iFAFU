@@ -1,26 +1,30 @@
 package cn.ifafu.ifafu.ui.main.old_theme
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.data.bean.Weather
+import androidx.lifecycle.liveData
+import cn.ifafu.ifafu.ui.main.bean.Weather
 import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.ui.main.bean.ClassPreview
 import cn.ifafu.ifafu.ui.main.bean.ExamPreview
 import cn.ifafu.ifafu.ui.main.bean.ScorePreview
-import cn.ifafu.ifafu.util.GlobalLib
-import com.tencent.bugly.beta.Beta
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class MainOldViewModel(val repo: RepositoryImpl) : ViewModel() {
 
-    val user = MutableLiveData<User>()
+    val user: LiveData<User> = liveData {
+        RepositoryImpl.user.getInUse()?.let { emit(it) }
+    }
+    val semester:LiveData<String> = liveData {
+        val semester = RepositoryImpl.getNowSemester().toString()
+        emit(semester)
+    }
     val online = MutableLiveData<Boolean>()
     val weather = MutableLiveData<Weather>()
-    val semester = MutableLiveData<String>()
     val classPreview = MutableLiveData<ClassPreview>()
     val examsPreview = MutableLiveData<ExamPreview>()
     val scorePreview = MutableLiveData<ScorePreview>()
@@ -28,10 +32,7 @@ class MainOldViewModel(val repo: RepositoryImpl) : ViewModel() {
     init {
         GlobalScope.launch(Dispatchers.IO) {
             online.postValue(true)
-            val semester = RepositoryImpl.getNowSemester().toString()
-            this@MainOldViewModel.semester.postValue(semester)
             updateScorePreviewFromDb()
-            user.postValue(RepositoryImpl.user.getInUse())
         }
     }
 

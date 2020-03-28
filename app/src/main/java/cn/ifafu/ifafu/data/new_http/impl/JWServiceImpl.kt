@@ -27,6 +27,14 @@ import kotlin.collections.HashMap
 class JWServiceImpl : JWService {
 
     private var user: User? = null
+        set(value) {
+            if (field != value) {
+                value?.school?.let {
+                    urls = Constant.getURL(it)
+                }
+                field = value
+            }
+        }
 
     companion object {
         private const val VERIFY_REPEAT_COUNT = 6 //验证码识别错误重复登录次数
@@ -34,12 +42,6 @@ class JWServiceImpl : JWService {
 
     private val http = IFHttpClient()
     private lateinit var urls: URL
-
-    init {
-        user?.run {
-            urls = Constant.getURL(school)
-        }
-    }
 
     override suspend fun checkoutTo(user: User) {
         this.user = user

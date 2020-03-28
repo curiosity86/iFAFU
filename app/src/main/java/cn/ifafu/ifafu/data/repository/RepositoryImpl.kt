@@ -21,6 +21,7 @@ import cn.ifafu.ifafu.data.new_http.impl.JWServiceImpl
 import cn.ifafu.ifafu.data.new_http.impl.WoServiceImpl
 import cn.ifafu.ifafu.data.retrofit.APIManager
 import cn.ifafu.ifafu.data.retrofit.parser.*
+import cn.ifafu.ifafu.ui.main.bean.Weather
 import cn.ifafu.ifafu.ui.syllabus.view.CourseItem
 import cn.ifafu.ifafu.util.DateUtils
 import cn.ifafu.ifafu.util.HttpClient

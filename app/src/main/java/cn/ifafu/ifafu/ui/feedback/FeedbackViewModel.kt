@@ -12,7 +12,6 @@ class FeedbackViewModel(application: Application) : BaseViewModel(application) {
 
     val contact = LiveDataString()
     val message = LiveDataString()
-    val toastMessage = LiveDataString()
     val submitCommand = View.OnClickListener { submit() }
 
     private val repo = RepositoryImpl

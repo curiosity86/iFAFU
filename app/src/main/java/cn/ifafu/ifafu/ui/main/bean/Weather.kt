@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.data.bean
+package cn.ifafu.ifafu.ui.main.bean
 
 class Weather {
     var cityName: String = ""

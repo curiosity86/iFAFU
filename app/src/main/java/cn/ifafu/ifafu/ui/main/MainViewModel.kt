@@ -2,7 +2,9 @@ package cn.ifafu.ifafu.ui.main
 
 import android.app.Application
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.liveData
 import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.data.repository.RepositoryImpl
@@ -16,7 +18,9 @@ import javax.security.auth.login.LoginException
 
 class MainViewModel(application: Application) : BaseViewModel(application) {
 
-    val users = MutableLiveData<List<User>>()
+    val users: LiveData<List<User>> = liveData {
+        emit(RepositoryImpl.user.getAll())
+    }
     val showMultiUserDialog = MutableLiveData<Boolean>()
 
     val theme = MutableLiveData<Int>()
@@ -34,7 +38,6 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
 
     fun switchAccount() {
         safeLaunchWithMessage {
-            users.postValue(RepositoryImpl.user.getAll())
             showMultiUserDialog.postValue(true)
         }
     }

@@ -14,6 +14,8 @@ import android.view.View
 import androidx.annotation.ColorInt
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.util.DensityUtils
+import java.text.SimpleDateFormat
+import java.util.*
 
 class Timeline @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -23,6 +25,7 @@ class Timeline @JvmOverloads constructor(
     private var color: Int = Color.BLACK
     private var count: Int = 4
     private var textSize: Float = 12F
+    private var format = "yyyy-MM-dd"
 
     private val linePaint = Paint().apply {
         flags = Paint.ANTI_ALIAS_FLAG
@@ -77,6 +80,7 @@ class Timeline @JvmOverloads constructor(
         //绘制点
         canvas.translate(intervalOfPoint / 2, 0F)
         //计算偏移量，以保证文本上下间距相同
+        val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val centerOffsetY = textSize / 4
         for (i in 0 until timeEvents.size.coerceAtMost(count)) {
             val event = timeEvents[i]
@@ -84,7 +88,7 @@ class Timeline @JvmOverloads constructor(
             canvas.drawCircle(0F, 0F, 10F, pointPaint)
             //通过StaticLayout实现自动换行
             val topTextLayout = StaticLayout(
-                event.top,
+                    format.format(event.timeStamp),
                 textPaint,
                 intervalOfPoint.toInt(),
                 Layout.Alignment.ALIGN_NORMAL,
@@ -99,7 +103,7 @@ class Timeline @JvmOverloads constructor(
             topTextLayout.draw(canvas)
             canvas.restore()
             val bottomTextLayout = StaticLayout(
-                event.bottom,
+                event.text,
                 textPaint,
                 intervalOfPoint.toInt(),
                 Layout.Alignment.ALIGN_NORMAL,
@@ -117,8 +121,12 @@ class Timeline @JvmOverloads constructor(
 
     }
 
+    fun setFormat(format: String) {
+        this.format = format
+    }
+
     fun setTimeEvents(events: List<TimeEvent>) {
-        timeEvents = events
+        timeEvents = events.sortedBy { it.timeStamp }
         invalidate()
     }
 

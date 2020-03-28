@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.data.new_http.impl
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.data.IFResult
 import cn.ifafu.ifafu.data.bean.Version
-import cn.ifafu.ifafu.data.bean.Weather
+import cn.ifafu.ifafu.ui.main.bean.Weather
 import cn.ifafu.ifafu.data.new_http.bean.WoResponse
 import cn.ifafu.ifafu.data.new_http.WoService
 import cn.ifafu.ifafu.util.HttpClient

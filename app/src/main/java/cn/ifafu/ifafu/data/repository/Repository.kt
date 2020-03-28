@@ -2,7 +2,7 @@ package cn.ifafu.ifafu.data.repository
 
 import cn.ifafu.ifafu.data.IFResult
 import cn.ifafu.ifafu.data.bean.Version
-import cn.ifafu.ifafu.data.bean.Weather
+import cn.ifafu.ifafu.ui.main.bean.Weather
 import cn.ifafu.ifafu.data.entity.Exam
 import cn.ifafu.ifafu.data.entity.User
 import javax.security.auth.login.LoginException

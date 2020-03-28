@@ -1,17 +1,15 @@
 package cn.ifafu.ifafu.ui.syllabus_setting
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.ActivityInfo
-import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.ImageView
 import androidx.activity.viewModels
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,33 +18,24 @@ import cn.ifafu.ifafu.app.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
 import cn.ifafu.ifafu.databinding.SyllabusSettingActivityBinding
-import cn.ifafu.ifafu.util.DensityUtils
-import cn.ifafu.ifafu.util.Glide4Engine
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.*
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.color.colorChooser
-import com.zhihu.matisse.Matisse
-import com.zhihu.matisse.MimeType
 import kotlinx.android.synthetic.main.syllabus_setting_activity.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import me.drakeet.multitype.MultiTypeAdapter
+import timber.log.Timber
+import java.io.File
 
 class SyllabusSettingActivity : BaseActivity() {
 
-    private val REQUEST_CODE_CHOOSE_ACTIVITY = 23
-    private val REQUEST_CODE_PERMISSION = 24
-    private val mPicturePicker by lazy {
-        Matisse.from(this)
-                .choose(MimeType.ofImage())
-                .countable(true)
-                .maxSelectable(1)
-                .gridExpectedSize(DensityUtils.dp2px(this, 120F))
-                .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
-                .thumbnailScale(0.85f)
-                .imageEngine(Glide4Engine())
-    }
+    private val PICK = 1001
+    private val CROP = 1002
+
+    private lateinit var account: String
+
     private val mAdapter by lazy {
         MultiTypeAdapter().apply {
             register(SeekBarItem::class, SeekBarBinder())
@@ -71,6 +60,7 @@ class SyllabusSettingActivity : BaseActivity() {
         rv_syllabus_setting.layoutManager = LinearLayoutManager(this)
         rv_syllabus_setting.adapter = mAdapter
         mViewModel.setting.observe(this, Observer { setting ->
+            account = setting.account
             mAdapter.items = listOf(
                     SeekBarItem("一天课程的节数", setting.totalNode, "节", 8, 12) {
                         setting.totalNode = it
@@ -103,8 +93,11 @@ class SyllabusSettingActivity : BaseActivity() {
                         setResult(Activity.RESULT_OK)
                     },
                     TextViewItem("课表背景", "长按重置为默认背景", {
-                        showPicturePicker()
-                        setResult(Activity.RESULT_OK)
+                        val intent = Intent(Intent.ACTION_PICK).apply {
+                            type = "image/*"
+                        }
+                        Timber.d("height: ${window.decorView.height}, width: ${window.decorView.width}")
+                        startActivityForResult(intent, PICK)
                     }, {
                         setting.background = ""
                         mViewModel.save()
@@ -124,15 +117,23 @@ class SyllabusSettingActivity : BaseActivity() {
             )
             mAdapter.notifyDataSetChanged()
         })
-        mViewModel.init()
     }
 
-    private fun showPicturePicker() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_CODE_PERMISSION)
-        } else {
-            mPicturePicker.forResult(REQUEST_CODE_CHOOSE_ACTIVITY)
+    private fun crop(uri: Uri) {
+        val intent = Intent("com.android.camera.action.CROP").apply {
+            setDataAndType(uri, "image/*")
+            putExtra("crop", "true")
+            putExtra("aspectX", window.decorView.width);
+            putExtra("aspectY", window.decorView.height);
+            intent.putExtra("outputX", window.decorView.width); // 宽尺寸
+            intent.putExtra("outputY", window.decorView.height); // 高尺寸
+            intent.putExtra("scale", true); // 保持比例
+            //临时方案，没想好别乱改，注意和课表背景加载的关系！！！
+            val file = File(getExternalFilesDir(account), "syllabus_bg.jpg")
+            putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file))
+            putExtra("outputFormat", Bitmap.CompressFormat.JPEG)
         }
+        startActivityForResult(intent, CROP)
     }
 
     private fun showColorPicker(setting: SyllabusSetting, ivColor: ImageView) {
@@ -157,19 +158,13 @@ class SyllabusSettingActivity : BaseActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_CODE_CHOOSE_ACTIVITY && resultCode == Activity.RESULT_OK) {
-            mViewModel.setting.value?.background = Matisse.obtainResult(data)[0].toString()
-            mViewModel.save()
-            return
+        if (requestCode == PICK && resultCode == Activity.RESULT_OK) {
+            data?.data?.let { crop(it) }
+        } else if (requestCode == CROP && resultCode == Activity.RESULT_OK) {
+            setResult(Activity.RESULT_OK)
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
         }
-        super.onActivityResult(requestCode, resultCode, data)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (requestCode == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            mPicturePicker.forResult(REQUEST_CODE_CHOOSE_ACTIVITY)
-            return
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
 }

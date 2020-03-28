@@ -1,12 +1,14 @@
 package cn.ifafu.ifafu.ui.main.new_theme
 
 import android.app.Application
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.liveData
 import cn.ifafu.ifafu.base.BaseViewModel
-import cn.ifafu.ifafu.data.bean.Weather
 import cn.ifafu.ifafu.data.entity.Exam
 import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.ui.main.bean.ClassPreview
+import cn.ifafu.ifafu.ui.main.bean.Weather
 import cn.ifafu.ifafu.ui.main.new_theme.view.TimeEvent
 import cn.ifafu.ifafu.util.DateUtils
 import cn.woolsen.easymvvm.livedata.LiveDataField
@@ -19,18 +21,14 @@ import kotlin.collections.ArrayList
 
 class MainNewViewModel(application: Application) : BaseViewModel(application) {
 
-    val weather = LiveDataField<Weather>()
-    val user = LiveDataField<User>()
-    val timeEvents = LiveDataField<List<TimeEvent>>()
-    val nextCourse = LiveDataField<ClassPreview>()
-
     private val repo = RepositoryImpl
 
-    init {
-        GlobalScope.launch {
-            user.postValue(repo.user.getInUse())
-        }
+    val weather = LiveDataField<Weather>()
+    val user: LiveData<User> = liveData {
+        repo.user.getInUse()?.let { emit(it) }
     }
+    val timeEvents = LiveDataField<List<TimeEvent>>()
+    val nextCourse = LiveDataField<ClassPreview>()
 
     fun updateWeather() = GlobalScope.launch {
         repo.getWeather("101230101").getOrNull()?.let {
@@ -52,18 +50,19 @@ class MainNewViewModel(application: Application) : BaseViewModel(application) {
                 } else {
                     "${holiday.name} ${day}天"
                 }
-                val event = TimeEvent(holiday.date, top)
+                val event = TimeEvent(date?.time ?: 0L, top)
                 list.add(event)
             }
         }
         val exams = repo.exam.getNow()
         list.addAll(exams.toTimeEvents())
-        list.sortWith(Comparator { o1, o2 -> o1.bottom.compareTo(o2.bottom) })
+        list.sortWith(Comparator { o1, o2 -> o1.text.compareTo(o2.text) })
         timeEvents.postValue(list)
         repo.getNotExamsFromDbOrNet().getOrFailure {
             toast(it.errorMessage())
         }?.let {
             list.addAll(it.toTimeEvents())
+            list.sortWith(Comparator { o1, o2 -> o1.text.compareTo(o2.text) })
             timeEvents.postValue(list)
         }
     }
@@ -77,14 +76,12 @@ class MainNewViewModel(application: Application) : BaseViewModel(application) {
     private suspend fun getNextCourse(): ClassPreview {
         val courses = this.repo.syllabus.getAll()
         val setting = this.repo.syllabus.getSetting()
-        //调课信息
         val holidayFromToMap = this.repo.syllabus.getAdjustmentInfo()
         return ClassPreview.convert(courses, holidayFromToMap, setting)
     }
 
     private fun List<Exam>.toTimeEvents(): List<TimeEvent> {
         val events = ArrayList<TimeEvent>()
-        val format = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
         val now = Date()
         forEach { exam ->
             if (exam.startTime != 0L) { //暂无时间信息
@@ -96,7 +93,7 @@ class MainNewViewModel(application: Application) : BaseViewModel(application) {
                     } else {
                         "${exam.name} ${day}天"
                     }
-                    val axis = TimeEvent(format.format(Date(exam.startTime)), bottom)
+                    val axis = TimeEvent(exam.startTime, bottom)
                     events.add(axis)
                 }
             }

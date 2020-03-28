@@ -6,35 +6,40 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.view.View
 import android.widget.RemoteViews
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.data.repository.RepositoryImpl
-import cn.ifafu.ifafu.ui.activity.SplashActivity
 import cn.ifafu.ifafu.ui.main.bean.ClassPreview
-import kotlinx.coroutines.*
+import cn.ifafu.ifafu.ui.syllabus.SyllabusActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
 class SyllabusWidget : AppWidgetProvider() {
 
-    companion object {
-        private const val ACTION_WIDGET_SYLLABUS_CLICK = "ifafu.widget.syllabus.REFRESH"
-    }
-
-    private fun getPendingIntent(context: Context, resId: Int): PendingIntent {
-        val intent = Intent()
-        intent.setClass(context, SyllabusWidget::class.java)
-        intent.data = Uri.parse("Id:$resId")
-        intent.action = ACTION_WIDGET_SYLLABUS_CLICK
-        return PendingIntent.getBroadcast(context, 0, intent, 0)
-    }
+    companion object;
 
     private suspend fun updateSyllabusWidget(context: Context, remoteViews: RemoteViews) = withContext(Dispatchers.IO) {
-        remoteViews.setOnClickPendingIntent(R.id.btn_refresh,
-                getPendingIntent(context, R.id.btn_refresh))//更新刷新时间
+        //设置跳转课表按钮监听
+        val syllabusIntent: PendingIntent = Intent(context, SyllabusActivity::class.java)
+                .let { intent ->
+                    intent.putExtra("from", Constant.SYLLABUS_WIDGET)
+                    PendingIntent.getActivity(context, 0, intent, 0)
+                }
+        remoteViews.setOnClickPendingIntent(R.id.btn_go, syllabusIntent)
+        //设置刷新Widget按钮监听
+        val refreshIntent: PendingIntent = Intent()
+                .let { intent ->
+                    intent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+                    PendingIntent.getBroadcast(context, 0, intent, 0)
+                }
+        remoteViews.setOnClickPendingIntent(R.id.btn_refresh, refreshIntent)
+        //更新刷新时间
         val format = SimpleDateFormat("HH:mm:ss", Locale.CHINA)
         val now = context.getString(R.string.refresh_time_format, format.format(Date()))
         remoteViews.setTextViewText(R.id.tv_refresh_time, now)
@@ -45,8 +50,6 @@ class SyllabusWidget : AppWidgetProvider() {
             val holidayFromToMap = repo.syllabus.getAdjustmentInfo()
             val preview = ClassPreview.convert(courses, holidayFromToMap, setting)
             setPreviewViewInfo(context, remoteViews, preview)
-            remoteViews.setOnClickPendingIntent(R.id.btn_go,
-                    getPendingIntent(context, R.id.btn_go))
         } catch (e: Exception) {
             remoteViews.setViewVisibility(R.id.message, View.VISIBLE)
             remoteViews.setViewVisibility(R.id.layout_info, View.GONE)
@@ -54,36 +57,21 @@ class SyllabusWidget : AppWidgetProvider() {
         }
     }
 
-
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
-        GlobalScope.launch(Dispatchers.Main) {
-            appWidgetIds.forEach { appWidgetId ->
-                val views = RemoteViews(context.packageName, R.layout.widget_syllabus)
+        appWidgetIds.forEach { appWidgetId ->
+            val views = RemoteViews(context.packageName, R.layout.widget_syllabus)
+            runBlocking {
                 updateSyllabusWidget(context, views)
-                //更新Widget
-                appWidgetManager.updateAppWidget(appWidgetId, views)
             }
+            appWidgetManager.updateAppWidget(appWidgetId, views)
         }
     }
 
     override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action == ACTION_WIDGET_SYLLABUS_CLICK) {
+        if (intent.action == AppWidgetManager.ACTION_APPWIDGET_UPDATE) {
             val remoteViews = RemoteViews(context.packageName, R.layout.widget_syllabus)
-            val data = intent.data
-            var resId = -1
-            if (data != null) {
-                resId = Integer.parseInt(data.schemeSpecificPart)
-            }
-            when (resId) {
-                R.id.btn_refresh -> runBlocking {
-                    updateSyllabusWidget(context, remoteViews)
-                }
-                R.id.btn_go -> {
-                    val jumpIntent = Intent(context, SplashActivity::class.java)
-                    jumpIntent.putExtra("from", Constant.SYLLABUS_WIDGET)
-                    jumpIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    context.startActivity(jumpIntent)
-                }
+            runBlocking {
+                updateSyllabusWidget(context, remoteViews)
             }
             val manger = AppWidgetManager.getInstance(context)
             val provider = ComponentName(context, SyllabusWidget::class.java)

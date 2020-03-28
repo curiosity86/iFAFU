@@ -36,7 +36,8 @@
         <activity
             android:name=".ui.login.LoginActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".ui.syllabus.SyllabusActivity" />
+        <activity android:name=".ui.syllabus.SyllabusActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".ui.syllabus_item.CourseItemActivity" />
         <activity android:name=".ui.syllabus_setting.SyllabusSettingActivity" />
         <activity android:name=".ui.score_list.ScoreListActivity" />
@@ -70,7 +71,6 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="ifafu.widget.syllabus.REFRESH" />
             </intent-filter>
 
             <meta-data

@@ -1,38 +1,54 @@
 package cn.ifafu.ifafu.ui.syllabus
 
 import android.app.Application
+import android.net.Uri
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.liveData
+import androidx.lifecycle.switchMap
 import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
-import cn.ifafu.ifafu.data.new_http.impl.JWServiceImpl
 import cn.ifafu.ifafu.data.repository.RepositoryImpl
 import cn.ifafu.ifafu.ui.syllabus.view.CourseItem
 import cn.woolsen.easymvvm.livedata.LiveDataString
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import timber.log.Timber
+import java.io.File
 
 class SyllabusViewModel(application: Application) : BaseViewModel(application) {
 
     private val repo = RepositoryImpl
 
-    val setting by lazy { MutableLiveData<SyllabusSetting>() }
-    val courses by lazy { MutableLiveData<List<List<CourseItem>?>>() }
+    val setting = MutableLiveData<SyllabusSetting>()
+    val courses = MutableLiveData<List<List<CourseItem>?>>()
+
     val loading = LiveDataString()
+    val backgroundUri: LiveData<Uri?> = setting.switchMap { setting ->
+        liveData {
+            val img = File(application.getExternalFilesDir(setting.account), "syllabus_bg.jpg")
+            if (img.exists()) {
+                /*
+                emit null, 避免因为两次uri相同而背景不改变
+                不信你看[ImageView.setImageUri]
+                */
+                emit(null)
+                emit(Uri.fromFile(img))
+            }
+        }
+    }
+
 
     fun initData() {
         GlobalScope.launch {
-            updateSyllabusSetting().join()
+            updateSyllabusSetting()
             updateSyllabusLocal()
             val openingDay = repo.getOpeningDay().getOrNull() ?: return@launch
             val setting = repo.syllabus.getSetting()
             if (setting.openingDay != openingDay) {
-                Timber.d("update opening day: ${openingDay}, before: ${setting.openingDay}")
                 setting.openingDay = openingDay
-                this@SyllabusViewModel.setting.postValue(setting)
                 repo.syllabus.saveSetting(setting)
-                updateSyllabusLocal()
+                this@SyllabusViewModel.setting.postValue(setting)
             }
         }
     }
@@ -88,8 +104,7 @@ class SyllabusViewModel(application: Application) : BaseViewModel(application) {
     })
 
     fun updateSyllabusSetting() = safeLaunchWithMessage {
-        val setting = RepositoryImpl.syllabus.getSetting()
-        Timber.d("Update Syllabus Setting")
+        val setting = repo.syllabus.getSetting()
         this@SyllabusViewModel.setting.postValue(setting)
         repo.syllabus.saveSetting(setting)
     }

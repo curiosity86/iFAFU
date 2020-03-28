@@ -7,17 +7,19 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
+import android.widget.FrameLayout
 import android.widget.ImageButton
-import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.util.ColorUtils
+import com.nineoldandroids.animation.ValueAnimator
 
 
-class ElectiveView : LinearLayout {
+class ElectiveView @JvmOverloads constructor(
+        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+) : FrameLayout(context, attrs, defStyleAttr) {
 
     private var view: View
 
@@ -34,10 +36,7 @@ class ElectiveView : LinearLayout {
     private val expandAnimation by lazy { getRotateAnimation(0F, -180F) }
     private val collapseAnimation by lazy { getRotateAnimation(-180F, 0F) }
 
-    constructor(context: Context?) : this(context, null)
-    constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0)
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
+    init {
         val inflater = LayoutInflater.from(getContext())
         view = inflater.inflate(R.layout.view_elective_item, this)
         btnSign = view.findViewById(R.id.btn_sign)
@@ -110,6 +109,19 @@ class ElectiveView : LinearLayout {
         })
         return animation
     }
-
+    private fun showHideTitle(view: View, maxHeight: Int, duration: Long, isShow: Boolean) {
+        val animator = if (isShow) {
+            ValueAnimator.ofFloat(0f, 1f)
+        } else {
+            ValueAnimator.ofFloat(1f, 0f)
+        }
+        animator.addUpdateListener { animation ->
+            val currentValue = animation.animatedValue as Float
+            val params = view.layoutParams
+            params.height = (currentValue * maxHeight).toInt()
+            view.layoutParams = params
+        }
+        animator.setDuration(duration).start()
+    }
 }
 

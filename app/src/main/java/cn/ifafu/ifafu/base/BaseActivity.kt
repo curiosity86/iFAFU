@@ -3,7 +3,10 @@ package cn.ifafu.ifafu.base
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.lifecycle.ViewModelLazy
 import cn.ifafu.ifafu.app.Constant
+import cn.ifafu.ifafu.app.ViewModelFactory
+import cn.ifafu.ifafu.app.getViewModelFactory
 import cn.ifafu.ifafu.ui.login.LoginActivity
 import cn.woolsen.easymvvm.base.BaseActivity
 import kotlinx.coroutines.Dispatchers
@@ -16,11 +19,8 @@ abstract class BaseActivity : BaseActivity(), UIEvent {
         finish()
     }
 
-    override suspend fun finishIt() = withContext(Dispatchers.Main) {
-        finish()
-    }
-
     protected fun toast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
+
 }

@@ -25,6 +25,7 @@ import cn.ifafu.ifafu.ui.view.LoadingDialog
 import cn.ifafu.ifafu.util.ChineseNumbers
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.syllabus_activity.*
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -50,7 +51,9 @@ class SyllabusActivity : BaseActivity(), View.OnClickListener, View.OnLongClickL
                 .titleBarMarginTop(tb_syllabus)
                 .statusBarDarkFont(true)
                 .init()
-        bind<SyllabusActivityBinding>(R.layout.syllabus_activity)
+        with(bind<SyllabusActivityBinding>(R.layout.syllabus_activity)) {
+            vm = mViewModel
+        }
         btn_back.setOnClickListener(this)
         btn_add.setOnClickListener(this)
         btn_refresh.setOnClickListener(this)
@@ -65,6 +68,7 @@ class SyllabusActivity : BaseActivity(), View.OnClickListener, View.OnLongClickL
             mPageAdapter.courses = it
             mPageAdapter.notifyDataSetChanged()
         })
+
         loadingDialog.observe(this, mViewModel.loading)
         mViewModel.initData()
     }
@@ -85,12 +89,17 @@ class SyllabusActivity : BaseActivity(), View.OnClickListener, View.OnLongClickL
         mPageAdapter.setting = setting
         mPageAdapter.notifyDataSetChanged()
         setCurrentWeek(setting.getCurrentWeek())
-        if (setting.background.isNotEmpty()) {
-            iv_background.setImageDrawable(null)
-            iv_background.setImageURI(Uri.parse(setting.background))
-        } else {
-            iv_background.setImageDrawable(null)
-        }
+        //临时方案，没想好别乱改，注意和课表背景图片设置的关系！！！
+//        val file = File(getExternalFilesDir(setting.account), "syllabus_bg.jpg")
+//        if (file.exists()) {
+//            kotlin.runCatching {
+//                val background = Uri.fromFile(file)
+//                iv_background.setImageDrawable(null)
+//                iv_background.setImageURI(background)
+//            }
+//        } else {
+//            iv_background.setImageDrawable(null)
+//        }
     }
 
     private fun setCurrentWeek(currentWeek: Int) {
@@ -135,11 +144,15 @@ class SyllabusActivity : BaseActivity(), View.OnClickListener, View.OnLongClickL
     override fun onLongClick(v: View?): Boolean {
         return when (v?.id) {
             R.id.tv_subtitle -> {
-                view_pager.setCurrentItem(mCurrentWeek - 1, true)
+                rollbackToCurrent()
                 true
             }
             else -> false
         }
+    }
+
+    private fun rollbackToCurrent() {
+        view_pager.setCurrentItem(mCurrentWeek - 1, true)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {

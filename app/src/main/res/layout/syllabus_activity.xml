@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="vm"
+            type="cn.ifafu.ifafu.ui.syllabus.SyllabusViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -15,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
-            android:scaleType="fitXY" />
+            android:scaleType="fitXY"
+            srcUri="@{vm.backgroundUri}"/>
 
         <RelativeLayout
             android:id="@+id/tb_syllabus"
