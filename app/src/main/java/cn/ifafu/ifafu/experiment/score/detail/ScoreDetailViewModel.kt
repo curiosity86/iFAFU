@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.ui.score_item
+package cn.ifafu.ifafu.experiment.score.detail
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
@@ -9,7 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class ScoreItemViewModel(application: Application) : BaseViewModel(application) {
+class ScoreDetailViewModel(application: Application) : BaseViewModel(application) {
 
     val score by lazy { MutableLiveData<List<Pair<String, String>>>() }
 
@@ -35,7 +35,7 @@ class ScoreItemViewModel(application: Application) : BaseViewModel(application) 
                 map["学年"] = score.year
                 map["学期"] = score.term
                 map["备注"] = score.remarks
-                this@ScoreItemViewModel.score.postValue(map.toList())
+                this@ScoreDetailViewModel.score.postValue(map.toList())
             }
         }
     }

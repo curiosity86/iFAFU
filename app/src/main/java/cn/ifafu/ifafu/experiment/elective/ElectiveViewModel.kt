@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.ui.elective
+package cn.ifafu.ifafu.experiment.elective
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
@@ -19,7 +19,7 @@ class ElectiveViewModel(application: Application) : BaseViewModel(application) {
 
     init {
         safeLaunch(block = {
-            loading.postValue("登录中")
+            loading.postValue("加载中")
             val allScores = ensureLoginStatus {
                 RepositoryImpl.ScoreRt.fetchAll()
             }.run {

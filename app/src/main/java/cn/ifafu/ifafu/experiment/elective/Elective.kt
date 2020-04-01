@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.ui.elective
+package cn.ifafu.ifafu.experiment.elective
 
 import cn.ifafu.ifafu.data.entity.Score
 

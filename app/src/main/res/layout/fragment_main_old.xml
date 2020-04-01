@@ -7,7 +7,7 @@
     <data>
         <variable
             name="viewModel"
-            type="cn.ifafu.ifafu.ui.main.old_theme.MainOldViewModel" />
+            type="cn.ifafu.ifafu.ui.main1.old_theme.MainOldViewModel" />
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout

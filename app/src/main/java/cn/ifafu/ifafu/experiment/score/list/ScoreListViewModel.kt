@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.ui.score_list
+package cn.ifafu.ifafu.experiment.score.list
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
@@ -11,6 +11,7 @@ import cn.ifafu.ifafu.util.trimEnd
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class ScoreListViewModel(application: Application) : BaseViewModel(application) {
 
@@ -24,7 +25,8 @@ class ScoreListViewModel(application: Application) : BaseViewModel(application) 
 
     private lateinit var scoreFilter: ScoreFilter
 
-    fun initData() {
+    init {
+        Timber.d("init viewmodel")
         safeLaunchWithMessage {
             loading.postValue("加载中")
             val semester = RepositoryImpl.getNowSemester()

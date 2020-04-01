@@ -24,7 +24,7 @@
         android:focusable="true"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        tools:context=".ui.main.MainActivity">
+        tools:context=".ui.main1.MainActivity">
 
         <cn.ifafu.ifafu.view.custom.WToolbar
             android:id="@+id/tb_elec"

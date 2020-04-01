@@ -12,7 +12,8 @@ import cn.ifafu.ifafu.data.entity.Score
 import cn.ifafu.ifafu.util.GlobalLib
 import cn.ifafu.ifafu.view.custom.SmoothCheckBox
 
-class ScoreFilterAdapter(context: Context) : RecyclerView.Adapter<ScoreFilterAdapter.ViewHolder>() {
+class ScoreFilterAdapter(context: Context, private val onCheckedChangeListener: ((score: Score) -> Unit))
+    : RecyclerView.Adapter<ScoreFilterAdapter.ViewHolder>() {
 
     var data: List<Score> = ArrayList()
         set(value) {
@@ -21,7 +22,6 @@ class ScoreFilterAdapter(context: Context) : RecyclerView.Adapter<ScoreFilterAda
         }
 
     private val layoutInflater = LayoutInflater.from(context)
-    var afterCheckedListener: ((score: Score) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = layoutInflater.inflate(R.layout.item_score_filter, parent, false)
@@ -47,7 +47,7 @@ class ScoreFilterAdapter(context: Context) : RecyclerView.Adapter<ScoreFilterAda
         holder.checkBox.setChecked(score.isIESItem, false)
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
             score.isIESItem = isChecked
-            afterCheckedListener?.invoke(score)
+            onCheckedChangeListener.invoke(score)
         }
         holder.itemView.setOnClickListener {
             holder.checkBox.setChecked(!holder.checkBox.isChecked, true)

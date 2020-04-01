@@ -164,4 +164,6 @@
     <string name="add_course">添加课程</string>
     <string name="schedule_setting">课表设置</string>
     <string name="refresh_schedule">刷新课表</string>
+    <string name="score_filter">智育分筛选</string>
+    <string name="refresh">刷新</string>
 </resources>

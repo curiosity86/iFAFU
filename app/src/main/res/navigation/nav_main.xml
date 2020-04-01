@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/fragment_main_new">
+
+    <fragment
+        android:id="@+id/fragment_main_new"
+        android:name="cn.ifafu.ifafu.ui.main1.new_theme.MainNewFragment"
+        tools:layout="@layout/fragment_main_new">
+        <action
+            android:id="@+id/action_fragment_main_new_to_fragment_score_list"
+            app:destination="@id/fragment_score_list" />
+        <action
+            android:id="@+id/action_fragment_main_new_to_fragment_elective"
+            app:destination="@id/fragment_elective" />
+        <action
+            android:id="@+id/action_fragment_main_new_to_feedbackFragment"
+            app:destination="@id/fragment_feedback" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/fragment_score_list"
+        android:name="cn.ifafu.ifafu.experiment.score.list.ScoreListFragment"
+        tools:layout="@layout/fragment_score_list">
+        <action
+            android:id="@+id/action_fragment_score_list_to_fragment_score_detail"
+            app:destination="@id/fragment_score_detail" />
+        <action
+            android:id="@+id/action_fragment_score_list_to_fragment_score_filter"
+            app:destination="@id/fragment_score_filter" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_score_detail"
+        android:name="cn.ifafu.ifafu.experiment.score.detail.ScoreDetailFragment"
+        android:label="fragment_score_detail"
+        tools:layout="@layout/fragment_score_detail">
+
+        <argument
+            android:name="score_id"
+            app:argType="long" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_score_filter"
+        android:name="cn.ifafu.ifafu.experiment.score.filter.ScoreFilterFragment"
+        tools:layout="@layout/fragment_score_filter">
+
+        <argument
+            android:name="year"
+            app:argType="string" />
+
+        <argument
+            android:name="term"
+            app:argType="string" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_main_old"
+        android:name="cn.ifafu.ifafu.ui.main1.old_theme.MainOldFragment"
+        tools:layout="@layout/fragment_main_old">
+        <action
+            android:id="@+id/action_fragment_main_old_to_fragment_score_list"
+            app:destination="@id/fragment_score_list" />
+        <action
+            android:id="@+id/action_fragment_main_old_to_fragment_elective"
+            app:destination="@id/fragment_elective" />
+        <action
+            android:id="@+id/action_fragment_main_old_to_feedbackFragment"
+            app:destination="@id/fragment_feedback" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_elective"
+        android:name="cn.ifafu.ifafu.experiment.elective.ElectiveFragment"
+        tools:layout="@layout/fragment_elective">
+        <action
+            android:id="@+id/action_fragment_elective_to_fragment_score_detail2"
+            app:destination="@id/fragment_score_detail" />
+        <action
+            android:id="@+id/action_fragment_elective_to_feedbackFragment"
+            app:destination="@id/fragment_feedback" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_feedback"
+        android:name="cn.ifafu.ifafu.experiment.feedback.FeedbackFragment"
+        tools:layout="@layout/fragment_feedback"/>
+
+</navigation>

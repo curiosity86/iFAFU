@@ -11,8 +11,12 @@ import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.data.bean.Menu
 import cn.ifafu.ifafu.view.adapter.MenuAdapter.MenuViewHolder
 
-class MenuAdapter(context: Context, menuList: List<Menu>) : RecyclerView.Adapter<MenuViewHolder>() {
-    private var mMenuList: List<Menu> = menuList
+class MenuAdapter(context: Context) : RecyclerView.Adapter<MenuViewHolder>() {
+    var menus: List<Menu> = ArrayList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
     private var mContext: Context = context
     private var mItemClickListener: ((View?, Menu) -> Unit)? = null
 
@@ -22,7 +26,7 @@ class MenuAdapter(context: Context, menuList: List<Menu>) : RecyclerView.Adapter
     }
 
     override fun onBindViewHolder(holder: MenuViewHolder, position: Int) {
-        val menu = mMenuList[position]
+        val menu = menus[position]
         holder.titleTV.text = menu.title
         holder.iconIV.setImageResource(menu.icon)
         holder.itemView.setOnClickListener { v: View? ->
@@ -35,11 +39,7 @@ class MenuAdapter(context: Context, menuList: List<Menu>) : RecyclerView.Adapter
     }
 
     override fun getItemCount(): Int {
-        return mMenuList.size
-    }
-
-    fun setMenuList(menus: List<Menu>) {
-        mMenuList = menus
+        return menus.size
     }
 
     interface OnClickListener {

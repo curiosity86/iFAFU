@@ -18,7 +18,7 @@ class ScoreAdapter(private val mContext: Context) : RecyclerView.Adapter<ScoreVi
 
     var scoreList: List<Score> = ArrayList()
 
-    private var mClickListener: ((Score) -> Unit)? = null
+    private var mClickListener: ((View, Score) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScoreViewHolder {
         val view = LayoutInflater.from(mContext).inflate(R.layout.item_score_list_item, parent, false)
@@ -52,8 +52,12 @@ class ScoreAdapter(private val mContext: Context) : RecyclerView.Adapter<ScoreVi
             else ->
                 holder.ivTip.setImageDrawable(null)
         }
-        holder.itemView.setOnClickListener { v: View? ->
-            mClickListener?.invoke(score)
+        mClickListener?.let { listener ->
+            holder.itemView.setOnClickListener { v: View? ->
+                v?.let { view ->
+                    listener.invoke(view, score)
+                }
+            }
         }
     }
 
@@ -61,7 +65,7 @@ class ScoreAdapter(private val mContext: Context) : RecyclerView.Adapter<ScoreVi
         return scoreList.size
     }
 
-    fun setOnScoreClickListener(listener: (Score) -> Unit) {
+    fun setOnScoreClickListener(listener: (View, Score) -> Unit) {
         mClickListener = listener
     }
 

@@ -4,29 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="adapter"
             type="cn.ifafu.ifafu.view.adapter.ScoreFilterAdapter" />
+
         <variable
-            name="layoutManager"
-            type="androidx.recyclerview.widget.RecyclerView.LayoutManager" />
-        <variable
-            name="ies"
-            type="String" />
-        <variable
-            name="filterAllAction"
-            type="android.view.View.OnClickListener" />
+            name="vm"
+            type="cn.ifafu.ifafu.experiment.score.filter.ScoreFilterViewModel" />
+
     </data>
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <cn.ifafu.ifafu.view.custom.WToolbar
             android:id="@+id/tb_score_filter"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="?attr/actionBarSize"
             app:elevation="4dp"
             app:title="@string/score_filter_title">
 
@@ -34,13 +31,12 @@
                 android:id="@+id/btn_filter_all"
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
-                android:text="@string/score_filter_all"
-                android:textSize="16sp"
-                android:gravity="center"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="8dp"
                 android:background="@color/transparent"
-                android:onClick="@{filterAllAction}"/>
+                android:gravity="center"
+                android:text="@string/score_filter_all"
+                android:textSize="16sp" />
 
         </cn.ifafu.ifafu.view.custom.WToolbar>
 
@@ -59,18 +55,19 @@
             android:layout_height="35dp"
             android:background="#DDFFFF"
             android:gravity="center"
-            android:text="@{@string/score_filter_now_ies(ies)}"
+            android:text="@{@string/score_filter_now_ies(vm.ies)}"
             android:textColor="#1dcbdb"
             android:textSize="12sp"
-            tools:text="当前智育分：91分"/>
+            tools:text="当前智育分：91分" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_score_filter"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/item_score_filter"
+            android:orientation="vertical"
             app:adapter="@{adapter}"
-            app:layoutManager="@{layoutManager}" />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_score_filter" />
 
     </LinearLayout>
 </layout>

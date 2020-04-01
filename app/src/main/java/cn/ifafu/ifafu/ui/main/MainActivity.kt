@@ -18,6 +18,7 @@ import cn.ifafu.ifafu.ui.login.LoginActivity
 import cn.ifafu.ifafu.ui.main.new_theme.MainNewFragment
 import cn.ifafu.ifafu.ui.main.old_theme.MainOldFragment
 import cn.ifafu.ifafu.ui.main.view.MultiUserDialog
+import cn.ifafu.ifafu.ui.main.MainViewModel
 import cn.ifafu.ifafu.ui.view.LoadingDialog
 import cn.ifafu.ifafu.util.ButtonUtils
 import cn.ifafu.ifafu.view.custom.DragLayout

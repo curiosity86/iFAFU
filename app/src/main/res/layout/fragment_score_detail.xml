@@ -21,7 +21,7 @@
         <cn.ifafu.ifafu.view.custom.WToolbar
             android:id="@+id/tb_score_item"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="?attr/actionBarSize"
             app:elevation="4dp"
             app:title="成绩详情" />
 
@@ -29,7 +29,8 @@
             android:id="@+id/rv_score_item"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager="@{layoutManager}"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2"
             app:adapter="@{adapter}"/>
 
     </LinearLayout>

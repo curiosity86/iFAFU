@@ -6,8 +6,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
-import cn.ifafu.ifafu.ui.main.MainViewModel
-import cn.ifafu.ifafu.ui.main.old_theme.MainOldViewModel
+import cn.ifafu.ifafu.ui.main1.MainViewModel
+import cn.ifafu.ifafu.ui.main1.old_theme.MainOldViewModel
 
 @Suppress("UNCHECKED_CAST")
 class ViewModelFactory(private val application: Application) : ViewModelProvider.NewInstanceFactory() {

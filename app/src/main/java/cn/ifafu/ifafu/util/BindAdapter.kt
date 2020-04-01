@@ -3,8 +3,8 @@ package cn.ifafu.ifafu.util
 import android.net.Uri
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
-import cn.ifafu.ifafu.ui.elective.Elective
-import cn.ifafu.ifafu.ui.elective.ElectiveView
+import cn.ifafu.ifafu.experiment.elective.Elective
+import cn.ifafu.ifafu.experiment.elective.ElectiveView
 import cn.ifafu.ifafu.view.custom.SmoothCheckBox
 
 @BindingAdapter("elective")

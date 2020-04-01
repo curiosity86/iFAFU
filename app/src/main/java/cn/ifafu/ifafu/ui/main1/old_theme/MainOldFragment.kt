@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.ui.main.old_theme
+package cn.ifafu.ifafu.ui.main1.old_theme
 
 import android.content.Intent
 import android.os.Bundle
@@ -21,7 +21,6 @@ import cn.ifafu.ifafu.ui.exam_list.ExamListActivity
 import cn.ifafu.ifafu.ui.feedback.FeedbackActivity
 import cn.ifafu.ifafu.ui.main1.MainViewModel
 import cn.ifafu.ifafu.ui.main.bean.Menu
-import cn.ifafu.ifafu.ui.main1.old_theme.MainOldViewModel
 import cn.ifafu.ifafu.ui.schedule.SyllabusActivity
 import cn.ifafu.ifafu.ui.setting.SettingActivity
 import cn.ifafu.ifafu.ui.web.WebActivity
