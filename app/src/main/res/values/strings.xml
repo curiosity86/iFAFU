@@ -161,4 +161,7 @@
     <string name="contact_require">* 联系方式:</string>
     <string name="enter_content">请输入反馈内容</string>
     <string name="content_required">* 内容描述:</string>
+    <string name="add_course">添加课程</string>
+    <string name="schedule_setting">课表设置</string>
+    <string name="refresh_schedule">刷新课表</string>
 </resources>

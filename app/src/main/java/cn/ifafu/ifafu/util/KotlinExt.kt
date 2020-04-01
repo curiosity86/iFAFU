@@ -65,7 +65,6 @@ fun Double.toString(radius: Int): String {
     return String.format("%.${radius}f", this)
 }
 
-
 /**
  * Returns the sum of all values produced by [selector] function applied to each element in the collection.
  */

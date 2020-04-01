@@ -14,7 +14,7 @@ import me.drakeet.multitype.ItemViewBinder
 class ColorBinder : ItemViewBinder<ColorItem, ColorBinder.VH>() {
 
     override fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): VH {
-        return VH(inflater.inflate(R.layout.setting_color_recycle_item, parent, false))
+        return VH(inflater.inflate(R.layout.item_setting_color, parent, false))
     }
 
     override fun onBindViewHolder(holder: VH, item: ColorItem) {

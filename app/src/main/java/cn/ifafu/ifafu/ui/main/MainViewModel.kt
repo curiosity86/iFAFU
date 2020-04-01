@@ -1,16 +1,15 @@
 package cn.ifafu.ifafu.ui.main
 
 import android.app.Application
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.entity.User
-import cn.ifafu.ifafu.data.repository.RepositoryImpl
+import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import cn.ifafu.ifafu.util.GlobalLib
-import cn.woolsen.easymvvm.livedata.LiveDataString
-import cn.woolsen.easymvvm.livedata.LiveEvent
+import cn.ifafu.ifafu.data.bean.LiveEvent
+import cn.ifafu.ifafu.util.AppUtils
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -24,7 +23,7 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
     val showMultiUserDialog = MutableLiveData<Boolean>()
 
     val theme = MutableLiveData<Int>()
-    val loading = LiveDataString()
+    val loading = MutableLiveData<String>()
     val startLoginActivity = LiveEvent()
 
     private val repo: RepositoryImpl = RepositoryImpl
@@ -100,7 +99,7 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
             toast(it.message ?: "Unknown Error")
         }?.let {
             Timber.d("Version: ${it}")
-            if (it.versionCode <= GlobalLib.getLocalVersionCode(getApplication())) {
+            if (it.versionCode <= AppUtils.getVersionCode(getApplication())) {
                 toast("当前为最新版本")
             } else {
                 toast("有更新！最新版本为:${it.versionName}\n若未自动更新，请前往ifafu官网手动更新")

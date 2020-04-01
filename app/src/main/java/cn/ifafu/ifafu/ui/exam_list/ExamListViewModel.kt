@@ -1,22 +1,20 @@
 package cn.ifafu.ifafu.ui.exam_list
 
 import android.app.Application
+import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.base.BaseViewModel
-import cn.ifafu.ifafu.data.repository.RepositoryImpl
+import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import cn.ifafu.ifafu.data.entity.Exam
 import cn.ifafu.ifafu.data.bean.Semester
-import cn.woolsen.easymvvm.livedata.LiveDataBoolean
-import cn.woolsen.easymvvm.livedata.LiveDataField
-import cn.woolsen.easymvvm.livedata.LiveDataString
 import kotlinx.coroutines.*
 
 class ExamListViewModel(application: Application) : BaseViewModel(application) {
 
     private lateinit var _semester: Semester
-    val semester = LiveDataField<Semester>()
+    val semester = MutableLiveData<Semester>()
 
-    val exams = LiveDataField<List<Exam>>()
-    val loading = LiveDataString()
+    val exams = MutableLiveData<List<Exam>>()
+    val loading = MutableLiveData<String>()
 
     private val now = System.currentTimeMillis()
     private val examTimeComparator = Comparator<Exam> { o1, o2 ->

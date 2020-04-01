@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.getViewModelFactory
+import cn.ifafu.ifafu.base.BaseFragment
 import cn.ifafu.ifafu.databinding.FragmentMainOldBinding
 import cn.ifafu.ifafu.ui.activity.AboutActivity
 import cn.ifafu.ifafu.ui.elective.ElectiveActivity
@@ -21,14 +22,12 @@ import cn.ifafu.ifafu.ui.main.MainViewModel
 import cn.ifafu.ifafu.ui.main.bean.Menu
 import cn.ifafu.ifafu.ui.score_list.ScoreListActivity
 import cn.ifafu.ifafu.ui.setting.SettingActivity
-import cn.ifafu.ifafu.ui.syllabus.SyllabusActivity
+import cn.ifafu.ifafu.ui.schedule.SyllabusActivity
 import cn.ifafu.ifafu.ui.web.WebActivity
 import cn.ifafu.ifafu.view.custom.MenuClickListener
 import cn.ifafu.ifafu.view.custom.MenuMaker
 import cn.ifafu.ifafu.view.listener.ScrollDrawerListener
-import cn.woolsen.easymvvm.base.BaseFragment
 import com.google.android.material.navigation.NavigationView
-import timber.log.Timber
 
 class MainOldFragment : BaseFragment(), MenuClickListener, View.OnClickListener {
 

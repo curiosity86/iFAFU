@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import cn.ifafu.ifafu.ui.main.bean.Weather
 import cn.ifafu.ifafu.data.entity.User
-import cn.ifafu.ifafu.data.repository.RepositoryImpl
+import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import cn.ifafu.ifafu.ui.main.bean.ClassPreview
 import cn.ifafu.ifafu.ui.main.bean.ExamPreview
 import cn.ifafu.ifafu.ui.main.bean.ScorePreview

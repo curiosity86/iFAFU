@@ -36,10 +36,10 @@
         <activity
             android:name=".ui.login.LoginActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".ui.syllabus.SyllabusActivity"
+        <activity android:name=".ui.schedule.SyllabusActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".ui.syllabus_item.CourseItemActivity" />
-        <activity android:name=".ui.syllabus_setting.SyllabusSettingActivity" />
+        <activity android:name=".ui.schedule_item.CourseItemActivity" />
+        <activity android:name=".ui.schedule_setting.SyllabusSettingActivity" />
         <activity android:name=".ui.score_list.ScoreListActivity" />
         <activity android:name=".ui.score_item.ScoreItemActivity" />
         <activity android:name=".ui.score_filter.ScoreFilterActivity" />

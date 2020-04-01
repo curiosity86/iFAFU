@@ -2,7 +2,7 @@ package cn.ifafu.ifafu.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import cn.ifafu.ifafu.ui.syllabus.view.CourseItem
+import cn.ifafu.ifafu.ui.schedule.view.ScheduleItem
 import cn.ifafu.ifafu.util.DateUtils
 import java.util.*
 
@@ -10,7 +10,7 @@ import java.util.*
 class Course {
 
     @PrimaryKey
-    var id: Long = 0
+    var id: Int = 0
     var name: String = "" // 课程名
     var address: String = ""// 上课地点
     var teacher: String = "" // 老师名
@@ -39,15 +39,15 @@ class Course {
         return course
     }
 
-    fun toCourseItem(): CourseItem {
-        return CourseItem(
-                id = id,
-                name = name,
-                address = address,
-                startNode = beginNode,
-                dayOfWeek = weekday,
-                nodeCount = nodeCnt
-        )
+    fun toCourseItem(): ScheduleItem {
+        return ScheduleItem().apply {
+            tag = this@Course.id
+            name = this@Course.name
+            address = this@Course.address
+            dayOfWeek = this@Course.weekday
+            startNode = this@Course.beginNode
+            nodeCount = this@Course.nodeCnt
+        }
     }
 
     override fun toString(): String {

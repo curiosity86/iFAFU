@@ -157,22 +157,15 @@
             app:layout_constraintTop_toBottomOf="@id/textView2"
             tools:text="总绩点：9.9" />
 
-        <View
-            android:id="@+id/spline"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/bg_gray"
-            app:layout_constraintTop_toBottomOf="@id/tv_gpa" />
-
         <cn.ifafu.ifafu.view.custom.EmptyView
             android:id="@+id/view_exam_empty"
             visibleGoneWhen="@{!vm.scoreList.empty}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/spline"
-            app:message="@string/score_data_empty" />
+            app:layout_constraintTop_toBottomOf="@id/tv_gpa"
+            app:message="@string/score_data_empty"
+            tools:visibility="gone"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_score"
@@ -180,12 +173,14 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/bg_gray"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
             app:adapter="@{adapter}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/spline"
-            tools:listitem="@layout/score_list_recycle_item" />
+            app:layout_constraintTop_toBottomOf="@id/tv_gpa"
+            tools:listitem="@layout/item_score_list_item"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -11,13 +11,13 @@
 //import cn.ifafu.ifafu.ui.view.LoadingDialog
 //import com.afollestad.materialdialogs.MaterialDialog
 //import com.gyf.immersionbar.ImmersionBar
-//import kotlinx.android.synthetic.main.comment_activity.*
+//import kotlinx.android.synthetic.main.activity_comment.*
 //
 //class CommentActivity : BaseActivity<CommentContract.Presenter>(), CommentContract.View {
 //    private lateinit var loadingDialog: LoadingDialog
 //
 //    override fun getLayoutId(savedInstanceState: Bundle?): Int {
-//        return R.layout.comment_activity
+//        return R.layout.activity_comment
 //    }
 //
 //    override fun initData(savedInstanceState: Bundle?) {

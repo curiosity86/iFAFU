@@ -22,15 +22,15 @@ import cn.ifafu.ifafu.ui.feedback.FeedbackActivity
 import cn.ifafu.ifafu.ui.main.MainViewModel
 import cn.ifafu.ifafu.ui.score_list.ScoreListActivity
 import cn.ifafu.ifafu.ui.setting.SettingActivity
-import cn.ifafu.ifafu.ui.syllabus.SyllabusActivity
+import cn.ifafu.ifafu.ui.schedule.SyllabusActivity
 import cn.ifafu.ifafu.ui.web.WebActivity
 import cn.ifafu.ifafu.util.ButtonUtils
 import cn.ifafu.ifafu.view.adapter.MenuAdapter
 import cn.ifafu.ifafu.view.custom.DragLayout
 import kotlinx.android.synthetic.main.fragment_main_new.*
 import kotlinx.android.synthetic.main.include_main_new_left_menu.*
-import kotlinx.android.synthetic.main.main_include.*
-import kotlinx.android.synthetic.main.main_next_course_include.*
+import kotlinx.android.synthetic.main.include_main_new.*
+import kotlinx.android.synthetic.main.include_main_new_course.*
 import timber.log.Timber
 
 class MainNewFragment : BaseFragment(), View.OnClickListener {

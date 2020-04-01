@@ -20,7 +20,7 @@ class ExamAdapter(
     private val format2 = SimpleDateFormat("HH:mm", Locale.CHINA)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExamViewHolder {
-        val view = LayoutInflater.from(mContext).inflate(R.layout.exam_info_recycle_item, parent, false)
+        val view = LayoutInflater.from(mContext).inflate(R.layout.item_exam_info, parent, false)
         return ExamViewHolder(view)
     }
 

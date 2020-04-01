@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.app
 import android.app.Application
 import cn.ifafu.ifafu.BuildConfig
 import cn.ifafu.ifafu.base.BaseApplication
-import cn.ifafu.ifafu.data.repository.RepositoryImpl
+import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import cn.ifafu.ifafu.util.AppUtils
 import cn.ifafu.ifafu.util.SPUtils
 import com.tencent.bugly.Bugly
@@ -18,7 +18,7 @@ class IFAFU : BaseApplication() {
 
     companion object {
 
-        var isInitConfig = false
+        private var isInitConfig = false
 
         /**
          * 启动界面时调用，防止长时间白屏

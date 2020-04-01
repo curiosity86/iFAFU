@@ -8,7 +8,7 @@
 
         <variable
             name="vm"
-            type="cn.ifafu.ifafu.ui.syllabus_item.CourseItemViewModel" />
+            type="cn.ifafu.ifafu.ui.schedule_item.CourseItemViewModel" />
 
         <variable
             name="course"

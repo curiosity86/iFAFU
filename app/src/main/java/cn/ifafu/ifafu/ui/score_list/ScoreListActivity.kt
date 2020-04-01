@@ -5,7 +5,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.getViewModelFactory

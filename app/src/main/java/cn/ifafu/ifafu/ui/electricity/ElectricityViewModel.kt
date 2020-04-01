@@ -3,15 +3,14 @@ package cn.ifafu.ifafu.ui.electricity
 import android.app.Application
 import android.graphics.Bitmap
 import androidx.lifecycle.MutableLiveData
-import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.bean.ElecSelection
 import cn.ifafu.ifafu.data.entity.ElecQuery
 import cn.ifafu.ifafu.data.entity.ElecUser
-import cn.ifafu.ifafu.data.repository.RepositoryImpl
+import cn.ifafu.ifafu.data.entity.User
+import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import cn.ifafu.ifafu.util.ifFalse
 import cn.ifafu.ifafu.util.trimEnd
-import cn.woolsen.easymvvm.livedata.LiveDataString
 import com.alibaba.fastjson.JSONObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -33,7 +32,7 @@ class ElectricityViewModel(application: Application) : BaseViewModel(application
     val room by lazy { MutableLiveData<String>() }
     val elecBalance by lazy { MutableLiveData<String>() }
 
-    val loading = LiveDataString()
+    val loading = MutableLiveData<String>()
 
     fun init() {
         GlobalScope.launch {
@@ -41,11 +40,13 @@ class ElectricityViewModel(application: Application) : BaseViewModel(application
             var elecUser = RepositoryImpl.XfbRt.getElecUser()
             when {
                 elecUser == null -> { //首次登录
+                    val user = RepositoryImpl.user.getInUse() ?: kotlin.run {
+                        loading.postValue(null)
+                        return@launch
+                    }
                     elecUser = ElecUser().apply {
-                        val user = RepositoryImpl.user.getInUse()
-                        account = user!!.account
-                        val account = user.account
-                        xfbAccount = if (user.school == Constant.FAFU_JS) "0$account" else account
+                        this.account = user.account
+                        xfbAccount = if (user.school == User.FAFU_JS) "0$account" else account
                     }
                     loginStatus.postValue(false)
                 }
@@ -160,8 +161,8 @@ class ElectricityViewModel(application: Application) : BaseViewModel(application
     fun login(password: String, verify: String) {
         GlobalScope.launch(Dispatchers.IO) {
             loading.postValue("登录中")
-            val json = JSONObject.parseObject(RepositoryImpl.XfbRt.elecLogin(elecUser.value?.account
-                    ?: "", password, verify))
+            val user = elecUser.value ?: return@launch
+            val json = JSONObject.parseObject(RepositoryImpl.XfbRt.elecLogin(user.xfbAccount, password, verify))
             if (json.getBoolean("IsSucceed") == true) {
                 val obj2 = json.getJSONObject("Obj2")
                 elecUser.value?.password = password
@@ -170,7 +171,7 @@ class ElectricityViewModel(application: Application) : BaseViewModel(application
                     RepositoryImpl.XfbRt.saveElecUser(this)
                 }
                 val elecCookie = RepositoryImpl.XfbRt.getElecCookie().apply {
-                    account = elecUser.value?.account ?: ""
+                    this.account = user.account
                     rescouseType = obj2.getString("RescouseType")
                 }
                 RepositoryImpl.XfbRt.saveElecCookie(elecCookie)

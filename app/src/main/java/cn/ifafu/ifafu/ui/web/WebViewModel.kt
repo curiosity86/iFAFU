@@ -6,16 +6,15 @@ import android.webkit.CookieManager
 import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.base.BaseViewModel
-import cn.ifafu.ifafu.data.repository.RepositoryImpl
+import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import cn.ifafu.ifafu.data.bean.ZFApiList
 import cn.ifafu.ifafu.util.SPUtils
-import cn.woolsen.easymvvm.livedata.LiveDataString
 
 class WebViewModel(application: Application) : BaseViewModel(application) {
 
     val loadUrl by lazy { MutableLiveData<String>() }
     val title by lazy { MutableLiveData<String>() }
-    val loading = LiveDataString()
+    val loading = MutableLiveData<String>()
 
     fun init(intent: Intent) {
         safeLaunchWithMessage {

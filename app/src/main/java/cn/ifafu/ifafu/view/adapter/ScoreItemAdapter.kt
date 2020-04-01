@@ -5,7 +5,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 
 class ScoreItemAdapter
-    : BaseQuickAdapter<Pair<String, String>, BaseViewHolder>(R.layout.score_item_info_rv_item) {
+    : BaseQuickAdapter<Pair<String, String>, BaseViewHolder>(R.layout.item_score_item_info_item) {
 
     override fun convert(helper: BaseViewHolder, item: Pair<String, String>) {
         helper.setText(R.id.tv_title, item.first)

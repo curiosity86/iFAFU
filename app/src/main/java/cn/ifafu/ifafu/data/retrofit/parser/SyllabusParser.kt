@@ -157,8 +157,7 @@ class SyllabusParser(user: User? = null) : BaseParser<Response<List<Course>>>() 
         //合并课程
         val map = HashMap<String, Array<BooleanArray>>()
         courses.forEach { course ->
-            val key = "${course.name}❤${course.teacher ?: ""}❤${course.address
-                    ?: ""}❤${course.weekday}"
+            val key = "${course.name}❤${course.teacher}❤${course.address}❤${course.weekday}"
             val nodes = map.getOrPut(key, { Array(25) { BooleanArray(20) } })
             course.weekSet.forEach { week ->
                 for (node in course.beginNode until (course.beginNode + course.nodeCnt)) {
@@ -209,7 +208,7 @@ class SyllabusParser(user: User? = null) : BaseParser<Response<List<Course>>>() 
         return Response.success(afterMergeCourses.apply {
             forEach {
                 it.account = account
-                it.id = it.hashCode().toLong()
+                it.id = it.hashCode()
             }
         })
     }

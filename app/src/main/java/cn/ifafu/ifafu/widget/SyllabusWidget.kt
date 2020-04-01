@@ -10,13 +10,12 @@ import android.view.View
 import android.widget.RemoteViews
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
-import cn.ifafu.ifafu.data.repository.RepositoryImpl
+import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import cn.ifafu.ifafu.ui.main.bean.ClassPreview
-import cn.ifafu.ifafu.ui.syllabus.SyllabusActivity
+import cn.ifafu.ifafu.ui.schedule.SyllabusActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 

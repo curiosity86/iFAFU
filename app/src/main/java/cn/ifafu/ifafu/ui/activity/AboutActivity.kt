@@ -8,34 +8,29 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.activity.viewModels
-import androidx.databinding.ViewDataBinding
-import androidx.viewbinding.ViewBinding
 import cn.ifafu.ifafu.BuildConfig
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BaseActivity
-import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.databinding.ActivityAboutBinding
 import cn.ifafu.ifafu.ui.feedback.FeedbackActivity
-import cn.ifafu.ifafu.util.GlobalLib
+import cn.ifafu.ifafu.util.AppUtils
+import cn.ifafu.ifafu.util.contentView
 import com.afollestad.materialdialogs.MaterialDialog
-import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.activity_about.*
 
 class AboutActivity : BaseActivity(), View.OnClickListener {
 
+    private val binding: ActivityAboutBinding by contentView(R.layout.activity_about)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setLightUiBar()
-        with(bind<ActivityAboutBinding>(R.layout.activity_about)) {
-            debug = BuildConfig.DEBUG
-            version = GlobalLib.getLocalVersionName(this@AboutActivity)
-        }
-        tb_about.setNavigationOnClickListener { finish() }
+        binding.debug = BuildConfig.DEBUG
+        binding.version = AppUtils.getVersionName(this)
         aboutAppSubName.setOnLongClickListener {
             Toast.makeText(
                     this,
-                    "当前迭代版本号：${GlobalLib.getLocalVersionCode(this)}",
+                    "当前迭代版本号：${AppUtils.getVersionCode(this)}",
                     Toast.LENGTH_SHORT
             ).show()
             true
@@ -73,7 +68,7 @@ class AboutActivity : BaseActivity(), View.OnClickListener {
             }
             R.id.btn_feed -> {
                 MaterialDialog(this).show {
-                    setContentView(R.layout.about_feed)
+                    setContentView(R.layout.view_about_feed)
                 }
             }
         }

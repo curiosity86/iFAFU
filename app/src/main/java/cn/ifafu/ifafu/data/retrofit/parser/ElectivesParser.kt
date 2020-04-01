@@ -14,7 +14,7 @@ class ElectivesParser(val user: User) : BaseParser<Electives>() {
         info.account = user.account
         val doc = Jsoup.parse(html)
         when (user.school) {
-            Constant.FAFU -> {
+            User.FAFU -> {
                 val ele = doc.select("table[id=\"DataGrid5\"]")[0].children()[0].children()
                 for (element in ele) {
                     val ts = element.text().trim().split(" ")
@@ -31,7 +31,7 @@ class ElectivesParser(val user: User) : BaseParser<Electives>() {
                 info.total = ttt[ttt.indexOf("任意选修课") + 1].toInt()
                 return info
             }
-            Constant.FAFU_JS -> {
+            User.FAFU_JS -> {
                 val ele = doc.select("option[selected=\"selected\"]")
                 when (ele[1].text()) {
                     "经济与管理系", "人文社会科学系" ->

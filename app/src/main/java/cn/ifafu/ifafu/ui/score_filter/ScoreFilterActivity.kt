@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
-import cn.ifafu.ifafu.databinding.ScoreFilterActivityBinding
+import cn.ifafu.ifafu.databinding.ActivityScoreFilterBinding
 import cn.ifafu.ifafu.view.adapter.ScoreFilterAdapter
 import cn.ifafu.ifafu.view.custom.RecyclerViewDivider
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +21,7 @@ class ScoreFilterActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setLightUiBar()
-        val mBinding = bind<ScoreFilterActivityBinding>(R.layout.score_filter_activity)
+        val mBinding = bind<ActivityScoreFilterBinding>(R.layout.activity_score_filter)
         mBinding.adapter = mAdapter
         mBinding.layoutManager = LinearLayoutManager(this)
         mBinding.rvScoreFilter.addItemDecoration(RecyclerViewDivider(

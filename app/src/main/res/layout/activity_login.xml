@@ -14,7 +14,7 @@
             type="cn.ifafu.ifafu.ui.login.LoginViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
@@ -26,11 +26,8 @@
             android:layout_height="360dp"
             android:layout_centerInParent="true"
             android:alpha="0.05"
-            android:src="@{vm.account.length() != 9 ? @drawable/fafu_bb_icon : @drawable/fafu_js_icon}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:src="@{vm.account.length() != 9 ? @drawable/img_fafu_bb : @drawable/img_fafu_js}"
+            tools:src="@drawable/img_fafu_bb"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -52,9 +49,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:src="@drawable/ic_close"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            android:src="@drawable/ic_close"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -64,8 +59,6 @@
             android:layoutAnimation="@anim/layout_fall_down"
             android:orientation="vertical"
             android:paddingBottom="48dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             tools:layoutAnimation="@null">
 
             <ImageView
@@ -135,6 +128,6 @@
 
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
 
 </layout>

@@ -1,19 +1,18 @@
 package cn.ifafu.ifafu.ui.login
 
 import android.app.Application
+import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.base.BaseViewModel
-import cn.ifafu.ifafu.data.repository.RepositoryImpl
-import cn.woolsen.easymvvm.livedata.LiveDataBoolean
-import cn.woolsen.easymvvm.livedata.LiveDataString
+import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class LoginViewModel(application: Application) : BaseViewModel(application) {
 
-    val account = LiveDataString()
-    val password = LiveDataString()
-    val showLoading = LiveDataBoolean()
-    val isLoginSuccessful = LiveDataBoolean()
+    val account = MutableLiveData<String>()
+    val password = MutableLiveData<String>()
+    val showLoading = MutableLiveData<Boolean>()
+    val isLoginSuccessful = MutableLiveData<Boolean>()
 
     private val repo = RepositoryImpl
 

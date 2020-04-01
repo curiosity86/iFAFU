@@ -22,31 +22,6 @@ object GlobalLib {
         return trimZero(String.format("%." + digit + "f", num))
     }
 
-    fun getLocalVersionName(context: Context): String {
-        var localVersion = ""
-        try {
-            val packageInfo = context.applicationContext
-                    .packageManager
-                    .getPackageInfo(context.packageName, 0)
-            localVersion = packageInfo.versionName
-        } catch (e: PackageManager.NameNotFoundException) {
-            e.printStackTrace()
-        }
-        return localVersion
-    }
-
-    fun getLocalVersionCode(context: Context): Int {
-        return try {
-            val packageInfo = context.applicationContext
-                    .packageManager
-                    .getPackageInfo(context.packageName, 0)
-            packageInfo.versionCode
-        } catch (e: PackageManager.NameNotFoundException) {
-            e.printStackTrace()
-            9999
-        }
-    }
-
     @JvmStatic
     fun getActivityFromView(view: View?): Activity? {
         if (null != view) {
@@ -61,8 +36,4 @@ object GlobalLib {
         return null
     }
 
-    fun hideSoftKeyboard(activity: Activity) {
-        val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(activity.window.decorView.windowToken, 0)
-    }
 }

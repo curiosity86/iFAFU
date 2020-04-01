@@ -5,7 +5,7 @@ import android.app.Application
 import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.entity.Score
 import cn.ifafu.ifafu.data.entity.ScoreFilter
-import cn.ifafu.ifafu.data.repository.RepositoryImpl
+import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import cn.ifafu.ifafu.util.trimEnd
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

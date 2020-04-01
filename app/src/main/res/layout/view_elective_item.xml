@@ -97,7 +97,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="4dp"
             tools:itemCount="2"
-            tools:listitem="@layout/elective_recycle_item" />
+            tools:listitem="@layout/item_elective" />
 
         <TextView
             android:id="@+id/tv_empty"

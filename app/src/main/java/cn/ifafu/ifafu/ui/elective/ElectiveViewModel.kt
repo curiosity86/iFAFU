@@ -1,12 +1,10 @@
 package cn.ifafu.ifafu.ui.elective
 
 import android.app.Application
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.base.BaseViewModel
-import cn.ifafu.ifafu.data.repository.RepositoryImpl
+import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import cn.ifafu.ifafu.util.sumByFloat
-import cn.woolsen.easymvvm.livedata.LiveDataString
 
 class ElectiveViewModel(application: Application) : BaseViewModel(application) {
 
@@ -17,7 +15,7 @@ class ElectiveViewModel(application: Application) : BaseViewModel(application) {
     val wxsy = MutableLiveData<Elective>()
     val cxcy = MutableLiveData<Elective>()
 
-    val loading = LiveDataString()
+    val loading = MutableLiveData<String>()
 
     init {
         safeLaunch(block = {

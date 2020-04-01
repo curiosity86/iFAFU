@@ -11,7 +11,7 @@ android {
         applicationId "cn.ifafu.ifafu"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 81
+        versionCode 82
         versionName "1.2.5"
         resConfigs "zh"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -90,7 +90,6 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation project(path: ':easymvvm')
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'

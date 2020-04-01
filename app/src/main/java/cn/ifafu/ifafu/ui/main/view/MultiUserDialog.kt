@@ -2,18 +2,18 @@ package cn.ifafu.ifafu.ui.main.view
 
 import android.content.ClipboardManager
 import android.content.Context
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.databinding.DataBindingUtil
 import cn.ifafu.ifafu.BR
 import cn.ifafu.ifafu.BuildConfig
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.data.entity.User
-import cn.ifafu.ifafu.data.repository.RepositoryImpl
-import cn.ifafu.ifafu.databinding.DialogAccountSwitchBinding
+import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import cn.ifafu.ifafu.util.ToastUtils
-import cn.woolsen.easymvvm.binding.BindView
-import cn.woolsen.easymvvm.binding.BindViews
+import cn.ifafu.ifafu.binding.BindView
+import cn.ifafu.ifafu.binding.BindViews
+import cn.ifafu.ifafu.databinding.DialogMultiAccountBinding
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
@@ -30,7 +30,7 @@ class MultiUserDialog(
 
     private val dialog =
             MaterialDialog(context).apply {
-                customView(viewRes = R.layout.dialog_account_switch)
+                customView(viewRes = R.layout.dialog_multi_account)
                 title(text = "多账号管理")
                 negativeButton(text = "添加账号") {
                     onAddClick()
@@ -43,7 +43,7 @@ class MultiUserDialog(
             }
 
     private val binding =
-            DataBindingUtil.bind<DialogAccountSwitchBinding>(dialog.getCustomView())
+            DataBindingUtil.bind<DialogMultiAccountBinding>(dialog.getCustomView())
 
     private var users = emptyList<User>()
     private val tag = HashMap<String, Any>()
@@ -60,8 +60,8 @@ class MultiUserDialog(
             users.forEach {
                 bindViews.add(ItemBindView(
                         when (it.school) {
-                            Constant.FAFU -> R.drawable.fafu_bb_icon_white
-                            Constant.FAFU_JS -> R.drawable.fafu_js_icon_white
+                            User.FAFU -> R.drawable.fafu_bb_icon_white
+                            User.FAFU_JS -> R.drawable.fafu_js_icon_white
                             else -> R.drawable.icon_ifafu_round
                         }, it.name, it.account) { onItemClick(it) }
                 )
@@ -86,9 +86,9 @@ class MultiUserDialog(
             list.forEach {
                 RepositoryImpl.user.save(it)
             }
-            ToastUtils.showToastShort("导入成功")
+            Toast.makeText(context, "导入成功", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
-            ToastUtils.showToastShort("导入失败")
+            Toast.makeText(context, "导入失败", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -105,7 +105,7 @@ class MultiUserDialog(
         }
 
         override fun layoutRes(): Int {
-            return R.layout.main_account_recycle_item
+            return R.layout.item_account
         }
 
         override fun bindingVariable(): Int {

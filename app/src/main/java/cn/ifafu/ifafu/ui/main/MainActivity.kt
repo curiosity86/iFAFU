@@ -27,7 +27,6 @@ import com.afollestad.materialdialogs.customview.getCustomView
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.fragment_main_new.*
 import kotlinx.android.synthetic.main.fragment_main_old.*
-import timber.log.Timber
 
 class MainActivity : BaseActivity() {
 
@@ -60,7 +59,7 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ImmersionBar.with(this).init()
-        setContentView(R.layout.main_activity)
+        setContentView(R.layout.activity_main)
         mViewModel.theme.observe(this, Observer {
             supportFragmentManager.beginTransaction().apply {
                 when (it) {

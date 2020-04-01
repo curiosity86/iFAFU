@@ -9,8 +9,8 @@ import cn.ifafu.ifafu.data.entity.Exam
 import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.data.exception.NoAuthException
 import cn.ifafu.ifafu.data.new_http.IFHttpClient
-import cn.ifafu.ifafu.data.new_http.bean.IFResponse
 import cn.ifafu.ifafu.data.new_http.JWService
+import cn.ifafu.ifafu.data.new_http.bean.IFResponse
 import cn.ifafu.ifafu.data.new_http.converter.ExamConverter
 import cn.ifafu.ifafu.data.new_http.converter.LoginConverter
 import cn.ifafu.ifafu.data.retrofit.parser.VerifyParser
@@ -22,7 +22,6 @@ import org.jsoup.Jsoup
 import java.io.IOException
 import java.util.regex.Pattern
 import javax.security.auth.login.LoginException
-import kotlin.collections.HashMap
 
 class JWServiceImpl : JWService {
 
@@ -46,7 +45,9 @@ class JWServiceImpl : JWService {
     override suspend fun checkoutTo(user: User) {
         this.user = user
         this.urls = Constant.getURL(user.school)
-        reLogin()
+        kotlin.runCatching {
+            reLogin()
+        }
     }
 
     override suspend fun login(
@@ -143,9 +144,9 @@ class JWServiceImpl : JWService {
         //设置必要参数（异步）
         val paramsAsync = getHiddenParamAsync(
                 user, IFHttpClient.LOGIN, mapOf(
-                "txtUserName" to user.account.encode("GBK"),
+                "txtUserName" to user.account,
                 "Textbox1" to "",
-                "TextBox2" to user.password.encode("GBK"),
+                "TextBox2" to user.password,
                 "RadioButtonList1" to "",
                 "Button1" to "",
                 "lbLanguage" to "",

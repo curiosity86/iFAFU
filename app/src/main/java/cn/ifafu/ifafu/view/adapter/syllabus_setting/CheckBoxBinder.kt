@@ -13,7 +13,7 @@ class CheckBoxBinder
     : ItemViewBinder<CheckBoxItem, CheckBoxBinder.ViewHolder>() {
 
     override fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): ViewHolder {
-        return ViewHolder(inflater.inflate(R.layout.setting_checkbox_recycle_item, parent, false))
+        return ViewHolder(inflater.inflate(R.layout.item_setting_checkbox, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, item: CheckBoxItem) {

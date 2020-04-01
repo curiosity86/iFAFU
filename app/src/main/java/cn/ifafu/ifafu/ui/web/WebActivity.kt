@@ -16,9 +16,9 @@ import androidx.lifecycle.Observer
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
-import cn.ifafu.ifafu.databinding.WebActivityBinding
+import cn.ifafu.ifafu.databinding.ActivityWebBinding
 import cn.ifafu.ifafu.ui.view.LoadingDialog
-import kotlinx.android.synthetic.main.web_activity.*
+import kotlinx.android.synthetic.main.activity_web.*
 
 class WebActivity : BaseActivity() {
 
@@ -36,7 +36,7 @@ class WebActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setLightUiBar()
-        bind<WebActivityBinding>(R.layout.web_activity)
+        bind<ActivityWebBinding>(R.layout.activity_web)
         initWebView()
         mViewModel.loadUrl.observe(this, Observer {
             webView.loadUrl(it)

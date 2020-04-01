@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.ui.setting
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.base.BaseViewModel
-import cn.ifafu.ifafu.data.repository.RepositoryImpl
+import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import cn.ifafu.ifafu.data.entity.GlobalSetting
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.CheckBoxItem
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.SettingItem

@@ -24,7 +24,7 @@
             android:background="@color/bg_gray"
             android:orientation="vertical">
 
-            <include layout="@layout/main_include"
+            <include layout="@layout/include_main_new"
                 bind:weather="@{vm.weather}"/>
 
         </cn.ifafu.ifafu.view.custom.MyLinearLayout>

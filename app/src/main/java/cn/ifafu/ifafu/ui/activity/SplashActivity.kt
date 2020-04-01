@@ -10,11 +10,11 @@ import androidx.appcompat.app.AppCompatActivity
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.app.IFAFU
-import cn.ifafu.ifafu.data.repository.RepositoryImpl
+import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import cn.ifafu.ifafu.ui.exam_list.ExamListActivity
 import cn.ifafu.ifafu.ui.login.LoginActivity
 import cn.ifafu.ifafu.ui.main.MainActivity
-import cn.ifafu.ifafu.ui.syllabus.SyllabusActivity
+import cn.ifafu.ifafu.ui.schedule.SyllabusActivity
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 

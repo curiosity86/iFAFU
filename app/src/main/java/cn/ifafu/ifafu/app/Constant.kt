@@ -30,15 +30,6 @@ object Constant {
     const val ACTIVITY_REPAIR = 110
     const val ACTIVITY_SETTING = 111
 
-    /**
-     * @see [User.FAFU]
-     * @see [User.FAFU_JS]
-     */
-    @Deprecated("move to user.class")
-    const val FAFU = "FAFU"
-    @Deprecated("move to user.class")
-    const val FAFU_JS = "FAFU_JS"
-
     private val URL_MAP: Map<String, ZFApiList> = mapOf(
             User.FAFU to ZFApiList(User.FAFU, "http://jwgl.fafu.edu.cn/{token}/",
                     "default2.aspx",
@@ -94,6 +85,8 @@ object Constant {
     }
 
 }
+
+const val DATABASE_NAME = "ifafu_db"
 
 @StringDef(value = [User.FAFU, User.FAFU_JS])
 annotation class School

@@ -15,7 +15,7 @@ class User {
     var name: String = ""// 名字
     @School
     @ColumnInfo(name = "schoolCode")
-    var school: String = Constant.FAFU
+    var school: String = FAFU
     var token: String = generateToken()
 
     private fun generateToken(): String {

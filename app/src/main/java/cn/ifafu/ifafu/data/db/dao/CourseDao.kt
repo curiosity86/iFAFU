@@ -12,7 +12,7 @@ interface CourseDao {
     fun getAll(account: String, local: Boolean): List<Course>
 
     @Query("SELECT * FROM Course WHERE id=:id")
-    fun get(id: Long): Course?
+    fun get(id: Int): Course?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(vararg course: Course)

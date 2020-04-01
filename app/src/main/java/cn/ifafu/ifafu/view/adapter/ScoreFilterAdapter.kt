@@ -24,7 +24,7 @@ class ScoreFilterAdapter(context: Context) : RecyclerView.Adapter<ScoreFilterAda
     var afterCheckedListener: ((score: Score) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = layoutInflater.inflate(R.layout.score_filter_recycle_item, parent, false)
+        val view = layoutInflater.inflate(R.layout.item_score_filter, parent, false)
         return ViewHolder(view)
     }
 

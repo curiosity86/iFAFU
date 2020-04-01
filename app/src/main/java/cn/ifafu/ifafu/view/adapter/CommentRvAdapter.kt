@@ -6,7 +6,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 
 @Suppress("DEPRECATION")
-class CommentRvAdapter(data: List<CommentItem>, val click: (item: CommentItem) -> Unit) : BaseQuickAdapter<CommentItem, BaseViewHolder>(R.layout.comment_recycle_item, data) {
+class CommentRvAdapter(data: List<CommentItem>, val click: (item: CommentItem) -> Unit) : BaseQuickAdapter<CommentItem, BaseViewHolder>(R.layout.item_comment, data) {
 
     override fun convert(helper: BaseViewHolder, item: CommentItem?) {
         helper.run {

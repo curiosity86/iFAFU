@@ -1,40 +1,35 @@
 package cn.ifafu.ifafu
 
+import cn.ifafu.ifafu.data.bean.ElecSelection
 import cn.ifafu.ifafu.data.new_http.impl.JWServiceImpl
+import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
+import com.alibaba.fastjson.JSONArray
+import com.alibaba.fastjson.JSONObject
 import kotlinx.coroutines.*
 import org.junit.Test
 
 class Test {
-    data class User(val name: String)
 
-    private fun testCo() = runBlocking {
-        GlobalScope.launch(Dispatchers.Main) {
-            println("Main:        " + Thread.currentThread().name)
+    @Test
+    fun testCo() {
+        val json = JSONObject.toJSONString(RepositoryImpl.XfbRt.getSelectionList())
+
+        JSONArray.parseArray(json).map {
+            val json = JSONObject.parseObject(it.toString())
+            ElecSelection(
+                    aid = json["aid"]?.toString() ?: "",
+                    name = json["name"]?.toString() ?: "",
+                    areaId = json["areaId"]?.toString() ?: "",
+                    area = json["area"]?.toString() ?: "",
+                    buildingId = json["buildingId"]?.toString() ?: "",
+                    building = json["building"]?.toString() ?: "",
+                    floorId = json["floorId"]?.toString() ?: "",
+                    floor = json["floor"]?.toString() ?: "",
+                    group1 = json["group1"]?.toString() ?: "",
+                    group2 = json["group2"]?.toString() ?: ""
+            )
+        }.forEach {
+            println(JSONObject.toJSONString(it))
         }
-        GlobalScope.launch(Dispatchers.Main) {
-            println("Main:        " + Thread.currentThread().name)
-        }
-        println("Fefault:     " + Thread.currentThread().name)
-        println("Fefault:     " + Thread.currentThread().name)
-        println("Fefault:     " + Thread.currentThread().name)
-        GlobalScope.launch(Dispatchers.Default) {
-            println("Default:     " + Thread.currentThread().name)
-        }
-        GlobalScope.launch(Dispatchers.Default) {
-            println("Default:     " + Thread.currentThread().name)
-        }
-        GlobalScope.launch(Dispatchers.Unconfined) {
-            println("Unconfined:  " + Thread.currentThread().name)
-        }
-        GlobalScope.launch(Dispatchers.Unconfined) {
-            println("Unconfined:  " + Thread.currentThread().name)
-        }
-        GlobalScope.launch(Dispatchers.IO) {
-            println("IO:          " + Thread.currentThread().name)
-        }
-        GlobalScope.launch(Dispatchers.IO) {
-            println("IO:          " + Thread.currentThread().name)
-        }
-        delay(1000L)
     }
 }

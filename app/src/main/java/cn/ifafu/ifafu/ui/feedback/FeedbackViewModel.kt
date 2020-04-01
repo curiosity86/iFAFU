@@ -2,16 +2,16 @@ package cn.ifafu.ifafu.ui.feedback
 
 import android.app.Application
 import android.view.View
+import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.base.BaseViewModel
-import cn.ifafu.ifafu.data.repository.RepositoryImpl
-import cn.woolsen.easymvvm.livedata.LiveDataString
+import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class FeedbackViewModel(application: Application) : BaseViewModel(application) {
 
-    val contact = LiveDataString()
-    val message = LiveDataString()
+    val contact = MutableLiveData<String>()
+    val message = MutableLiveData<String>()
     val submitCommand = View.OnClickListener { submit() }
 
     private val repo = RepositoryImpl

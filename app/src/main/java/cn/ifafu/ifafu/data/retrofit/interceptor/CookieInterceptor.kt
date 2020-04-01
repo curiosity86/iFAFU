@@ -1,6 +1,6 @@
 package cn.ifafu.ifafu.data.retrofit.interceptor
 
-import cn.ifafu.ifafu.data.repository.RepositoryImpl
+import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import cn.ifafu.ifafu.data.entity.ElecCookie
 import okhttp3.Interceptor
 import okhttp3.Response

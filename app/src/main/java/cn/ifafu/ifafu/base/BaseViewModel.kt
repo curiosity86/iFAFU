@@ -10,7 +10,7 @@ import androidx.lifecycle.AndroidViewModel
 import cn.ifafu.ifafu.app.IFAFU
 import cn.ifafu.ifafu.data.bean.Response
 import cn.ifafu.ifafu.data.exception.NoAuthException
-import cn.ifafu.ifafu.data.repository.RepositoryImpl
+import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import cn.ifafu.ifafu.ui.login.LoginActivity
 import kotlinx.coroutines.*
 import java.io.IOException

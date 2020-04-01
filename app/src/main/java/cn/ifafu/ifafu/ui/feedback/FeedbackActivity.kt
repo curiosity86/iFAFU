@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.getViewModelFactory
+import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.databinding.ActivityFeedbackBinding
-import cn.woolsen.easymvvm.base.BaseActivity
 
 class FeedbackActivity : BaseActivity() {
 

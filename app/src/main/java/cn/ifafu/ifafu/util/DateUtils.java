@@ -8,7 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import cn.ifafu.ifafu.ui.syllabus.view.DayOfWeek;
+import cn.ifafu.ifafu.ui.schedule.view.DayOfWeek;
 
 /**
  * create by woolsen on 19/7/16

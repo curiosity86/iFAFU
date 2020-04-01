@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
-import cn.ifafu.ifafu.databinding.SettingActivityBinding
+import cn.ifafu.ifafu.databinding.ActivitySettingBinding
 import cn.ifafu.ifafu.view.adapter.syllabus_setting.*
 import me.drakeet.multitype.MultiTypeAdapter
 
@@ -29,7 +29,7 @@ class SettingActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setLightUiBar()
-        with(bind<SettingActivityBinding>(R.layout.setting_activity)) {
+        with(bind<ActivitySettingBinding>(R.layout.activity_setting)) {
             val dividerItemDecoration = DividerItemDecoration(this@SettingActivity, DividerItemDecoration.VERTICAL)
             dividerItemDecoration.setDrawable(getDrawable(R.drawable.shape_divider)!!)
             rvSetting.addItemDecoration(dividerItemDecoration)

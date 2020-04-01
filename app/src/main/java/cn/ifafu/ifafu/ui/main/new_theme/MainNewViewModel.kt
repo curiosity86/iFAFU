@@ -2,16 +2,16 @@ package cn.ifafu.ifafu.ui.main.new_theme
 
 import android.app.Application
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.entity.Exam
 import cn.ifafu.ifafu.data.entity.User
-import cn.ifafu.ifafu.data.repository.RepositoryImpl
+import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import cn.ifafu.ifafu.ui.main.bean.ClassPreview
 import cn.ifafu.ifafu.ui.main.bean.Weather
 import cn.ifafu.ifafu.ui.main.new_theme.view.TimeEvent
 import cn.ifafu.ifafu.util.DateUtils
-import cn.woolsen.easymvvm.livedata.LiveDataField
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -23,12 +23,12 @@ class MainNewViewModel(application: Application) : BaseViewModel(application) {
 
     private val repo = RepositoryImpl
 
-    val weather = LiveDataField<Weather>()
+    val weather = MutableLiveData<Weather>()
     val user: LiveData<User> = liveData {
         repo.user.getInUse()?.let { emit(it) }
     }
-    val timeEvents = LiveDataField<List<TimeEvent>>()
-    val nextCourse = LiveDataField<ClassPreview>()
+    val timeEvents = MutableLiveData<List<TimeEvent>>()
+    val nextCourse = MutableLiveData<ClassPreview>()
 
     fun updateWeather() = GlobalScope.launch {
         repo.getWeather("101230101").getOrNull()?.let {

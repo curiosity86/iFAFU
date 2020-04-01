@@ -2,6 +2,7 @@ package cn.ifafu.ifafu.util
 
 import okhttp3.*
 
+@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 open class HttpClient {
 
     private val client by lazy { OkHttpClient() }
@@ -16,11 +17,19 @@ open class HttpClient {
         return client.newCall(request.build()).execute()
     }
 
-    fun post(url: String, headers: Headers? = null, body: Map<String, String>? = null): Response {
+    fun post(url: String, headers: Headers? = null, body: Map<String, String>? = null, bodyEncoded: Boolean = false): Response {
         val formBody = if (body != null) {
-            FormBody.Builder()
-                    .add(body)
-                    .build()
+            if (bodyEncoded) {
+                FormBody.Builder().apply {
+                    for (entry in body.entries) {
+                        addEncoded(entry.key, entry.value)
+                    }
+                }.build()
+            } else {
+                FormBody.Builder()
+                        .add(body)
+                        .build()
+            }
         } else {
             null
         }

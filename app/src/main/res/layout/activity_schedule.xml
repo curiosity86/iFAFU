@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="vm"
+            type="cn.ifafu.ifafu.ui.schedule.SyllabusViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:scaleType="fitXY"
+            srcUri="@{vm.backgroundUri}"/>
+
+        <RelativeLayout
+            android:id="@+id/tb_syllabus"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:paddingTop="8dp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/btn_back"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="8dp"
+                android:padding="2dp"
+                android:src="@drawable/ic_back" />
+
+            <ImageButton
+                android:id="@+id/btn_add"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="4dp"
+                android:layout_toStartOf="@id/btn_refresh"
+                android:padding="2dp"
+                android:src="@drawable/ic_add" />
+
+            <ImageButton
+                android:id="@+id/btn_refresh"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="8dp"
+                android:layout_toStartOf="@id/btn_setting"
+                android:padding="2dp"
+                android:src="@drawable/ic_refresh" />
+
+            <ImageButton
+                android:id="@+id/btn_setting"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignEnd="@id/tv_subtitle"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="4dp"
+                android:padding="4dp"
+                android:src="@drawable/ic_setting" />
+
+            <TextView
+                android:id="@+id/tv_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_below="@id/tv_date"
+                android:layout_marginStart="4dp"
+                android:layout_toEndOf="@id/btn_back"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginStart="4dp"
+                android:layout_toEndOf="@id/btn_back"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_below="@id/tb_syllabus"
+            app:layout_constraintTop_toBottomOf="@id/tb_syllabus"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

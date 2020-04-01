@@ -3,7 +3,7 @@ package cn.ifafu.ifafu.ui.score_item
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.base.BaseViewModel
-import cn.ifafu.ifafu.data.repository.RepositoryImpl
+import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import cn.ifafu.ifafu.util.GlobalLib
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

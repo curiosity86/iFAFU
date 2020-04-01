@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.app.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
-import cn.ifafu.ifafu.databinding.ScoreItemActivityBinding
+import cn.ifafu.ifafu.databinding.ActivityScoreItemBinding
 import cn.ifafu.ifafu.view.adapter.ScoreItemAdapter
 
 class ScoreItemActivity : BaseActivity() {
@@ -19,7 +19,7 @@ class ScoreItemActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setLightUiBar()
-        with(bind<ScoreItemActivityBinding>(R.layout.score_item_activity)) {
+        with(bind<ActivityScoreItemBinding>(R.layout.activity_score_item)) {
             layoutManager = GridLayoutManager(this@ScoreItemActivity, 2)
             adapter = mAdapter
         }

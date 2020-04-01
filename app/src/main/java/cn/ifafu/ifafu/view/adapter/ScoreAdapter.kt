@@ -21,7 +21,7 @@ class ScoreAdapter(private val mContext: Context) : RecyclerView.Adapter<ScoreVi
     private var mClickListener: ((Score) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScoreViewHolder {
-        val view = LayoutInflater.from(mContext).inflate(R.layout.score_list_recycle_item, parent, false)
+        val view = LayoutInflater.from(mContext).inflate(R.layout.item_score_list_item, parent, false)
         return ScoreViewHolder(view)
     }
 

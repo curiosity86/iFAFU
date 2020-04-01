@@ -3,6 +3,7 @@ package cn.ifafu.ifafu.view.custom;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -57,8 +58,8 @@ public class WToolbar extends RelativeLayout {
     public WToolbar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        final TintTypedArray a = TintTypedArray.obtainStyledAttributes(getContext(), attrs,
-                R.styleable.WToolbar, defStyleAttr, 0);
+        final TypedArray a = context.obtainStyledAttributes(
+                attrs, R.styleable.WToolbar, defStyleAttr, 0);
 
         if (a.hasValue(R.styleable.WToolbar_elevation)) {
             setElevation(a.getDimension(R.styleable.WToolbar_elevation, 0));

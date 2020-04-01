@@ -42,7 +42,7 @@ class LoadingDialog constructor(context: Context, text: String? = null) {
         val loadingTV: TextView
 
         init {
-            setContentView(R.layout.progress_dialog)
+            setContentView(R.layout.dialog_progress)
             loadingTV = findViewById(R.id.tv_progress_text)
             setText(text)
             findViewById<ProgressBar>(R.id.pb_progress).apply {

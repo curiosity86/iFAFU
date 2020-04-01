@@ -31,7 +31,7 @@ class IFHttpClient : HttpClient() {
     fun postJW(user: User, @Domain domain: Int, params: Map<String, String>): Response {
         val headers = getHeader(user, domain)
         val url = getUrl(user, domain)
-        return post(url, headers, params)
+        return post(url, headers, params.mapValues { it.value.encode() }, true)
     }
 
     private fun getUrl(user: User, @Domain domain: Int): String {

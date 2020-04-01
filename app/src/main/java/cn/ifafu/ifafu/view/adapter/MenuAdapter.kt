@@ -17,7 +17,7 @@ class MenuAdapter(context: Context, menuList: List<Menu>) : RecyclerView.Adapter
     private var mItemClickListener: ((View?, Menu) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuViewHolder {
-        val view = LayoutInflater.from(mContext).inflate(R.layout.main_menu_recycle_item, parent, false)
+        val view = LayoutInflater.from(mContext).inflate(R.layout.item_main_new_tab, parent, false)
         return MenuViewHolder(view)
     }
 
