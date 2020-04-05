@@ -14,12 +14,11 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.getViewModelFactory
+import cn.ifafu.ifafu.ui.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
-import cn.ifafu.ifafu.databinding.ActivityScheduleBinding
 import cn.ifafu.ifafu.databinding.ActivityScheduleSettingBinding
-import cn.ifafu.ifafu.view.adapter.syllabus_setting.*
+import cn.ifafu.ifafu.ui.view.adapter.syllabus_setting.*
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.color.colorChooser
 import kotlinx.android.synthetic.main.activity_schedule_setting.*

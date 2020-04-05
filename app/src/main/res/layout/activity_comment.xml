@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <cn.ifafu.ifafu.view.custom.WToolbar
+    <cn.ifafu.ifafu.ui.view.custom.WoToolbar
         android:id="@+id/tb_comment"
         android:layout_width="match_parent"
         android:layout_height="56dp"

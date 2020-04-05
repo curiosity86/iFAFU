@@ -1,6 +1,6 @@
 package cn.ifafu.ifafu.data.new_http.impl
 
-import cn.ifafu.ifafu.app.Constant
+import cn.ifafu.ifafu.constant.Constant
 import cn.ifafu.ifafu.data.IFResult
 import cn.ifafu.ifafu.data.bean.Version
 import cn.ifafu.ifafu.ui.main.bean.Weather

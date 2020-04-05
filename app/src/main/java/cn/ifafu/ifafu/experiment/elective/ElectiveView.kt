@@ -40,8 +40,7 @@ class ElectiveView @JvmOverloads constructor(
     private val collapseAnimation by lazy { getRotateAnimation(-180F, 0F) }
 
     init {
-        val inflater = LayoutInflater.from(getContext())
-        val view = inflater.inflate(R.layout.view_elective_item, this)
+        val view = LayoutInflater.from(getContext()).inflate(R.layout.view_elective_item, this)
 
         rootLayout = view.findViewById(R.id.layout_root)
         btnSign = view.findViewById(R.id.btn_sign)

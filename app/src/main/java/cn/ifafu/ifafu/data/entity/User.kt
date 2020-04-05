@@ -4,7 +4,6 @@ import androidx.annotation.StringDef
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import cn.ifafu.ifafu.app.Constant
 import java.util.*
 
 @Entity

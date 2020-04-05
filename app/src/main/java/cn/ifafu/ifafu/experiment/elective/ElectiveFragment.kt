@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import cn.ifafu.ifafu.app.getViewModelFactory
+import cn.ifafu.ifafu.ui.getViewModelFactory
 import cn.ifafu.ifafu.data.entity.Score
 import cn.ifafu.ifafu.databinding.FragmentElectiveBinding
 import cn.ifafu.ifafu.ui.feedback.FeedbackActivity

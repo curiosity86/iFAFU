@@ -6,6 +6,7 @@ import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.entity.Score
 import cn.ifafu.ifafu.data.entity.ScoreFilter
 import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
+import cn.ifafu.ifafu.experiment.score.list.ScoreListViewModel
 import cn.ifafu.ifafu.util.trimEnd
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -16,7 +17,7 @@ class ScoreFilterViewModel(application: Application) : BaseViewModel(application
     private lateinit var _filter: ScoreFilter
     private lateinit var _scores: List<Score>
 
-    val scores = MutableLiveData<List<Score>>()
+    var scores = MutableLiveData<List<Score>>()
     val ies = MutableLiveData<String>()
 
     fun init(year: String, term: String) = GlobalScope.launch {
@@ -48,4 +49,5 @@ class ScoreFilterViewModel(application: Application) : BaseViewModel(application
         RepositoryImpl.ScoreRt.saveFilter(_filter)
         ies.postValue(_filter.calcIES(_scores).trimEnd(2))
     }
+
 }

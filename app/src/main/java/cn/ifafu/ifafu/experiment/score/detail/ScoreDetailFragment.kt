@@ -9,9 +9,14 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import cn.ifafu.ifafu.app.getViewModelFactory
+import cn.ifafu.ifafu.ui.getViewModelFactory
 import cn.ifafu.ifafu.databinding.FragmentScoreDetailBinding
-import cn.ifafu.ifafu.view.adapter.ScoreItemAdapter
+import cn.ifafu.ifafu.ui.view.adapter.ScoreItemAdapter
+import com.gyf.immersionbar.ImmersionBar
+import kotlinx.android.synthetic.main.fragment_score_detail.*
+import kotlinx.android.synthetic.main.fragment_score_detail.view.*
+import kotlinx.android.synthetic.main.fragment_score_detail.view.tb_score_detail
+import kotlinx.android.synthetic.main.fragment_score_filter.*
 
 class ScoreDetailFragment : Fragment() {
 
@@ -24,15 +29,26 @@ class ScoreDetailFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentScoreDetailBinding.inflate(inflater, container, false).apply {
             adapter = mAdapter
-            tbScoreItem.setNavigationOnClickListener {
-                findNavController().popBackStack()
-            }
         }
-        mViewModel.score.observe(viewLifecycleOwner, Observer {
-            mAdapter.replaceData(it)
-        })
-        mViewModel.init(args.scoreId)
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        //沉浸状态栏
+        ImmersionBar.with(this)
+                .titleBar(tb_score_detail)
+                .statusBarDarkFont(true)
+                .init()
+
+        //初始化监听事件
+        view.tb_score_detail.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        //初始化ViewModel
+        mViewModel.score.observe(viewLifecycleOwner, Observer {
+            mAdapter.addData(it)
+        })
+        mViewModel.init(args.scoreId)
+    }
 }

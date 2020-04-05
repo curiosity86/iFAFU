@@ -23,10 +23,9 @@
         android:clickable="true"
         android:focusable="true"
         android:gravity="center_horizontal"
-        android:orientation="vertical"
-        tools:context=".ui.main1.MainActivity">
+        android:orientation="vertical">
 
-        <cn.ifafu.ifafu.view.custom.WToolbar
+        <cn.ifafu.ifafu.ui.view.custom.WoToolbar
             android:id="@+id/tb_elec"
             android:layout_width="match_parent"
             android:layout_height="56dp"

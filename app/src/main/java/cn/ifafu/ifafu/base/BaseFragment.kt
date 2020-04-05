@@ -1,5 +1,6 @@
 package cn.ifafu.ifafu.base
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +10,7 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import cn.ifafu.ifafu.app.Constant
+import cn.ifafu.ifafu.constant.Constant
 import cn.ifafu.ifafu.ui.login.LoginActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -48,6 +49,9 @@ abstract class BaseFragment : Fragment(), UIEvent {
         }
     }
 
+    protected fun startActivityByClazz(clazz: Class<out Activity>) {
+        startActivity(Intent(requireContext(), clazz))
+    }
 
     override suspend fun startLoginActivity() {
         withContext(Dispatchers.Main) {

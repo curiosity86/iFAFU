@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -13,9 +14,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layoutFullscreen="@{false}">
 
-        <cn.ifafu.ifafu.view.custom.WToolbar
+        <cn.ifafu.ifafu.ui.view.custom.WoToolbar
             android:id="@+id/tb_elective"
             android:layout_width="match_parent"
             android:layout_height="56dp"
@@ -26,14 +28,14 @@
                 android:id="@+id/btn_feedback"
                 android:layout_width="48dp"
                 android:layout_height="32dp"
-                android:text="反馈"
-                android:textSize="16sp"
-                android:gravity="center"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="8dp"
-                android:src="@drawable/ic_feed" />
+                android:gravity="center"
+                android:src="@drawable/ic_feed"
+                android:text="@string/feedback_simple"
+                android:textSize="16sp" />
 
-        </cn.ifafu.ifafu.view.custom.WToolbar>
+        </cn.ifafu.ifafu.ui.view.custom.WoToolbar>
 
         <ScrollView
             android:layout_width="match_parent"
@@ -42,16 +44,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
                 android:orientation="vertical"
-                android:paddingTop="4dp"
-                android:animateLayoutChanges="true">
+                android:paddingTop="4dp">
 
                 <cn.ifafu.ifafu.experiment.elective.ElectiveView
                     android:id="@+id/e_total"
                     elective="@{vm.total}"
                     visibleGoneWhen="@{vm.total == null}"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    tools:visibility="visible" />
 
                 <cn.ifafu.ifafu.experiment.elective.ElectiveView
                     android:id="@+id/e_zrkx"

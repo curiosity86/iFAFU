@@ -6,37 +6,32 @@ import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.navigation.fragment.findNavController
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.Constant
-import cn.ifafu.ifafu.app.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseFragment
+import cn.ifafu.ifafu.constant.Constant
 import cn.ifafu.ifafu.data.bean.Menu
 import cn.ifafu.ifafu.databinding.FragmentMainNewBinding
+import cn.ifafu.ifafu.experiment.elective.ElectiveActivity
 import cn.ifafu.ifafu.experiment.score.ScoreActivity
 import cn.ifafu.ifafu.ui.activity.AboutActivity
-import cn.ifafu.ifafu.experiment.elective.ElectiveActivity
 import cn.ifafu.ifafu.ui.electricity.ElectricityActivity
 import cn.ifafu.ifafu.ui.exam_list.ExamListActivity
 import cn.ifafu.ifafu.ui.feedback.FeedbackActivity
-import cn.ifafu.ifafu.ui.main1.MainViewModel
-import cn.ifafu.ifafu.ui.main1.new_theme.MainNewViewModel
+import cn.ifafu.ifafu.ui.getViewModelFactory
+import cn.ifafu.ifafu.ui.main.MainViewModel
 import cn.ifafu.ifafu.ui.schedule.SyllabusActivity
 import cn.ifafu.ifafu.ui.setting.SettingActivity
+import cn.ifafu.ifafu.ui.view.adapter.MenuAdapter
+import cn.ifafu.ifafu.ui.view.custom.DragLayout
+import cn.ifafu.ifafu.ui.view.listener.OnMenuItemClickListener
 import cn.ifafu.ifafu.ui.web.WebActivity
-import cn.ifafu.ifafu.util.ButtonUtils
-import cn.ifafu.ifafu.view.adapter.MenuAdapter
-import cn.ifafu.ifafu.view.custom.DragLayout
 import kotlinx.android.synthetic.main.fragment_main_new.*
 import kotlinx.android.synthetic.main.include_main_new.*
 import kotlinx.android.synthetic.main.include_main_new_course.*
 import kotlinx.android.synthetic.main.include_main_new_left_menu.*
-import timber.log.Timber
 
-class MainNewFragment : BaseFragment(), View.OnClickListener {
-
-    private var mMenuAdapter: MenuAdapter? = null
+class MainNewFragment : BaseFragment(), View.OnClickListener, OnMenuItemClickListener {
 
     private val viewModel: MainNewViewModel by viewModels { getViewModelFactory() }
     private val activityViewModel: MainViewModel by activityViewModels { getViewModelFactory() }
@@ -77,34 +72,45 @@ class MainNewFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun initMenu() {
-        val menus = listOf(
-                Menu(R.drawable.tab_syllabus, "课程表", SyllabusActivity::class.java),
-                Menu(R.drawable.tab_exam, "考试计划", ExamListActivity::class.java),
-                Menu(R.drawable.tab_score, "成绩查询", ScoreActivity::class.java),
-                Menu(R.drawable.tab_elective, "选修查询", ElectiveActivity::class.java),
-                Menu(R.drawable.tab_web, "网页模式", WebActivity::class.java),
-                Menu(R.drawable.tab_electricity, "电费查询", ElectricityActivity::class.java),
-                Menu(R.drawable.tab_repair, "报修服务", WebActivity::class.java),
-                Menu(R.drawable.tab_feedback, "反馈问题", FeedbackActivity::class.java)
+        val menus = mutableListOf(
+                Menu(R.id.menu_schedule, R.drawable.tab_syllabus, "课程表", SyllabusActivity::class.java),
+                Menu(R.id.menu_exam_list, R.drawable.tab_exam, "考试计划", ExamListActivity::class.java),
+                Menu(R.id.menu_score_list, R.drawable.tab_score, "成绩查询", ScoreActivity::class.java),
+                Menu(R.id.menu_elective, R.drawable.tab_elective, "选修查询", ElectiveActivity::class.java),
+                Menu(R.id.menu_web, R.drawable.tab_web, "网页模式", WebActivity::class.java),
+                Menu(R.id.menu_electricity, R.drawable.tab_electricity, "电费查询", ElectricityActivity::class.java),
+                Menu(R.id.menu_repair, R.drawable.tab_repair, "报修服务", WebActivity::class.java),
+                Menu(R.id.menu_feedback, R.drawable.tab_feedback, "反馈问题", FeedbackActivity::class.java)
         )
-        mMenuAdapter = MenuAdapter(requireContext()).apply {
-            setOnMenuClickListener { _, menu ->
-                if (!ButtonUtils.isFastDoubleClick(Constant.ACTIVITY_MAIN)) {
-                    if (menu.title == "报修服务") {
-                        startActivity(Intent(activity, menu.activityClass).apply {
-                            putExtra("title", "报修服务")
-                            putExtra("url", Constant.REPAIR_URL)
-                        })
-                    } else {
-                        startActivity(Intent(activity, menu.activityClass))
-                    }
-                }
+        val menuAdapter = MenuAdapter(this)
+        menuAdapter.data = menus
+        rv_menu.adapter = menuAdapter
+    }
+
+    override fun onMenuItemClick(menu: Menu) {
+        when (menu.id) {
+            R.id.menu_schedule ->
+                startActivityByClazz(SyllabusActivity::class.java)
+            R.id.menu_exam_list ->
+                startActivityByClazz(ExamListActivity::class.java)
+            R.id.menu_score_list ->
+                findNavController().navigate(R.id.action_fragment_main_new_to_fragment_score_list)
+            R.id.menu_elective ->
+                startActivityByClazz(ElectiveActivity::class.java)
+            R.id.menu_web ->
+                startActivityByClazz(WebActivity::class.java)
+            R.id.menu_electricity ->
+                startActivityByClazz(ElectricityActivity::class.java)
+            R.id.menu_repair -> {
+                startActivity(Intent(activity, menu.activityClass).apply {
+                    putExtra("title", "报修服务")
+                    putExtra("url", Constant.REPAIR_URL)
+                })
+            }
+            R.id.menu_feedback -> {
+                findNavController().navigate(R.id.action_fragment_main_new_to_feedbackFragment)
             }
         }
-        mMenuAdapter?.menus = menus
-        rv_menu.layoutManager = GridLayoutManager(
-                context, 4, RecyclerView.VERTICAL, false)
-        rv_menu.adapter = mMenuAdapter
     }
 
     override fun onClick(v: View?) {
@@ -130,29 +136,5 @@ class MainNewFragment : BaseFragment(), View.OnClickListener {
         tv_course_time.text = time
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Timber.d("onDestroy")
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        Timber.d("onDetach")
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Timber.d("onDestroyView")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Timber.d("onPause")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Timber.d("onStop")
-    }
 
 }

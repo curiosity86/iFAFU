@@ -1,6 +1,5 @@
 package cn.ifafu.ifafu.data.retrofit.parser
 
-import cn.ifafu.ifafu.app.Constant
 import cn.ifafu.ifafu.data.entity.Electives
 import cn.ifafu.ifafu.data.entity.User
 import org.jsoup.Jsoup

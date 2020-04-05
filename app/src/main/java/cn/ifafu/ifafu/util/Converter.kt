@@ -5,8 +5,7 @@ package cn.ifafu.ifafu.util
 import android.content.Context
 import android.graphics.drawable.Drawable
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.Constant
-import cn.ifafu.ifafu.app.School
+import cn.ifafu.ifafu.constant.School
 import cn.ifafu.ifafu.data.bean.Semester
 import cn.ifafu.ifafu.data.entity.User
 

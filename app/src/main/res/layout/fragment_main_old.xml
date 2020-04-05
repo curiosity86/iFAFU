@@ -7,28 +7,25 @@
     <data>
         <variable
             name="viewModel"
-            type="cn.ifafu.ifafu.ui.main1.old_theme.MainOldViewModel" />
+            type="cn.ifafu.ifafu.ui.main.old_theme.MainOldViewModel" />
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/layout_drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        layoutFullscreen="@{true}">
 
         <LinearLayout
             android:id="@+id/layout_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/main_old_bg"
-            android:orientation="vertical">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="24dp"
-                android:background="@color/global_blue" />
+            android:orientation="vertical"
+            android:background="@drawable/main_old_bg">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/tb_score_filter"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:background="@color/global_blue">

@@ -1,7 +1,7 @@
 package cn.ifafu.ifafu.data.new_http.impl
 
 import android.graphics.Bitmap
-import cn.ifafu.ifafu.app.Constant
+import cn.ifafu.ifafu.constant.Constant
 import cn.ifafu.ifafu.base.BaseApplication
 import cn.ifafu.ifafu.data.IFResult
 import cn.ifafu.ifafu.data.bean.URL
@@ -16,7 +16,6 @@ import cn.ifafu.ifafu.data.new_http.converter.LoginConverter
 import cn.ifafu.ifafu.data.retrofit.parser.VerifyParser
 import cn.ifafu.ifafu.util.BitmapUtil
 import cn.ifafu.ifafu.util.SPUtils
-import cn.ifafu.ifafu.util.encode
 import kotlinx.coroutines.*
 import org.jsoup.Jsoup
 import java.io.IOException

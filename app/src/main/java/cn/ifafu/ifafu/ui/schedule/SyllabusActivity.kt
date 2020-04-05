@@ -12,8 +12,8 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.Constant
-import cn.ifafu.ifafu.app.getViewModelFactory
+import cn.ifafu.ifafu.constant.Constant
+import cn.ifafu.ifafu.ui.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
 import cn.ifafu.ifafu.databinding.ActivityScheduleBinding

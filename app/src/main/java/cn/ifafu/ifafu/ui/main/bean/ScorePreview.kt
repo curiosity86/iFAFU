@@ -9,12 +9,13 @@ class ScorePreview private constructor(
 ) {
     companion object {
         fun convert(scores: List<Score>?): ScorePreview {
-            return if (scores == null) {
-                ScorePreview(hasInfo = false, message = "获取成绩失败")
-            } else if (scores.isEmpty()) {
-                ScorePreview(hasInfo = false, message = "暂无考试成绩")
-            } else {
-                ScorePreview(hasInfo = true, text = "已出${scores.size}门成绩")
+            return when {
+                scores == null ->
+                    ScorePreview(hasInfo = false, message = "获取成绩失败")
+                scores.isEmpty() ->
+                    ScorePreview(hasInfo = false, message = "暂无成绩信息")
+                else ->
+                    ScorePreview(hasInfo = true, text = "已出${scores.size}门成绩")
             }
         }
     }

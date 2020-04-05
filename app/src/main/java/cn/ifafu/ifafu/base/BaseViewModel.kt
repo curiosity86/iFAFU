@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteConstraintException
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
-import cn.ifafu.ifafu.app.IFAFU
+import cn.ifafu.ifafu.IFAFU
 import cn.ifafu.ifafu.data.bean.Response
 import cn.ifafu.ifafu.data.exception.NoAuthException
 import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl

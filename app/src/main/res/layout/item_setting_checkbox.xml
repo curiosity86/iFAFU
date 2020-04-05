@@ -44,7 +44,7 @@
 
         </LinearLayout>
 
-        <cn.ifafu.ifafu.view.custom.SmoothCheckBox
+        <cn.ifafu.ifafu.ui.view.custom.SmoothCheckBox
             android:id="@+id/checkbox"
             android:layout_width="20dp"
             android:layout_height="20dp"

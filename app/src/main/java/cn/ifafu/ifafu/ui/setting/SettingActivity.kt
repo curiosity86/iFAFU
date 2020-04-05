@@ -7,10 +7,10 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.getViewModelFactory
+import cn.ifafu.ifafu.ui.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.databinding.ActivitySettingBinding
-import cn.ifafu.ifafu.view.adapter.syllabus_setting.*
+import cn.ifafu.ifafu.ui.view.adapter.syllabus_setting.*
 import me.drakeet.multitype.MultiTypeAdapter
 
 class SettingActivity : BaseActivity() {

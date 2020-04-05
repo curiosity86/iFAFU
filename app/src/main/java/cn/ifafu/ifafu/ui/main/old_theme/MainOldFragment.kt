@@ -8,29 +8,27 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.Constant
-import cn.ifafu.ifafu.app.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseFragment
+import cn.ifafu.ifafu.constant.Constant
 import cn.ifafu.ifafu.databinding.FragmentMainOldBinding
-import cn.ifafu.ifafu.experiment.score.ScoreActivity
-import cn.ifafu.ifafu.ui.activity.AboutActivity
 import cn.ifafu.ifafu.experiment.elective.ElectiveActivity
+import cn.ifafu.ifafu.experiment.score.ScoreActivity
 import cn.ifafu.ifafu.ui.electricity.ElectricityActivity
 import cn.ifafu.ifafu.ui.exam_list.ExamListActivity
-import cn.ifafu.ifafu.ui.feedback.FeedbackActivity
-import cn.ifafu.ifafu.ui.main1.MainViewModel
+import cn.ifafu.ifafu.ui.getViewModelFactory
+import cn.ifafu.ifafu.ui.main.MainViewModel
 import cn.ifafu.ifafu.ui.main.bean.Menu
-import cn.ifafu.ifafu.ui.main1.old_theme.MainOldViewModel
 import cn.ifafu.ifafu.ui.schedule.SyllabusActivity
 import cn.ifafu.ifafu.ui.setting.SettingActivity
+import cn.ifafu.ifafu.ui.view.custom.MenuMaker
+import cn.ifafu.ifafu.ui.view.listener.OnMenuItemClickListener
+import cn.ifafu.ifafu.ui.view.listener.ScrollDrawerListener
 import cn.ifafu.ifafu.ui.web.WebActivity
-import cn.ifafu.ifafu.view.custom.MenuClickListener
-import cn.ifafu.ifafu.view.custom.MenuMaker
-import cn.ifafu.ifafu.view.listener.ScrollDrawerListener
 import com.google.android.material.navigation.NavigationView
 
-class MainOldFragment : BaseFragment(), MenuClickListener, View.OnClickListener {
+class MainOldFragment : BaseFragment(), View.OnClickListener, OnMenuItemClickListener {
 
     private val activityViewModel: MainViewModel by activityViewModels { getViewModelFactory() }
 
@@ -73,29 +71,28 @@ class MainOldFragment : BaseFragment(), MenuClickListener, View.OnClickListener 
     }
 
     private fun initLeftMenu(rootView: View) {
-        val leftMenuLayout = rootView.findViewById<LinearLayout>(R.id.layout_left_menu) ?: return
-        val menu = Menu(mapOf(
+        val menuLayout = rootView.findViewById<LinearLayout>(R.id.layout_left_menu) ?: return
+        val menu = mapOf(
                 "信息查询" to listOf(
-                        Menu.Item("成绩查询", R.drawable.menu_score_white),
-                        Menu.Item("学生考试查询", R.drawable.menu_exam_white),
-                        Menu.Item("电费查询", R.drawable.menu_elec_white),
-                        Menu.Item("选修学分查询", R.drawable.menu_elective_white)),
+                        cn.ifafu.ifafu.data.bean.Menu(R.id.menu_exam_list, R.drawable.menu_score_white, "成绩查询"),
+                        cn.ifafu.ifafu.data.bean.Menu(R.id.menu_exam_list, R.drawable.menu_exam_white, "学生考试查询"),
+                        cn.ifafu.ifafu.data.bean.Menu(R.id.menu_electricity, R.drawable.menu_elec_white, "电费查询"),
+                        cn.ifafu.ifafu.data.bean.Menu(R.id.menu_elective, R.drawable.menu_elective_white, "选修学分查询")),
                 "实用工具" to listOf(
-                        Menu.Item("我的课表", R.drawable.menu_syllabus_white),
-                        Menu.Item("网页模式", R.drawable.menu_web_white),
-//                        Menu.Item("一键评教", R.drawable.main_old_tabs_comment),
-                        Menu.Item("报修服务", R.drawable.main_old_tabs_repair)),
+                        cn.ifafu.ifafu.data.bean.Menu(R.id.menu_schedule, R.drawable.menu_syllabus_white, "我的课表"),
+                        cn.ifafu.ifafu.data.bean.Menu(R.id.menu_web, R.drawable.menu_web_white, "网页模式"),
+                        cn.ifafu.ifafu.data.bean.Menu(R.id.menu_repair, R.drawable.main_old_tabs_repair, "报修服务")),
                 "软件设置" to listOf(
-                        Menu.Item("软件设置", R.drawable.menu_setting_white),
-                        Menu.Item("账号管理", R.drawable.main_old_tabs_manage)),
+                        cn.ifafu.ifafu.data.bean.Menu(R.id.menu_setting, R.drawable.menu_setting_white, "软件设置"),
+                        cn.ifafu.ifafu.data.bean.Menu(R.id.menu_account_management, R.drawable.main_old_tabs_manage, "账号管理")),
                 "关于软件" to listOf(
-                        Menu.Item("检查更新", R.drawable.menu_update_white),
-                        Menu.Item("关于iFAFU", R.drawable.main_old_tabs_about),
-                        Menu.Item("反馈问题", R.drawable.ic_feedback_white)
+                        cn.ifafu.ifafu.data.bean.Menu(R.id.menu_upgrade, R.drawable.menu_update_white, "检查更新"),
+                        cn.ifafu.ifafu.data.bean.Menu(R.id.menu_about_ifafu, R.drawable.main_old_tabs_about, "关于iFAFU"),
+                        cn.ifafu.ifafu.data.bean.Menu(R.id.menu_feedback, R.drawable.ic_feedback_white, "反馈问题")
                 )
-        ))
+        )
         MenuMaker(menu)
-                .layout(leftMenuLayout)
+                .layout(menuLayout)
                 .menuClickListener(this)
                 .make()
     }
@@ -109,26 +106,33 @@ class MainOldFragment : BaseFragment(), MenuClickListener, View.OnClickListener 
         }
     }
 
-    override fun onMenuClick(item: Menu.Item) {
-        when (item.title) {
-            "成绩查询" -> startActivity(Intent(activity, ScoreActivity::class.java))
-            "学生考试查询" -> startActivity(Intent(activity, ExamListActivity::class.java))
-            "我的课表" -> startActivity(Intent(activity, SyllabusActivity::class.java))
-            "网页模式" -> startActivity(Intent(activity, WebActivity::class.java))
-            "电费查询" -> startActivity(Intent(activity, ElectricityActivity::class.java))
-            "报修服务" -> {
-                startActivity(Intent(activity, WebActivity::class.java).apply {
+    override fun onMenuItemClick(menu: cn.ifafu.ifafu.data.bean.Menu) {
+        when (menu.id) {
+            R.id.menu_exam_list ->
+                startActivityByClazz(ExamListActivity::class.java)
+            R.id.menu_score_list ->
+                findNavController().navigate(R.id.action_fragment_main_old_to_fragment_score_list)
+            R.id.menu_electricity ->
+                startActivityByClazz(ElectricityActivity::class.java)
+            R.id.menu_elective ->
+                startActivityByClazz(ElectiveActivity::class.java)
+            R.id.menu_schedule ->
+                startActivityByClazz(SyllabusActivity::class.java)
+            R.id.menu_web ->
+                startActivityByClazz(WebActivity::class.java)
+            R.id.menu_repair ->
+                startActivity(Intent(activity, menu.activityClass).apply {
                     putExtra("title", "报修服务")
                     putExtra("url", Constant.REPAIR_URL)
                 })
-            }
-            "选修学分查询" -> startActivity(Intent(activity, ElectiveActivity::class.java))
-//            "一键评教" -> startActivity(Intent(context, CommentActivity::class.java))
-            "账号管理" -> activityViewModel.switchAccount()
-            "软件设置" -> requireActivity().startActivityForResult(Intent(context, SettingActivity::class.java), Constant.ACTIVITY_SETTING)
-            "检查更新" -> activityViewModel.upgradeApp()
-            "关于iFAFU" -> startActivity(Intent(activity, AboutActivity::class.java))
-            "反馈问题" -> startActivity(Intent(activity, FeedbackActivity::class.java))
+            R.id.menu_setting ->
+                startActivityByClazz(SettingActivity::class.java)
+            R.id.menu_account_management ->
+                activityViewModel.switchAccount()
+            R.id.menu_upgrade ->
+                activityViewModel.upgradeApp()
+            R.id.menu_feedback ->
+                findNavController().navigate(R.id.action_fragment_main_old_to_feedbackFragment)
         }
         mDrawerLayout.closeDrawer(GravityCompat.START)
     }

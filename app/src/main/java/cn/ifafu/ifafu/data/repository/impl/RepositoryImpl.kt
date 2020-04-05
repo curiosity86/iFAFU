@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteConstraintException
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
-import cn.ifafu.ifafu.app.Constant
+import cn.ifafu.ifafu.constant.Constant
 import cn.ifafu.ifafu.base.BaseApplication
 import cn.ifafu.ifafu.data.IFResult
 import cn.ifafu.ifafu.data.bean.*

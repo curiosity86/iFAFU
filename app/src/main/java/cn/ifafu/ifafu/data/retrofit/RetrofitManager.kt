@@ -1,6 +1,6 @@
 package cn.ifafu.ifafu.data.retrofit
 
-import cn.ifafu.ifafu.app.Constant
+import cn.ifafu.ifafu.constant.Constant
 import cn.ifafu.ifafu.data.retrofit.interceptor.JWCookieInterceptor
 import cn.ifafu.ifafu.util.SPUtils.Companion.get
 import okhttp3.Interceptor

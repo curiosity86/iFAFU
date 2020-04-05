@@ -6,7 +6,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
-import cn.ifafu.ifafu.app.Constant
+import cn.ifafu.ifafu.constant.Constant
 import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.bean.ZFApiList
 import cn.ifafu.ifafu.data.entity.SyllabusSetting

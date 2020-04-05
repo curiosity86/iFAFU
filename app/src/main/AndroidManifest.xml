@@ -11,14 +11,13 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
-        android:name=".app.IFAFU"
+        android:name=".IFAFU"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="${app_icon}"
         android:label="${app_name}"
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="${app_icon_round}"
-        android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="ExportedService,GoogleAppIndexingWarning,UnusedAttribute">
         <activity
@@ -49,6 +48,9 @@
         <activity android:name=".ui.feedback.FeedbackActivity"/>
         <activity android:name=".experiment.score.ScoreActivity"
             android:launchMode="singleTask" />
+        <activity android:name=".experiment.MainActivity" />
+        <activity android:name=".experiment.score.filter.ScoreFilterActivity" />
+
         <meta-data
             android:name="BUGLY_APP_CHANNEL"
             android:value="${channel}" />
@@ -66,7 +68,7 @@
             android:value="portrait|landscape" />
 
         <receiver
-            android:name=".widget.SyllabusWidget"
+            android:name="cn.ifafu.ifafu.ui.widget.SyllabusWidget"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

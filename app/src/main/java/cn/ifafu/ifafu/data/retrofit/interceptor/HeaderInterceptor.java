@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import java.io.IOException;
 
-import cn.ifafu.ifafu.app.Constant;
+import cn.ifafu.ifafu.constant.Constant;
 import cn.ifafu.ifafu.util.SPUtils;
 import okhttp3.Interceptor;
 import okhttp3.Request;

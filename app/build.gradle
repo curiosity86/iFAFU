@@ -129,7 +129,7 @@ dependencies {
     //动画低版本支持
     implementation 'com.nineoldandroids:library:2.4.0'
     //ViewAdapter
-    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50'
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.2'
     implementation 'me.drakeet.multitype:multitype:4.0.0-alpha3'
     //Material Dialogs: https://github.com/afollestad/material-dialogs
 //    implementation 'com.orhanobut:dialogplus:1.11@aar'

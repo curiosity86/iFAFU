@@ -14,14 +14,16 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        layoutFullscreen="@{false}">
 
-        <cn.ifafu.ifafu.view.custom.WToolbar
-            android:id="@+id/tb_elec"
+        <cn.ifafu.ifafu.ui.view.custom.WoToolbar
+            android:id="@+id/tb_score_filter"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             app:elevation="4dp"
-            app:title="反馈" />
+            app:title="反馈"
+            addPaddingTopStatusBar="@{true}"/>
 
         <TextView
             android:layout_width="match_parent"

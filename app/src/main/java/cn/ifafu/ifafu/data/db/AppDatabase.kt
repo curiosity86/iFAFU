@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import cn.ifafu.ifafu.app.DATABASE_NAME
+import cn.ifafu.ifafu.constant.DATABASE_NAME
 import cn.ifafu.ifafu.data.db.converter.*
 import cn.ifafu.ifafu.data.db.dao.*
 import cn.ifafu.ifafu.data.entity.*

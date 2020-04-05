@@ -8,8 +8,8 @@ import android.view.Window
 import android.view.WindowManager.LayoutParams
 import androidx.appcompat.app.AppCompatActivity
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.Constant
-import cn.ifafu.ifafu.app.IFAFU
+import cn.ifafu.ifafu.constant.Constant
+import cn.ifafu.ifafu.IFAFU
 import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import cn.ifafu.ifafu.ui.exam_list.ExamListActivity
 import cn.ifafu.ifafu.ui.login.LoginActivity
@@ -50,7 +50,7 @@ class SplashActivity : AppCompatActivity() {
                     activity = SyllabusActivity::class.java
                 }
                 else -> {
-                    activity = MainActivity::class.java
+                    activity = cn.ifafu.ifafu.experiment.MainActivity::class.java
                 }
             }
             val intent = Intent(this@SplashActivity, activity)

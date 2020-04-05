@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Intent
 import android.webkit.CookieManager
 import androidx.lifecycle.MutableLiveData
-import cn.ifafu.ifafu.app.Constant
+import cn.ifafu.ifafu.constant.Constant
 import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import cn.ifafu.ifafu.data.bean.ZFApiList

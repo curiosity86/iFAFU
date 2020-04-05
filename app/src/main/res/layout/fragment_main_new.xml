@@ -3,31 +3,34 @@
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="vm"
-            type="cn.ifafu.ifafu.ui.main1.new_theme.MainNewViewModel" />
+            type="cn.ifafu.ifafu.ui.main.new_theme.MainNewViewModel" />
     </data>
 
-    <cn.ifafu.ifafu.view.custom.DragLayout
+    <cn.ifafu.ifafu.ui.view.custom.DragLayout
         android:id="@+id/drawer_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/main_left_bg"
         android:orientation="vertical">
 
-        <include layout="@layout/include_main_new_left_menu"
-            bind:user="@{vm.user}"/>
+        <include
+            layout="@layout/include_main_new_left_menu"
+            bind:user="@{vm.user}" />
 
-        <cn.ifafu.ifafu.view.custom.MyLinearLayout
+        <cn.ifafu.ifafu.ui.view.custom.MyLinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/bg_gray"
             android:orientation="vertical">
 
-            <include layout="@layout/include_main_new"
-                bind:weather="@{vm.weather}"/>
+            <include
+                layout="@layout/include_main_new"
+                bind:weather="@{vm.weather}" />
 
-        </cn.ifafu.ifafu.view.custom.MyLinearLayout>
+        </cn.ifafu.ifafu.ui.view.custom.MyLinearLayout>
 
-    </cn.ifafu.ifafu.view.custom.DragLayout>
+    </cn.ifafu.ifafu.ui.view.custom.DragLayout>
 </layout>

@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import cn.ifafu.ifafu.data.entity.GlobalSetting
-import cn.ifafu.ifafu.view.adapter.syllabus_setting.CheckBoxItem
-import cn.ifafu.ifafu.view.adapter.syllabus_setting.SettingItem
+import cn.ifafu.ifafu.ui.view.adapter.syllabus_setting.CheckBoxItem
+import cn.ifafu.ifafu.ui.view.adapter.syllabus_setting.SettingItem
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 

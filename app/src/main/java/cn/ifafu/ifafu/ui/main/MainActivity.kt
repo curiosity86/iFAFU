@@ -10,18 +10,17 @@ import androidx.activity.viewModels
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.Constant
-import cn.ifafu.ifafu.app.getViewModelFactory
+import cn.ifafu.ifafu.constant.Constant
+import cn.ifafu.ifafu.ui.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.data.entity.GlobalSetting
 import cn.ifafu.ifafu.ui.login.LoginActivity
 import cn.ifafu.ifafu.ui.main.new_theme.MainNewFragment
 import cn.ifafu.ifafu.ui.main.old_theme.MainOldFragment
 import cn.ifafu.ifafu.ui.main.view.MultiUserDialog
-import cn.ifafu.ifafu.ui.main.MainViewModel
 import cn.ifafu.ifafu.ui.view.LoadingDialog
 import cn.ifafu.ifafu.util.ButtonUtils
-import cn.ifafu.ifafu.view.custom.DragLayout
+import cn.ifafu.ifafu.ui.view.custom.DragLayout
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
@@ -59,7 +58,6 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ImmersionBar.with(this).init()
         setContentView(R.layout.activity_main)
         mViewModel.theme.observe(this, Observer {
             supportFragmentManager.beginTransaction().apply {

@@ -1,7 +1,7 @@
 package cn.ifafu.ifafu.data.new_http
 
 import androidx.annotation.IntDef
-import cn.ifafu.ifafu.app.Constant
+import cn.ifafu.ifafu.constant.Constant
 import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.util.HttpClient
 import cn.ifafu.ifafu.util.encode

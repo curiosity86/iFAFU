@@ -8,8 +8,8 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.Constant
-import cn.ifafu.ifafu.app.getViewModelFactory
+import cn.ifafu.ifafu.constant.Constant
+import cn.ifafu.ifafu.ui.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.databinding.ActivityLoginBinding
 import cn.ifafu.ifafu.ui.main.MainActivity
@@ -38,7 +38,7 @@ class LoginActivity : BaseActivity() {
             }
             vm = viewModel
             etPassword.setOnEditorActionListener { v, actionId, event ->
-                if (actionId == KeyEvent.ACTION_DOWN) {
+                if (event.action == KeyEvent.ACTION_DOWN) {
                     viewModel.login()
                 }
                 true

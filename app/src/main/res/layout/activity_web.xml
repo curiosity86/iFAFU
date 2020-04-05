@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <cn.ifafu.ifafu.view.custom.WToolbar
+        <cn.ifafu.ifafu.ui.view.custom.WoToolbar
             android:id="@+id/tb_web"
             android:layout_width="match_parent"
             android:layout_height="56dp"
@@ -32,7 +32,7 @@
                 android:src="@drawable/ic_refresh"
                 android:tint="@color/black" />
 
-        </cn.ifafu.ifafu.view.custom.WToolbar>
+        </cn.ifafu.ifafu.ui.view.custom.WoToolbar>
 
     </LinearLayout>
 </layout>

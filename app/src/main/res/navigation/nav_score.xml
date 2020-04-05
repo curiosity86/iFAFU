@@ -40,7 +40,7 @@
 
     <fragment
         android:id="@+id/fragment_score_filter"
-        android:name="cn.ifafu.ifafu.experiment.score.filter.ScoreFilterFragment"
+        android:name="cn.ifafu.ifafu.experiment.score.filter.ScoreFilterActivity"
         tools:layout="@layout/fragment_score_filter">
 
         <argument

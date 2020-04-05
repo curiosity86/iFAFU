@@ -166,4 +166,5 @@
     <string name="refresh_schedule">刷新课表</string>
     <string name="score_filter">智育分筛选</string>
     <string name="refresh">刷新</string>
+    <string name="feedback_simple">反馈</string>
 </resources>

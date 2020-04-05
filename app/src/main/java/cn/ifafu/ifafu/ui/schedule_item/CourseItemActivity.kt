@@ -9,15 +9,14 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.getViewModelFactory
+import cn.ifafu.ifafu.ui.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.data.entity.Course
 import cn.ifafu.ifafu.databinding.ActivityCourseItemBinding
 import cn.ifafu.ifafu.ui.schedule.SyllabusActivity
-import cn.ifafu.ifafu.view.adapter.WeekItemAdapter
+import cn.ifafu.ifafu.ui.view.adapter.WeekItemAdapter
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.view.OptionsPickerView
-import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.android.synthetic.main.activity_course_item.*
 
 class CourseItemActivity : BaseActivity(), View.OnClickListener {

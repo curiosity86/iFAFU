@@ -7,10 +7,10 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.getViewModelFactory
+import cn.ifafu.ifafu.ui.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.databinding.ActivityExamListBinding
-import cn.ifafu.ifafu.view.adapter.ExamAdapter
+import cn.ifafu.ifafu.ui.view.adapter.ExamAdapter
 import cn.ifafu.ifafu.ui.view.LoadingDialog
 import cn.ifafu.ifafu.ui.view.SemesterOptionPicker
 import kotlinx.android.synthetic.main.activity_exam_list.*

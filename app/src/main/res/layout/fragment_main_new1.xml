@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="cn.ifafu.ifafu.experiment.main.newly.MainNewViewModel" />
+    </data>
+
+    <cn.ifafu.ifafu.ui.view.custom.DragLayout
+        android:id="@+id/drawer_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/main_left_bg"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/include_main_new_left_menu"
+            app:user="@{vm.user}" />
+
+        <cn.ifafu.ifafu.ui.view.custom.MyLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bg_gray"
+            android:orientation="vertical">
+
+            <include
+                layout="@layout/include_main_new"
+                app:timeEvents="@{vm.timeEvents}"
+                app:weather="@{vm.weather}" />
+
+        </cn.ifafu.ifafu.ui.view.custom.MyLinearLayout>
+
+    </cn.ifafu.ifafu.ui.view.custom.DragLayout>
+</layout>

@@ -14,7 +14,7 @@ import android.widget.LinearLayout
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.app.getViewModelFactory
+import cn.ifafu.ifafu.ui.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.databinding.ActivityWebBinding
 import cn.ifafu.ifafu.ui.view.LoadingDialog
