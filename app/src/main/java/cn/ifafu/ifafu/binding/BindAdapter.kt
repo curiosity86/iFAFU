@@ -1,6 +1,5 @@
 package cn.ifafu.ifafu.binding
 
-import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.view.LayoutInflater
@@ -11,18 +10,13 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.view.marginTop
-import androidx.core.view.updateLayoutParams
-import androidx.core.view.updatePadding
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import cn.ifafu.ifafu.experiment.elective.Elective
-import cn.ifafu.ifafu.experiment.elective.ElectiveView
+import cn.ifafu.ifafu.experiment.ui.elective.Elective
+import cn.ifafu.ifafu.experiment.ui.elective.ElectiveView
 import cn.ifafu.ifafu.ui.main.new_theme.view.TimeEvent
 import cn.ifafu.ifafu.ui.main.new_theme.view.Timeline
-import com.gyf.immersionbar.ImmersionBar
-import timber.log.Timber
 
 
 @BindingAdapter("timeEvents")

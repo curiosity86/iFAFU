@@ -12,6 +12,10 @@
         <variable
             name="vm"
             type="cn.ifafu.ifafu.ui.login.LoginViewModel" />
+
+        <variable
+            name="closable"
+            type="Boolean" />
     </data>
 
     <RelativeLayout
@@ -49,6 +53,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
+            visibleGoneWhen="@{closable}"
             android:src="@drawable/ic_close"/>
 
         <LinearLayout

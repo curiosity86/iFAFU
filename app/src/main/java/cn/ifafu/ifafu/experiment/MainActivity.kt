@@ -3,7 +3,6 @@ package cn.ifafu.ifafu.experiment
 import android.os.Bundle
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BaseActivity
-import com.gyf.immersionbar.ImmersionBar
 
 class MainActivity : BaseActivity() {
 

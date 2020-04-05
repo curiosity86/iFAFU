@@ -16,7 +16,7 @@
     <item name="menu_web" type="id" />
     <item name="menu_elective" type="id" />
     <item name="menu_upgrade" type="id" />
-    <item name="menu_account_management" type="id" />
+    <item name="menu_user_management" type="id" />
     <item name="menu_about_ifafu" type="id" />
 
 </resources>

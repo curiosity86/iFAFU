@@ -44,12 +44,11 @@
         <activity android:name=".ui.activity.AboutActivity" />
         <activity android:name=".ui.electricity.ElectricityActivity" />
         <activity android:name=".ui.setting.SettingActivity" />
-        <activity android:name=".experiment.elective.ElectiveActivity" />
+        <activity android:name="cn.ifafu.ifafu.experiment.ui.elective.ElectiveActivity" />
         <activity android:name=".ui.feedback.FeedbackActivity"/>
-        <activity android:name=".experiment.score.ScoreActivity"
+        <activity android:name="cn.ifafu.ifafu.experiment.ui.score.ScoreActivity"
             android:launchMode="singleTask" />
         <activity android:name=".experiment.MainActivity" />
-        <activity android:name=".experiment.score.filter.ScoreFilterActivity" />
 
         <meta-data
             android:name="BUGLY_APP_CHANNEL"

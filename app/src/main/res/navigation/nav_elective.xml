@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fragment_elective"
-        android:name="cn.ifafu.ifafu.experiment.elective.ElectiveFragment"
+        android:name="cn.ifafu.ifafu.experiment.ui.elective.ElectiveFragment"
         tools:layout="@layout/fragment_elective">
 
         <action
@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/fragment_score_detail"
-        android:name="cn.ifafu.ifafu.experiment.score.detail.ScoreDetailFragment"
+        android:name="cn.ifafu.ifafu.experiment.ui.score.detail.ScoreDetailFragment"
         android:label="fragment_score_detail"
         tools:layout="@layout/fragment_score_detail">
 

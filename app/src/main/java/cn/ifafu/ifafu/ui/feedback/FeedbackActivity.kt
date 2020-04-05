@@ -6,7 +6,7 @@ import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.ui.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.databinding.ActivityFeedbackBinding
-import cn.ifafu.ifafu.experiment.feedback.FeedbackViewModel
+import cn.ifafu.ifafu.experiment.ui.feedback.FeedbackViewModel
 
 class FeedbackActivity : BaseActivity() {
 

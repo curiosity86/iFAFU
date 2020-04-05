@@ -59,6 +59,7 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        ImmersionBar.with(this).init()
         mViewModel.theme.observe(this, Observer {
             supportFragmentManager.beginTransaction().apply {
                 when (it) {

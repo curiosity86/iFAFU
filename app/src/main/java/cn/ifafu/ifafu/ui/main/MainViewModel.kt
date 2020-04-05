@@ -67,10 +67,6 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
         }
     }
 
-    private fun checkTheme() = safeLaunchWithMessage {
-        theme.postValue(RepositoryImpl.GlobalSettingRt.get().theme)
-    }
-
     fun checkoutTo(user: User) = GlobalScope.launch {
         if (user.account != RepositoryImpl.user.getInUseAccount()) {
             loading.postValue("切换中")
@@ -93,7 +89,6 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
             showMultiUserDialog.postValue(false)
         }
     }
-
     fun upgradeApp() = GlobalScope.launch {
         repo.getNewVersion().getOrFailure {
             toast(it.message ?: "Unknown Error")
@@ -106,4 +101,9 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
             }
         }
     }
+    private fun checkTheme() = safeLaunchWithMessage {
+        theme.postValue(RepositoryImpl.GlobalSettingRt.get().theme)
+    }
+
+
 }

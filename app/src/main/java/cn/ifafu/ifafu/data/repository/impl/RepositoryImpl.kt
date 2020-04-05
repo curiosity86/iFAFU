@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteConstraintException
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
+import androidx.lifecycle.LiveData
 import cn.ifafu.ifafu.constant.Constant
 import cn.ifafu.ifafu.base.BaseApplication
 import cn.ifafu.ifafu.data.IFResult
@@ -331,6 +332,9 @@ object RepositoryImpl : Repository {
             IFResult.failure<User>(e)
         }
     }
+
+    val scoreFilter: LiveData<ScoreFilter>
+        = db.scoreFilterDao.get(account)
 
     override suspend fun getNewVersion(): IFResult<Version> = withContext(Dispatchers.IO) {
         try {

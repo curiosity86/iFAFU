@@ -11,7 +11,7 @@
 
         <variable
             name="vm"
-            type="cn.ifafu.ifafu.experiment.score.list.ScoreListViewModel" />
+            type="cn.ifafu.ifafu.experiment.ui.score.list.ScoreListViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text='@{vm.title + "学习成绩" ?? ""}'
+            android:text='@{vm.semester.toString() + "学习成绩" ?? ""}'
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"

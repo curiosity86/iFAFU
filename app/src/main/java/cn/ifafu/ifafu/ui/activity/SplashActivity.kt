@@ -50,7 +50,7 @@ class SplashActivity : AppCompatActivity() {
                     activity = SyllabusActivity::class.java
                 }
                 else -> {
-                    activity = cn.ifafu.ifafu.experiment.MainActivity::class.java
+                    activity = MainActivity::class.java
                 }
             }
             val intent = Intent(this@SplashActivity, activity)

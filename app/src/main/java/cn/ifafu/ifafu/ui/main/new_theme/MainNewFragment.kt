@@ -12,8 +12,8 @@ import cn.ifafu.ifafu.base.BaseFragment
 import cn.ifafu.ifafu.constant.Constant
 import cn.ifafu.ifafu.data.bean.Menu
 import cn.ifafu.ifafu.databinding.FragmentMainNewBinding
-import cn.ifafu.ifafu.experiment.elective.ElectiveActivity
-import cn.ifafu.ifafu.experiment.score.ScoreActivity
+import cn.ifafu.ifafu.experiment.ui.elective.ElectiveActivity
+import cn.ifafu.ifafu.experiment.ui.score.ScoreActivity
 import cn.ifafu.ifafu.ui.activity.AboutActivity
 import cn.ifafu.ifafu.ui.electricity.ElectricityActivity
 import cn.ifafu.ifafu.ui.exam_list.ExamListActivity
@@ -94,7 +94,8 @@ class MainNewFragment : BaseFragment(), View.OnClickListener, OnMenuItemClickLis
             R.id.menu_exam_list ->
                 startActivityByClazz(ExamListActivity::class.java)
             R.id.menu_score_list ->
-                findNavController().navigate(R.id.action_fragment_main_new_to_fragment_score_list)
+                startActivityByClazz(ScoreActivity::class.java)
+//                findNavController().navigate(R.id.action_fragment_main_new_to_fragment_score_list)
             R.id.menu_elective ->
                 startActivityByClazz(ElectiveActivity::class.java)
             R.id.menu_web ->
@@ -108,7 +109,8 @@ class MainNewFragment : BaseFragment(), View.OnClickListener, OnMenuItemClickLis
                 })
             }
             R.id.menu_feedback -> {
-                findNavController().navigate(R.id.action_fragment_main_new_to_feedbackFragment)
+                startActivityByClazz(FeedbackActivity::class.java)
+//                findNavController().navigate(R.id.action_fragment_main_new_to_feedbackFragment)
             }
         }
     }

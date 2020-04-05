@@ -34,8 +34,9 @@ inline fun Boolean.ifFalse(run: () -> Unit) {
 /**
  * Returns the float String without the end 0
  */
-fun Float.trimEnd(radius: Int = 99): String {
-    var num = if (radius == 99) toString() else toString(radius)
+fun Float.trimEnd(radius: Int = -1): String {
+    var num = if (radius == -1) toString() else toString(radius)
+    if (this == 0F) return "0"
     if (num.indexOf(".") > 0) { // 去掉多余的0
         num = num.replace("0+$".toRegex(), "")
         // 如最后一位是.则去掉
@@ -58,10 +59,16 @@ fun Double.trimEnd(radius: Int = 99): String {
 }
 
 fun Float.toString(radius: Int): String {
+    if (this == 0F) {
+        return "0"
+    }
     return String.format("%.${radius}f", this)
 }
 
 fun Double.toString(radius: Int): String {
+    if (this == 0.0) {
+        return "0"
+    }
     return String.format("%.${radius}f", this)
 }
 

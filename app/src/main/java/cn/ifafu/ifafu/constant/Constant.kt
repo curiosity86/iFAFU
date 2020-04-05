@@ -1,10 +1,15 @@
 package cn.ifafu.ifafu.constant
 
+import android.database.sqlite.SQLiteConstraintException
 import androidx.annotation.StringDef
 import cn.ifafu.ifafu.data.bean.URL
 import cn.ifafu.ifafu.data.bean.ZFApi
 import cn.ifafu.ifafu.data.bean.ZFApiList
 import cn.ifafu.ifafu.data.entity.User
+import java.io.IOException
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 object Constant {
     const val IFAFU_BASE_URL = "https://api.ifafu.cn"
@@ -111,3 +116,23 @@ const val ACTIVITY_SETTING = 111
 
 @StringDef(value = [User.FAFU, User.FAFU_JS])
 annotation class School
+
+
+fun Throwable.getMessage(): String {
+    return when (this) {
+        is UnknownHostException, is ConnectException ->
+            "网络错误，请检查网络设置"
+        is SocketTimeoutException ->
+            "服务器连接超时（可能原因：学校服务器崩溃）"
+        is SQLiteConstraintException ->
+            "数据库数据错误（错误信息：${message}）"
+        is IOException ->
+            if (this.message?.contains("unexpected") == true) {
+                "正方教务系统又崩溃了！"
+            } else {
+                message ?: "Net Error"
+            }
+        else ->
+            message ?: "Unknown Error"
+    }
+}

@@ -2,7 +2,7 @@ package cn.ifafu.ifafu.data
 
 /* 数据层统一数据返回类 */
 @Suppress("UNCHECKED_CAST")
-class IFResult<T> private constructor(@PublishedApi internal val value: Any?) {
+class IFResult<out T> private constructor(@PublishedApi internal val value: Any?) {
 
     val isSuccess: Boolean get() = value !is Failure
     val isFailure: Boolean get() = value is Failure

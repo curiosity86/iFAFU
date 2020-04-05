@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="cn.ifafu.ifafu.experiment.score.filter.ScoreFilterViewModel" />
+            type="cn.ifafu.ifafu.experiment.ui.score.filter.ScoreFilterViewModel" />
 
     </data>
 

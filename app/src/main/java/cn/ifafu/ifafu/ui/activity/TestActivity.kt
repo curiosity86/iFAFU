@@ -6,7 +6,6 @@ import androidx.databinding.DataBindingUtil
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.data.entity.Score
 import cn.ifafu.ifafu.databinding.ActivityTestBinding
-import cn.ifafu.ifafu.experiment.elective.Elective
 
 class TestActivity : AppCompatActivity() {
 

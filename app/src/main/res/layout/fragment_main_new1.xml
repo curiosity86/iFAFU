@@ -6,7 +6,7 @@
 
         <variable
             name="vm"
-            type="cn.ifafu.ifafu.experiment.main.newly.MainNewViewModel" />
+            type="cn.ifafu.ifafu.experiment.ui.main.newly.MainNewViewModel" />
     </data>
 
     <cn.ifafu.ifafu.ui.view.custom.DragLayout

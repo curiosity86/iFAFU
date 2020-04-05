@@ -8,12 +8,12 @@ import androidx.lifecycle.MutableLiveData
  */
 class SingleMutableLiveData<T> : MutableLiveData<T>() {
 
-    override fun postValue(value: T) {
+    override fun postValue(value: T?) {
         super.postValue(value)
         super.postValue(null)
     }
 
-    override fun setValue(value: T) {
+    override fun setValue(value: T?) {
         super.setValue(value)
         super.setValue(null)
     }

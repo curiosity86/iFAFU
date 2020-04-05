@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fragment_main_new"
-        android:name="cn.ifafu.ifafu.experiment.main.newly.MainNewFragment"
+        android:name="cn.ifafu.ifafu.experiment.ui.main.newly.MainNewFragment"
         tools:layout="@layout/fragment_main_new1">
         <action
             android:id="@+id/action_fragment_main_new_to_fragment_score_list"
@@ -35,7 +35,7 @@
 
     <fragment
         android:id="@+id/fragment_score_list"
-        android:name="cn.ifafu.ifafu.experiment.score.list.ScoreListFragment"
+        android:name="cn.ifafu.ifafu.experiment.ui.score.list.ScoreListFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@anim/slide_in_left"
@@ -59,7 +59,7 @@
 
     <fragment
         android:id="@+id/fragment_score_detail"
-        android:name="cn.ifafu.ifafu.experiment.score.detail.ScoreDetailFragment"
+        android:name="cn.ifafu.ifafu.experiment.ui.score.detail.ScoreDetailFragment"
         android:label="fragment_score_detail"
         tools:layout="@layout/fragment_score_detail">
 
@@ -70,7 +70,7 @@
 
     <fragment
         android:id="@+id/fragment_score_filter"
-        android:name="cn.ifafu.ifafu.experiment.score.filter.ScoreFilterActivity"
+        android:name="cn.ifafu.ifafu.experiment.ui.score.filter.ScoreFilterFragment"
         tools:layout="@layout/fragment_score_filter">
 
         <argument
@@ -84,7 +84,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragment_main_old"
-        android:name="cn.ifafu.ifafu.experiment.main.old.MainOldFragment"
+        android:name="cn.ifafu.ifafu.experiment.ui.main.old.MainOldFragment"
         tools:layout="@layout/fragment_main_old">
         <action
             android:id="@+id/action_fragment_main_old_to_fragment_score_list"
@@ -110,7 +110,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragment_elective"
-        android:name="cn.ifafu.ifafu.experiment.elective.ElectiveFragment"
+        android:name="cn.ifafu.ifafu.experiment.ui.elective.ElectiveFragment"
         tools:layout="@layout/fragment_elective">
         <action
             android:id="@+id/action_fragment_elective_to_fragment_score_detail2"
@@ -129,7 +129,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragment_feedback"
-        android:name="cn.ifafu.ifafu.experiment.feedback.FeedbackFragment"
+        android:name="cn.ifafu.ifafu.experiment.ui.feedback.FeedbackFragment"
         tools:layout="@layout/fragment_feedback" />
 
 </navigation>

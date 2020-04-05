@@ -11,8 +11,13 @@ abstract class BaseSimpleFragment : Fragment() {
         Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT).show()
     }
 
-    protected fun startActivityByClazz(clazz: Class<out Activity>) {
-        startActivity(Intent(requireContext(), clazz))
+    protected fun startActivityByClazz(clazz: Class<out Activity>,
+                                       applyIntent: ((Intent) -> Intent)? = null) {
+        val intent = Intent(requireContext(), clazz)
+        if (applyIntent != null) {
+            applyIntent(intent)
+        }
+        startActivity(intent)
     }
 
 }

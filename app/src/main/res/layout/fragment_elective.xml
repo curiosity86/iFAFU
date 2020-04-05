@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="cn.ifafu.ifafu.experiment.elective.ElectiveViewModel" />
+            type="cn.ifafu.ifafu.experiment.ui.elective.ElectiveViewModel" />
 
     </data>
 
@@ -48,7 +48,7 @@
                 android:orientation="vertical"
                 android:paddingTop="4dp">
 
-                <cn.ifafu.ifafu.experiment.elective.ElectiveView
+                <cn.ifafu.ifafu.experiment.ui.elective.ElectiveView
                     android:id="@+id/e_total"
                     elective="@{vm.total}"
                     visibleGoneWhen="@{vm.total == null}"
@@ -56,35 +56,35 @@
                     android:layout_height="wrap_content"
                     tools:visibility="visible" />
 
-                <cn.ifafu.ifafu.experiment.elective.ElectiveView
+                <cn.ifafu.ifafu.experiment.ui.elective.ElectiveView
                     android:id="@+id/e_zrkx"
                     elective="@{vm.zrkx}"
                     visibleGoneWhen="@{vm.zrkx == null}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <cn.ifafu.ifafu.experiment.elective.ElectiveView
+                <cn.ifafu.ifafu.experiment.ui.elective.ElectiveView
                     android:id="@+id/e_rwsk"
                     elective="@{vm.rwsk}"
                     visibleGoneWhen="@{vm.rwsk == null}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <cn.ifafu.ifafu.experiment.elective.ElectiveView
+                <cn.ifafu.ifafu.experiment.ui.elective.ElectiveView
                     android:id="@+id/e_wxsy"
                     elective="@{vm.wxsy}"
                     visibleGoneWhen="@{vm.wxsy == null}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <cn.ifafu.ifafu.experiment.elective.ElectiveView
+                <cn.ifafu.ifafu.experiment.ui.elective.ElectiveView
                     android:id="@+id/e_cxcy"
                     elective="@{vm.cxcy}"
                     visibleGoneWhen="@{vm.cxcy == null}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <cn.ifafu.ifafu.experiment.elective.ElectiveView
+                <cn.ifafu.ifafu.experiment.ui.elective.ElectiveView
                     android:id="@+id/e_ysty"
                     elective="@{vm.ysty}"
                     visibleGoneWhen="@{vm.ysty == null}"
