@@ -1,5 +1,7 @@
 package cn.ifafu.ifafu.experiment.ui.common
 
+import android.animation.Animator
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
@@ -120,23 +122,65 @@ class ElectiveView @JvmOverloads constructor(
             isCollapse = false
             btnSign.startAnimation(expandAnimation)
             if (itemViewMap.isEmpty()) {
-                tvEmpty.visibility = View.VISIBLE
+                show(tvEmpty)
             } else {
                 itemViewMap.values.forEach {
-                    it.visibility = View.VISIBLE
+                    show(it)
                 }
             }
         } else {
             isCollapse = true
             btnSign.startAnimation(collapseAnimation)
             if (itemViewMap.isEmpty()) {
-                tvEmpty.visibility = View.GONE
+                hide(tvEmpty)
             } else {
                 itemViewMap.values.forEach {
-                    it.visibility = View.GONE
+                    hide(it)
                 }
             }
         }
+    }
+
+    private fun show(view: View) {
+        ObjectAnimator.ofFloat(view, "alpha", 0F, 1F).apply {
+            duration = 200L
+            addListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(animation: Animator?) {
+
+                }
+
+                override fun onAnimationEnd(animation: Animator?) {
+                    view.visibility = View.VISIBLE
+                }
+
+                override fun onAnimationCancel(animation: Animator?) {
+                }
+
+                override fun onAnimationStart(animation: Animator?) {
+                }
+            })
+        }.start()
+    }
+
+    private fun hide(view: View) {
+        ObjectAnimator.ofFloat(view, "alpha", 1F, 0F).apply {
+            duration = 200L
+            addListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(animation: Animator?) {
+
+                }
+
+                override fun onAnimationEnd(animation: Animator?) {
+                    view.visibility = View.GONE
+                }
+
+                override fun onAnimationCancel(animation: Animator?) {
+                }
+
+                override fun onAnimationStart(animation: Animator?) {
+                }
+            })
+        }.start()
     }
 
     private fun getRotateAnimation(fromDegrees: Float, toDegrees: Float): RotateAnimation {

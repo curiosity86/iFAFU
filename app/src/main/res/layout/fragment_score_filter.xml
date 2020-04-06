@@ -14,12 +14,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:transitionName="transition_score_filter"
         android:orientation="vertical">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/tb_score_filter"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="@color/white"
+            android:elevation="4dp"
             app:navigationIcon="@drawable/ic_back"
             app:menu="@menu/score_filter"
             app:title="@string/score_filter_title">

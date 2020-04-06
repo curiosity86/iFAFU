@@ -107,7 +107,7 @@
             "notNull": true
           },
           {
-            "fieldPath": "schoolCode",
+            "fieldPath": "school",
             "columnName": "schoolCode",
             "affinity": "TEXT",
             "notNull": true

@@ -4,9 +4,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.alibaba.fastjson.JSONObject
 import timber.log.Timber
+import java.io.Serializable
 
 @Entity
-class Score {
+class Score : Serializable {
     @PrimaryKey
     var id: Int = 0
     var name: String = ""//课程名称
@@ -39,6 +40,10 @@ class Score {
             }
             else -> score //及格，按正常成绩计算
         }
+
+    fun scoreString() {
+
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

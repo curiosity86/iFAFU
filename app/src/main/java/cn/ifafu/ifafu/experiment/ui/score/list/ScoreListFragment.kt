@@ -8,15 +8,16 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.base.BaseSimpleFragment
 import cn.ifafu.ifafu.databinding.FragmentScoreListBinding
+import cn.ifafu.ifafu.experiment.ui.common.ScoreListAdapter
 import cn.ifafu.ifafu.ui.getViewModelFactory
 import cn.ifafu.ifafu.ui.view.LoadingDialog
 import cn.ifafu.ifafu.ui.view.SemesterOptionPicker
-import cn.ifafu.ifafu.ui.view.adapter.ScoreAdapter
 import cn.ifafu.ifafu.ui.view.custom.RecyclerViewDivider
 import com.afollestad.materialdialogs.MaterialDialog
 import com.gyf.immersionbar.ImmersionBar
@@ -24,15 +25,7 @@ import kotlinx.android.synthetic.main.fragment_score_list.view.*
 
 class ScoreListFragment : BaseSimpleFragment(), View.OnClickListener, Toolbar.OnMenuItemClickListener {
 
-    private val mAdapter: ScoreAdapter by lazy {
-        ScoreAdapter(requireContext()).apply {
-            setOnScoreClickListener { v, score ->
-                val action = ScoreListFragmentDirections
-                        .actionFragmentScoreListToFragmentScoreDetail(score.id)
-                findNavController().navigate(action)
-            }
-        }
-    }
+    private val mAdapter: ScoreListAdapter = ScoreListAdapter()
 
     private val iesDetailDialog by lazy {
         MaterialDialog(requireContext()).apply {
@@ -82,7 +75,7 @@ class ScoreListFragment : BaseSimpleFragment(), View.OnClickListener, Toolbar.On
         view.layout_cnt.setOnClickListener(this@ScoreListFragment)
         view.tb_score_list.setOnMenuItemClickListener(this)
         view.tb_score_list.setNavigationOnClickListener {
-            findNavController().popBackStack()
+            requireActivity().finish()
         }
 
         //初始化RecycleView
@@ -92,13 +85,12 @@ class ScoreListFragment : BaseSimpleFragment(), View.OnClickListener, Toolbar.On
 
         //初始化ViewModel
         mViewModel.iesDetail.observe(viewLifecycleOwner, Observer {
-            if (it != null) {
+            it.runContentIfNotHandled {
                 iesDetailDialog.show { message(text = it) }
             }
         })
         mViewModel.scores.observe(viewLifecycleOwner, Observer {
-            mAdapter.scoreList = it
-            mAdapter.notifyDataSetChanged()
+            mAdapter.setList(it)
         })
         mLoadingDialog.observe(viewLifecycleOwner, mViewModel.loading)
     }
@@ -120,6 +112,9 @@ class ScoreListFragment : BaseSimpleFragment(), View.OnClickListener, Toolbar.On
                     toast("未找到学期信息")
                     return
                 }
+                val extras = FragmentNavigatorExtras(
+                        v to "transition_score_filter"
+                )
                 val action = ScoreListFragmentDirections
                         .actionFragmentScoreListToFragmentScoreFilter(semester.yearStr, semester.termStr)
                 findNavController().navigate(action)

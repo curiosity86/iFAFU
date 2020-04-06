@@ -21,6 +21,16 @@ class Event<out T>(private val content: T) {
     }
 
     /**
+     * 返回数据。防止被二次使用
+     */
+    fun runContentIfNotHandled(block: (T) -> Unit) {
+        if (!hasBeenHandled) {
+            hasBeenHandled = true
+            block(content)
+        }
+    }
+
+    /**
      * 返回数据。不论是否被使用过
      */
     fun peekContent(): T = content

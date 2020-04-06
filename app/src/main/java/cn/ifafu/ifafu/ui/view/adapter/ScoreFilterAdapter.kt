@@ -9,8 +9,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.data.entity.Score
-import cn.ifafu.ifafu.util.GlobalLib
 import cn.ifafu.ifafu.ui.view.custom.SmoothCheckBox
+import cn.ifafu.ifafu.util.GlobalLib
 
 class ScoreFilterAdapter(context: Context, private val onCheckedChangeListener: ((score: Score) -> Unit))
     : RecyclerView.Adapter<ScoreFilterAdapter.ViewHolder>() {
@@ -63,7 +63,7 @@ class ScoreFilterAdapter(context: Context, private val onCheckedChangeListener: 
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTV: TextView = itemView.findViewById(R.id.tv_score_name)
-        val scoreTV: TextView = itemView.findViewById(R.id.tv_score_score)
+        val scoreTV: TextView = itemView.findViewById(R.id.tv_score)
         val checkBox: SmoothCheckBox = itemView.findViewById(R.id.checkbox)
     }
 }

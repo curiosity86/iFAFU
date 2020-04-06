@@ -29,7 +29,7 @@ class ScoreListViewModel(
      * _score是唯一一个需要修改的私有LiveData，其余都通过监听_score值的改变而变化
      * LiveDate配合Room, JetPack牛逼！！
      */
-    private val _scores = MutableLiveData<List<Score>>()
+    private val _scores = MediatorLiveData<List<Score>>()
     private val _ies = MediatorLiveData<PairString>().apply {
         //监听成绩列表的修改
         addSource(_scores) { scores ->
@@ -51,7 +51,7 @@ class ScoreListViewModel(
     val ies: LiveData<PairString> = _ies
     val cnt: LiveData<PairString> = _cnt
 
-    val iesDetail = MutableLiveData<String>()
+    val iesDetail = MutableLiveData<Event<String>>()
     val loading = MutableLiveData<String>()
     val semester = MutableLiveData<Semester>()
     val message = MutableLiveData<Event<String>>()
@@ -63,24 +63,15 @@ class ScoreListViewModel(
             val semester = RepositoryImpl.getNowSemester()
             this@ScoreListViewModel.semester.postValue(semester)
             //先使用数据库数据更新View
-            val scores = RepositoryImpl.ScoreRt.getNow()
-            val local = launch {
-                _scores.postValue(scores)
+            _scores.addSource(RepositoryImpl.loadScores(semester.yearStr, semester.termStr)) {
+                _scores.postValue(it)
             }
             //在前台从教务管理系统获取成绩信息并更新View
-            val net = launch {
-                val scoreList = fetchAsync(semester).await()
-                if (scoreList == null) {
-                    message.postValue(Event("获取成绩失败"))
-                } else {
-                    _scores.postValue(scoreList)
-                }
-            }
-            //若数据库不为空则先取消加载dialog
-            //为空则等待执行
-            local.join()
-            if (scores.isEmpty()) {
-                net.join()
+            val scoreList = fetchAsync(semester).await()
+            if (scoreList == null) {
+                message.postValue(Event("获取成绩失败"))
+            } else {
+                _scores.postValue(scoreList)
             }
             loading.postValue(null)
         }
@@ -130,7 +121,7 @@ class ScoreListViewModel(
                     failList.add(it)
                 }
             }
-            iesDetail.postValue("总共${all.size}门成绩，排除课程：[" +
+            iesDetail.postValue(Event("总共${all.size}门成绩，排除课程：[" +
                     StringBuilder().apply {
                         var first = true
                         filterList.forEach {
@@ -183,8 +174,7 @@ class ScoreListViewModel(
                         }
                         append("，减去不及格的学分共${totalMinus.trimEnd(2)}分，最终为${(ies - totalMinus).trimEnd(2)}分。")
                     }
-            )
-            iesDetail.postValue(null)
+            ))
         }
     }
 

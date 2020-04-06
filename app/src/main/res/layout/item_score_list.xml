@@ -31,7 +31,7 @@
         tools:text="计算机网络" />
 
     <TextView
-        android:id="@+id/tv_score_score"
+        android:id="@+id/tv_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical|end"

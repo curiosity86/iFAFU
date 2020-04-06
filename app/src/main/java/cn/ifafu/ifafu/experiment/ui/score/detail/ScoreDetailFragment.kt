@@ -9,12 +9,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import cn.ifafu.ifafu.ui.getViewModelFactory
 import cn.ifafu.ifafu.databinding.FragmentScoreDetailBinding
+import cn.ifafu.ifafu.ui.getViewModelFactory
 import cn.ifafu.ifafu.ui.view.adapter.ScoreItemAdapter
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.fragment_score_detail.*
-import kotlinx.android.synthetic.main.fragment_score_detail.view.tb_score_detail
+import kotlinx.android.synthetic.main.fragment_score_detail.view.*
 
 class ScoreDetailFragment : Fragment() {
 

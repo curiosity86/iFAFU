@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.transition.TransitionInflater
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.databinding.FragmentScoreFilterBinding
 import cn.ifafu.ifafu.ui.getViewModelFactory
@@ -34,6 +35,11 @@ class ScoreFilterFragment : Fragment(), Toolbar.OnMenuItemClickListener {
 
     private val args: ScoreFilterFragmentArgs by navArgs()
     private val mViewModel: ScoreFilterViewModel by viewModels { getViewModelFactory() }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentScoreFilterBinding.inflate(inflater, container, false).apply {

@@ -10,9 +10,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.data.entity.Score
+import cn.ifafu.ifafu.ui.view.adapter.ScoreAdapter.ScoreViewHolder
 import cn.ifafu.ifafu.util.ColorUtils
 import cn.ifafu.ifafu.util.GlobalLib
-import cn.ifafu.ifafu.ui.view.adapter.ScoreAdapter.ScoreViewHolder
 
 class ScoreAdapter(private val mContext: Context) : RecyclerView.Adapter<ScoreViewHolder>() {
 
@@ -21,7 +21,7 @@ class ScoreAdapter(private val mContext: Context) : RecyclerView.Adapter<ScoreVi
     private var mClickListener: ((View, Score) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScoreViewHolder {
-        val view = LayoutInflater.from(mContext).inflate(R.layout.item_score_list_item, parent, false)
+        val view = LayoutInflater.from(mContext).inflate(R.layout.item_score_list, parent, false)
         return ScoreViewHolder(view)
     }
 
@@ -71,7 +71,7 @@ class ScoreAdapter(private val mContext: Context) : RecyclerView.Adapter<ScoreVi
 
     inner class ScoreViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvName: TextView = itemView.findViewById(R.id.tv_score_name)
-        val tvScore: TextView = itemView.findViewById(R.id.tv_score_score)
+        val tvScore: TextView = itemView.findViewById(R.id.tv_score)
         val ivTip: ImageView = itemView.findViewById(R.id.iv_tip)
     }
 

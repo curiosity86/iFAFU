@@ -51,10 +51,10 @@ class ScoreParser(user: User) : BaseParser<Response<List<Score>>>() {
             score.remarks = eles[11]
             score.makeupRemarks = eles[12]
         }
-        score.isIESItem = score.score == Score.FREE_COURSE
+        score.isIESItem = !(score.score == Score.FREE_COURSE
                 || score.nature.contains("任意选修")
                 || score.nature.contains("公共选修")
-                || score.name.contains("体育")
+                || score.name.contains("体育"))
         score.id = score.hashCode()
         return score
     }
