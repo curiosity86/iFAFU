@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
+import cn.ifafu.ifafu.experiment.vo.Elective
 import cn.ifafu.ifafu.util.sumByFloat
 
 class ElectiveViewModel(application: Application) : BaseViewModel(application) {

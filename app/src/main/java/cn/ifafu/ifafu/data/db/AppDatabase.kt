@@ -43,6 +43,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract val tokenDao: TokenDao
     abstract val examDao: ExamDao
     abstract val scoreDao: ScoreDao
+    abstract val scoreDaoExp: cn.ifafu.ifafu.experiment.db.ScoreDao
     abstract val scoreFilterDao: ScoreFilterDao
     abstract val syllabusSettingDao: SyllabusSettingDao
     abstract val globalSettingDao: GlobalSettingDao
@@ -54,12 +55,11 @@ abstract class AppDatabase : RoomDatabase() {
     companion object {
 
         @Volatile
-        private var INSTANCE: AppDatabase? = null
+        private lateinit var INSTANCE: AppDatabase
 
         fun getInstance(context: Context): AppDatabase {
-            return INSTANCE ?: synchronized(this) {
-                INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
-            }
+            INSTANCE = if (::INSTANCE.isInitialized) INSTANCE else buildDatabase(context)
+            return INSTANCE
         }
 
         private fun buildDatabase(context: Context): AppDatabase {

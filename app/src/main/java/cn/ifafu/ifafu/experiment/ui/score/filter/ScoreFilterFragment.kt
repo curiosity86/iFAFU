@@ -40,7 +40,6 @@ class ScoreFilterFragment : Fragment(), Toolbar.OnMenuItemClickListener {
             lifecycleOwner = viewLifecycleOwner
             vm = mViewModel
         }
-
         return binding.root
     }
 
@@ -77,10 +76,6 @@ class ScoreFilterFragment : Fragment(), Toolbar.OnMenuItemClickListener {
             }
         }
         return true
-    }
-
-    interface OnRefreshListener {
-        fun onRefresh()
     }
 
 }

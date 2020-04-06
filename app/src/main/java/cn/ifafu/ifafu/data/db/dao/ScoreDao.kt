@@ -1,7 +1,9 @@
 package cn.ifafu.ifafu.data.db.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import cn.ifafu.ifafu.data.entity.Score
+import cn.ifafu.ifafu.data.entity.ScoreFilter
 
 @Dao
 interface ScoreDao {
@@ -19,7 +21,8 @@ interface ScoreDao {
     fun getAllByTerm(account: String, term: String): List<Score>
 
     @Query("SELECT * FROM Score WHERE id=:id")
-    fun getScoreById(id: Long): Score
+    fun getScoreById(id: Int): Score
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(vararg score: Score)
@@ -33,4 +36,10 @@ interface ScoreDao {
     @Query("DELETE FROM Score WHERE term=:term AND year=:year")
     fun delete(year: String, term: String)
 
+
+    @Query("SELECT * FROM Score WHERE account=:account AND term=:term AND year=:year ORDER BY id")
+    fun getAllLD(account: String, year: String, term: String): LiveData<List<Score>>
+
+    @Query("SELECT * FROM ScoreFilter WHERE account=:account")
+    fun getFilterByAccount(account: String): LiveData<ScoreFilter>
 }

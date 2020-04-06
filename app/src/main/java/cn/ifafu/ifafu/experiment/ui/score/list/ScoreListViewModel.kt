@@ -8,7 +8,7 @@ import androidx.lifecycle.map
 import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.bean.Semester
 import cn.ifafu.ifafu.data.entity.Score
-import cn.ifafu.ifafu.data.entity.ScoreFilter
+import cn.ifafu.ifafu.data.entity.calcIES
 import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import cn.ifafu.ifafu.experiment.vo.PairString
 import cn.ifafu.ifafu.util.Event
@@ -30,19 +30,10 @@ class ScoreListViewModel(
      * LiveDate配合Room, JetPack牛逼！！
      */
     private val _scores = MutableLiveData<List<Score>>()
-    private val _filter = RepositoryImpl.scoreFilter
     private val _ies = MediatorLiveData<PairString>().apply {
-        var iScores = emptyList<Score>()
-        var iFilter = ScoreFilter()
         //监听成绩列表的修改
         addSource(_scores) { scores ->
-            iScores = scores
-            this.value = getIESPair(iScores, iFilter)
-        }
-        //监听筛选列表的修改，Room会将数据库数据同步到LiveData
-        addSource(_filter) { filter ->
-            iFilter = filter
-            this.value = getIESPair(iScores, iFilter)
+            this.value = getIESPair(scores)
         }
     }
     private val _cnt = _scores.map { scores ->
@@ -125,22 +116,18 @@ class ScoreListViewModel(
     fun iesCalculationDetail() {
         safeLaunchWithMessage {
             val all = scores.value!!
-            val filter = _filter.value!!
-
-            val passingList = ArrayList<Score>()
-            val failList = ArrayList<Score>()
-            val filterList = ArrayList<Score>()
+            val passingList = ArrayList<Score>() //及格
+            val failList = ArrayList<Score>() //不及格
+            val filterList = ArrayList<Score>() //过滤
             var totalScore = 0F
             var credit = 0F
             all.forEach {
-                if (it.id !in filter.filterList) {
-                    if (it.realScore >= 60) {
-                        passingList.add(it)
-                    } else {
-                        failList.add(it)
-                    }
-                } else {
+                if (!it.isIESItem) {
                     filterList.add(it)
+                } else if (it.realScore >= 60) {
+                    passingList.add(it)
+                } else {
+                    failList.add(it)
                 }
             }
             iesDetail.postValue("总共${all.size}门成绩，排除课程：[" +
@@ -212,24 +199,8 @@ class ScoreListViewModel(
         }
     }
 
-    private fun getGPA(scores: List<Score>): String {
-        var totalGPA = 0F
-        scores.forEach {
-            totalGPA += it.gpa
-        }
-        return if (totalGPA < 0) {
-            "无信息"
-        } else {
-            totalGPA.trimEnd(2)
-        }
-    }
-
-    private fun getScoreCountPair(scores: List<Score>): PairString {
-        return PairString(scores.size.toString(), "门")
-    }
-
-    private fun getIESPair(scores: List<Score>, scoreFilter: ScoreFilter): PairString {
-        val ies = scoreFilter.calcIES(scores)
+    private fun getIESPair(scores: List<Score>): PairString {
+        val ies = scores.calcIES()
         return if (ies.isNaN() || ies <= 0F) {
             PairString("0", "分")
         } else {

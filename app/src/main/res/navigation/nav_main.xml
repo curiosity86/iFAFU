@@ -65,7 +65,7 @@
 
         <argument
             android:name="score_id"
-            app:argType="long" />
+            app:argType="integer" />
     </fragment>
 
     <fragment

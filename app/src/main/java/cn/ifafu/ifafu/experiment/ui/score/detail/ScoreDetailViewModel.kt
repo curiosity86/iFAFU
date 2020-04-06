@@ -13,9 +13,9 @@ class ScoreDetailViewModel(application: Application) : BaseViewModel(application
 
     val score by lazy { MutableLiveData<List<Pair<String, String>>>() }
 
-    fun init(id: Long) {
+    fun init(id: Int) {
         GlobalScope.launch(Dispatchers.IO) {
-            if (id == 0L) {
+            if (id == 0) {
                 toast("查询成绩出错（无法找到ID）")
                 return@launch
             }

@@ -1,52 +1,45 @@
 package cn.ifafu.ifafu.experiment.ui.score.filter
 
-import android.app.Application
-import androidx.lifecycle.MutableLiveData
-import cn.ifafu.ifafu.base.BaseViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import cn.ifafu.ifafu.data.entity.Score
-import cn.ifafu.ifafu.data.entity.ScoreFilter
+import cn.ifafu.ifafu.data.entity.calcIES
 import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
-import cn.ifafu.ifafu.util.trimEnd
+import cn.ifafu.ifafu.util.toString
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 
-class ScoreFilterViewModel(application: Application) : BaseViewModel(application) {
-
-    private lateinit var _filter: ScoreFilter
-    private lateinit var _scores: List<Score>
-
-    var scores = MutableLiveData<List<Score>>()
-    val ies = MutableLiveData<String>()
-
-    fun init(year: String, term: String) = GlobalScope.launch {
-        _filter = RepositoryImpl.ScoreRt.getFilter()
-        _scores = RepositoryImpl.ScoreRt.getAll(year, term)
-        _scores.forEach {
-            it.isIESItem = it.id !in _filter.filterList
-        }
-        scores.postValue(_scores)
-        ies.postValue(_filter.calcIES(_scores).trimEnd(2))
-    }
-
-    fun itemChecked(score: Score) {
-        GlobalScope.launch(Dispatchers.IO) {
-            if (!score.isIESItem) {
-                _filter.filterList.add(score.id)
-            } else {
-                _filter.filterList.removeAll { score.id == it }
-            }
-            RepositoryImpl.ScoreRt.saveFilter(_filter)
-            ies.postValue(_filter.calcIES(_scores).trimEnd(2))
+class ScoreFilterViewModel : ViewModel() {
+    private val _scores = MediatorLiveData<List<Score>>()
+    private val _ies = MediatorLiveData<String>().apply {
+        //监听成绩列表的修改
+        addSource(_scores) { scores ->
+            this.value = scores.calcIES().toString(2)
         }
     }
 
-    fun allChecked() = GlobalScope.launch(Dispatchers.IO) {
-        _scores.forEach {
-            _filter.filterList.remove(it.id)
+    var scores: LiveData<List<Score>> = _scores
+    val ies: LiveData<String> = _ies
+
+    fun init(year: String, term: String) = (viewModelScope + Dispatchers.IO).launch {
+        _scores.addSource(RepositoryImpl.loadScores(year, term)) {
+            _scores.postValue(it)
         }
-        RepositoryImpl.ScoreRt.saveFilter(_filter)
-        ies.postValue(_filter.calcIES(_scores).trimEnd(2))
+    }
+
+    fun itemChecked(score: Score) = (viewModelScope + Dispatchers.IO).launch {
+        RepositoryImpl.ScoreRt.save(score)
+    }
+
+    fun allChecked() = (viewModelScope + Dispatchers.IO).launch {
+        val scores = scores.value ?: return@launch
+        scores.forEach {
+            it.isIESItem = true
+        }
+        RepositoryImpl.ScoreRt.save(scores)
     }
 
 }

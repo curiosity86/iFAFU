@@ -1,5 +1,3 @@
-@file:Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-
 package cn.ifafu.ifafu.data.repository.impl
 
 import android.annotation.SuppressLint
@@ -9,8 +7,11 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
 import androidx.lifecycle.LiveData
-import cn.ifafu.ifafu.constant.Constant
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.liveData
+import androidx.lifecycle.switchMap
 import cn.ifafu.ifafu.base.BaseApplication
+import cn.ifafu.ifafu.constant.Constant
 import cn.ifafu.ifafu.data.IFResult
 import cn.ifafu.ifafu.data.bean.*
 import cn.ifafu.ifafu.data.db.AppDatabase
@@ -65,6 +66,18 @@ object RepositoryImpl : Repository {
                 field
             }
         }
+
+    private val userLD = liveData(Dispatchers.IO) {
+        user.getInUse()?.let { emit(it) }
+    } as MutableLiveData<User>
+
+    val scoreFilter: LiveData<ScoreFilter> = userLD.switchMap { user ->
+        db.scoreFilterDao.get(user.account)
+    }
+
+    fun loadScores(year: String, term: String): LiveData<List<Score>> =
+            db.scoreDao.getAllLD(account, year, term)
+
 
     /**
      * 启动App时初始化
@@ -333,8 +346,6 @@ object RepositoryImpl : Repository {
         }
     }
 
-    val scoreFilter: LiveData<ScoreFilter>
-        = db.scoreFilterDao.get(account)
 
     override suspend fun getNewVersion(): IFResult<Version> = withContext(Dispatchers.IO) {
         try {
@@ -655,11 +666,11 @@ object RepositoryImpl : Repository {
                 if (list != null && list.isNotEmpty()) {
                     deleteAll()
                     save(list)
-                    //筛选不需要计入智育分的成绩
-                    val scoreFilter = getFilter()
-                    scoreFilter.account = account
-                    scoreFilter.filter(list)
-                    saveFilter(scoreFilter)
+//                    //筛选不需要计入智育分的成绩
+//                    val scoreFilter = getFilter()
+//                    scoreFilter.account = account
+//                    scoreFilter.filter(list)
+//                    saveFilter(scoreFilter)
                 }
             }
         }
@@ -693,7 +704,7 @@ object RepositoryImpl : Repository {
             db.scoreDao.getAll(account, semester.yearStr, semester.termStr)
         }
 
-        suspend fun getById(id: Long): Score? = withContext(Dispatchers.Default) {
+        suspend fun getById(id: Int): Score? = withContext(Dispatchers.Default) {
             db.scoreDao.getScoreById(id)
         }
 

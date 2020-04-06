@@ -1,6 +1,6 @@
 package cn.ifafu.ifafu.data.bean
 
-data class Response<T>(
+data class Response<out T>(
         val code: Int,
         val message: String = "",
         val data: T? = null,

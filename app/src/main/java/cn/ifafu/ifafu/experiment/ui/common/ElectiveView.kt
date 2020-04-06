@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.experiment.ui.elective
+package cn.ifafu.ifafu.experiment.ui.common
 
 import android.content.Context
 import android.graphics.Color
@@ -14,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.data.entity.Score
+import cn.ifafu.ifafu.experiment.vo.Elective
 import cn.ifafu.ifafu.util.ColorUtils
 
 

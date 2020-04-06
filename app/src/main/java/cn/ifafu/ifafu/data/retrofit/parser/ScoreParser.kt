@@ -4,37 +4,32 @@ import cn.ifafu.ifafu.data.bean.Response
 import cn.ifafu.ifafu.data.entity.Score
 import cn.ifafu.ifafu.data.entity.User
 import org.jsoup.Jsoup
-import java.util.*
 
 class ScoreParser(user: User) : BaseParser<Response<List<Score>>>() {
     private val account: String = user.account
 
     override fun parse(html: String): Response<List<Score>> {
         check(html)
-        val list: MutableList<Score> = ArrayList()
-        val document = Jsoup.parse(html)
-        val elementsTemp = document.select("table[id=\"Datagrid1\"]")
-        if (elementsTemp.size == 0) {
-            return Response.failure("成绩获取失败")
+        try {
+            val list = Jsoup.parse(html)
+                    .select("table[id=\"Datagrid1\"]")
+                    .getOrElse(0) { return Response.failure("成绩获取失败") }
+                    .getElementsByTag("tr")
+                    .drop(1)
+                    // 通过空格分隔信息，不能用Element#eachText（会把空字符串去掉）
+                    .map { it.children().text().split(" ") }
+                    .map { paresToScore(it, account) }
+            return Response.success(list.sortedBy { it.id })
+        } catch (e: Exception) {
+            return Response.failure("成绩解析出错")
         }
-        val elements = elementsTemp[0].getElementsByTag("tr")
-        elements.drop(1).forEach {
-            //Element.eachText会去除空字符串
-            val eachText = it.children().text().split(" ")
-            list.add(paresToScore(eachText))
-        }
-        for (score in list) {
-            score.account = account
-            score.id = score.id * 31 + account.hashCode()
-        }
-        return Response.success(list.sortedBy { it.id })
     }
 
-    private fun paresToScore(eles: List<String>): Score {
+    private fun paresToScore(eles: List<String>, account: String): Score {
         val score = Score()
+        score.account = account
         score.year = eles[0]
         score.term = eles[1]
-        score.id = (eles[0] + eles[1] + eles[2]).hashCode().toLong()
         score.name = eles[3]
         score.nature = eles[4]
         score.attr = eles[5]
@@ -56,6 +51,11 @@ class ScoreParser(user: User) : BaseParser<Response<List<Score>>>() {
             score.remarks = eles[11]
             score.makeupRemarks = eles[12]
         }
+        score.isIESItem = score.score == Score.FREE_COURSE
+                || score.nature.contains("任意选修")
+                || score.nature.contains("公共选修")
+                || score.name.contains("体育")
+        score.id = score.hashCode()
         return score
     }
 
