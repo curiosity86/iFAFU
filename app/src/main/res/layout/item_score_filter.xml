@@ -33,7 +33,6 @@
         android:id="@+id/checkbox"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_gravity="center_vertical|end"
-        android:layout_margin="5dp" />
+        android:layout_gravity="center_vertical|end" />
 
 </LinearLayout>

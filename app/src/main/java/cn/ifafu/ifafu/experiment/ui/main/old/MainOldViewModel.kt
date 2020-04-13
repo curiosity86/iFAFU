@@ -22,7 +22,7 @@ class MainOldViewModel(val repo: RepositoryImpl) : ViewModel() {
 
     val user: MutableLiveData<User> = MutableLiveData()
     val semester: LiveData<String> = liveData {
-        val semester = RepositoryImpl.getNowSemester().toString()
+        val semester = RepositoryImpl.getNowSemester().toTitle()
         emit(semester)
     }
     val online = MutableLiveData<Boolean>()
@@ -69,12 +69,12 @@ class MainOldViewModel(val repo: RepositoryImpl) : ViewModel() {
     }
 
     fun updateScorePreview() = GlobalScope.launch(Dispatchers.IO) {
-        kotlin.runCatching {
-            val db = RepositoryImpl.ScoreRt.getNow()
-            scorePreview.postValue(ScorePreview.convert(db))
-            val scores = RepositoryImpl.ScoreRt.fetchNow().data
-            scorePreview.postValue(ScorePreview.convert(scores))
-        }
+//        kotlin.runCatching {
+//            val db = RepositoryImpl.ScoreRt.getNow()
+//            scorePreview.postValue(ScorePreview.convert(db))
+//            val scores = RepositoryImpl.ScoreRt.fetchNow().data
+//            scorePreview.postValue(ScorePreview.convert(scores))
+//        }
     }
 
     fun switchAccount() = coroutineScope.launch {

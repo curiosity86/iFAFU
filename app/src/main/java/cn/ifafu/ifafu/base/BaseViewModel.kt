@@ -11,7 +11,7 @@ import cn.ifafu.ifafu.IFAFU
 import cn.ifafu.ifafu.data.bean.Response
 import cn.ifafu.ifafu.data.exception.NoAuthException
 import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
-import cn.ifafu.ifafu.ui.login.LoginActivity
+import cn.ifafu.ifafu.experiment.ui.login.LoginActivity
 import kotlinx.coroutines.*
 import java.io.IOException
 import java.net.ConnectException

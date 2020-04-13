@@ -5,48 +5,54 @@ import okhttp3.*
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 open class HttpClient {
 
-    private val client by lazy { OkHttpClient() }
+    private val client = OkHttpClient()
 
     fun get(url: String, headers: Headers? = null): Response {
         val request = Request.Builder()
                 .get()
                 .url(url)
         if (headers != null) {
-            request.headers(headers)
-        }
-        return client.newCall(request.build()).execute()
-    }
-
-    fun post(url: String, headers: Headers? = null, body: Map<String, String>? = null, bodyEncoded: Boolean = false): Response {
-        val formBody = if (body != null) {
-            if (bodyEncoded) {
-                FormBody.Builder().apply {
-                    for (entry in body.entries) {
-                        addEncoded(entry.key, entry.value)
-                    }
-                }.build()
-            } else {
-                FormBody.Builder()
-                        .add(body)
-                        .build()
+            val headersBuilder = headers.newBuilder()
+            if (headersBuilder["Content-Type"] == null) {
+                headersBuilder.set("Content-Type", "application/x-www-form-urlencoded")
             }
-        } else {
-            null
-        }
-        val request = Request.Builder()
-                .post(formBody)
-                .url(url)
-        if (headers != null) {
-            request.headers(headers)
+            request.headers(headersBuilder.build())
         }
         return client.newCall(request.build()).execute()
     }
 
-    private fun FormBody.Builder.add(map: Map<String, String>): FormBody.Builder {
-        map.forEach { (key, value) ->
-            add(key, value)
-        }
-        return this
+    fun post(url: String, headers: Headers? = null, body: Map<String, String>? = null, enc: String? = null): Response {
+        val formBody = if (body != null) {
+            FormBody.Builder().apply {
+                if (enc != null) {
+                    add(body, "gb2312")
+                } else {
+                    addEncoded(body)
+                }
+            }.build()
+        } else null
+        val request = Request.Builder().apply {
+            post(formBody)
+            url(url)
+            if (headers != null) {
+                headers(headers)
+            }
+        }.build()
+        return client.newCall(request).execute()
     }
 
+}
+
+fun FormBody.Builder.add(map: Map<String, String>, enc: String): FormBody.Builder {
+    map.forEach { (key, value) ->
+        add(key, value.encode(enc))
+    }
+    return this
+}
+
+fun FormBody.Builder.addEncoded(map: Map<String, String>): FormBody.Builder {
+    map.forEach { (key, value) ->
+        add(key, value)
+    }
+    return this
 }

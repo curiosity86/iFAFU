@@ -7,7 +7,6 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 @Entity
 class SyllabusSetting {
@@ -96,7 +95,10 @@ class SyllabusSetting {
     }
 
     override fun hashCode(): Int {
-        return Objects.hash(account, weekCnt, totalNode, showSaturday, showSunday, showBeginTimeText, showHorizontalLine, showVerticalLine, openingDay, nodeLength, firstDayOfWeek, background, textSize, themeColor, statusDartFont, isForceRefresh, beginTime)
+        return Objects.hash(account, weekCnt, totalNode, showSaturday, showSunday,
+                showBeginTimeText, showHorizontalLine, showVerticalLine, openingDay,
+                nodeLength, firstDayOfWeek, background, textSize, themeColor,
+                statusDartFont, isForceRefresh, beginTime)
     }
 
     companion object {

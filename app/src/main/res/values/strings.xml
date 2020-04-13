@@ -107,7 +107,7 @@
 
     <!--ScoreFilterActivity-->
     <string name="score_filter_hint">选择需要记入智育分的成绩</string>
-    <string name="score_filter_now_ies">当前智育分：%s分</string>
+    <string name="format_now_ies">当前智育分：%s分</string>
     <string name="score_filter_title">智育分计算筛选</string>
     <string name="score_filter_all">全选</string>
 

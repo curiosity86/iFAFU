@@ -9,7 +9,6 @@ import android.util.Base64
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
-import androidx.lifecycle.switchMap
 import cn.ifafu.ifafu.base.BaseApplication
 import cn.ifafu.ifafu.constant.Constant
 import cn.ifafu.ifafu.data.IFResult
@@ -71,14 +70,6 @@ object RepositoryImpl : Repository {
         user.getInUse()?.let { emit(it) }
     } as MutableLiveData<User>
 
-    val scoreFilter: LiveData<ScoreFilter> = userLD.switchMap { user ->
-        db.scoreFilterDao.get(user.account)
-    }
-
-    fun loadScores(year: String, term: String): LiveData<List<Score>> =
-            db.scoreDao.getAllLD(account, year, term)
-
-
     /**
      * 启动App时初始化
      */
@@ -107,7 +98,7 @@ object RepositoryImpl : Repository {
         val termIndex = if (c[Calendar.MONTH] < 1 || c[Calendar.MONTH] > 6) 0 else 1
         c.add(Calendar.MONTH, 5)
         val year = c[Calendar.YEAR]
-        val yearByAccount: Int //通过学号判断学生
+        val yearByAccount: Int //通过学号判断学生入学年份
         val account = account
         yearByAccount = if (account.length == 10) {
             account.substring(1, 3).toInt() + 2000
@@ -119,6 +110,25 @@ object RepositoryImpl : Repository {
         }
         yearList.add("全部")
         return Semester(yearList, arrayListOf("1", "2", "全部"), 0, termIndex)
+    }
+
+    fun getExamSemester(): Semester {
+        val yearList: MutableList<String> = ArrayList()
+        val c = Calendar.getInstance()
+        val termIndex = if (c[Calendar.MONTH] < 1 || c[Calendar.MONTH] > 6) 0 else 1
+        c.add(Calendar.MONTH, 5)
+        val year = c[Calendar.YEAR]
+        val yearByAccount: Int //通过学号判断学生入学年份
+        val account = account
+        yearByAccount = if (account.length == 10) {
+            account.substring(1, 3).toInt() + 2000
+        } else {
+            account.substring(0, 2).toInt() + 2000
+        }
+        for (i in yearByAccount until year) {
+            yearList.add(0, String.format(Locale.CHINA, "%d-%d", i, i + 1))
+        }
+        return Semester(yearList, arrayListOf("1", "2"), 0, termIndex)
     }
 
     class SyllabusRt(context: Context) {
@@ -334,19 +344,6 @@ object RepositoryImpl : Repository {
         RepositoryImpl.user.saveLoginOnly(user)
     }
 
-    override suspend fun login(account: String, password: String): IFResult<User> {
-        return try {
-            jwService.login(account, password).also {
-                val user = it.getOrNull() ?: return@also
-                RepositoryImpl.user.save(user)
-                RepositoryImpl.user.saveLoginOnly(user)
-            }
-        } catch (e: Exception) {
-            IFResult.failure<User>(e)
-        }
-    }
-
-
     override suspend fun getNewVersion(): IFResult<Version> = withContext(Dispatchers.IO) {
         try {
             woService.getNewVersion()
@@ -396,10 +393,6 @@ object RepositoryImpl : Repository {
 
         suspend fun login(user: User): Response<String> {
             return login(user.account, user.password)
-        }
-
-        suspend fun login2(account: String, password: String): IFResult<User> {
-            return jwService.login(account, password)
         }
 
         suspend fun login(account: String, password: String): Response<String> = withContext(Dispatchers.IO) {
@@ -483,10 +476,9 @@ object RepositoryImpl : Repository {
             db.userDao.delete(account)
             db.courseDao.delete(account)
             db.examDao.delete(account)
-            db.scoreDao.delete(account)
+            db.scoreDao.deleteScore(account)
             db.globalSettingDao.delete(account)
             db.syllabusSettingDao.delete(account)
-            db.tokenDao.delete(account)
             db.elecQueryDao.delete(account)
             db.elecUserDao.delete(account)
             db.elecCookieDao.delete(account)
@@ -664,13 +656,8 @@ object RepositoryImpl : Repository {
                 val list = data
                 //若获取的成绩不为空，则清空数据库成绩并保存刚获取的成绩
                 if (list != null && list.isNotEmpty()) {
-                    deleteAll()
-                    save(list)
-//                    //筛选不需要计入智育分的成绩
-//                    val scoreFilter = getFilter()
-//                    scoreFilter.account = account
-//                    scoreFilter.filter(list)
-//                    saveFilter(scoreFilter)
+                    db.scoreDao.deleteScore(account)
+                    db.scoreDao.saveScore(list)
                 }
             }
         }
@@ -695,57 +682,12 @@ object RepositoryImpl : Repository {
             fetchAll(semester.yearStr, semester.termStr)
         }
 
-        suspend fun getAll(): List<Score> = withContext(Dispatchers.Default) {
-            db.scoreDao.getAll(account)
-        }
-
-        suspend fun getNow(): List<Score> = withContext(Dispatchers.Default) {
+        fun getNow(): LiveData<List<Score>> {
             val semester = getNowSemester()
-            db.scoreDao.getAll(account, semester.yearStr, semester.termStr)
+            return db.scoreDao.getAllScores(account, semester.yearStr, semester.termStr)
         }
 
-        suspend fun getById(id: Int): Score? = withContext(Dispatchers.Default) {
-            db.scoreDao.getScoreById(id)
-        }
 
-        suspend fun getAll(year: String, term: String): List<Score> = withContext(Dispatchers.Default) {
-            if (year == "全部" && term == "全部") {
-                db.scoreDao.getAll(account)
-            } else if (year == "全部") {
-                db.scoreDao.getAllByTerm(account, term)
-            } else if (term == "全部") {
-                db.scoreDao.getAllByYear(account, year)
-            } else {
-                db.scoreDao.getAll(account, year, term)
-            }
-        }
-
-        suspend fun delete(year: String, term: String) = withContext(Dispatchers.Default) {
-            db.scoreDao.delete(year, term)
-        }
-
-        suspend fun deleteAll() = withContext(Dispatchers.Default) {
-            db.scoreDao.delete(account)
-        }
-
-        suspend fun save(score: Score) = withContext(Dispatchers.Default) {
-            db.scoreDao.save(score)
-        }
-
-        suspend fun save(scores: List<Score>) = withContext(Dispatchers.Default) {
-            db.scoreDao.save(*scores.toTypedArray())
-        }
-
-        suspend fun getFilter(): ScoreFilter = withContext(Dispatchers.Default) {
-            val account = account
-            db.scoreFilterDao.scoreFilter(account) ?: ScoreFilter().apply {
-                this.account = account
-            }
-        }
-
-        suspend fun saveFilter(scoreFilter: ScoreFilter) = withContext(Dispatchers.Default) {
-            db.scoreFilterDao.save(scoreFilter)
-        }
     }
 
     class ExamRt {

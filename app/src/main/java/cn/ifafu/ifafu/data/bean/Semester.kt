@@ -5,11 +5,13 @@ package cn.ifafu.ifafu.data.bean
  * Created by woolsen on 19/9/18
  */
 data class Semester(
-        var yearList: MutableList<String>,
-        var termList: MutableList<String>,
+        var yearList: List<String>,
+        var termList: List<String>,
         var yearIndex: Int = 0,
         var termIndex: Int = 0
 ) {
+
+    var account = ""
 
     val yearStr: String
         get() = yearList[yearIndex]
@@ -25,12 +27,7 @@ data class Semester(
         return termList.indexOf(term)
     }
 
-    fun setYearTermIndex(yearIndex: Int, termIndex: Int) {
-        this.yearIndex = yearIndex
-        this.termIndex = termIndex
-    }
-
-    override fun toString(): String {
+    fun toTitle(): String {
         return if (termStr == "全部" && yearStr == "全部") {
             "全部"
         } else if (termStr == "全部") {

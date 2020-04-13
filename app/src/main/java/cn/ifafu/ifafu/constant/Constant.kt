@@ -76,12 +76,14 @@ object Constant {
                     login = "default2.aspx",
                     verify = "CheckCode.aspx",
                     main = "xs_main.aspx",
-                    exam = Pair("xskscx.aspx", "N121604")),
+                    exam = Pair("xskscx.aspx", "N121604"),
+                    score = Pair("xscjcx_dq_fafu.aspx", "N121605")),
             "FAFU_JS" to URL(host = "http://js.ifafu.cn",
                     login = "default.aspx",
                     verify = "CheckCode.aspx",
                     main = "xs_main.aspx",
-                    exam = Pair("xskscx.aspx", "N121603"))
+                    exam = Pair("xskscx.aspx", "N121603"),
+                    score = Pair("xscjcx_dq.aspx", "N121613"))
     )
 
     fun getURL(@School school: String): URL {

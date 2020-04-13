@@ -1,7 +1,6 @@
 package cn.ifafu.ifafu.experiment.ui.feedback
 
 import android.app.Application
-import android.view.View
 import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
@@ -12,13 +11,12 @@ class FeedbackViewModel(application: Application) : BaseViewModel(application) {
 
     val contact = MutableLiveData<String>()
     val message = MutableLiveData<String>()
-    val submitCommand = View.OnClickListener { submit() }
 
     private val repo = RepositoryImpl
 
     private var lastUploadTime = 0L
 
-    private fun submit() = GlobalScope.launch {
+    fun submit() = GlobalScope.launch {
         val message = message.value
         if (message.isNullOrBlank()) {
             toast("请输入反馈内容")

@@ -1,57 +1,26 @@
 package cn.ifafu.ifafu.ui.view.adapter
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.data.entity.Score
-import cn.ifafu.ifafu.ui.view.custom.SmoothCheckBox
-import cn.ifafu.ifafu.util.GlobalLib
+import cn.ifafu.ifafu.util.toRadiusString
+import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import kotlinx.android.synthetic.main.item_score_filter.view.*
 
-class ScoreFilterAdapter(context: Context, private val onCheckedChangeListener: ((score: Score) -> Unit))
-    : RecyclerView.Adapter<ScoreFilterAdapter.ViewHolder>() {
+class ScoreFilterAdapter(private val onCheckedChangeListener: ((score: Score) -> Unit))
+    : BaseQuickAdapter<Score, BaseViewHolder>(R.layout.item_score_filter) {
 
-    var data: List<Score> = ArrayList()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
-
-    private val layoutInflater = LayoutInflater.from(context)
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = layoutInflater.inflate(R.layout.item_score_filter, parent, false)
-        return ViewHolder(view)
-    }
-
-    override fun getItemCount(): Int {
-        return data.size
-    }
-
-    @SuppressLint("SetTextI18n")
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val score = data[position]
-        holder.titleTV.text = score.name
-        score.realScore.run {
-            if (this == Score.FREE_COURSE) {
-                holder.scoreTV.text = "免修";
-            } else {
-                holder.scoreTV.text = GlobalLib.formatFloat(this, 2) + "分";
+    init {
+        setDiffCallback(object : DiffUtil.ItemCallback<Score>() {
+            override fun areItemsTheSame(oldItem: Score, newItem: Score): Boolean {
+                return oldItem == newItem
             }
-        }
-        holder.checkBox.setOnCheckedChangeListener(null)
-        holder.checkBox.setChecked(score.isIESItem, false)
-        holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
-            score.isIESItem = isChecked
-            onCheckedChangeListener.invoke(score)
-        }
-        holder.itemView.setOnClickListener {
-            holder.checkBox.setChecked(!holder.checkBox.isChecked, true)
-        }
+
+            override fun areContentsTheSame(oldItem: Score, newItem: Score): Boolean {
+                return oldItem.isIESItem == oldItem.isIESItem
+            }
+        })
     }
 
     fun setAllChecked() {
@@ -61,9 +30,23 @@ class ScoreFilterAdapter(context: Context, private val onCheckedChangeListener: 
         notifyDataSetChanged()
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val titleTV: TextView = itemView.findViewById(R.id.tv_score_name)
-        val scoreTV: TextView = itemView.findViewById(R.id.tv_score)
-        val checkBox: SmoothCheckBox = itemView.findViewById(R.id.checkbox)
+    override fun convert(holder: BaseViewHolder, item: Score) {
+        val titleTV = holder.itemView.tv_score_name
+        val scoreTV = holder.itemView.tv_score
+        val checkBox = holder.itemView.checkbox
+        titleTV.text = item.name
+        if (item.realScore == Score.FREE_COURSE) {
+            scoreTV.text = "免修";
+        } else {
+            scoreTV.text = (item.realScore.toRadiusString(2) + "分")
+        }
+        checkBox.setChecked(item.isIESItem, false)
+        checkBox.setOnCheckedChangeListener { _, isChecked ->
+            item.isIESItem = isChecked
+            onCheckedChangeListener.invoke(item)
+        }
+        holder.itemView.setOnClickListener {
+            checkBox.setChecked(!checkBox.isChecked, true)
+        }
     }
 }

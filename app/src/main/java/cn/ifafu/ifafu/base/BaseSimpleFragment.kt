@@ -7,7 +7,10 @@ import com.google.android.material.snackbar.Snackbar
 
 abstract class BaseSimpleFragment : Fragment() {
 
-    protected open fun toast(message: String) {
+    protected open fun toast(message: String?) {
+        if (message == null) {
+            return
+        }
         Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT).show()
     }
 

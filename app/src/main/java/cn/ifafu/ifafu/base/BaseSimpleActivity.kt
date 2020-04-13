@@ -7,7 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 
 abstract class BaseSimpleActivity : AppCompatActivity() {
 
-    protected open fun toast(message: String) {
+    protected open fun toast(message: String?) {
+        if (message == null) {
+            return
+        }
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 

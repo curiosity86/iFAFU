@@ -5,57 +5,54 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.ui.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.databinding.ActivityExamListBinding
-import cn.ifafu.ifafu.ui.view.adapter.ExamAdapter
+import cn.ifafu.ifafu.ui.getViewModelFactory
 import cn.ifafu.ifafu.ui.view.LoadingDialog
-import cn.ifafu.ifafu.ui.view.SemesterOptionPicker
+import cn.ifafu.ifafu.ui.view.SemesterPicker
+import cn.ifafu.ifafu.ui.view.adapter.ExamAdapter
 import kotlinx.android.synthetic.main.activity_exam_list.*
 
 class ExamListActivity : BaseActivity() {
 
-    private val mExamAdapter = ExamAdapter(this)
+    private val mExamAdapter = ExamAdapter()
     private val mLoadingDialog = LoadingDialog(this)
     private val mViewModel: ExamListViewModel by viewModels { getViewModelFactory() }
 
     private val mSemesterOptionPicker by lazy {
-        SemesterOptionPicker(this) { year, term ->
+        SemesterPicker(this) { year, term ->
             mViewModel.switchYearAndTerm(year, term)
         }
     }
 
-    private var first = true
     private lateinit var mBinding: ActivityExamListBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setLightUiBar()
         mBinding = bind(R.layout.activity_exam_list)
+
+        //初始化监听事件
         btn_refresh.setOnClickListener { mViewModel.refresh() }
         tb_exam.setNavigationOnClickListener { finish() }
         tb_exam.setSubtitleClickListener { v ->
-            mViewModel.semester.value?.run {
-                mSemesterOptionPicker.setSemester(this)
-                mSemesterOptionPicker.show()
-            }
+            mSemesterOptionPicker.show()
         }
         tb_exam.setSubtitleDrawablesRelative(null, null, this.getDrawable(R.drawable.ic_down_little), null)
-        rv_exam.layoutManager = LinearLayoutManager(this)
+
+        //初始化RecycleView
         val dividerItemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        val divider = this.getDrawable(R.drawable.shape_divider)
-        if (divider != null) {
-            dividerItemDecoration.setDrawable(divider)
-        }
+        val divider = this.getDrawable(R.drawable.shape_divider)!!
+        dividerItemDecoration.setDrawable(divider)
         mBinding.vm = mViewModel
         rv_exam.addItemDecoration(dividerItemDecoration)
         rv_exam.adapter = mExamAdapter
+
+        //初始化ViewModel
         mViewModel.exams.observe(this, Observer {
             isShowEmptyView(it.isEmpty())
-            mExamAdapter.data = it
-            mExamAdapter.notifyDataSetChanged()
+            mExamAdapter.setNewInstance(it.toMutableList())
         })
         mLoadingDialog.observe(this, mViewModel.loading)
     }

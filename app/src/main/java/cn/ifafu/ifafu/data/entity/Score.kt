@@ -2,8 +2,6 @@ package cn.ifafu.ifafu.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.alibaba.fastjson.JSONObject
-import timber.log.Timber
 import java.io.Serializable
 
 @Entity
@@ -77,33 +75,4 @@ class Score : Serializable {
     companion object {
         const val FREE_COURSE = -99999F //免修课程
     }
-}
-
-fun List<Score>.calcIES(): Float {
-    // 过滤 不计入智育分的成绩 和 免修成绩
-    val scores = this
-            .filter { it.isIESItem && it.realScore != Score.FREE_COURSE }
-    if (scores.isEmpty()) {
-        return 0f
-    }
-    var totalScore = 0f
-    var totalCredit = 0f
-    var totalMinus = 0f
-    for (score in scores) {
-        val realScore = score.realScore
-        totalScore += (realScore * score.credit)
-        totalCredit += score.credit
-        if (realScore < 60) {
-            totalMinus += score.credit
-        }
-    }
-    var result = totalScore / totalCredit - totalMinus
-    if (result.isNaN()) {
-        result = 0F
-    }
-    Timber.d("IES, result = [${result}]")
-    Timber.d("IES, firsh = [${JSONObject.toJSONString(scores[0])}]")
-    Timber.d("IES, list = [${JSONObject.toJSONString(scores.map { it.name })}]")
-
-    return result
 }

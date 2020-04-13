@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 5,
-    "identityHash": "b16143193abba30ce5cb09635c75f0f0",
+    "identityHash": "2cf304ec11bfa312af5eaaadaa14afdd",
     "entities": [
       {
         "tableName": "Course",
@@ -86,7 +86,7 @@
       },
       {
         "tableName": "User",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`account` TEXT NOT NULL, `password` TEXT NOT NULL, `name` TEXT NOT NULL, `schoolCode` TEXT NOT NULL, `token` TEXT NOT NULL, PRIMARY KEY(`account`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`account` TEXT NOT NULL, `password` TEXT NOT NULL, `name` TEXT NOT NULL, `schoolCode` TEXT NOT NULL, `token` TEXT NOT NULL, `last_login_time` INTEGER NOT NULL, PRIMARY KEY(`account`))",
         "fields": [
           {
             "fieldPath": "account",
@@ -116,6 +116,12 @@
             "fieldPath": "token",
             "columnName": "token",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastLoginTime",
+            "columnName": "last_login_time",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -709,7 +715,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"b16143193abba30ce5cb09635c75f0f0\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"2cf304ec11bfa312af5eaaadaa14afdd\")"
     ]
   }
 }

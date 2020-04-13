@@ -19,11 +19,11 @@ import cn.ifafu.ifafu.constant.Constant
 import cn.ifafu.ifafu.data.bean.Menu
 import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.databinding.FragmentMainOld1Binding
+import cn.ifafu.ifafu.experiment.ui.login.LoginActivity
 import cn.ifafu.ifafu.ui.activity.AboutActivity
 import cn.ifafu.ifafu.ui.electricity.ElectricityActivity
 import cn.ifafu.ifafu.ui.exam_list.ExamListActivity
 import cn.ifafu.ifafu.ui.getViewModelFactory
-import cn.ifafu.ifafu.ui.login.LoginActivity
 import cn.ifafu.ifafu.ui.main.view.MultiUserDialog
 import cn.ifafu.ifafu.ui.schedule.SyllabusActivity
 import cn.ifafu.ifafu.ui.setting.SettingActivity

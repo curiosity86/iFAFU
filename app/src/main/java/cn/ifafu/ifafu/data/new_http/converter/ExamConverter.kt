@@ -68,7 +68,6 @@ class ExamConverter(user: User) {
             exam.endTime = end
         }
         //考试名、地址、座位号
-        exam.id = e[0].text().hashCode().toLong()
         exam.name = e[1].text()
         exam.address = if (e.size > 4) e[4].text() else ""
         exam.seatNumber = if (e.size > 6) e[6].text().run {
@@ -76,6 +75,7 @@ class ExamConverter(user: User) {
             else this
         } else ""
         exam.account = account
+        exam.id = exam.hashCode()
 
         return exam
     }

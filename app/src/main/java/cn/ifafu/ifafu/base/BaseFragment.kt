@@ -11,7 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import cn.ifafu.ifafu.constant.Constant
-import cn.ifafu.ifafu.ui.login.LoginActivity
+import cn.ifafu.ifafu.experiment.ui.login.LoginActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

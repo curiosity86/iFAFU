@@ -1,11 +1,9 @@
 package cn.ifafu.ifafu.util
 
 import android.app.Activity
-import android.content.Context
 import android.content.ContextWrapper
-import android.content.pm.PackageManager
 import android.view.View
-import android.view.inputmethod.InputMethodManager
+import cn.ifafu.ifafu.data.entity.Score
 
 object GlobalLib {
     fun trimZero(s: String): String {
@@ -36,4 +34,28 @@ object GlobalLib {
         return null
     }
 
+    fun List<Score>.calcIES(): Float {
+        // 过滤 不计入智育分的成绩 和 免修成绩
+        val scores = this
+                .filter { it.isIESItem && it.realScore != Score.FREE_COURSE }
+        if (scores.isEmpty()) {
+            return 0f
+        }
+        var totalScore = 0f
+        var totalCredit = 0f
+        var totalMinus = 0f
+        for (score in scores) {
+            val realScore = score.realScore
+            totalScore += (realScore * score.credit)
+            totalCredit += score.credit
+            if (realScore < 60) {
+                totalMinus += score.credit
+            }
+        }
+        var result = totalScore / totalCredit - totalMinus
+        if (result.isNaN()) {
+            result = 0F
+        }
+        return result
+    }
 }

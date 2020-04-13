@@ -1,15 +1,12 @@
 package cn.ifafu.ifafu.ui.main.old_theme
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
-import cn.ifafu.ifafu.ui.main.bean.Weather
+import androidx.lifecycle.*
 import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import cn.ifafu.ifafu.ui.main.bean.ClassPreview
 import cn.ifafu.ifafu.ui.main.bean.ExamPreview
 import cn.ifafu.ifafu.ui.main.bean.ScorePreview
+import cn.ifafu.ifafu.ui.main.bean.Weather
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -19,7 +16,7 @@ class MainOldViewModel(val repo: RepositoryImpl) : ViewModel() {
     val user: LiveData<User> = liveData {
         RepositoryImpl.user.getInUse()?.let { emit(it) }
     }
-    val semester:LiveData<String> = liveData {
+    val semester: LiveData<String> = liveData {
         val semester = RepositoryImpl.getNowSemester().toString()
         emit(semester)
     }
@@ -27,12 +24,13 @@ class MainOldViewModel(val repo: RepositoryImpl) : ViewModel() {
     val weather = MutableLiveData<Weather>()
     val classPreview = MutableLiveData<ClassPreview>()
     val examsPreview = MutableLiveData<ExamPreview>()
-    val scorePreview = MutableLiveData<ScorePreview>()
+    val scorePreview = RepositoryImpl.ScoreRt.getNow().map {
+        ScorePreview.convert(it)
+    } as MutableLiveData<ScorePreview>
 
     init {
         GlobalScope.launch(Dispatchers.IO) {
             online.postValue(true)
-            updateScorePreviewFromDb()
         }
     }
 
@@ -64,12 +62,4 @@ class MainOldViewModel(val repo: RepositoryImpl) : ViewModel() {
             scorePreview.postValue(ScorePreview.convert(scores))
         }
     }
-
-    private suspend fun updateScorePreviewFromDb() = GlobalScope.launch(Dispatchers.IO) {
-        kotlin.runCatching {
-            val db = RepositoryImpl.ScoreRt.getNow()
-            scorePreview.postValue(ScorePreview.convert(db))
-        }
-    }
-
 }

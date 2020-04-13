@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/fragment_score_detail"
-        android:name="cn.ifafu.ifafu.experiment.ui.score.detail.ScoreDetailFragment"
+        android:name="cn.ifafu.ifafu.experiment.ui.score_detail.ScoreDetailFragment"
         android:label="fragment_score_detail"
         tools:layout="@layout/fragment_score_detail">
 

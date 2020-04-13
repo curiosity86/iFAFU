@@ -1,36 +1,39 @@
 package cn.ifafu.ifafu.ui.view.adapter
 
-import android.content.Context
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.data.entity.Exam
 import cn.ifafu.ifafu.util.DateUtils
+import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ExamAdapter(
-        private val mContext: Context,
-        var data: List<Exam> = emptyList()) : RecyclerView.Adapter<ExamAdapter.ExamViewHolder>() {
+class ExamAdapter : BaseQuickAdapter<Exam, BaseViewHolder>(R.layout.item_exam_info) {
 
     private val format = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
     private val format2 = SimpleDateFormat("HH:mm", Locale.CHINA)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExamViewHolder {
-        val view = LayoutInflater.from(mContext).inflate(R.layout.item_exam_info, parent, false)
-        return ExamViewHolder(view)
+    init {
+        setDiffCallback(object : DiffUtil.ItemCallback<Exam>() {
+            override fun areItemsTheSame(oldItem: Exam, newItem: Exam): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areContentsTheSame(oldItem: Exam, newItem: Exam): Boolean {
+                return oldItem.id == newItem.id
+            }
+        })
     }
 
-    override fun onBindViewHolder(holder: ExamViewHolder, position: Int) {
-        val exam = this.data[position]
+    override fun convert(holder: BaseViewHolder, item: Exam) {
+        val exam = item
         val start = Calendar.getInstance()
         start.time = Date(exam.startTime)
         val weekday = DateUtils.getWeekdayCN(start.get(Calendar.DAY_OF_WEEK))
 
-        holder.tvExamTime.text = if (exam.endTime == 0L) {
+        holder.setText(R.id.tv_exam_name, exam.name)
+        holder.setText(R.id.tv_exam_time, if (exam.endTime == 0L) {
             "暂无考试时间"
         } else {
             String.format("%s (%s %s~%s)",
@@ -38,34 +41,20 @@ class ExamAdapter(
                     weekday,
                     format2.format(Date(exam.startTime)),
                     format2.format(Date(exam.endTime)))
-        }
-
-        holder.tvExamName.text = exam.name
-        holder.tvExamAddress.text = String.format("%s   %s", exam.address, exam.seatNumber)
+        })
+        holder.setText(R.id.tv_exam_address, String.format("%s   %s", exam.address, exam.seatNumber))
         when {
             exam.endTime == 0L -> {
-                holder.tvExamLast.text = "未知"
+                holder.setText(R.id.tv_exam_last, "未知")
             }
             exam.endTime < System.currentTimeMillis() -> {
-                holder.tvExamLast.setText(R.string.exam_over)
+                holder.setText(R.id.tv_exam_last, R.string.exam_over)
             }
             else -> {
-                holder.tvExamLast.text = String.format("剩余%s",
-                        DateUtils.calcIntervalTime(System.currentTimeMillis(), exam.startTime))
+                holder.setText(R.id.tv_exam_last, String.format("剩余%s",
+                        DateUtils.calcIntervalTime(System.currentTimeMillis(), exam.startTime)))
             }
         }
     }
 
-    override fun getItemCount(): Int {
-        return this.data.size
-    }
-
-    inner class ExamViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        var tvExamName: TextView = itemView.findViewById(R.id.tv_exam_name)
-        var tvExamTime: TextView = itemView.findViewById(R.id.tv_exam_time)
-        var tvExamAddress: TextView = itemView.findViewById(R.id.tv_exam_address)
-        var tvExamLast: TextView = itemView.findViewById(R.id.tv_exam_last)
-
-    }
 }

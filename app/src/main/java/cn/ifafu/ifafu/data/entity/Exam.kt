@@ -1,39 +1,23 @@
 package cn.ifafu.ifafu.data.entity
 
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import java.text.SimpleDateFormat
 import java.util.*
 
 @Entity
-class Exam {
-    @PrimaryKey
-    var id: Long = 0L
-    var name: String = ""
-    var startTime: Long = 0  //无时间信息则为0
-    var endTime: Long = 0
-    var address: String = ""
-    var seatNumber: String = ""
-    var account: String = ""
-    var year: String = ""
-    var term: String = ""
-
-    @Ignore
-    constructor(id: Long, name: String, startTime: Long, endTime: Long, address: String,
-                seatNumber: String, account: String, year: String, term: String) {
-        this.id = id
-        this.name = name
-        this.startTime = startTime
-        this.endTime = endTime
-        this.address = address
-        this.seatNumber = seatNumber
-        this.account = account
-        this.year = year
-        this.term = term
-    }
-
-    constructor()
+data class Exam(
+        @PrimaryKey
+        var id: Int = 0,
+        var name: String = "",
+        var startTime: Long = 0,  //无时间信息则为0
+        var endTime: Long = 0,
+        var address: String = "",
+        var seatNumber: String = "",
+        var account: String = "",
+        var year: String = "",
+        var term: String = ""
+) {
 
     override fun toString(): String {
         val format = SimpleDateFormat("yyyy-MM-dd HH-mm-ss", Locale.CHINA)
@@ -48,5 +32,27 @@ class Exam {
                 ", year='" + year + '\'' +
                 ", term='" + term + '\'' +
                 '}'
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Exam
+
+        if (name != other.name) return false
+        if (account != other.account) return false
+        if (year != other.year) return false
+        if (term != other.term) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = name.hashCode()
+        result = 31 * result + account.hashCode()
+        result = 31 * result + year.hashCode()
+        result = 31 * result + term.hashCode()
+        return result
     }
 }

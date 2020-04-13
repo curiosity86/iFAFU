@@ -5,13 +5,9 @@
 
     <data>
 
-        <import type="android.view.View" />
-
-        <import type="cn.ifafu.ifafu.util.Converter" />
-
         <variable
             name="vm"
-            type="cn.ifafu.ifafu.experiment.ui.score.list.ScoreListViewModel" />
+            type="cn.ifafu.ifafu.experiment.ui.score_list.ScoreListViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text='@{vm.semester.toString() + "学习成绩" ?? ""}'
+            android:text='@{vm.semester + "学习成绩" ?? ""}'
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -147,22 +143,11 @@
             app:layout_constraintTop_toBottomOf="@id/textView2"
             tools:text="总绩点：9.9" />
 
-        <cn.ifafu.ifafu.ui.view.custom.EmptyView
-            android:id="@+id/view_exam_empty"
-            visibleGoneWhen="@{!vm.scores.empty}"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_gpa"
-            app:message="@string/score_data_empty"
-            tools:visibility="gone" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_score"
-            visibleGoneWhen="@{vm.scores.empty}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/bg_gray"
+            android:background="@color/white"
             android:orientation="vertical"
             android:paddingStart="2dp"
             android:paddingEnd="2dp"

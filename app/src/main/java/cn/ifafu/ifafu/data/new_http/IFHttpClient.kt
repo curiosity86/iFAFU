@@ -5,8 +5,8 @@ import cn.ifafu.ifafu.constant.Constant
 import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.util.HttpClient
 import cn.ifafu.ifafu.util.encode
-import okhttp3.*
-import java.lang.Exception
+import okhttp3.Headers
+import okhttp3.Response
 
 class IFHttpClient : HttpClient() {
 
@@ -31,7 +31,7 @@ class IFHttpClient : HttpClient() {
     fun postJW(user: User, @Domain domain: Int, params: Map<String, String>): Response {
         val headers = getHeader(user, domain)
         val url = getUrl(user, domain)
-        return post(url, headers, params.mapValues { it.value.encode() }, true)
+        return post(url, headers, params.mapValues { it.value.encode() })
     }
 
     private fun getUrl(user: User, @Domain domain: Int): String {

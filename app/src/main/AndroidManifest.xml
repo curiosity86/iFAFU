@@ -33,7 +33,7 @@
             android:name=".ui.main.MainActivity"
             android:launchMode="singleTask" />
         <activity
-            android:name=".ui.login.LoginActivity"
+            android:name="cn.ifafu.ifafu.experiment.ui.login.LoginActivity"
             android:launchMode="singleTask" />
         <activity android:name=".ui.schedule.SyllabusActivity"
             android:launchMode="singleTask" />
@@ -48,7 +48,7 @@
         <activity android:name=".ui.feedback.FeedbackActivity"/>
         <activity android:name="cn.ifafu.ifafu.experiment.ui.score.ScoreActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".experiment.MainActivity" />
+        <activity android:name=".experiment.ui.main.MainActivity" />
 
         <meta-data
             android:name="BUGLY_APP_CHANNEL"

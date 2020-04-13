@@ -1,7 +1,7 @@
 package cn.ifafu.ifafu.data.retrofit.parser
 
-import cn.ifafu.ifafu.data.entity.Exam
 import cn.ifafu.ifafu.data.bean.Response
+import cn.ifafu.ifafu.data.entity.Exam
 import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.util.getInts
 import org.jsoup.Jsoup
@@ -64,7 +64,6 @@ class ExamParser(user: User) : BaseParser<Response<List<Exam>>>() {
         }
 
 
-        exam.id = e[0].text().hashCode().toLong()
         exam.name = e[1].text()
         exam.address = if (e.size > 4) e[4].text() else ""
         exam.seatNumber = if (e.size > 6) e[6].text().run {
@@ -72,6 +71,7 @@ class ExamParser(user: User) : BaseParser<Response<List<Exam>>>() {
             else this
         } else ""
         exam.account = account
+        exam.id = exam.hashCode()
 
         return exam
     }

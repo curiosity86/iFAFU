@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="transition_score_filter">transition_score_filter</string>
+    <string name="transition_score_name">transition_score_name</string>
+    <string name="transition_score_score">transition_score_score</string>
+</resources>

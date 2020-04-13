@@ -13,7 +13,7 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import cn.ifafu.ifafu.experiment.ui.common.ElectiveView
+import cn.ifafu.ifafu.experiment.ui.elective.ElectiveView
 import cn.ifafu.ifafu.experiment.vo.Elective
 import cn.ifafu.ifafu.ui.main.new_theme.view.TimeEvent
 import cn.ifafu.ifafu.ui.main.new_theme.view.Timeline

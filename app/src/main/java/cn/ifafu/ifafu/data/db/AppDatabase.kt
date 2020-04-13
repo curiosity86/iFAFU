@@ -11,15 +11,14 @@ import cn.ifafu.ifafu.constant.DATABASE_NAME
 import cn.ifafu.ifafu.data.db.converter.*
 import cn.ifafu.ifafu.data.db.dao.*
 import cn.ifafu.ifafu.data.entity.*
+import cn.ifafu.ifafu.experiment.data.db.ScoreDao
 
 @Database(
         entities = [
             Course::class,
             User::class,
-            Token::class,
             Exam::class,
             Score::class,
-            ScoreFilter::class,
             SyllabusSetting::class,
             GlobalSetting::class,
             ElecQuery::class,
@@ -27,7 +26,7 @@ import cn.ifafu.ifafu.data.entity.*
             ElecCookie::class,
             Electives::class
         ],
-        version = 5,
+        version = 7,
         exportSchema = true
 )
 @TypeConverters(value = [
@@ -40,17 +39,16 @@ import cn.ifafu.ifafu.data.entity.*
 abstract class AppDatabase : RoomDatabase() {
     abstract val userDao: UserDao
     abstract val courseDao: CourseDao
-    abstract val tokenDao: TokenDao
     abstract val examDao: ExamDao
+    abstract val examDaoExp: cn.ifafu.ifafu.experiment.data.db.ExamDao
     abstract val scoreDao: ScoreDao
-    abstract val scoreDaoExp: cn.ifafu.ifafu.experiment.db.ScoreDao
-    abstract val scoreFilterDao: ScoreFilterDao
     abstract val syllabusSettingDao: SyllabusSettingDao
     abstract val globalSettingDao: GlobalSettingDao
     abstract val elecQueryDao: ElecQueryDao
     abstract val elecUserDao: ElecUserDao
     abstract val elecCookieDao: ElecCookieDao
     abstract val electivesDao: ElectivesDao
+    abstract val userDaoExp: cn.ifafu.ifafu.experiment.data.db.UserDao
 
     companion object {
 
@@ -58,14 +56,18 @@ abstract class AppDatabase : RoomDatabase() {
         private lateinit var INSTANCE: AppDatabase
 
         fun getInstance(context: Context): AppDatabase {
-            INSTANCE = if (::INSTANCE.isInitialized) INSTANCE else buildDatabase(context)
+            INSTANCE = if (::INSTANCE.isInitialized) INSTANCE else {
+                Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME)
+                        .addMigrations(
+                                MIRGRATIONS_1_2,
+                                MIRGRATIONS_2_3,
+                                MIRGRATIONS_3_4,
+                                MIRGRATIONS_4_5,
+                                MIRGRATIONS_5_6,
+                                MIRGRATIONS_6_7)
+                        .build()
+            }
             return INSTANCE
-        }
-
-        private fun buildDatabase(context: Context): AppDatabase {
-            return Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME)
-                    .addMigrations(MIRGRATIONS_1_2, MIRGRATIONS_2_3, MIRGRATIONS_3_4, MIGRATIONS_4_5)
-                    .build()
         }
 
         private val MIRGRATIONS_1_2 = object : Migration(1, 2) {
@@ -87,10 +89,20 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
-        private val MIGRATIONS_4_5= object : Migration(4, 5) {
+        private val MIRGRATIONS_4_5 = object : Migration(4, 5) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("DROP TABLE ElecUser")
                 database.execSQL("CREATE TABLE IF NOT EXISTS ElecUser (`account` TEXT NOT NULL, `xfbAccount` TEXT NOT NULL, `xfbId` TEXT NOT NULL, `password` TEXT NOT NULL, PRIMARY KEY(`account`))")
+            }
+        }
+        private val MIRGRATIONS_5_6 = object : Migration(5, 6) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE User ADD last_login_time INTEGER NOT NULL DEFAULT 0;")
+            }
+        }
+        private val MIRGRATIONS_6_7 = object : Migration(6, 7) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("DROP TABLE ScoreFilter")
             }
         }
     }

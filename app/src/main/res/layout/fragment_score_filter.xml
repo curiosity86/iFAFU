@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="cn.ifafu.ifafu.experiment.ui.score.filter.ScoreFilterViewModel" />
+            type="cn.ifafu.ifafu.experiment.ui.score_filter.ScoreFilterViewModel" />
 
     </data>
 
@@ -44,7 +44,7 @@
             android:layout_height="35dp"
             android:background="#DDFFFF"
             android:gravity="center"
-            android:text="@{@string/score_filter_now_ies(vm.ies)}"
+            android:text="@{@string/format_now_ies(vm.ies)}"
             android:textColor="#1dcbdb"
             android:textSize="12sp"
             tools:text="当前智育分：91分" />

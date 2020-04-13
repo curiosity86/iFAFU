@@ -5,7 +5,6 @@ import cn.ifafu.ifafu.base.BaseApplication
 import cn.ifafu.ifafu.constant.Constant
 import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
 import cn.ifafu.ifafu.experiment.di.appModule
-import cn.ifafu.ifafu.experiment.di.mvvmModule
 import cn.ifafu.ifafu.util.AppUtils
 import cn.ifafu.ifafu.util.SPUtils
 import com.tencent.bugly.Bugly
@@ -27,7 +26,6 @@ class IFAFU : BaseApplication() {
             androidLogger()
             androidContext(this@IFAFU)
             modules(appModule)
-            modules(mvvmModule)
         }
     }
 
@@ -49,13 +47,14 @@ class IFAFU : BaseApplication() {
                 /* 初始化Repository并于内部自动登录(TODO 内部登录不够软工，得改) */
                 RepositoryImpl.init(application)
                 /* 初始化友盟 */
-                UMConfigure.init(application, "5d4082673fc1955041000408", "web", UMConfigure.DEVICE_TYPE_PHONE, "1a446c1ae0455153aa502937a87e5634")
+                UMConfigure.init(application, "5d4082673fc1955041000408", "web",
+                        UMConfigure.DEVICE_TYPE_PHONE, "1a446c1ae0455153aa502937a87e5634")
                 MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
                 /* 初始化Bugly */
                 Bugly.setUserId(application, SPUtils[Constant.SP_USER_INFO].getString("account"))
                 val strategy = CrashReport.UserStrategy(application)
                 strategy.setCrashHandleCallback(CrashCallback())
-                strategy.appVersion = AppUtils.getVersionName(application) + "-" + AppUtils.getVersionCode(application)
+                strategy.appVersion = "${AppUtils.getVersionName(application)}-${AppUtils.getVersionCode(application)}"
                 Bugly.init(application, "46836c4eaa", BuildConfig.DEBUG, strategy)
             }
         }
