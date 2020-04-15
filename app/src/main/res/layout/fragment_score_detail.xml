@@ -7,7 +7,7 @@
 
         <variable
             name="adapter"
-            type="cn.ifafu.ifafu.ui.view.adapter.ScoreItemAdapter" />
+            type="cn.ifafu.ifafu.experiment.ui.score_detail.ScoreDetailAdapter" />
     </data>
 
     <LinearLayout

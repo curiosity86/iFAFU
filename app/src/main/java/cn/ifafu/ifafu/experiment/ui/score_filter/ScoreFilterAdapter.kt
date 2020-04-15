@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.ui.view.adapter
+package cn.ifafu.ifafu.experiment.ui.score_filter
 
 import androidx.recyclerview.widget.DiffUtil
 import cn.ifafu.ifafu.R
@@ -18,7 +18,8 @@ class ScoreFilterAdapter(private val onCheckedChangeListener: ((score: Score) ->
             }
 
             override fun areContentsTheSame(oldItem: Score, newItem: Score): Boolean {
-                return oldItem.isIESItem == oldItem.isIESItem
+                return oldItem.isIESItem == newItem.isIESItem &&
+                        oldItem.name == newItem.name
             }
         })
     }

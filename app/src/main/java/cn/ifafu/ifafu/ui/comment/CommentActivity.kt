@@ -7,7 +7,7 @@
 //import cn.ifafu.ifafu.base.mvp.BaseActivity
 //import cn.ifafu.ifafu.data.entity.CommentItem
 //import cn.ifafu.ifafu.util.SPUtils
-//import cn.ifafu.ifafu.ui.view.adapter.CommentRvAdapter
+//import cn.ifafu.ifafu.ui.comment.CommentRvAdapter
 //import cn.ifafu.ifafu.ui.view.LoadingDialog
 //import com.afollestad.materialdialogs.MaterialDialog
 //import com.gyf.immersionbar.ImmersionBar

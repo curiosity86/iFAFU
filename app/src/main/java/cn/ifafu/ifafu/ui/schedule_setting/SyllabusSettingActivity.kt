@@ -9,23 +9,22 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.ImageView
-import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.ui.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.data.entity.SyllabusSetting
 import cn.ifafu.ifafu.databinding.ActivityScheduleSettingBinding
-import cn.ifafu.ifafu.ui.view.adapter.syllabus_setting.*
+import cn.ifafu.ifafu.ui.setting.SettingAdapter
+import cn.ifafu.ifafu.ui.setting.SettingItem
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.color.colorChooser
 import kotlinx.android.synthetic.main.activity_schedule_setting.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import me.drakeet.multitype.MultiTypeAdapter
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.io.File
 
@@ -36,16 +35,9 @@ class SyllabusSettingActivity : BaseActivity() {
 
     private lateinit var account: String
 
-    private val mAdapter by lazy {
-        MultiTypeAdapter().apply {
-            register(SeekBarItem::class, SeekBarBinder())
-            register(CheckBoxItem::class, CheckBoxBinder())
-            register(TextViewItem::class, TextViewBinder())
-            register(ColorItem::class, ColorBinder())
-        }
-    }
+    private val mAdapter = SettingAdapter()
 
-    private val mViewModel: SyllabusSettingViewModel by viewModels { getViewModelFactory() }
+    private val mViewModel by viewModel<SyllabusSettingViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,40 +51,40 @@ class SyllabusSettingActivity : BaseActivity() {
         rv_syllabus_setting.addItemDecoration(dividerItemDecoration)
         rv_syllabus_setting.layoutManager = LinearLayoutManager(this)
         rv_syllabus_setting.adapter = mAdapter
+
         mViewModel.setting.observe(this, Observer { setting ->
-            account = setting.account
-            mAdapter.items = listOf(
-                    SeekBarItem("一天课程的节数", setting.totalNode, "节", 8, 12) {
+            mAdapter.setNewInstance(listOf(
+                    SettingItem.SeekBar("一天课程的节数", setting.totalNode, "节", 8, 12) {
                         setting.totalNode = it
-                        mViewModel.save()
+                        mViewModel.save(setting)
                         setResult(Activity.RESULT_OK)
                     },
-                    SeekBarItem("课程字体大小", setting.textSize, "sp", 8, 18) {
+                    SettingItem.SeekBar("课程字体大小", setting.textSize, "sp", 8, 18) {
                         setting.textSize = it
-                        mViewModel.save()
+                        mViewModel.save(setting)
                         setResult(Activity.RESULT_OK)
                     },
-                    CheckBoxItem("显示水平分割线", "", setting.showHorizontalLine) {
+                    SettingItem.CheckBox("显示水平分割线", "", setting.showHorizontalLine) {
                         setting.showHorizontalLine = it
-                        mViewModel.save()
+                        mViewModel.save(setting)
                         setResult(Activity.RESULT_OK)
                     },
-                    CheckBoxItem("显示垂直分割线", "", setting.showVerticalLine) {
+                    SettingItem.CheckBox("显示垂直分割线", "", setting.showVerticalLine) {
                         setting.showVerticalLine = it
-                        mViewModel.save()
+                        mViewModel.save(setting)
                         setResult(Activity.RESULT_OK)
                     },
-                    CheckBoxItem("显示上课时间", "", setting.showBeginTimeText) {
+                    SettingItem.CheckBox("显示上课时间", "", setting.showBeginTimeText) {
                         setting.showBeginTimeText = it
-                        mViewModel.save()
+                        mViewModel.save(setting)
                         setResult(Activity.RESULT_OK)
                     },
-                    CheckBoxItem("标题栏深色字体", "", setting.statusDartFont) {
+                    SettingItem.CheckBox("标题栏深色字体", "", setting.statusDartFont) {
                         setting.statusDartFont = it
-                        mViewModel.save()
+                        mViewModel.save(setting)
                         setResult(Activity.RESULT_OK)
                     },
-                    TextViewItem("课表背景", "长按重置为默认背景", {
+                    SettingItem.Text("课表背景", "长按重置为默认背景", {
                         val intent = Intent(Intent.ACTION_PICK).apply {
                             type = "image/*"
                         }
@@ -104,22 +96,21 @@ class SyllabusSettingActivity : BaseActivity() {
                             file.delete()
                         }
                         setting.background = ""
-                        mViewModel.save()
+                        mViewModel.save(setting)
                         GlobalScope.launch(Dispatchers.Main) {
                             toast("课表背景已重置")
                         }
                         setResult(Activity.RESULT_OK)
                     }),
-                    ColorItem("主题颜色", "按钮颜色，文本颜色（除课程文本）", setting.themeColor) { ivColor ->
+                    SettingItem.Color("主题颜色", "按钮颜色，文本颜色（除课程文本）", setting.themeColor) { ivColor ->
                         showColorPicker(setting, ivColor)
                         setResult(Activity.RESULT_OK)
-                    },
-                    TextViewItem("导出测试数据到剪切板", "", {
-                        mViewModel.outputHtml()
-                        setResult(Activity.RESULT_OK)
-                    }, {})
-            )
-            mAdapter.notifyDataSetChanged()
+                    }
+//                    SettingItem.Text("导出测试数据到剪切板", "", {
+//                        mViewModel.outputHtml()
+//                        setResult(Activity.RESULT_OK)
+//                    })
+            ).toMutableList())
         })
     }
 
@@ -155,7 +146,7 @@ class SyllabusSettingActivity : BaseActivity() {
                 val grad = ivColor.background as GradientDrawable?
                 grad?.setColor(selectColor)
                 setting.themeColor = selectColor
-                mViewModel.save()
+                mViewModel.save(setting)
             }
             negativeButton(text = "取消")
         }

@@ -6,13 +6,11 @@ import android.view.View
 import android.view.Window
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.ui.getViewModelFactory
 import cn.ifafu.ifafu.base.BaseActivity
 import cn.ifafu.ifafu.data.entity.Course
 import cn.ifafu.ifafu.databinding.ActivityCourseItemBinding
+import cn.ifafu.ifafu.ui.getViewModelFactory
 import cn.ifafu.ifafu.ui.schedule.SyllabusActivity
 import cn.ifafu.ifafu.ui.view.adapter.WeekItemAdapter
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
@@ -57,10 +55,6 @@ class CourseItemActivity : BaseActivity(), View.OnClickListener {
         binding = bind(R.layout.activity_course_item)
         with(binding) {
             vm = viewModel
-            layoutManager = GridLayoutManager(
-                    this@CourseItemActivity,
-                    6, RecyclerView.VERTICAL,
-                    false)
             adapter = mWeekAdapter
         }
         viewModel.setting.observe(this, Observer {

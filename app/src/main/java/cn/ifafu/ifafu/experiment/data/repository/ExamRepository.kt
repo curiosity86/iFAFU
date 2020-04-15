@@ -1,15 +1,20 @@
 package cn.ifafu.ifafu.experiment.data.repository
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.liveData
+import cn.ifafu.ifafu.data.bean.Semester
 import cn.ifafu.ifafu.data.entity.Exam
-import cn.ifafu.ifafu.experiment.bean.IFResponse
 import cn.ifafu.ifafu.experiment.bean.Resource
 import cn.ifafu.ifafu.experiment.data.UserManager
 import cn.ifafu.ifafu.experiment.data.db.ExamDao
 import cn.ifafu.ifafu.experiment.data.service.ZFService
-import cn.ifafu.ifafu.experiment.util.NetBoundResource
+import cn.ifafu.ifafu.experiment.util.toMediatorLiveData
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ExamRepository(
         private val userManager: UserManager,
@@ -17,43 +22,44 @@ class ExamRepository(
         private val zfService: ZFService
 ) {
 
+    val semester: LiveData<Semester>
+        get() = _semester
+    private val _semester = loadSemester().toMediatorLiveData()
+
     private val coroutineScope: CoroutineScope = GlobalScope
 
-    fun loadExams(year: String, term: String): LiveData<Resource<List<Exam>>> {
-        return userManager.userSwitchMap { user ->
-            val account = user.account
-            object : NetBoundResource<List<Exam>>(coroutineScope) {
 
-                override fun loadFromDb(): LiveData<List<Exam>> {
-                    return if (year == "全部" && term == "全部") {
-                        examDao.getAllExams(account)
-                    } else if (year == "全部") {
-                        examDao.getAllExamsByTerm(account, term)
-                    } else if (term == "全部") {
-                        examDao.getAllExamsByYear(account, year)
-                    } else {
-                        examDao.getAllExams(account, year, term)
-                    }
-                }
+    private var lock = false
 
-                override fun shouldFetch(data: List<Exam>?): Boolean {
-                    return true
-                }
 
-                override fun createCall(): IFResponse<List<Exam>> {
-                    return userManager.auto { zfService.fetchExams(user, year, term) }
-                }
+    val examResource: LiveData<Resource<List<Exam>>>
+        get() = _examResource
+    private val _examResource = MediatorLiveData<Resource<List<Exam>>>().apply {
 
-                override fun saveCallResult(item: List<Exam>) {
-                    val list = item.onEach {
-                        it.account = account
-                        it.id = hashCode()
-                    }
-                    examDao.saveScores(list)
-                }
-
-            }.asLiveData()
-        }
     }
 
+    private fun loadSemester(): LiveData<Semester> {
+        return userManager.userSwitchMap { user ->
+            liveData(Dispatchers.IO) {
+                val c = Calendar.getInstance()
+                val termIndex = if (c[Calendar.MONTH] < 1 || c[Calendar.MONTH] > 6) 0 else 1
+                c.add(Calendar.MONTH, 5)
+                val toYear = c[Calendar.YEAR]
+                val enrollmentYear = user.account.run {
+                    if (length == 10) {
+                        substring(1, 3).toInt() + 2000
+                    } else {
+                        substring(0, 2).toInt() + 2000
+                    }
+                }
+                val yearList = ArrayList<String>()
+                for (i in enrollmentYear until toYear) {
+                    yearList.add(0, String.format(Locale.CHINA, "%d-%d", i, i + 1))
+                }
+                val semester = Semester(yearList, listOf("1", "2"), 0, termIndex)
+                semester.account = user.account
+                emit(semester)
+            }
+        }
+    }
 }

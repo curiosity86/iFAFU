@@ -4,17 +4,16 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import cn.ifafu.ifafu.base.BaseViewModel
 import cn.ifafu.ifafu.data.repository.impl.RepositoryImpl
-import cn.ifafu.ifafu.experiment.vo.Elective
 import cn.ifafu.ifafu.util.sumByFloat
 
 class ElectiveViewModel(application: Application) : BaseViewModel(application) {
 
-    val total = MutableLiveData<Elective>()
-    val zrkx = MutableLiveData<Elective>()
-    val rwsk = MutableLiveData<Elective>()
-    val ysty = MutableLiveData<Elective>()
-    val wxsy = MutableLiveData<Elective>()
-    val cxcy = MutableLiveData<Elective>()
+    val total = MutableLiveData<ElectiveBean>()
+    val zrkx = MutableLiveData<ElectiveBean>()
+    val rwsk = MutableLiveData<ElectiveBean>()
+    val ysty = MutableLiveData<ElectiveBean>()
+    val wxsy = MutableLiveData<ElectiveBean>()
+    val cxcy = MutableLiveData<ElectiveBean>()
 
     val loading = MutableLiveData<String>()
 
@@ -78,22 +77,22 @@ class ElectiveViewModel(application: Application) : BaseViewModel(application) {
             val wxsyDone = wxsyCredit >= electives.wxsy
             val cxcyDone = cxcyCredit >= electives.cxcy
             val totalDone = zrkxDone && rwskDone && ystyDone && wxsyDone && cxcyDone && totalCredit >= electives.total
-            total.postValue(Elective("全部选修课，已修${totalScores.size}门",
+            total.postValue(ElectiveBean("全部选修课，已修${totalScores.size}门",
                     "需修满${electives.total}分，已修${totalCredit}分${totalDone.isDoneStr()}",
                     totalScores, totalDone))
-            zrkx.postValue(Elective("自然科学类，已修${zrkxScores.size}门",
+            zrkx.postValue(ElectiveBean("自然科学类，已修${zrkxScores.size}门",
                     "需修满${electives.zrkx}分，已修${zrkxCredit}分${zrkxDone.isDoneStr()}",
                     zrkxScores, zrkxDone))
-            rwsk.postValue(Elective("人文社科类，已修${rwskScores.size}门",
+            rwsk.postValue(ElectiveBean("人文社科类，已修${rwskScores.size}门",
                     "需修满${electives.rwsk}分，已修${rwskCredit}分${rwskDone.isDoneStr()}",
                     rwskScores, rwskDone))
-            ysty.postValue(Elective("艺术体育类，已修${ystyScores.size}门",
+            ysty.postValue(ElectiveBean("艺术体育类，已修${ystyScores.size}门",
                     "需修满${electives.ysty}分，已修${ystyCredit}分${ystyDone.isDoneStr()}",
                     ystyScores, ystyDone))
-            wxsy.postValue(Elective("文学素养类，已修${wxsyScores.size}门",
+            wxsy.postValue(ElectiveBean("文学素养类，已修${wxsyScores.size}门",
                     "需修满${electives.wxsy}分，已修${wxsyCredit}分${wxsyDone.isDoneStr()}",
                     wxsyScores, wxsyDone))
-            cxcy.postValue(Elective("创新创业教育类，已修${cxcyScores.size}门",
+            cxcy.postValue(ElectiveBean("创新创业教育类，已修${cxcyScores.size}门",
                     "需修满${electives.cxcy}分，已修${cxcyCredit}分${cxcyDone.isDoneStr()}",
                     cxcyScores, cxcyDone))
             loading.postValue(null)

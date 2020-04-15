@@ -5,7 +5,15 @@ package cn.ifafu.ifafu.experiment.bean
  */
 sealed class Resource<out T> {
 
-    data class Success<out T>(val data: T) : Resource<T>()
+    data class Success<out T>(val data: T) : Resource<T>() {
+        var message: String? = null
+            get() {
+                val message = field
+                field = null
+                return message
+            }
+    }
+
     data class Error(val message: String? = null) : Resource<Nothing>()
     data class Loading<out T>(val data: T? = null) : Resource<T>()
 
@@ -17,7 +25,7 @@ sealed class Resource<out T> {
         }
     }
 
-    inline fun <Result> map(crossinline transform: (T?) -> Result): Resource<Result> {
+    inline fun <R> map(crossinline transform: (T?) -> R): Resource<R> {
         return when (this) {
             is Success -> Success(transform(data))
             is Error -> Error(message)

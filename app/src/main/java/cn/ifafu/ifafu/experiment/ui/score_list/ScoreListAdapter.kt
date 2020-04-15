@@ -15,11 +15,11 @@ class ScoreListAdapter : BaseQuickAdapter<Score, BaseViewHolder>(R.layout.item_s
     init {
         setDiffCallback(object : DiffUtil.ItemCallback<Score>() {
             override fun areItemsTheSame(oldItem: Score, newItem: Score): Boolean {
-                return oldItem == newItem
+                return oldItem.hashCode() == newItem.hashCode()
             }
 
             override fun areContentsTheSame(oldItem: Score, newItem: Score): Boolean {
-                return oldItem.id == newItem.id
+                return oldItem.name == newItem.name && oldItem.score == newItem.score
             }
 
         })

@@ -113,21 +113,7 @@ class ZFServiceBB : ZFService {
         } + mapOf("xnd" to year, "xqd" to term)
         val httpResponse = http.post(url, headers = headers, body = params)
         val html = httpResponse.body()?.string() ?: return IFResponse.Failure("无返回信息")
-        return ExamConverter().convert(html).run {
-            if (this is IFResponse.Success) {
-                return if (year == "全部" && term == "全部") {
-                    this
-                } else if (year == "全部") {
-                    this.copy(data = this.data.filter { it.term == term })
-                } else if (term == "全部") {
-                    this.copy(data = this.data.filter { it.year == year })
-                } else {
-                    this.copy(data = this.data.filter { it.year == year && it.term == term })
-                }
-            } else {
-                this
-            }
-        }
+        return ExamConverter().convert(html)
     }
 
     private fun getVerifyImage(user: User): Bitmap? {

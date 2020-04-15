@@ -13,8 +13,8 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import cn.ifafu.ifafu.experiment.ui.elective.ElectiveBean
 import cn.ifafu.ifafu.experiment.ui.elective.ElectiveView
-import cn.ifafu.ifafu.experiment.vo.Elective
 import cn.ifafu.ifafu.ui.main.new_theme.view.TimeEvent
 import cn.ifafu.ifafu.ui.main.new_theme.view.Timeline
 
@@ -28,7 +28,7 @@ fun setTimeEvents(timeline: Timeline, timeEvent: List<TimeEvent>?) {
 
 
 @BindingAdapter("elective")
-fun setElective(view: ElectiveView, elective: Elective?) {
+fun setElective(view: ElectiveView, elective: ElectiveBean?) {
     view.setElective(elective)
 }
 

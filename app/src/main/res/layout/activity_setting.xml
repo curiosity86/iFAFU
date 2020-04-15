@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="adapter"
-            type="me.drakeet.multitype.MultiTypeAdapter" />
+            type="cn.ifafu.ifafu.ui.setting.SettingAdapter" />
 
-        <variable
-            name="layoutManager"
-            type="androidx.recyclerview.widget.RecyclerView.LayoutManager" />
     </data>
 
     <LinearLayout
@@ -29,8 +27,10 @@
             android:id="@+id/rv_setting"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
             app:adapter="@{adapter}"
-            app:layoutManager="@{layoutManager}" />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_setting_checkbox" />
 
     </LinearLayout>
 

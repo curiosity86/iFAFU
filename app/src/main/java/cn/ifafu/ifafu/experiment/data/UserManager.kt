@@ -2,6 +2,7 @@ package cn.ifafu.ifafu.experiment.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import cn.ifafu.ifafu.data.entity.User
 import cn.ifafu.ifafu.experiment.bean.IFResponse
@@ -32,9 +33,11 @@ class UserManager(
     } as LiveData<User>
 
     fun <Y> userSwitchMap(transform: (User) -> LiveData<Y>): LiveData<Y> {
-        return user.switchMap {
-            transform(it)
-        }
+        return user.switchMap(transform)
+    }
+
+    fun <Y> userMap(transform: (User) -> Y): LiveData<Y> {
+        return user.map(transform)
     }
 
     /**

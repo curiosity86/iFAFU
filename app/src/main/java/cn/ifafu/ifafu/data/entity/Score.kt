@@ -39,10 +39,6 @@ class Score : Serializable {
             else -> score //及格，按正常成绩计算
         }
 
-    fun scoreString() {
-
-    }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

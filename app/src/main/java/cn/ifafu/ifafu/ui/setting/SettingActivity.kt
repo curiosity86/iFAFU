@@ -1,57 +1,44 @@
 package cn.ifafu.ifafu.ui.setting
 
-import android.app.Activity
 import android.os.Bundle
-import androidx.activity.viewModels
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
-import cn.ifafu.ifafu.ui.getViewModelFactory
-import cn.ifafu.ifafu.base.BaseActivity
+import cn.ifafu.ifafu.base.BaseSimpleActivity
+import cn.ifafu.ifafu.data.entity.GlobalSetting
 import cn.ifafu.ifafu.databinding.ActivitySettingBinding
-import cn.ifafu.ifafu.ui.view.adapter.syllabus_setting.*
-import me.drakeet.multitype.MultiTypeAdapter
+import com.gyf.immersionbar.ImmersionBar
+import kotlinx.android.synthetic.main.activity_setting.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SettingActivity : BaseActivity() {
+class SettingActivity : BaseSimpleActivity() {
 
-    private val mAdapter by lazy {
-        MultiTypeAdapter().apply {
-            register(SeekBarItem::class, SeekBarBinder())
-            register(CheckBoxItem::class, CheckBoxBinder())
-            register(TextViewItem::class, TextViewBinder())
-            register(ColorItem::class, ColorBinder())
-        }
-    }
+    private val mAdapter = SettingAdapter()
 
-    private val mViewModel: SettingViewModel by viewModels { getViewModelFactory() }
+    private val mViewModel by viewModel<SettingViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setLightUiBar()
-        with(bind<ActivitySettingBinding>(R.layout.activity_setting)) {
-            val dividerItemDecoration = DividerItemDecoration(this@SettingActivity, DividerItemDecoration.VERTICAL)
-            dividerItemDecoration.setDrawable(getDrawable(R.drawable.shape_divider)!!)
-            rvSetting.addItemDecoration(dividerItemDecoration)
-            layoutManager = LinearLayoutManager(this@SettingActivity)
-            adapter = mAdapter
-        }
-        mViewModel.settings.observe(this, Observer {
-            mAdapter.items = it
-            mAdapter.notifyDataSetChanged()
-        })
-        mViewModel.needCheckTheme.observe(this, Observer {
-            if (it) {
-                setResult(Activity.RESULT_OK)
-            } else {
-                setResult(Activity.RESULT_CANCELED)
-            }
-        })
-        mViewModel.initSetting()
-    }
+        ImmersionBar.with(this)
+                .titleBar(tb_setting)
+                .statusBarDarkFont(true)
+                .init()
+        val binding = DataBindingUtil.setContentView<ActivitySettingBinding>(this, R.layout.activity_setting)
 
-    override fun onPause() {
-        mViewModel.save()
-        super.onPause()
+        // 初始化RecycleView
+        val dividerItemDecoration = DividerItemDecoration(this@SettingActivity, DividerItemDecoration.VERTICAL)
+        dividerItemDecoration.setDrawable(getDrawable(R.drawable.shape_divider)!!)
+        binding.rvSetting.addItemDecoration(dividerItemDecoration)
+        binding.adapter = mAdapter
+
+        // 初始化ViewModel
+        mViewModel.settings.observe(this, Observer { setting ->
+            mAdapter.setNewInstance(mutableListOf(
+                    SettingItem.CheckBox("旧版主页主题", "应需求而来，喜欢0.9版本iFAFU界面就快来呀", setting.theme == GlobalSetting.THEME_OLD) {
+                        setting.theme = if (it) GlobalSetting.THEME_OLD else GlobalSetting.THEME_NEW
+                        mViewModel.save(setting)
+                    }))
+        })
     }
 }

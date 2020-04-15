@@ -16,7 +16,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.data.entity.Score
-import cn.ifafu.ifafu.experiment.vo.Elective
 import cn.ifafu.ifafu.util.ColorUtils
 
 
@@ -27,7 +26,7 @@ class ElectiveView @JvmOverloads constructor(
     private var mClickListener: ((View, Score) -> Unit)? = null
     private var rootLayout: LinearLayout
 
-    private var elective: Elective? = null
+    private var elective: ElectiveBean? = null
 
     private var isCollapse = true
 
@@ -58,7 +57,7 @@ class ElectiveView @JvmOverloads constructor(
 
     }
 
-    fun setElective(elective: Elective?) {
+    fun setElective(elective: ElectiveBean?) {
         if (elective == null) return
         itemViewMap.clear()
         for (view in itemViewMap.values) {
@@ -102,7 +101,7 @@ class ElectiveView @JvmOverloads constructor(
         }
     }
 
-    fun getElective(): Elective? {
+    fun getElective(): ElectiveBean? {
         return elective
     }
 

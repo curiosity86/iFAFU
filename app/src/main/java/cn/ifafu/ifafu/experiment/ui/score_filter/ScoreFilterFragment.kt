@@ -13,17 +13,12 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.databinding.FragmentScoreFilterBinding
-import cn.ifafu.ifafu.ui.view.adapter.ScoreFilterAdapter
 import cn.ifafu.ifafu.ui.view.custom.RecyclerViewDivider
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.fragment_score_filter.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-// （已解决） 暂时不适用Navigation + Fragment
-// 原因：对于ScoreFilter页面结束后，通知ScoreList刷新成绩无较好的Fragment解决方案
-// （弃用）目前方案：通过Activity#onActivityResult
-// 解决方案：通过Room+LiveData组件实现数据与数据库同步
 class ScoreFilterFragment : Fragment(), Toolbar.OnMenuItemClickListener {
 
     private val mAdapter by lazy {

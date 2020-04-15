@@ -20,7 +20,7 @@ import cn.ifafu.ifafu.ui.view.custom.RecyclerViewDivider
 import com.afollestad.materialdialogs.MaterialDialog
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.fragment_score_list.view.*
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ScoreListFragment : BaseSimpleFragment(), View.OnClickListener, Toolbar.OnMenuItemClickListener {
 
@@ -48,17 +48,16 @@ class ScoreListFragment : BaseSimpleFragment(), View.OnClickListener, Toolbar.On
 
     private val mLoadingDialog by lazy { LoadingDialog(requireContext()) }
 
-    private val mViewModel by sharedViewModel<ScoreListViewModel>()
+    private val mViewModel by viewModel<ScoreListViewModel>()
 
-    private var mBinding: FragmentScoreListBinding? = null
+    private lateinit var mBinding: FragmentScoreListBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = FragmentScoreListBinding.inflate(inflater, container, false).apply {
+        mBinding = FragmentScoreListBinding.inflate(inflater, container, false).apply {
             lifecycleOwner = viewLifecycleOwner
             vm = mViewModel
         }
-        mBinding = binding
-        return binding.root
+        return mBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -100,7 +99,11 @@ class ScoreListFragment : BaseSimpleFragment(), View.OnClickListener, Toolbar.On
         mViewModel.scoresResource.observe(viewLifecycleOwner, Observer { resource ->
             when (resource) {
                 is Resource.Success -> {
-                    mAdapter.setNewInstance(resource.data.toMutableList())
+                    val message = resource.message
+                    if (message != null) {
+                        toast(message)
+                    }
+                    mAdapter.setDiffNewData(resource.data.toMutableList())
                     mLoadingDialog.cancel()
                 }
                 is Resource.Error -> {

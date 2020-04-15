@@ -11,7 +11,7 @@ class MenuAdapter(
         listener: OnMenuItemClickListener
 ) : BaseQuickAdapter<Menu, BaseDataBindingHolder<ItemMainNewTabBinding>>(R.layout.item_main_new_tab) {
 
-    var onMenuClickListener = listener
+    private var onMenuClickListener = listener
         set(value) {
             field = value
             notifyDataSetChanged()

@@ -9,23 +9,29 @@ import cn.ifafu.ifafu.experiment.util.successMap
 import cn.ifafu.ifafu.experiment.util.toEventLiveData
 import cn.ifafu.ifafu.experiment.vo.PairString
 import cn.ifafu.ifafu.util.Event
+import cn.ifafu.ifafu.util.GlobalLib.calcIES
 import cn.ifafu.ifafu.util.sumByFloat
 import cn.ifafu.ifafu.util.toRadiusString
 import cn.ifafu.ifafu.util.trimEnd
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.core.scope.Scope
+import timber.log.Timber
 
 class ScoreListViewModel(
-        private val scoreRepository: ScoreRepository
+        private val scoreRepository: ScoreRepository,
+        private val scope: Scope
 ) : ViewModel() {
 
     val semester: LiveData<Event<Semester>> = scoreRepository.semester.toEventLiveData()
+    val semesterTitle: LiveData<String> = scoreRepository.semester.map { it.toTitle() }
     val scoresResource: LiveData<Resource<List<Score>>> = scoreRepository.scoreResource
-    val ies: LiveData<PairString> = scoreRepository.ies.map {
-        if (it.isNaN() || it <= 0F) {
+    val ies: LiveData<PairString> = scoresResource.successMap {
+        val ies = it.calcIES()
+        if (ies.isNaN() || ies <= 0F) {
             PairString("0", "分")
         } else {
-            val result = it.trimEnd(2)
+            val result = ies.trimEnd(2)
             val index = result.indexOf('.')
             if (index == -1) {
                 PairString(result, "分")
@@ -121,6 +127,12 @@ class ScoreListViewModel(
                     append("，减去不及格的学分共${totalMinus.trimEnd(2)}分，最终为${(ies - totalMinus).trimEnd(2)}分。")
                 }
         ))
+    }
+
+    override fun onCleared() {
+        scope.close()
+        super.onCleared()
+        Timber.d("ScoreListViewModel#onCleared")
     }
 
 }

@@ -1,4 +1,4 @@
-package cn.ifafu.ifafu.ui.view.adapter
+package cn.ifafu.ifafu.ui.comment
 
 import cn.ifafu.ifafu.R
 import cn.ifafu.ifafu.data.bean.CommentItem
