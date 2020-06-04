@@ -30,7 +30,6 @@ abstract class BaseActivity : AppCompatActivity(), UIEvent {
         }
     }
 
-
     override suspend fun startLoginActivity() = withContext(Dispatchers.Main) {
         startActivityForResult(Intent(this@BaseActivity, LoginActivity::class.java), Constant.ACTIVITY_LOGIN)
         finish()
